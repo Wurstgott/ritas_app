@@ -69,7 +69,7 @@ function frisch() {
     missionen: { aktiv: [], fertig: [] },
     leiter: { neuland: {} }, plaene: [],
     checkliste: D.checkliste.map(c => ({ ...c, an: false })), liste: [],
-    wennDann: "",
+    wennDann: "", eigeneT: [],
     ruhe: { hilft: ["fuesse", "wasser", "platz"], eigene: [], leute: [], satz: 0, satzEigen: "", unterwegs: ["pausen", "umdrehen"], unterwegsEigen: [], geuebt: 0 },
     timer: null,
     rueckblick: {},
@@ -194,7 +194,7 @@ function haptik(art) {
   try { if (navigator.vibrate) navigator.vibrate(VIB[art] || 10); } catch (e) { }
 }
 /* iOS: echter Schalter unter einem label erzeugt den System-Tick (ab iOS 18) */
-const HAPSEL = ".knopf,.kachel,.tf,.chip,.liste-zeile,nav.tabs button,.karte:not(.zu),.fach:not(.leer),.schalter-zeile";
+const HAPSEL = ".tuer,.logo-knopf,.knopf,.kachel,.tf,.chip,.liste-zeile,nav.tabs button,.karte:not(.zu),.fach:not(.leer),.schalter-zeile";
 function armHaptics() {
   if (!IOS || !S.vib) return;
   $$(HAPSEL).forEach(el => {
@@ -292,13 +292,13 @@ function sheetZu(ohneHistory) {
   if (!SHEETS.length) document.body.style.overflow = "";
   try { s.vorher && s.vorher.focus && s.vorher.focus({ preventScroll: true }); } catch (e) { }
   if (s.onclose) s.onclose();
-  if (!ohneHistory && history.state && history.state.sheet) { IGNORE_POP = true; history.back(); }
+  if (!ohneHistory && history.state && history.state.sheet) { IGNORE_POP++; history.back(); }
   setTimeout(hebeToast, 240);
 }
-function alleSheetsZu() { while (SHEETS.length) sheetZu(); }
-let IGNORE_POP = false;
+function alleSheetsZu() { const n = SHEETS.length; while (SHEETS.length) sheetZu(true); if (n && history.state && history.state.sheet) { IGNORE_POP++; history.back(); } }
+let IGNORE_POP = 0;
 addEventListener("popstate", () => {
-  if (IGNORE_POP) { IGNORE_POP = false; return; }
+  if (IGNORE_POP > 0) { IGNORE_POP--; return; }
   if (SHEETS.length) sheetZu(true);
 });
 function aktuellesSheet() { return SHEETS.length ? SHEETS[SHEETS.length - 1].sh : null; }
@@ -359,6 +359,7 @@ function welle(el, x, y) {
 }
 const sperre = new WeakMap();
 function gesperrt(el) {
+  if (el.dataset && (el.dataset.act === "huhn-tap" || el.dataset.act === "tschuess")) return false;
   const t = performance.now(), l = sperre.get(el) || 0;
   if (t - l < 600) return true; sperre.set(el, t); return false;
 }

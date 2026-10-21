@@ -20,7 +20,7 @@ function render(opt = {}) {
   if (!SHEETS.length && (document.activeElement === document.body || !document.activeElement || !document.contains(document.activeElement))) { const z = (opt.fokus && $(opt.fokus, main)) || null; if (z) z.focus({ preventScroll: true }); }
   bilderZeichnen(opt.neu);
   figurenMalen();
-  const lg = $("#logo"); if (lg && !lg.firstChild) lg.innerHTML = ritaSVG(34);
+  const lg = $("#logo"); if (lg && !lg.firstChild) lg.innerHTML = ritaSVG(58);
   armHaptics();
 }
 function bilderZeichnen(neu) {
@@ -92,6 +92,7 @@ function nachEintrag(r, text) {
   const info = e.t === "ausflug" ? (e.umgekehrt ? "Umgekehrt? Auch das ist eine gute Entscheidung." : "Am Horizont steht jetzt eine neue Silhouette.") : waehle(t.info || ["Eingetragen. Das zählt."], e.id);
   const ort = e.t === "ausflug" ? "horizont" : e.t === "tagebuch" ? "tagebuch" : e.t === "abgehakt" ? "abgehakt" : e.t === "ruheuebung" ? "ruhe" : (e.mut ? "mut" : tat(e.t).bild);
   const huhn = S.huhn ? huehnchenReagiert(ort) : "";
+  try { eierEintrag(e); } catch (err) { }
   const taler = Math.round(e.taler * 10) / 10;
   alleSheetsZu();
   haptik("erfolg"); ton("erfolg");
@@ -169,6 +170,7 @@ document.addEventListener("input", ev => {
   if (el.dataset.feld && E) { E[el.dataset.feld] = el.value; }
   if (el.dataset.einst) { S[el.dataset.einst] = el.value.trim() || (el.dataset.einst === "name" ? "Rita" : ""); speichern(); }
   if (el.dataset.lb) { S.lebensbuch[el.dataset.lb] = el.value; speichern(); }
+  if (el.dataset.geburtstag) { const m = /^(\d{1,2})\.(\d{1,2})/.exec(el.value.trim()); S.geburtstag = m ? `${m[2].padStart(2, "0")}-${m[1].padStart(2, "0")}` : ""; speichern(); }
   if (el.dataset.listeText) { const x = (S.liste || []).find(y => y.id === el.dataset.listeText); if (x && el.value.trim()) { x.text = el.value.trim().slice(0, 120); speichern(); } }
 });
 document.addEventListener("change", ev => {
@@ -192,7 +194,7 @@ function aktion(a, d, el, ev) {
     case "go": if (d.go === "einstellungen") einstellungenSheet(); break;
 
     /* Tagesform */
-    case "tf": S.tf[heute()] = d.v; if (S.huhn) S.huhnSagt = { tag: heute(), text: { A: "Viel Energie? Dann halt ich hier die Stellung, und du ziehst los.", B: "Gemächlich ist ein schönes Tempo. Ich hab ja nur das eine.", C: "Ruhig angehen. Da bin ich Profi, ich steh seit Jahren still.", D: "Sparflamme ist auch eine Flamme. Ich bin heute leise und leiste dir Gesellschaft." }[d.v] }; speichern(); haptik("auswahl"); el.setAttribute("aria-pressed", "true"); el.classList.add("fill-in");
+    case "tf": S.tf[heute()] = d.v; if (S.huhn) S.huhnSagt = { tag: heute(), text: { A: "Viel Energie? Dann halt ich hier die Stellung, und du ziehst los.", B: "Gemächlich ist ein schönes Tempo. Ich hab ja nur das eine.", C: "Ruhig angehen. Da bin ich Profi, ich steh seit Jahren still.", D: "Sparflamme ist auch eine Flamme. Ich bin heute leise und leiste dir Gesellschaft." }[d.v] }; try { eierTagesform(d.v); } catch (e) { } speichern(); haptik("auswahl"); el.setAttribute("aria-pressed", "true"); el.classList.add("fill-in");
       setTimeout(() => { render({ halteScroll: true, ohneAnim: true }); const f = D.tagesformen.find(x => x.id === d.v); sag(`${f.name} gewählt.`); }, REDUCED() ? 0 : 320); break;
     case "tf-onb": S.tf[heute()] = d.v; speichern(); haptik("auswahl"); sheetInhalt(onboardingInhalt()); break;
     case "tf-aendern": delete S.tf[heute()]; speichern(); render({ halteScroll: true, ohneAnim: true }); break;
@@ -216,7 +218,7 @@ function aktion(a, d, el, ev) {
       if (t.art === "buch" && !E.titel.trim()) { toast("Bitte den Buchtitel eintragen."); haptik("achtung"); break; }
       if (t.art === "buch" && D.hp) { const b = D.hp.baende.find(x => x.nr === S.hp.band); if (b && E.titel.trim() === b.titel && D.hp.baende.find(x => x.nr === b.nr + 1)) { S.hp.band = b.nr + 1; S.hp.kapitel = 0; } }
       const alt = E._alt; delete E._alt;
-      if (E.hpKap && D.hp) { const b = D.hp.baende.find(x => x.nr === S.hp.band); if (b) { S.hp.kapitel = Math.min(b.kapitel, S.hp.kapitel + Number(E.hpKap)); E.notiz = E.notiz || `${b.titel.replace("Harry Potter und d", "D")}, bis Kapitel ${S.hp.kapitel}`; } } delete E.hpKap;
+      if (E.hpKap && D.hp) { const b = D.hp.baende.find(x => x.nr === S.hp.band); if (b) { const vorK = S.hp.kapitel; setTimeout(() => { if (vorK < 13 && S.hp.kapitel >= 13) eierKapitel(13); }, 50); S.hp.kapitel = Math.min(b.kapitel, S.hp.kapitel + Number(E.hpKap)); E.notiz = E.notiz || `${b.titel.replace("Harry Potter und d", "D")}, bis Kapitel ${S.hp.kapitel}`; } } delete E.hpKap;
       const r = eintragSpeichern(E, alt);
       nachEintrag(r, alt ? "Geändert." : `Eingetragen: ${eintragText(r ? r.e : E).replace(/\.$/, "")}.`); break;
     }
@@ -229,14 +231,20 @@ function aktion(a, d, el, ev) {
     case "liste-hak": { const x = (S.liste || []).find(y => y.id === d.id); if (!x) break; x.erledigt = heute(); const r = eintragSpeichern({ t: "abgehakt", tag: heute(), notiz: x.text, listeId: x.id }); x.eintrag = r && r.e.id; speichern(); if (r) nachEintrag(r, `Abgehakt: ${x.text.replace(/[.!?]+$/, "")}.`); else render({ halteScroll: true, ohneAnim: true }); break; }
     case "liste-zurueck": { const x = (S.liste || []).find(y => y.id === d.id); if (!x) break; delete x.erledigt; if (x.eintrag) eintragLoeschen(x.eintrag, true); speichern(); render({ halteScroll: true, ohneAnim: true }); break; }
     case "erklaerung": erklaerungSheet(); break;
-    case "post-auf": S.postOffen = heute(); speichern(); haptik("auswahl"); render({ halteScroll: true, ohneAnim: true }); break;
+    case "post-auf": { const p = postHeute(); if (p && p.extra) S.extraPost.offen = true; else S.postOffen = heute(); } speichern(); haptik("auswahl"); render({ halteScroll: true, ohneAnim: true }); break;
     case "tschuess-los": S.tschuess = { tag: heute(), verlauf: [["rita", "Danke, Max!"], ["max", "Gern! Tschüss!"]], grenze: 2 + Math.floor(Math.random() * 4), n: 0 }; speichern(); haptik("auswahl"); render({ halteScroll: true, ohneAnim: true }); break;
-    case "tschuess": { const T = S.tschuess; if (!T || T.ende) break; T.n++; T.verlauf.push(["rita", TSCHUESS[Math.floor(Math.random() * TSCHUESS.length)]]); if (T.n >= T.grenze || (T.n >= 2 && Math.random() < .2)) { T.verlauf.push(["max", "Ich leg jetzt auf. Tschüss!"]); T.ende = "max"; } else T.verlauf.push(["max", TSCHUESS[Math.floor(Math.random() * TSCHUESS.length)]]); if (T.verlauf.length > 9) T.verlauf = [...T.verlauf.slice(0, 2), ...T.verlauf.slice(-7)]; speichern(); haptik("auswahl"); render({ halteScroll: true, ohneAnim: true }); break; }
+    case "tschuess": { const T = S.tschuess; if (!T || T.ende) break; T.n++; eierTschuess(T.n); T.verlauf.push(["rita", TSCHUESS[Math.floor(Math.random() * TSCHUESS.length)]]); if (T.n >= T.grenze || (T.n >= 2 && Math.random() < .2)) { T.verlauf.push(["max", "Ich leg jetzt auf. Tschüss!"]); T.ende = "max"; } else T.verlauf.push(["max", TSCHUESS[Math.floor(Math.random() * TSCHUESS.length)]]); if (T.verlauf.length > 9) T.verlauf = [...T.verlauf.slice(0, 2), ...T.verlauf.slice(-7)]; speichern(); haptik("auswahl"); render({ halteScroll: true, ohneAnim: true }); break; }
     case "tschuess-auflegen": { const T = S.tschuess; if (!T || T.ende) break; T.verlauf.push(["rita", "Ich leg jetzt auf. Tschüss!"]); T.ende = "rita"; S.tschuessSiege = (S.tschuessSiege || 0) + 1; speichern(); haptik("erfolg"); render({ halteScroll: true, ohneAnim: true }); break; }
     case "liste-hilfe": listeHilfeSheet(); break;
     case "nach-hak": { $$(".toast").forEach(t => t.remove()); const t2 = window._nachHak; if (t2) eintragenSheet(t2); break; }
+    case "abend": { const t = tat(d.t), letzte = [...S.eintraege].reverse().find(e => e.t === d.t); const r = eintragSpeichern({ t: d.t, tag: heute(), km: t.art === "km" ? (letzte?.km || 2) : undefined, min: t.art === "min" || t.art === "person" ? (letzte?.min || t.std || 20) : undefined, person: t.art === "person" ? "_" : undefined, notiz: "" }); if (r) nachEintrag(r, `${t.kurz} – eingetragen.`); break; }
+    case "abend-weg": S.abendWeg = heute(); speichern(); render({ halteScroll: true, ohneAnim: true }); break;
+    case "zettel-weg": if (S.zettel) S.zettel.weg = true; speichern(); haptik("auswahl"); render({ halteScroll: true, ohneAnim: true }); break;
+    case "huhn-tap": { const h = el.querySelector(".huhn"); if (h) { h.classList.remove("freut"); void h.getBBox; h.classList.add("freut"); setTimeout(() => h.classList.remove("freut"), 1100); } haptik("auswahl"); eierHuhnTap(); break; }
+    case "eier-um": S.eierAus = !S.eierAus; speichern(); sheetInhalt(einstellungenInhalt()); break;
+    case "tuer": tuerSheet(d.v); break;
     case "logo": logoSpass(el); break;
-    case "post-gelesen": { const p = maxPost(); S.briefe = S.briefe || []; if (p && !S.briefe.some(b => b.tag === heute())) S.briefe.push({ tag: heute(), text: p }); } S.postGelesen = heute(); speichern(); render({ halteScroll: true, ohneAnim: true }); break;
+    case "post-gelesen": { const p = postHeute(); S.briefe = S.briefe || []; if (p && !S.briefe.some(b => b.tag === heute() && b.text === p.text)) S.briefe.push({ tag: heute(), text: p.text, wer: p.wer }); if (p && p.extra) { S.extraPost.gelesen = true; speichern(); render({ halteScroll: true, ohneAnim: true }); break; } } S.postGelesen = heute(); speichern(); render({ halteScroll: true, ohneAnim: true }); break;
     case "stufe-zeigen": $$(".toast").forEach(t => t.remove()); S.gesehenStufe = stufe(); speichern(); stufeMoment(stufe(), window._auchNeu || []); break;
 
     /* Hilft / Ideen */
@@ -304,7 +312,7 @@ function aktion(a, d, el, ev) {
 
     /* Tagebuch */
     case "moment": momentSheet(); break;
-    case "moment-speichern": { const t = $("#moment-text").value.trim(); const h = heute(); const neu = !S.momente[h]; if (t) S.momente[h] = t; else delete S.momente[h]; if (t && neu) S.taler += 1; speichern(); sheetZu(); render({ halteScroll: true, ohneAnim: true }); if (t) toast("Aufgeschrieben.", { erfolg: true }); break; }
+    case "moment-speichern": { const t = $("#moment-text").value.trim(); eierMoment(t); const h = heute(); const neu = !S.momente[h]; if (t) S.momente[h] = t; else delete S.momente[h]; if (t && neu) S.taler += 1; speichern(); sheetZu(); render({ halteScroll: true, ohneAnim: true }); if (t) toast("Aufgeschrieben.", { erfolg: true }); break; }
     case "rueckblick": rueckblickSheet(); break;
     case "rueckblick-fertig": { const kw = kwVon(heute()); const neu = !S.rueckblick[kw]; S.rueckblick[kw] = heute(); S.wennDann = $("#vorsatz").value.trim(); if (neu) S.taler += 10; if (S.hinweis.tag === heute()) S.hinweis.zu = true; speichern(); sheetZu(); render({ halteScroll: true, ohneAnim: true }); toast(neu ? "Woche angeschaut. +10 Taler" : "Gespeichert.", { erfolg: true }); break; }
     case "tb-mehr": S._tbMehr = true; render({ halteScroll: true, ohneAnim: true }); break;
@@ -361,7 +369,7 @@ function aktion(a, d, el, ev) {
     case "sichern-datei": dateiSpeichern(); break;
     case "sichern-kopie": kopieren(sicherungText(), "Sicherung kopiert. Am besten in eine Notiz oder Mail einfügen."); S.letzteSicherung = heute(); speichern(); break;
     case "einspielen-text": { const s = sicherungPruefen($("#import-text").value); if (s) sicherungFrage(s); else { toast("Das sieht nicht wie eine Sicherung von Ritas App aus."); haptik("achtung"); } break; }
-    case "einspielen-ja": { if (!window._import) break; const vorher = JSON.stringify(S); S = window._import; window._import = null; try { migrieren(); alleSheetsZu(); render(); } catch (err) { S = JSON.parse(vorher); speichern(); alleSheetsZu(); render(); toast("Diese Sicherung ließ sich nicht lesen. Es bleibt alles, wie es war."); break; } toast("Sicherung eingespielt.", { erfolg: true }); break; }
+    case "einspielen-ja": { if (!window._import) break; const vorher = JSON.stringify(S); S = window._import; window._import = null; try { migrieren(); eigeneRegistrieren(); alleSheetsZu(); render(); } catch (err) { S = JSON.parse(vorher); speichern(); alleSheetsZu(); render(); toast("Diese Sicherung ließ sich nicht lesen. Es bleibt alles, wie es war."); break; } toast("Sicherung eingespielt.", { erfolg: true }); break; }
     case "wiederher": eintragWiederher(d.id); sheetInhalt(helferInhalt()); break;
     case "reset-1": sheet({ titel: "Wirklich alles löschen?", inhalt: `<p>Alle Einträge, das Bild, Taler und Einstellungen auf diesem Handy werden gelöscht. Das lässt sich nicht rückgängig machen.</p><button class="knopf zweit voll" data-act="sichern-kopie">Vorher Sicherung kopieren</button>`, fuss: `<div class="stapel"><button class="knopf voll rand warn" data-act="reset-2">Ja, alles löschen</button><button class="knopf haupt voll" data-act="sheet-zu">Nein, behalten</button></div>` }); break;
     case "reset-2": { const behalte = { name: S.name, anrede: S.anrede, size: S.size, theme: S.theme }; S = frisch(); Object.assign(S, behalte); S.onboard = true; speichern(); alleSheetsZu(); TAB = "heute"; render(); toast("Alles gelöscht. Auf ein Neues!"); break; }
@@ -378,7 +386,7 @@ function aktion(a, d, el, ev) {
     case "ton-probe": ton("erfolg", true); break;
     case "angebot-kat": ANG_KAT = d.v; haptik("auswahl"); sheetInhalt(angeboteInhalt()); aktuellesSheet().querySelector(".sheet-inhalt").scrollTop = 0; break;
     case "angebot-liste": { const x = D.angebote.find(y => y.id === d.id); if (!x) break; S.liste = S.liste || []; const text = angebotKurz(x); if (!S.liste.some(y => !y.erledigt && (y.angebot === x.id || y.text === text))) S.liste.push({ id: "l" + Date.now().toString(36), text, angebot: x.id }); speichern(); haptik("auswahl"); toast(`Steht auf ${A("deiner", "Ihrer")} Liste.`, { erfolg: true, dauer: 4000 }); el.outerHTML = `<p class="klein" style="margin:6px 0 0">${ic("haken")} Steht auf ${A("deiner", "Ihrer")} Liste.</p>`; render({ halteScroll: true, ohneAnim: true }); break; }
-    default: if (a && a.startsWith("ruhe-") && typeof ruheAktion === "function") ruheAktion(a, d, el);
+    default: if (a && a.startsWith("ruhe-") && typeof ruheAktion === "function") ruheAktion(a, d, el); else if (a && (a.startsWith("eigen") || a.startsWith("eig-"))) eigenAktion(a, d);
   }
 }
 
@@ -431,16 +439,16 @@ function timerBeenden() {
 
 /* ---------- Start ---------- */
 function start() {
-  migrieren();
+  migrieren(); eigeneRegistrieren();
   themaAnwenden();
   // Testzugang: ?t=JJJJ-MM-TTTHH:MM setzt die Uhr (nur für Prüfungen)
   const q = new URLSearchParams(location.search);
   if (q.get("zeit")) { const z = new Date(q.get("zeit")); if (!isNaN(z)) ZEITVERSATZ = z - Date.now(); }
-  try { render(); } catch (err) { notfall(err); return; }
+  try { eierTag(); render(); } catch (err) { notfall(err); return; }
   if (!S.onboard) setTimeout(onboardingSheet, 300);
   else if (S.timer) setTimeout(() => { if (timerRest() <= 0) timerSheet(); }, 400);
   addEventListener("resize", () => { clearTimeout(window._rs); window._rs = setTimeout(() => bilderZeichnen(), 150); });
-  document.addEventListener("visibilitychange", () => { if (!document.hidden) { render({ halteScroll: true, ohneAnim: true }); } });
+  document.addEventListener("visibilitychange", () => { if (!document.hidden) { try { eierTag(); } catch (e) { } render({ halteScroll: true, ohneAnim: true }); } });
   // Bild alle 10 Minuten neu (Sonnenstand)
   setInterval(() => { if (!document.hidden && !SHEETS.length) bilderZeichnen(); }, 600000);
   addEventListener("beforeinstallprompt", e => { e.preventDefault(); window._installPrompt = e; });

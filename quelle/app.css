@@ -542,3 +542,23 @@ h2, h3 { font-weight: 620; }
 @keyframes lz-huhn { 0% { transform: translate(-30px, 10px); opacity: 0; } 25%, 70% { transform: translate(6px, 0); opacity: 1; } 100% { transform: translate(-30px, 10px); opacity: 0; } }
 .logo-sprech { position: fixed; z-index: 60; pointer-events: none; background: var(--bogen); color: var(--tinte); padding: 6px 10px; border-radius: 12px; font-size: .85rem; box-shadow: 0 2px 6px rgba(0,0,0,.15); animation: lz-sprech 2.2s ease forwards; max-width: 220px; }
 @keyframes lz-sprech { 0% { opacity: 0; transform: translateY(6px); } 12%, 80% { opacity: 1; transform: none; } 100% { opacity: 0; } }
+.icon-wahl { display: grid; grid-template-columns: repeat(auto-fill, minmax(52px, 1fr)); gap: 8px; }
+.icon-wahl .knopf { min-height: 52px; padding: 0; justify-content: center; }
+.icon-wahl .knopf[aria-pressed="true"] { background: var(--moos); color: var(--papier); }
+.logo-knopf { width: 64px; height: 64px; }
+.logo-knopf .portrait { box-shadow: 0 2px 0 rgba(28,38,32,.18); border-radius: 50%; }
+.logo-knopf::after { content: ""; position: absolute; inset: -3px; border-radius: 50%; border: 2px solid var(--licht); opacity: 0; animation: logo-lockt 9s ease-in-out 3s infinite; pointer-events: none; }
+@keyframes logo-lockt { 0%, 88%, 100% { opacity: 0; transform: scale(1); } 92% { opacity: .9; transform: scale(1.08); } 96% { opacity: 0; transform: scale(1.18); } }
+.buehne.flach { aspect-ratio: 16 / 8.5; }
+.tueren { display: grid; gap: 12px; }
+.tuer { position: relative; display: grid; grid-template-columns: auto 1fr; grid-template-rows: auto auto; column-gap: 14px; align-items: center; text-align: left; padding: 18px 18px 18px 22px; border-radius: 16px; border: 0; background: var(--bogen); box-shadow: var(--schatten-2); color: var(--tinte); font: inherit; cursor: pointer; min-height: 88px; }
+.tuer::before { content: ""; position: absolute; left: 0; top: 14px; bottom: 14px; width: 6px; border-radius: 0 4px 4px 0; background: var(--k, var(--moos)); }
+.tuer .icon { grid-row: 1 / 3; width: 34px; height: 34px; color: var(--k, var(--moos)); }
+.tuer .titel { font-family: Fraunces, Georgia, serif; font-size: 1.3rem; font-weight: 650; }
+.tuer .unter { font-size: .92rem; color: var(--tinte-2); }
+.tuer:active { transform: scale(.985); }
+.zettel-notiz { position: relative; background: #FFF6C9; color: #2A2A22; padding: 16px 16px 10px; border-radius: 4px; box-shadow: 0 3px 0 rgba(28,38,32,.12); transform: rotate(-1deg); animation: brief-auf .45s ease-out both; }
+.zettel-notiz .knopf.leise { color: #1F4A34; }
+.zettel-nadel { position: absolute; top: -7px; left: 50%; width: 14px; height: 14px; margin-left: -7px; border-radius: 50%; background: #C8372D; box-shadow: 0 2px 0 rgba(0,0,0,.2); }
+.zettel-initial { width: 40px; height: 40px; flex: none; border-radius: 50%; background: #E2A93B; color: #2A2A22; display: grid; place-items: center; font-family: Fraunces, Georgia, serif; font-weight: 700; font-size: 1.2rem; }
+.huhn-karte[data-act] { cursor: pointer; }
