@@ -72,7 +72,7 @@
 html { font-size: var(--base); -webkit-text-size-adjust: 100%; }
 body {
   margin: 0; background: var(--papier); color: var(--tinte);
-  font-family: "Atkinson Hyperlegible Next", "Atkinson Hyperlegible", system-ui, -apple-system, "Segoe UI", Roboto, sans-serif;
+  font-family: Nunito, system-ui, -apple-system, "Segoe UI", Roboto, sans-serif;
   font-size: 1rem; line-height: 1.5; min-height: 100dvh;
   -webkit-tap-highlight-color: transparent; overflow-x: hidden;
   hyphens: auto; -webkit-hyphens: auto;
@@ -82,7 +82,7 @@ body::before {
   content: ""; position: fixed; inset: 0; pointer-events: none; z-index: 0; opacity: var(--faser-op);
   background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='180' height='180'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='.9' numOctaves='2' stitchTiles='stitch'/%3E%3CfeColorMatrix values='0 0 0 0 .2  0 0 0 0 .17  0 0 0 0 .1  0 0 0 1.2 -.1'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E");
 }
-h1, h2, h3, .serif { font-family: Literata, Georgia, "Times New Roman", serif; font-weight: 600; letter-spacing: -.005em; }
+h1, h2, h3, .serif { font-family: Fraunces, Georgia, "Times New Roman", serif; font-weight: 600; letter-spacing: -.005em; }
 h1 { font-size: 1.55rem; line-height: 1.2; margin: 0; }
 h2 { font-size: 1.25rem; line-height: 1.25; margin: 0 0 .35rem; }
 h3 { font-size: 1.1rem; line-height: 1.3; margin: 0 0 .25rem; }
@@ -100,7 +100,7 @@ header.kopf { flex-wrap: wrap;
   display: flex; align-items: center; justify-content: space-between; gap: 12px;
   padding: calc(env(safe-area-inset-top) + 12px) max(16px, env(safe-area-inset-right, 0px)) 6px max(16px, env(safe-area-inset-left, 0px));
 }
-.wortmarke { font-family: Literata, Georgia, serif; font-size: 1.05rem; font-weight: 600; color: var(--moos); display: flex; align-items: center; gap: 8px; }
+.wortmarke { font-family: Fraunces, Georgia, serif; font-size: 1.05rem; font-weight: 600; color: var(--moos); display: flex; align-items: center; gap: 8px; }
 .wortmarke svg { width: 28px; height: 28px; }
 main { padding-block: 4px calc(120px + env(safe-area-inset-bottom)); padding-left: max(16px, env(safe-area-inset-left, 0px)); padding-right: max(16px, env(safe-area-inset-right, 0px)); }
 .ansicht { animation: einschieben .26s ease-out both; }
@@ -242,8 +242,8 @@ section.abschnitt { margin: 0 0 28px; }
 /* ---------- Stepper ---------- */
 .stepper { display: grid; grid-template-columns: 72px 1fr 72px; align-items: center; gap: 10px; }
 .stepper .knopf { min-height: 72px; padding: 0; font-size: 1.8rem; }
-.stepper .wert { text-align: center; font-family: Literata, Georgia, serif; font-size: 2.1rem; font-weight: 600; line-height: 1; }
-.stepper .wert small { display: block; font-family: inherit; font-size: .9rem; font-weight: 400; color: var(--tinte-2); margin-top: 4px; font-family: "Atkinson Hyperlegible Next", system-ui, sans-serif; }
+.stepper .wert { text-align: center; font-family: Fraunces, Georgia, serif; font-size: 2.1rem; font-weight: 600; line-height: 1; }
+.stepper .wert small { display: block; font-family: inherit; font-size: .9rem; font-weight: 400; color: var(--tinte-2); margin-top: 4px; font-family: Nunito, system-ui, sans-serif; }
 
 /* ---------- Schalter ---------- */
 .schalter-zeile { position: relative; display: flex; align-items: center; justify-content: space-between; gap: 12px; min-height: 64px; padding: 6px 0; cursor: pointer; }
@@ -312,7 +312,7 @@ nav.tabs .punkt { position: absolute; top: 10px; right: 22%; width: 9px; height:
 /* Stempel beim Eintragen */
 .stempel {
   position: fixed; z-index: 70; left: 50%; top: 40%; width: 150px; height: 150px; margin: -75px 0 0 -75px; pointer-events: none;
-  border-radius: 50%; display: grid; place-items: center; color: var(--moos); font-family: Literata, serif; font-weight: 700; font-size: 1.05rem;
+  border-radius: 50%; display: grid; place-items: center; color: var(--moos); font-family: Fraunces, Georgia, serif; font-weight: 700; font-size: 1.05rem;
   box-shadow: inset 0 0 0 5px currentColor, inset 0 0 0 9px transparent, inset 0 0 0 11px currentColor;
   animation: stempel 1.1s ease-out forwards; text-align: center; line-height: 1.1; background: color-mix(in srgb, var(--bogen) 70%, transparent);
 }
@@ -322,7 +322,7 @@ nav.tabs .punkt { position: absolute; top: 10px; right: 22%; width: 9px; height:
 .timer-kreis { position: relative; width: min(300px, 78vw); aspect-ratio: 1; margin: 6px auto 12px; }
 .timer-kreis svg { width: 100%; height: 100%; transform: rotate(-90deg); }
 .timer-kreis .mitte { position: absolute; inset: 0; display: grid; place-content: center; text-align: center; }
-.timer-kreis .rest { font-family: Literata, Georgia, serif; font-size: 3.1rem; font-weight: 600; line-height: 1; font-variant-numeric: tabular-nums; }
+.timer-kreis .rest { font-family: Fraunces, Georgia, serif; font-size: 3.1rem; font-weight: 600; line-height: 1; font-variant-numeric: tabular-nums; }
 .timer-kreis .was { color: var(--tinte-2); margin-top: 8px; }
 
 /* ---------- Setzkasten ---------- */
@@ -353,7 +353,7 @@ input.text:focus, textarea.text:focus { outline: 3px solid var(--fokus); outline
 .karte {
   position: absolute; left: 0; width: var(--kb); height: calc(var(--kb) * 1.42); border-radius: 7px; border: 0; padding: 0;
   background: #FBF8F1; color: #1C2620; box-shadow: 0 1px 0 rgba(28,38,32,.35), 0 2px 3px rgba(28,38,32,.15);
-  cursor: pointer; font-family: Literata, Georgia, serif; font-weight: 700; touch-action: manipulation; transition: transform .18s ease, box-shadow .12s;
+  cursor: pointer; font-family: Fraunces, Georgia, serif; font-weight: 700; touch-action: manipulation; transition: transform .18s ease, box-shadow .12s;
 }
 .karte .w { position: absolute; top: 2px; left: 3px; font-size: calc(var(--kb) * .46); line-height: 1; letter-spacing: -.04em; }
 .karte .f { position: absolute; top: 3px; right: 2px; width: calc(var(--kb) * .32); height: calc(var(--kb) * .32); }
@@ -405,9 +405,9 @@ svg.icon { width: 28px; height: 28px; flex: none; color: var(--k, var(--moos)); 
 /* Hühnchen-Karte: Tonfigur mit Sprechblase aus Papier */
 .huhn-karte { display: flex; align-items: flex-end; gap: 10px; }
 .huhn-karte canvas { flex: none; }
-.sprechblase { position: relative; flex: 1; min-width: 0; background: var(--bogen); border-radius: 14px; padding: 12px 16px; box-shadow: var(--schatten-1), var(--saum); font-family: Literata, Georgia, serif; font-size: 1.02rem; line-height: 1.4; margin-bottom: 18px; }
+.sprechblase { position: relative; flex: 1; min-width: 0; background: var(--bogen); border-radius: 14px; padding: 12px 16px; box-shadow: var(--schatten-1), var(--saum); font-family: Fraunces, Georgia, serif; font-size: 1.02rem; line-height: 1.4; margin-bottom: 18px; }
 .sprechblase::before { content: ""; position: absolute; left: -9px; bottom: 14px; width: 18px; height: 18px; background: var(--bogen); transform: rotate(45deg); box-shadow: -1px 1px 0 rgba(28,38,32,.12); }
-.sprechblase .wer { display: block; font-family: "Atkinson Hyperlegible Next", system-ui, sans-serif; font-size: .78rem; font-weight: 700; color: #B8552F; margin-bottom: 2px; }
+.sprechblase .wer { display: block; font-family: Nunito, system-ui, sans-serif; font-size: .78rem; font-weight: 700; color: #B8552F; margin-bottom: 2px; }
 .bogen.post { background: color-mix(in srgb, var(--bogen) 88%, var(--licht)); overflow: hidden; }
 /* ---------- Hühnchen (Comic, SVG) ---------- */
 .huhn { overflow: visible; flex: none; }
@@ -441,7 +441,7 @@ svg.icon { width: 28px; height: 28px; flex: none; color: var(--k, var(--moos)); 
 .ruhe-plan ul, .ruhe-fragen { margin: 0; padding-left: 1.2em; }
 .ruhe-plan li { margin: 2px 0; }
 .ruhe-fragen li { margin: 8px 0; font-size: 1.1rem; }
-.ruhe-gross { font-family: Literata, Georgia, serif; font-size: 1.35rem; line-height: 1.4; margin: 12px 0 16px; text-wrap: balance; }
+.ruhe-gross { font-family: Fraunces, Georgia, serif; font-size: 1.35rem; line-height: 1.4; margin: 12px 0 16px; text-wrap: balance; }
 .ruhe-punkte { display: flex; gap: 6px; margin: 2px 0 14px; }
 .ruhe-punkte i { flex: 1; height: 5px; border-radius: 3px; background: var(--mulde-2); }
 .ruhe-punkte i.an { background: var(--flieder); }
@@ -449,17 +449,17 @@ svg.icon { width: 28px; height: 28px; flex: none; color: var(--k, var(--moos)); 
 .atem-kreis { width: 220px; height: 220px; max-width: 100%; border-radius: 50%; background: var(--flieder); opacity: .28; transform: scale(.5); }
 .atem-kreis.ein { transform: scale(1); transition: transform 4s ease-in-out; }
 .atem-kreis.aus { transform: scale(.5); transition: transform 6s ease-in-out; }
-.atem-text { position: absolute; font-family: Literata, Georgia, serif; font-size: 1.4rem; font-weight: 600; color: var(--tinte); }
+.atem-text { position: absolute; font-family: Fraunces, Georgia, serif; font-size: 1.4rem; font-weight: 600; color: var(--tinte); }
 @media (prefers-reduced-motion: reduce) { .atem-kreis.ein, .atem-kreis.aus { transition: none; } }
 :root[data-motion="ruhig"] .atem-kreis.ein, :root[data-motion="ruhig"] .atem-kreis.aus { transition: none; }
 
 /* ---------- Max erklärt, Hühnchen fragt ---------- */
 .max-karte { display: flex; gap: 12px; align-items: flex-start; }
 .max-karte .portrait { flex: none; }
-.brief { font-family: Literata, Georgia, serif; font-size: 1.08rem; line-height: 1.55; }
+.brief { font-family: Fraunces, Georgia, serif; font-size: 1.08rem; line-height: 1.55; }
 .brief p { margin: 0 0 10px; }
 .umschlag { position: relative; display: flex; gap: 12px; align-items: center; width: 100%; text-align: left; }
-.strich { font-family: Literata, Georgia, serif; letter-spacing: 1px; color: var(--moos); }
+.strich { font-family: Fraunces, Georgia, serif; letter-spacing: 1px; color: var(--moos); }
 .onb-haken .eintrag { animation: einschieben .3s calc(var(--i) * .4s + .2s) both; }
 .onb-huhn { animation: einschieben .35s 1.6s both; }
 header.kopf { flex-wrap: nowrap; }
@@ -470,7 +470,7 @@ header.kopf { flex-wrap: nowrap; }
 .max-karte > .bogen { flex: 1 1 12em !important; }
 .onb-punkt { width: 34px; height: 8px; border-radius: 4px; background: var(--mulde-2); }
 .onb-punkt.an { background: var(--moos); }
-.onb-nr { flex: none; width: 30px; font-family: Literata, Georgia, serif; font-size: 1.5rem; font-weight: 700; color: var(--moos); line-height: 1.1; }
+.onb-nr { flex: none; width: 30px; font-family: Fraunces, Georgia, serif; font-size: 1.5rem; font-weight: 700; color: var(--moos); line-height: 1.1; }
 .wortmarke .wm-haken { width: 1.2em; height: 1.2em; }
 :root { --huhnname: #B8552F; }
 @media (prefers-color-scheme: dark) { :root:not([data-theme="light"]) { --huhnname: #E08A62; } }
@@ -484,9 +484,9 @@ header.kopf .wortmarke { font-size: 21px; min-width: 0; }
 .wm-text { white-space: nowrap; }
 #knopf-einst.nur-icon { font-size: 13px; }
 .tschuess-verlauf { display: grid; gap: 4px; margin-top: 10px; }
-.tschuess { font-family: Literata, Georgia, serif; padding: 4px 10px; border-radius: 10px; background: var(--mulde); justify-self: start; max-width: 85%; }
+.tschuess { font-family: Fraunces, Georgia, serif; padding: 4px 10px; border-radius: 10px; background: var(--mulde); justify-self: start; max-width: 85%; }
 .tschuess.rita { justify-self: end; background: color-mix(in srgb, var(--moos) 14%, var(--bogen)); }
-.tschuess .wer { font-family: "Atkinson Hyperlegible Next", system-ui, sans-serif; font-size: .75rem; font-weight: 700; opacity: .75; margin-right: 4px; }
+.tschuess .wer { font-family: Nunito, system-ui, sans-serif; font-size: .75rem; font-weight: 700; opacity: .75; margin-right: 4px; }
 /* ---------- Post von Max: Umschlag und Brief ---------- */
 :root { --umschlag: #FBF1DC; --umschlag-rand: #D9C49A; }
 @media (prefers-color-scheme: dark) { :root:not([data-theme="light"]) { --umschlag: #2E3A33; --umschlag-rand: #5E6B60; } }
@@ -501,9 +501,16 @@ button.umschlag:active .umschlag-bild { transform: rotate(0) scale(.98); }
 @keyframes brief-auf { from { transform: translateY(14px) rotate(-2deg); opacity: 0; } }
 .brief-marke { position: absolute; top: -10px; right: 10px; transform: rotate(6deg); background: #FFFDF5; padding: 4px; border-radius: 2px; box-shadow: 0 0 0 3px #FFFDF5, 0 2px 4px rgba(0,0,0,.18); outline: 2px dashed #E5DCC8; outline-offset: 1px; }
 .brief-marke .portrait { display: block; border-radius: 0; }
-.brief-anrede, .brief-text, .brief-gruss { font-family: Literata, Georgia, serif; }
+.brief-anrede, .brief-text, .brief-gruss { font-family: Fraunces, Georgia, serif; }
 .brief-anrede { margin: 0 70px 6px 0; font-size: 1.1rem; font-style: italic; }
 .brief-text { margin: 0 0 8px; font-size: 1.08rem; line-height: 1.5; }
 .brief-gruss { margin: 0; font-style: italic; text-align: right; }
 .brief-gruss span { color: var(--ziegel); }
 .frage-knopf { min-width: 48px; min-height: 48px; padding: 0; justify-content: center; }
+/* Schrift: Fraunces (weich, für Überschriften und Briefe) + Nunito (rund, gut lesbar) */
+
+body { font-weight: 500; }
+h1 { font-weight: 650; letter-spacing: -.015em; }
+h2, h3 { font-weight: 620; }
+.knopf, .kachel .titel, .tf, .chip { font-weight: 700; }
+.sprechblase, .brief, .brief-text, .brief-anrede, .brief-gruss, .ruhe-gross, .tschuess, p.serif, .serif:not(h1):not(h2):not(h3) { font-weight: 400; }

@@ -8,7 +8,7 @@ d = pathlib.Path(__file__).parent
 stamp = datetime.datetime.now().strftime("%Y-%m-%d %H:%M")
 
 shell = (d / "app.html").read_text()
-css = (d / "app.css").read_text()
+css = (d / "fonts.css").read_text() + (d / "app.css").read_text()
 data = "\n".join((d / f).read_text() for f in ["data.js","data-orte.js","data-inhalte.js","data-laden.js","data-korrektur.js","data-sprache.js","data-lektorat.js","data-angebote.js"] if (d / f).exists())
 app = "\n".join((d / f).read_text() for f in ["core.js","figuren.js","scene.js","views.js","ruheplan.js","game.js","main.js"]).replace("__BUILD__", stamp)
 body = shell.replace("/*CSS*/", css).replace("/*DATA*/", data).replace("/*APP*/", app)
@@ -19,8 +19,7 @@ HEAD_COMMON = """<meta charset="utf-8">
 <meta name="description" content="Ritas App: Liste, rausgehen, lesen, tanzen – und Hühnchen ist dabei.">
 <meta name="theme-color" content="#F3EDE0" media="(prefers-color-scheme: light)">
 <meta name="theme-color" content="#14171A" media="(prefers-color-scheme: dark)">
-<link rel="preconnect" href="https://fonts.googleapis.com"><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link href="https://fonts.googleapis.com/css2?family=Literata:opsz,wght@7..72,400..700&family=Atkinson+Hyperlegible+Next:wght@400;600;700&display=swap" rel="stylesheet">
+
 """
 PWA = """<meta name="apple-mobile-web-app-capable" content="yes">
 <meta name="mobile-web-app-capable" content="yes">
@@ -38,7 +37,7 @@ def doc(extra):
 (d / "dist").mkdir(exist_ok=True)
 (d / "repo").mkdir(exist_ok=True)
 inner = body.replace("<body>", "", 1).rsplit("</body>", 1)[0]
-art = '<title>Ritas App</title>\n<meta name="claude:viewport-fit-sides" content="cover">\n<link rel="preconnect" href="https://fonts.googleapis.com"><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>\n<link href="https://fonts.googleapis.com/css2?family=Literata:opsz,wght@7..72,400..700&family=Atkinson+Hyperlegible+Next:wght@400;600;700&display=swap" rel="stylesheet">\n' + inner
+art = '<title>Ritas App</title>\n<meta name="claude:viewport-fit-sides" content="cover">\n' + inner
 (d / "dist" / "app.html").write_text(art)
 (d / "dist" / "test.html").write_text(doc(""))
 (d / "repo" / "index.html").write_text(doc(PWA))

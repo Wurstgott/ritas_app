@@ -502,10 +502,10 @@ function kaufenFrage(id) {
 /* ---------- Lesestoff aus dem Laden ---------- */
 function leseSheet(was) {
   let titel = "", html = "";
-  if (was.startsWith("gedichte")) { titel = was === "gedichte1" ? "Gedichte: Jahreszeiten" : "Gedichte: Unterwegs"; html = (D.gedichte?.[was] || []).map(g => `<div class="bogen"><h3>${esc(g.titel)}</h3><p style="white-space:pre-line;font-family:Literata,Georgia,serif;line-height:1.6">${esc(g.text)}</p><p class="klein">${esc(g.autor)}${g.jahr ? `, ${esc(g.jahr)}` : ""}</p></div>`).join(""); }
+  if (was.startsWith("gedichte")) { titel = was === "gedichte1" ? "Gedichte: Jahreszeiten" : "Gedichte: Unterwegs"; html = (D.gedichte?.[was] || []).map(g => `<div class="bogen"><h3>${esc(g.titel)}</h3><p style="white-space:pre-line;font-family:Fraunces, Georgia, serif;line-height:1.6">${esc(g.text)}</p><p class="klein">${esc(g.autor)}${g.jahr ? `, ${esc(g.jahr)}` : ""}</p></div>`).join(""); }
   else if (was.startsWith("rezepte")) { titel = was === "rezepte1" ? "Einfach & warm" : "Kuchen für Besuch"; html = (D.rezepte?.[was] || []).map(r => `<div class="bogen"><h3>${esc(r.titel)}</h3>${r.dauer ? `<p class="klein">${esc(r.dauer)}</p>` : ""}<p style="font-weight:700;margin-bottom:4px">Zutaten</p><ul style="margin:0 0 10px;padding-left:22px">${r.zutaten.map(z => `<li>${esc(z)}</li>`).join("")}</ul><p style="font-weight:700;margin-bottom:4px">So geht’s</p><ol style="margin:0 0 10px;padding-left:22px">${r.schritte.map(z => `<li style="margin-bottom:4px">${esc(z)}</li>`).join("")}</ol>${r.tipp ? `<p class="klein">${esc(r.tipp)}</p>` : ""}</div>`).join(""); }
-  else if (was === "briefe") { titel = "Briefanfänge"; html = (D.briefe || []).map((b, i) => `<div class="bogen"><div class="klein">${esc(b.anlass)}</div><p style="font-family:Literata,Georgia,serif;margin:6px 0 10px">${esc(b.anfang)}</p><button class="knopf klein leise" data-act="kopieren-text" data-text="${esc(b.anfang)}">Kopieren</button></div>`).join(""); }
-  else if (was === "fragen") { titel = "Fragekarten"; html = `<p class="klein">Für das nächste Telefonat – eine Frage reicht.</p>` + (D.fragekarten || []).map(f => `<div class="bogen"><p style="margin:0;font-family:Literata,Georgia,serif">${esc(f)}</p></div>`).join(""); }
+  else if (was === "briefe") { titel = "Briefanfänge"; html = (D.briefe || []).map((b, i) => `<div class="bogen"><div class="klein">${esc(b.anlass)}</div><p style="font-family:Fraunces, Georgia, serif;margin:6px 0 10px">${esc(b.anfang)}</p><button class="knopf klein leise" data-act="kopieren-text" data-text="${esc(b.anfang)}">Kopieren</button></div>`).join(""); }
+  else if (was === "fragen") { titel = "Fragekarten"; html = `<p class="klein">Für das nächste Telefonat – eine Frage reicht.</p>` + (D.fragekarten || []).map(f => `<div class="bogen"><p style="margin:0;font-family:Fraunces, Georgia, serif">${esc(f)}</p></div>`).join(""); }
   else if (was === "tanzkarten") { titel = "Tanzschritt-Karten"; html = (D.tanzkarten || []).map(k => `<div class="bogen streifen k-tanz"><h3>${esc(k.tanz)}</h3><p class="klein">${esc(k.takt || "")}${k.tempo ? ` · ${esc(k.tempo)}` : ""}</p><ol style="margin:0 0 8px;padding-left:22px">${(k.schritte || []).map(s => `<li style="margin-bottom:4px">${esc(s)}</li>`).join("")}</ol>${k.tipp ? `<p class="klein">${esc(k.tipp)}</p>` : ""}</div>`).join("") + (S.gekauft.takt ? `<button class="knopf zweit voll" data-act="takt">${ic("note")} Taktgeber öffnen</button>` : ""); }
   sheet({ titel, inhalt: html || "<p>Hier kommt bald etwas.</p>" });
 }
@@ -569,7 +569,7 @@ function wissenSheet() {
 }
 function lebensbuchSheet() {
   const f = D.lebensbuch || [];
-  sheet({ titel: "Erzählfragen", inhalt: `<p class="klein">Fragen zum Plaudern – beim Kaffee, am Telefon oder mit Max. Nichts davon muss.</p>` + f.map(x => `<div class="bogen"><p style="font-family:Literata,Georgia,serif;font-weight:600">${esc(x.frage)}</p><p class="klein">${x.mit === "zusammen" ? "Schön zu zweit" : "Für dich"}</p><textarea class="text" data-lb="${x.id}" placeholder="Wenn du magst …">${esc(S.lebensbuch[x.id] || "")}</textarea></div>`).join("") });
+  sheet({ titel: "Erzählfragen", inhalt: `<p class="klein">Fragen zum Plaudern – beim Kaffee, am Telefon oder mit Max. Nichts davon muss.</p>` + f.map(x => `<div class="bogen"><p style="font-family:Fraunces, Georgia, serif;font-weight:600">${esc(x.frage)}</p><p class="klein">${x.mit === "zusammen" ? "Schön zu zweit" : "Für dich"}</p><textarea class="text" data-lb="${x.id}" placeholder="Wenn du magst …">${esc(S.lebensbuch[x.id] || "")}</textarea></div>`).join("") });
 }
 function momentSheet() {
   const h = heute();
@@ -773,7 +773,7 @@ function umschlagSVG() {
   return `<svg class="umschlag-bild" viewBox="0 0 300 150" aria-hidden="true">
     <rect x="3" y="3" width="294" height="144" rx="8" fill="var(--umschlag)" stroke="var(--umschlag-rand)" stroke-width="2"/>
     <path d="M10 140 L150 70 L290 140" fill="none" stroke="var(--umschlag-rand)" stroke-width="1.5" opacity=".5"/>
-    <text x="18" y="30" font-family="Literata, Georgia, serif" font-size="13" font-style="italic" fill="var(--tinte-2)">Absender: Max</text>
+    <text x="18" y="30" font-family="Fraunces, Georgia, serif" font-size="13" font-style="italic" fill="var(--tinte-2)">Absender: Max</text>
     <g transform="translate(232 14) rotate(4)">
       <rect x="0" y="0" width="52" height="62" rx="2" fill="#FFFDF5" stroke="#FFFDF5" stroke-width="6" stroke-dasharray="3 3"/>
       <rect x="4" y="4" width="44" height="54" fill="#CFE3DA"/>
@@ -781,16 +781,16 @@ function umschlagSVG() {
       <path d="M26 19 C35 19 38 28 38 36 C38 45 33 50 26 50 C19 50 14 45 14 36 C14 28 17 19 26 19Z" fill="#E4B24F"/>
       <circle cx="23" cy="19" r="2.6" fill="#D9473A"/><circle cx="26" cy="17" r="3" fill="#D9473A"/><circle cx="29" cy="19" r="2.6" fill="#D9473A"/>
       <circle cx="22.5" cy="31" r="1.7" fill="#1C2620"/><circle cx="29.5" cy="31" r="1.7" fill="#1C2620"/><path d="M24 35 L28 35 L26 38Z" fill="#F4B92A"/>
-      <text x="26" y="12" text-anchor="middle" font-family="Atkinson Hyperlegible Next, sans-serif" font-size="6.5" font-weight="700" fill="#1F4A34">1 KUSS</text>
+      <text x="26" y="12" text-anchor="middle" font-family="Nunito, system-ui, sans-serif" font-size="6.5" font-weight="700" fill="#1F4A34">1 KUSS</text>
     </g>
     <g transform="translate(206 66)" opacity=".7" fill="none" stroke="var(--ziegel)" stroke-width="1.6">
       <circle cx="0" cy="0" r="20"/><circle cx="0" cy="0" r="15" stroke-width=".8"/>
       <path d="M22 -6 q8 -5 16 0 t16 0 t16 0 M22 2 q8 -5 16 0 t16 0 t16 0 M22 10 q8 -5 16 0 t16 0 t16 0"/>
-      <text x="0" y="-4" text-anchor="middle" font-family="Atkinson Hyperlegible Next, sans-serif" font-size="5.4" font-weight="700" fill="var(--ziegel)" stroke="none">SPANDAU</text>
-      <text x="0" y="6" text-anchor="middle" font-family="Atkinson Hyperlegible Next, sans-serif" font-size="7" font-weight="700" fill="var(--ziegel)" stroke="none">${tag}. ${mon}</text>
+      <text x="0" y="-4" text-anchor="middle" font-family="Nunito, system-ui, sans-serif" font-size="4.8" font-weight="800" fill="var(--ziegel)" stroke="none">SPANDAU</text>
+      <text x="0" y="6" text-anchor="middle" font-family="Nunito, system-ui, sans-serif" font-size="7" font-weight="700" fill="var(--ziegel)" stroke="none">${tag}. ${mon}</text>
     </g>
-    <text x="70" y="104" font-family="Literata, Georgia, serif" font-size="19" font-style="italic" fill="var(--tinte)">An ${esc(S.name)}</text>
-    <text x="70" y="126" font-family="Literata, Georgia, serif" font-size="13" font-style="italic" fill="var(--tinte-2)">Im Spandauer Forst</text>
+    <text x="70" y="104" font-family="Fraunces, Georgia, serif" font-size="19" font-style="italic" fill="var(--tinte)">An ${esc(S.name)}</text>
+    <text x="70" y="126" font-family="Fraunces, Georgia, serif" font-size="13" font-style="italic" fill="var(--tinte-2)">Im Spandauer Forst</text>
     <path d="M70 110 H230 M70 132 H200" stroke="var(--umschlag-rand)" stroke-width="1" opacity=".6"/>
   </svg>`;
 }
