@@ -62,7 +62,7 @@ function frisch() {
     tf: {},                 // { "JJJJ-MM-TT": "A".."D" } – nur für Vorschläge und ✱, keine Auswertung
     eintraege: [], geloescht: [],
     taler: 0, talerAusgegeben: 0, maxStufe: 0, gesehenStufe: 0,
-    gekauft: {}, menschen: D.menschenStart.map(m => ({ ...m })),
+    gekauft: { patience: true }, menschen: D.menschenStart.map(m => ({ ...m })),
     schnell: D.schnell.slice(),
     hinweis: { tag: "", id: "", weg: {} },
     momente: {}, lebensbuch: {}, wissen: {},
@@ -86,9 +86,19 @@ let S = laden() || frisch();
 function speichern() { try { localStorage.setItem(KEY, JSON.stringify(S)); } catch (e) { } }
 function migrieren() {
   const f = frisch();
-  for (const k in f) if (S[k] === undefined) S[k] = f[k];
+  if (!S || typeof S !== "object" || Array.isArray(S)) S = f;
+  for (const k in f) { const soll = f[k], ist = S[k];
+    if (ist === undefined || ist === null && soll !== null || (Array.isArray(soll) && !Array.isArray(ist)) || (soll && typeof soll === "object" && !Array.isArray(soll) && (typeof ist !== "object" || ist === null || Array.isArray(ist))) || (typeof soll === "number" && typeof ist !== "number") || (typeof soll === "string" && typeof ist !== "string") || (typeof soll === "boolean" && typeof ist !== "boolean")) S[k] = soll; }
+  const TAG = /^\d{4}-\d{2}-\d{2}$/;
+  S.eintraege = S.eintraege.filter(e => e && typeof e === "object" && typeof e.t === "string" && TAG.test(e.tag || ""));
+  S.liste = S.liste.filter(x => x && typeof x === "object" && typeof x.text === "string");
+  S.menschen = S.menschen.filter(m => m && typeof m === "object" && m.id && m.name);
+  S.plaene = S.plaene.filter(p => p && typeof p === "object");
+  if (!Number.isFinite(S.taler)) S.taler = 0;
   for (const k in f.spiel) if (S.spiel[k] === undefined) S.spiel[k] = f.spiel[k];
   if (!S.gv) S.gv = 1;
+  S.gekauft.patience = true;
+  if (!S.eintraege.some(e => e.person === "tanzschueler")) S.menschen = S.menschen.filter(m => m.id !== "tanzschueler");
   if (S.gv < 2) { const i = S.schnell.indexOf("tanzstunde"); if (i >= 0 && !S.schnellGeaendert) S.schnell[i] = "tagebuch"; S.gv = 2; }
   // künftige Migrationen: if (S.gv < 2) { …; S.gv = 2 }
   // Papierkorb: älter als 30 Tage endgültig weg

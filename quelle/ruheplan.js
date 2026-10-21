@@ -34,6 +34,7 @@ D.ruhe = {
     { id: "pause", text: "Ich darf Pause machen. Und danach weiter." }
   ]
 };
+if (D.huehnchenReaktionen) D.huehnchenReaktionen.ruhe = ["Geübt. Ich hab mitgeatmet. Glaub ich.", "Ruhig ein, langsam aus. Ich bin aus Ton, ich kann das von Natur aus.", "Sitzt schon besser. Respekt.", "Training ist Training. Haken dran."];
 D.taetigkeiten.push({ id: "ruheuebung", name: "Ruhe geübt", kurz: "Ruhe geübt", art: "klein", feld: "sorge", bild: "quelle", tf: "ABCD", icon: "atem",
   info: ["Geübt. Dann sitzt es, wenn es drauf ankommt.", "Ruhe geübt. Das ist Training, genau wie Gehen."] });
 
@@ -97,13 +98,13 @@ function ruheSchrittHTML() {
   const gross = t => `<p class="ruhe-gross">${t}</p>`;
   let h = "";
   if (i === 0) h = `<h2>Erst ein sicherer Platz</h2>${gross("Erst sicher stehen oder sitzen. Dann alles Weitere.")}<p>${A("Unterwegs: aufmerksam bleiben, langsamer werden und an der nächsten sicheren Stelle anhalten. Das Handy erst in die Hand nehmen, wenn du stehst. Zu Hause: hinsetzen, beide Füße auf den Boden.", "Unterwegs: aufmerksam bleiben, langsamer werden und an der nächsten sicheren Stelle anhalten. Das Handy erst in die Hand nehmen, wenn Sie stehen. Zu Hause: hinsetzen, beide Füße auf den Boden.")}</p>`;
-  else if (i === 1) h = `<h2>Innehalten</h2>${gross("„Aha. Da ist sie wieder, die Unruhe.“")}<p>Woher sie kommt, ist jetzt egal. Lösen muss ich auch nichts. Erst mal durchatmen.</p>`;
+  else if (i === 1) h = `<h2>Innehalten</h2>${gross("„Aha. Da ist sie, die Unruhe.“")}<p>Woher sie kommt, ist jetzt egal. Lösen muss ich auch nichts. Erst mal durchatmen.</p>`;
   else if (i === 2) h = `<h2>Atmen</h2>${atemKreisHTML()}<p class="klein" style="text-align:center">Ganz normal einatmen, nicht besonders tief. Langsam ausatmen, wie durch einen Strohhalm. Passt ein anderes Tempo besser, ist das richtig.</p>`;
   else if (i === 3) h = `<h2>Ankommen</h2><ul class="ruhe-fragen"><li>Was sehe ich gerade?</li><li>Was höre ich?</li><li>Was spüre ich unter Händen und Füßen?</li></ul><p class="klein">Ein paar Antworten reichen. Laut sagen hilft.</p>`;
   else if (i === 4) h = `<h2>Abwarten können</h2>${gross(`„${esc(ruheSatz())}“`)}<p>So eine Welle steigt, bleibt kurz oben und flaut wieder ab, meist schon nach ein paar Minuten. Ich muss nicht jedem Gedanken hinterherlaufen.</p>`;
-  else if (i === 5) { const hilft = ruheHilftListe(); h = `<h2>Was jetzt guttut</h2>${hilft.length ? `<ul class="ruhe-fragen">${hilft.map(t => `<li>${esc(t)}</li>`).join("")}</ul>` : `<p>Ein Glas Wasser, frische Luft, ein ruhiger Platz.</p>`}
-      ${(R.leute || []).length ? `<h3 style="margin-top:14px">Anrufen</h3><div class="liste">${R.leute.map(p => p.nr ? `<a class="liste-zeile" href="tel:${esc(p.nr.replace(/[^\d+]/g, ""))}">${ic("telefon")}<span class="text"><span class="titel">${esc(p.name)}</span><br><span class="unter zahl">${esc(p.nr)}</span></span></a>` : `<div class="liste-zeile" style="cursor:default">${ic("telefon")}<span class="text"><span class="titel">${esc(p.name)}</span></span></div>`).join("")}</div>` : ""}
-      ${(R.leute || []).length ? `<p class="klein" style="margin-top:10px">Erklären muss man nichts. Zum Beispiel: „Hast du kurz Zeit? Erzähl mir irgendwas, ich brauch grad eine Stimme.“</p>` : `<p class="klein" style="margin-top:10px">Ein Anruf hilft oft.</p>${RUHE.modus === "probe" ? `<button class="knopf zweit voll" data-act="ruhe-bearbeiten">${ic("telefon")} Jemanden zum Anrufen eintragen</button>` : ""}`}`; }
+  else if (i === 5) { const hilft = ruheHilftListe(); h = `<h2>Was jetzt guttut</h2>
+      ${(R.leute || []).length ? `<div class="liste">${R.leute.map(p => p.nr ? `<a class="liste-zeile" href="tel:${esc(p.nr.replace(/[^\d+]/g, ""))}">${ic("telefon")}<span class="text"><span class="titel">${esc(p.name)} anrufen</span><br><span class="unter zahl">${esc(p.nr)}</span></span></a>` : `<div class="liste-zeile" style="cursor:default">${ic("telefon")}<span class="text"><span class="titel">${esc(p.name)}</span></span></div>`).join("")}</div><p class="klein" style="margin-top:8px">Erklären muss man nichts. Zum Beispiel: „Hast du kurz Zeit? Erzähl mir irgendwas, ich brauch grad eine Stimme.“</p>` : (RUHE.modus === "probe" ? `<button class="knopf zweit voll" data-act="ruhe-bearbeiten">${ic("telefon")} Jemanden zum Anrufen eintragen</button>` : "")}
+      ${hilft.length ? `<ul class="ruhe-fragen">${hilft.map(t => `<li>${esc(t)}</li>`).join("")}</ul>` : `<p>Ein Glas Wasser, frische Luft, ein ruhiger Platz.</p>`}`; }
   else h = `<h2>Später</h2><p>Unterwegs gilt: Weiter geht es erst, wenn ich mich wieder sicher und klar fühle. Wenn nicht, hole ich mir jemanden dazu oder lasse mich abholen. Das ist kein Aufgeben, das ist klug.</p><p>Wenn es ruhiger ist, kann ich mich fragen: Was weiß ich gerade wirklich? Gibt es einen nächsten kleinen Schritt? Und wenn nicht: Die Frage kann warten.</p>${gross("Geschafft. Wenn ein Schritt geholfen hat, reicht das völlig.")}`;
   return punkte + h + (i === 5 || i === 0 ? notfallKlein() : "");
 }

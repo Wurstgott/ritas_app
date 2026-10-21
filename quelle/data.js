@@ -167,7 +167,6 @@ D.menschenStart = [
   { id: "max", name: "Max", rolle: "Patensohn", farbe: "#C98A1B" },
   { id: "christiane", name: "Christiane", rolle: "Freundin", farbe: "#B5532F" },
   { id: "daniel", name: "Daniel und Familie", rolle: "Sohn, in Schweden", farbe: "#3F6E8C" },
-  { id: "tanzschueler", name: "Mein Tanzschüler", rolle: "Nachbar", farbe: "#7A2A1B" },
   { id: "micha", name: "Micha", rolle: "Christianes Mann", farbe: "#4A6B3A" },
   { id: "nachbarin", name: "Nachbarin", rolle: "im Haus", farbe: "#6B4A7A" }
 ];

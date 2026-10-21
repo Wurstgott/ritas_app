@@ -17,6 +17,7 @@ function render(opt = {}) {
   offen.forEach(id => { const d = $(`details[data-id="${id}"]`, main); if (d) d.open = true; });
   $("#tabs").innerHTML = TABS.map(t => `<button data-tab="${t.id}" ${TAB === t.id ? 'aria-current="page"' : ""}>${ic(t.icon)}<span>${t.name}</span></button>`).join("");
   if (opt.halteScroll) scrollTo(0, y);
+  if (!SHEETS.length && (document.activeElement === document.body || !document.activeElement || !document.contains(document.activeElement))) { const z = (opt.fokus && $(opt.fokus, main)) || null; if (z) z.focus({ preventScroll: true }); }
   bilderZeichnen(opt.neu);
   figurenMalen();
   const lg = $("#logo"); if (lg && !lg.firstChild) lg.innerHTML = ritaSVG(34);
@@ -52,7 +53,7 @@ function eintragSpeichern(entwurf, altId) {
   if (e.person === "_") e.person = "";
   // Doppel-Schutz: identischer Eintrag innerhalb 3 s
   const l = S.eintraege[S.eintraege.length - 1];
-  if (!altId && l && l.t === e.t && Date.now() - l.ts < 3000 && l.km === e.km && l.min === e.min && l.notiz === e.notiz && l.person === e.person) return null;
+  if (!altId && l && l.t === e.t && Date.now() - l.ts < 3000 && l.km === e.km && l.min === e.min && l.notiz === e.notiz && l.person === e.person && l.listeId === e.listeId) return null;
   let alt = null;
   if (altId) { const i = S.eintraege.findIndex(x => x.id === altId); alt = S.eintraege[i]; S.eintraege.splice(i, 1); S.taler -= (alt.taler || 0); }
   const vorher = S.eintraege.filter(x => x.tag === e.tag);
@@ -83,40 +84,37 @@ function neuSchluessel(e, M) {
   if (t.bild === "mut" || e.mut) return "mut:" + Math.min(M.mut, 29);
   return null;
 }
+const NACH_HAK = [[/anruf|telefon|ruf .* an|\banrufen/i, "telefon"], [/\blesen\b|kapitel|buch/i, "lesen"], [/spazier|runde|gehen|\bkm\b/i, "gehen"], [/tagebuch/i, "tagebuch"], [/tanz/i, "tanzstunde"], [/besuch|kaffee mit|treffen/i, "besuch"]];
 function nachEintrag(r, text) {
   if (!r) return;
   const { e, vorherStufe, nachStufe, neuKey } = r;
   const t = tat(e.t);
   const info = e.t === "ausflug" ? (e.umgekehrt ? "Umgekehrt? Auch das ist eine gute Entscheidung." : "Am Horizont steht jetzt eine neue Silhouette.") : waehle(t.info || ["Eingetragen. Das zählt."], e.id);
-  const ort = e.t === "ausflug" ? "horizont" : e.t === "tagebuch" ? "tagebuch" : e.t === "abgehakt" ? "abgehakt" : (e.mut ? "mut" : tat(e.t).bild);
+  const ort = e.t === "ausflug" ? "horizont" : e.t === "tagebuch" ? "tagebuch" : e.t === "abgehakt" ? "abgehakt" : e.t === "ruheuebung" ? "ruhe" : (e.mut ? "mut" : tat(e.t).bild);
   const huhn = S.huhn ? huehnchenReagiert(ort) : "";
   const taler = Math.round(e.taler * 10) / 10;
   alleSheetsZu();
   haptik("erfolg"); ton("erfolg");
-  const ersterHeute = eintraegeAm(heute()).length === 1;
   render({ neu: neuKey, halteScroll: true, ohneAnim: true });
-  if (ersterHeute && !REDUCED()) { const wm = $(".wm-haken"); if (wm) { wm.classList.remove("zeichnen"); void wm.offsetWidth; wm.classList.add("zeichnen"); } }
   const talerTxt = taler >= .5 ? `+${Math.max(1, Math.round(taler))} Taler` : "";
-  if (e.t === "abgehakt") toast(`${text}${talerTxt ? "\n" + talerTxt : ""}`, { rueck: e.id, erfolg: true, dauer: 6000 });
-  else toast(`${text || "Eingetragen."}\n${huhn ? "Hühnchen: „" + huhn + "“" : info}${talerTxt ? " · " + talerTxt : ""}`, { rueck: e.id, erfolg: true });
-  // Ring nach 1,8 s, Stufenkarte nach 2,6 s
-  const buehne = $("#buehne-heute") || $("#buehne-gross");
-  if (buehne && neuKey) setTimeout(() => ringAn(buehne, neuKey.split(":")[0] === "fuss" || neuKey.startsWith("laterne") ? "tanz" : neuKey.split(":")[0] === "buch" ? "eiche" : neuKey.split(":")[0]), REDUCED() ? 0 : 1800);
   const auchNeu = [];
   if (e.t === "ausflug" && !S.leiter.neuland[e.leiter] && !e.umgekehrt) { S.leiter.neuland[e.leiter] = e.tag; const bonus = 5 * e.leiter; S.taler += bonus; auchNeu.push(`Neuland auf Sprosse ${e.leiter} (+${bonus} Taler)`); speichern(); }
   if (e.t === "buchfertig" && !S.meilensteine.buch) { S.meilensteine.buch = e.tag; auchNeu.push("das erste Lesezeichen an der Eiche"); speichern(); }
-  if (nachStufe > (S.gesehenStufe || 0)) {
-    window._auchNeu = auchNeu;
-    if (S.stufeGemeldet >= nachStufe) return; S.stufeGemeldet = nachStufe; speichern();
-    const zeig = (n = 0) => { if (SHEETS.length) return; if ($(".toast") && n < 25) { setTimeout(() => zeig(n + 1), 1000); return; } toast(`Neu im Bild: ${D.stufen[nachStufe].name}.`, { erfolg: true, knopf: { text: "Ansehen", act: "stufe-zeigen" }, dauer: 9000 }); haptik("stufe"); };
-    setTimeout(zeig, REDUCED() ? 300 : 2600);
-  } else if (auchNeu.length) setTimeout(() => toast(`Neu: ${auchNeu.join(", ")}.`, { erfolg: true }), 3200);
+  window._auchNeu = auchNeu;
+  const neueStufe = nachStufe > (S.gesehenStufe || 0) && !(S.stufeGemeldet >= nachStufe);
+  if (neueStufe) { S.stufeGemeldet = nachStufe; speichern(); haptik("stufe"); }
+  let knopf = neueStufe ? { text: "Ansehen", act: "stufe-zeigen" } : null;
+  if (!knopf && e.t === "abgehakt") { const m = NACH_HAK.find(([re]) => re.test(e.notiz || "")); if (m) { window._nachHak = m[1]; knopf = { text: `Auch als „${tat(m[1]).kurz}“ eintragen`, act: "nach-hak" }; } }
+  const zeile2 = [e.t === "abgehakt" ? "" : (huhn ? "Hühnchen: „" + huhn + "“" : info), neueStufe ? `Neu im Bild: ${D.stufen[nachStufe].name}` : (auchNeu.length ? `Neu: ${auchNeu.join(", ")}` : ""), talerTxt].filter(Boolean).join(" · ");
+  toast(`${text || "Eingetragen."}${zeile2 ? "\n" + zeile2 : ""}`, { rueck: e.id, erfolg: true, knopf, dauer: knopf ? 12000 : e.t === "abgehakt" ? 6000 : undefined });
+  const buehne = $("#buehne-heute") || $("#buehne-gross");
+  if (buehne && neuKey) setTimeout(() => ringAn(buehne, neuKey.split(":")[0] === "fuss" || neuKey.startsWith("laterne") ? "tanz" : neuKey.split(":")[0] === "buch" ? "eiche" : neuKey.split(":")[0]), REDUCED() ? 0 : 1200);
 }
 function eintragLoeschen(id, still) {
   const i = S.eintraege.findIndex(x => x.id === id); if (i < 0) return;
   const e = S.eintraege[i]; S.eintraege.splice(i, 1);
   if (e.t === "abgehakt") { const x = (S.liste || []).find(y => y.eintrag === id || (e.listeId && y.id === e.listeId)); if (x) { delete x.erledigt; delete x.eintrag; } }
-  S.taler = Math.max(0, S.taler - (e.taler || 0));
+  e.talerAb = Math.min(S.taler, e.taler || 0); S.taler -= e.talerAb;
   if (!still) { S.geloescht.push({ ...e, weg: Date.now() }); }
   speichern(); render({ halteScroll: true, ohneAnim: true });
   if (!still) toast("Eintrag gelöscht.", { rueck: "wieder:" + id });
@@ -126,13 +124,13 @@ function eintragWiederher(id) {
   const e = S.geloescht.splice(i, 1)[0]; delete e.weg;
   S.eintraege.push(e); S.eintraege.sort((a, b) => a.tag < b.tag ? -1 : a.tag > b.tag ? 1 : a.ts - b.ts);
   if (e.t === "abgehakt" && e.listeId) { const x = (S.liste || []).find(y => y.id === e.listeId); if (x) { x.erledigt = e.tag; x.eintrag = e.id; } }
-  S.taler += e.taler || 0; speichern(); render({ halteScroll: true, ohneAnim: true });
+  S.taler += e.talerAb ?? e.taler ?? 0; delete e.talerAb; speichern(); render({ halteScroll: true, ohneAnim: true });
 }
 
 /* ---------- Sicherung ---------- */
 function sicherungText() { return JSON.stringify({ app: "lichtung", gv: GV, gesichert: new Date().toISOString(), S }); }
 function sicherungPruefen(txt) {
-  try { const o = JSON.parse(txt.trim()); const s = o.S || o; if (!s || !Array.isArray(s.eintraege)) throw 0; return s; } catch (e) { return null; }
+  try { const o = JSON.parse(txt.trim()); const s = o.S || o; if (!s || typeof s !== "object" || !Array.isArray(s.eintraege) || !(o.app === "lichtung" || o.app === "ritas-app" || s.gv)) throw 0; if (!s.eintraege.every(e => e && typeof e.t === "string" && /^\d{4}-\d{2}-\d{2}$/.test(e.tag || ""))) throw 0; return s; } catch (e) { return null; }
 }
 function sicherungFrage(s) {
   sheet({ titel: "Sicherung einspielen", inhalt: `<p>Diese Sicherung enthält <span style="font-weight:700">${s.eintraege.length} Einträge</span> für ${esc(s.name || "—")}.</p><p>Sie ersetzt alles, was jetzt auf diesem Handy ist (${S.eintraege.length} Einträge).</p><button class="knopf zweit voll" data-act="sichern-kopie">Vorher aktuellen Stand kopieren</button>`,
@@ -171,6 +169,7 @@ document.addEventListener("input", ev => {
   if (el.dataset.feld && E) { E[el.dataset.feld] = el.value; }
   if (el.dataset.einst) { S[el.dataset.einst] = el.value.trim() || (el.dataset.einst === "name" ? "Rita" : ""); speichern(); }
   if (el.dataset.lb) { S.lebensbuch[el.dataset.lb] = el.value; speichern(); }
+  if (el.dataset.listeText) { const x = (S.liste || []).find(y => y.id === el.dataset.listeText); if (x && el.value.trim()) { x.text = el.value.trim().slice(0, 120); speichern(); } }
 });
 document.addEventListener("change", ev => {
   const el = ev.target;
@@ -193,8 +192,8 @@ function aktion(a, d, el, ev) {
     case "go": if (d.go === "einstellungen") einstellungenSheet(); break;
 
     /* Tagesform */
-    case "tf": S.tf[heute()] = d.v; speichern(); haptik("auswahl"); el.setAttribute("aria-pressed", "true"); el.classList.add("fill-in");
-      setTimeout(() => { render({ halteScroll: true, ohneAnim: true }); const f = D.tagesformen.find(x => x.id === d.v); sag(`${f.name} gewählt.`); if (d.v === "D") toast("Sparflamme ist auch eine Flamme. Heute zählt jede Kleinigkeit."); }, REDUCED() ? 0 : 320); break;
+    case "tf": S.tf[heute()] = d.v; if (S.huhn) S.huhnSagt = { tag: heute(), text: { A: "Viel Energie? Dann halt ich hier die Stellung, und du ziehst los.", B: "Gemächlich ist ein schönes Tempo. Ich hab ja nur das eine.", C: "Ruhig angehen. Da bin ich Profi, ich steh seit Jahren still.", D: "Sparflamme ist auch eine Flamme. Ich bin heute leise und leiste dir Gesellschaft." }[d.v] }; speichern(); haptik("auswahl"); el.setAttribute("aria-pressed", "true"); el.classList.add("fill-in");
+      setTimeout(() => { render({ halteScroll: true, ohneAnim: true }); const f = D.tagesformen.find(x => x.id === d.v); sag(`${f.name} gewählt.`); }, REDUCED() ? 0 : 320); break;
     case "tf-onb": S.tf[heute()] = d.v; speichern(); haptik("auswahl"); sheetInhalt(onboardingInhalt()); break;
     case "tf-aendern": delete S.tf[heute()]; speichern(); render({ halteScroll: true, ohneAnim: true }); break;
 
@@ -204,7 +203,7 @@ function aktion(a, d, el, ev) {
     case "waehle-t": sheetZu(); setTimeout(() => eintragenSheet(d.t), 240); break;
     case "step": { const f = d.f, dd = Number(d.d); E[f] = f === "km" ? clamp(Math.round((E[f] + dd) * 2) / 2, .5, 40) : clamp(E[f] + dd, 5, 300); haptik("auswahl"); sheetInhalt(eintragenInhalt()); break; }
     case "setz": {
-      let v = d.v; if (["km", "min", "leiter"].includes(d.f)) v = Number(v);
+      let v = d.v; if (["km", "min", "leiter", "hpKap"].includes(d.f)) v = Number(v);
       if (d.f === "wie" && E.wie === v) v = "";
       E[d.f] = v; haptik("auswahl");
       const id = aktuellesSheet()?.dataset.id;
@@ -217,7 +216,7 @@ function aktion(a, d, el, ev) {
       if (t.art === "buch" && !E.titel.trim()) { toast("Bitte den Buchtitel eintragen."); haptik("achtung"); break; }
       if (t.art === "buch" && D.hp) { const b = D.hp.baende.find(x => x.nr === S.hp.band); if (b && E.titel.trim() === b.titel && D.hp.baende.find(x => x.nr === b.nr + 1)) { S.hp.band = b.nr + 1; S.hp.kapitel = 0; } }
       const alt = E._alt; delete E._alt;
-      if (E.kapitelWeiter && D.hp) { const b = D.hp.baende.find(x => x.nr === S.hp.band); if (b) { S.hp.kapitel = Math.min(b.kapitel, S.hp.kapitel + 1); E.notiz = E.notiz || `${b.titel}, Kapitel ${S.hp.kapitel}`; } } delete E.kapitelWeiter;
+      if (E.hpKap && D.hp) { const b = D.hp.baende.find(x => x.nr === S.hp.band); if (b) { S.hp.kapitel = Math.min(b.kapitel, S.hp.kapitel + Number(E.hpKap)); E.notiz = E.notiz || `${b.titel.replace("Harry Potter und d", "D")}, bis Kapitel ${S.hp.kapitel}`; } } delete E.hpKap;
       const r = eintragSpeichern(E, alt);
       nachEintrag(r, alt ? "Geändert." : `Eingetragen: ${eintragText(r ? r.e : E).replace(/\.$/, "")}.`); break;
     }
@@ -225,15 +224,19 @@ function aktion(a, d, el, ev) {
     case "aendern": { if (aktuellesSheet()) sheetZu(); const e = S.eintraege.find(x => x.id === d.id); if (!e) break; if (e.t === "ausflug" || e.t === "planung") { toast("Ausflüge lassen sich löschen und neu eintragen."); break; } eintragenSheet(e.t, { ...e, _alt: e.id, notizOffen: !!e.notiz, wie: e.zuViel ? "zuviel" : e.wie || "" }); break; }
     case "loeschen": if (aktuellesSheet()) sheetZu(); eintragLoeschen(d.id); break;
     case "liste-neu": { const inp = $("#liste-neu"); const t = inp.value.trim(); if (!t) { inp.focus(); break; } S.liste = S.liste || []; S.liste.push({ id: "l" + Date.now().toString(36), text: t, neu: heute() }); speichern(); render({ halteScroll: true, ohneAnim: true }); setTimeout(() => $("#liste-neu")?.focus(), 30); break; }
-    case "liste-hak": { const x = (S.liste || []).find(y => y.id === d.id); if (!x) break; x.erledigt = heute(); const r = eintragSpeichern({ t: "abgehakt", tag: heute(), notiz: x.text, listeId: x.id }); x.eintrag = r && r.e.id; speichern(); if (r) nachEintrag(r, `Abgehakt: ${x.text}.`); else render({ halteScroll: true, ohneAnim: true }); break; }
+    case "liste-edit": LISTE_EDIT = !LISTE_EDIT; haptik("auswahl"); render({ halteScroll: true, ohneAnim: true, fokus: '[data-act="liste-edit"]' }); break;
+    case "liste-weg": { const i = (S.liste || []).findIndex(y => y.id === d.id); if (i < 0) break; const [weg] = S.liste.splice(i, 1); speichern(); haptik("auswahl"); if (!S.liste.some(y => !y.erledigt)) LISTE_EDIT = false; render({ halteScroll: true, ohneAnim: true, fokus: '[data-act="liste-edit"]' }); toast(`Gelöscht: ${weg.text}`, { dauer: 4000 }); break; }
+    case "liste-hak": { const x = (S.liste || []).find(y => y.id === d.id); if (!x) break; x.erledigt = heute(); const r = eintragSpeichern({ t: "abgehakt", tag: heute(), notiz: x.text, listeId: x.id }); x.eintrag = r && r.e.id; speichern(); if (r) nachEintrag(r, `Abgehakt: ${x.text.replace(/[.!?]+$/, "")}.`); else render({ halteScroll: true, ohneAnim: true }); break; }
     case "liste-zurueck": { const x = (S.liste || []).find(y => y.id === d.id); if (!x) break; delete x.erledigt; if (x.eintrag) eintragLoeschen(x.eintrag, true); speichern(); render({ halteScroll: true, ohneAnim: true }); break; }
     case "erklaerung": erklaerungSheet(); break;
     case "post-auf": S.postOffen = heute(); speichern(); haptik("auswahl"); render({ halteScroll: true, ohneAnim: true }); break;
     case "tschuess-los": S.tschuess = { tag: heute(), verlauf: [["rita", "Danke, Max!"], ["max", "Gern! Tschüss!"]], grenze: 2 + Math.floor(Math.random() * 4), n: 0 }; speichern(); haptik("auswahl"); render({ halteScroll: true, ohneAnim: true }); break;
-    case "tschuess": { const T = S.tschuess; if (!T || T.ende) break; T.n++; T.verlauf.push(["rita", TSCHUESS[Math.floor(Math.random() * TSCHUESS.length)]]); if (T.n >= T.grenze) { T.verlauf.push(["max", "Ich leg jetzt auf. Tschüss!"]); T.ende = "max"; } else T.verlauf.push(["max", TSCHUESS[Math.floor(Math.random() * TSCHUESS.length)]]); if (T.verlauf.length > 8) T.verlauf = T.verlauf.slice(-8); speichern(); haptik("auswahl"); render({ halteScroll: true, ohneAnim: true }); break; }
+    case "tschuess": { const T = S.tschuess; if (!T || T.ende) break; T.n++; T.verlauf.push(["rita", TSCHUESS[Math.floor(Math.random() * TSCHUESS.length)]]); if (T.n >= T.grenze || (T.n >= 2 && Math.random() < .2)) { T.verlauf.push(["max", "Ich leg jetzt auf. Tschüss!"]); T.ende = "max"; } else T.verlauf.push(["max", TSCHUESS[Math.floor(Math.random() * TSCHUESS.length)]]); if (T.verlauf.length > 9) T.verlauf = [...T.verlauf.slice(0, 2), ...T.verlauf.slice(-7)]; speichern(); haptik("auswahl"); render({ halteScroll: true, ohneAnim: true }); break; }
     case "tschuess-auflegen": { const T = S.tschuess; if (!T || T.ende) break; T.verlauf.push(["rita", "Ich leg jetzt auf. Tschüss!"]); T.ende = "rita"; S.tschuessSiege = (S.tschuessSiege || 0) + 1; speichern(); haptik("erfolg"); render({ halteScroll: true, ohneAnim: true }); break; }
     case "liste-hilfe": listeHilfeSheet(); break;
-    case "post-gelesen": S.postGelesen = heute(); speichern(); render({ halteScroll: true, ohneAnim: true }); break;
+    case "nach-hak": { $$(".toast").forEach(t => t.remove()); const t2 = window._nachHak; if (t2) eintragenSheet(t2); break; }
+    case "logo": logoSpass(el); break;
+    case "post-gelesen": { const p = maxPost(); S.briefe = S.briefe || []; if (p && !S.briefe.some(b => b.tag === heute())) S.briefe.push({ tag: heute(), text: p }); } S.postGelesen = heute(); speichern(); render({ halteScroll: true, ohneAnim: true }); break;
     case "stufe-zeigen": $$(".toast").forEach(t => t.remove()); S.gesehenStufe = stufe(); speichern(); stufeMoment(stufe(), window._auchNeu || []); break;
 
     /* Hilft / Ideen */
@@ -350,6 +353,7 @@ function aktion(a, d, el, ev) {
     case "spiel-frei": S.spiel.frei = !S.spiel.frei; speichern(); sheetInhalt(helferInhalt()); break;
     case "mensch-weg": { const i = Number(d.i), m = S.menschen[i]; S.menschen.splice(i, 1); speichern(); sheetInhalt(einstellungenInhalt()); window._menschWeg = [i, m]; toast(`${m.name} aus der Liste genommen. Einträge bleiben.`, { knopf: { text: "Rückgängig", act: "mensch-zurueck" } }); break; }
     case "mensch-zurueck": if (window._menschWeg) { const [i, m] = window._menschWeg; S.menschen.splice(i, 0, m); window._menschWeg = null; speichern(); sheetInhalt(einstellungenInhalt()); $$(".toast").forEach(t => t.remove()); } break;
+    case "person-dazu": { const n = ($("#person-neu")?.value || "").trim(); if (!n) { $("#person-neu")?.focus(); break; } const farben = ["#7A5A9A", "#3F7A6A", "#9A6A3A", "#5A7A9A", "#9A4A5A"]; const id = "m" + Date.now().toString(36); S.menschen.push({ id, name: n.slice(0, 30), rolle: "", farbe: farben[S.menschen.length % farben.length] }); E.person = id; speichern(); haptik("erfolg"); sheetInhalt(eintragenInhalt()); toast(`${n} ist jetzt dauerhaft in der Auswahl.`, { dauer: 3500 }); break; }
     case "mensch-neu": { const inp = $("#neu-mensch"); const n = inp.value.trim(); if (!n) break; const farben = ["#7A5A9A", "#3F7A6A", "#9A6A3A", "#5A7A9A", "#9A4A5A"]; S.menschen.push({ id: "m" + Date.now().toString(36), name: n, rolle: "", farbe: farben[S.menschen.length % farben.length] }); speichern(); sheetInhalt(einstellungenInhalt()); break; }
     case "helfer": helferSheet(); break;
     case "ueber": ueberSheet(); break;
@@ -357,7 +361,7 @@ function aktion(a, d, el, ev) {
     case "sichern-datei": dateiSpeichern(); break;
     case "sichern-kopie": kopieren(sicherungText(), "Sicherung kopiert. Am besten in eine Notiz oder Mail einfügen."); S.letzteSicherung = heute(); speichern(); break;
     case "einspielen-text": { const s = sicherungPruefen($("#import-text").value); if (s) sicherungFrage(s); else { toast("Das sieht nicht wie eine Sicherung von Ritas App aus."); haptik("achtung"); } break; }
-    case "einspielen-ja": { if (!window._import) break; S = window._import; migrieren(); window._import = null; alleSheetsZu(); render(); toast("Sicherung eingespielt.", { erfolg: true }); break; }
+    case "einspielen-ja": { if (!window._import) break; const vorher = JSON.stringify(S); S = window._import; window._import = null; try { migrieren(); alleSheetsZu(); render(); } catch (err) { S = JSON.parse(vorher); speichern(); alleSheetsZu(); render(); toast("Diese Sicherung ließ sich nicht lesen. Es bleibt alles, wie es war."); break; } toast("Sicherung eingespielt.", { erfolg: true }); break; }
     case "wiederher": eintragWiederher(d.id); sheetInhalt(helferInhalt()); break;
     case "reset-1": sheet({ titel: "Wirklich alles löschen?", inhalt: `<p>Alle Einträge, das Bild, Taler und Einstellungen auf diesem Handy werden gelöscht. Das lässt sich nicht rückgängig machen.</p><button class="knopf zweit voll" data-act="sichern-kopie">Vorher Sicherung kopieren</button>`, fuss: `<div class="stapel"><button class="knopf voll rand warn" data-act="reset-2">Ja, alles löschen</button><button class="knopf haupt voll" data-act="sheet-zu">Nein, behalten</button></div>` }); break;
     case "reset-2": { const behalte = { name: S.name, anrede: S.anrede, size: S.size, theme: S.theme }; S = frisch(); Object.assign(S, behalte); S.onboard = true; speichern(); alleSheetsZu(); TAB = "heute"; render(); toast("Alles gelöscht. Auf ein Neues!"); break; }
@@ -432,7 +436,7 @@ function start() {
   // Testzugang: ?t=JJJJ-MM-TTTHH:MM setzt die Uhr (nur für Prüfungen)
   const q = new URLSearchParams(location.search);
   if (q.get("zeit")) { const z = new Date(q.get("zeit")); if (!isNaN(z)) ZEITVERSATZ = z - Date.now(); }
-  render();
+  try { render(); } catch (err) { notfall(err); return; }
   if (!S.onboard) setTimeout(onboardingSheet, 300);
   else if (S.timer) setTimeout(() => { if (timerRest() <= 0) timerSheet(); }, 400);
   addEventListener("resize", () => { clearTimeout(window._rs); window._rs = setTimeout(() => bilderZeichnen(), 150); });
@@ -453,3 +457,24 @@ start();
 
 /* Eingabefeld im Blatt nicht unter der Knopfleiste verstecken */
 document.addEventListener("focusin", ev => { if (ev.target.matches("input.text, textarea") && ev.target.closest(".sheet")) setTimeout(() => ev.target.scrollIntoView({ block: "center", behavior: REDUCED() ? "auto" : "smooth" }), 300); });
+
+/* Notfall: Wenn beim Start etwas klemmt, Daten sichern statt leere Seite */
+function notfall(err) {
+  let roh = ""; try { roh = localStorage.getItem(KEY) || ""; } catch (e) { }
+  $("#main").innerHTML = `<div class="gruss"><h1>Da hat was geklemmt.</h1></div><p>Deine Einträge sind noch da. Ruf am besten Max an. Er kann mit diesem Text alles wiederherstellen:</p><textarea class="text" readonly style="min-height:160px">${esc(roh)}</textarea><button class="knopf zweit voll" style="margin-top:10px" onclick="try{navigator.clipboard.writeText(this.previousElementSibling.value)}catch(e){}">Text kopieren</button><p class="klein">${esc(String(err && err.message || err))}</p>`;
+}
+
+/* Ritas Gesicht oben links: jedes Antippen eine andere kleine Überraschung */
+const LOGO_SPAESSE = ["zwinkern", "huepfen", "brille", "herzen", "drehen", "huhn", "wackeln", "sprech"];
+let logoLetzter = "";
+function logoSpass(el) {
+  if (el.dataset.laeuft) return; el.dataset.laeuft = "1"; setTimeout(() => delete el.dataset.laeuft, 900);
+  let a; do { a = LOGO_SPAESSE[Math.floor(Math.random() * LOGO_SPAESSE.length)]; } while (a === logoLetzter); logoLetzter = a;
+  haptik("auswahl");
+  if (REDUCED()) a = "zwinkern";
+  const r = el.getBoundingClientRect();
+  if (["zwinkern", "huepfen", "brille", "drehen", "wackeln"].includes(a)) { el.classList.remove(...[...el.classList].filter(c => c.startsWith("a-"))); void el.offsetWidth; el.classList.add("a-" + a); setTimeout(() => el.classList.remove("a-" + a), 2500); return; }
+  if (a === "herzen") { for (let i = 0; i < 5; i++) { const h = document.createElement("span"); h.className = "logo-flug"; h.textContent = ["♥", "✿", "♥", "★", "♥"][i]; h.style.color = ["#C8372D", "#E2A93B", "#D9603C", "#5B8A47", "#C8372D"][i]; h.style.left = (r.left + r.width / 2 - 8) + "px"; h.style.top = (r.top + 6) + "px"; h.style.setProperty("--dx", ((i - 2) * 16) + "px"); h.style.animationDelay = (i * 90) + "ms"; document.body.appendChild(h); setTimeout(() => h.remove(), 2000); } return; }
+  if (a === "huhn") { const h = document.createElement("span"); h.className = "logo-huhn"; h.innerHTML = huhnSVG({ gr: 30, stimmung: "freut" }); h.style.left = (r.right - 4) + "px"; h.style.top = (r.top + 8) + "px"; document.body.appendChild(h); setTimeout(() => h.remove(), 1900); return; }
+  if (a === "sprech") { const t = ["Kitzelt!", "Na, du?", "Ich hab alles im Blick.", "Heute schon gelacht?", "Bitte nicht so fest, ich bin frisch frisiert.", "Huch!", "Hallo, ich bin’s, Rita. Ach, das weißt du ja."][Math.floor(Math.random() * 7)]; const b = document.createElement("span"); b.className = "logo-sprech"; b.textContent = t; b.style.left = (r.left + 4) + "px"; b.style.top = (r.bottom + 6) + "px"; document.body.appendChild(b); setTimeout(() => b.remove(), 2300); }
+}
