@@ -41,7 +41,7 @@ let RUHE = { schritt: 0, modus: "jetzt", iv: 0, atemZ: 0, atemEnde: 0 };
 const RUHE_SCHRITTE = 7;
 
 function ruheP() { if (!S.ruhe) S.ruhe = frisch().ruhe; const u = S.ruhe.unterwegs.indexOf("umdrehen"); if (u >= 0) S.ruhe.unterwegs.splice(u, 1, "pause"); return S.ruhe; }
-const notfallKlein = () => `<p class="klein" style="margin-top:14px">Druck oder Schmerz in der Brust, Luftnot, die nicht besser wird, Fieber oder „So kenne ich das nicht“: nicht abwarten, <a href="tel:112">112 anrufen</a>.</p>`;
+const notfallKlein = () => "";
 function ruheSatz() { const R = ruheP(); return R.satzEigen || D.ruhe.saetze[R.satz || 0]; }
 function ruheHilftListe() { const R = ruheP(); return [...D.ruhe.hilft.filter(h => R.hilft.includes(h.id)).map(h => h.text), ...(R.eigene || [])]; }
 function ruheUnterwegsListe() { const R = ruheP(); return [...D.ruhe.unterwegs.filter(h => R.unterwegs.includes(h.id)).map(h => h.text), ...(R.unterwegsEigen || [])]; }
@@ -64,7 +64,7 @@ function ruheInhalt() {
       ${ruheUnterwegsListe().length ? `<p style="margin:10px 0 4px;font-weight:700">Für unterwegs</p><ul>${ruheUnterwegsListe().map(t => `<li>${esc(t)}</li>`).join("")}</ul>` : ""}
     </div>
     <button class="knopf zweit voll" style="margin-top:10px" data-act="ruhe-bearbeiten">${ic("feder")} ${A("Plan zusammenstellen", "Plan zusammenstellen")}</button>
-    <p class="klein" style="margin-top:16px">Nicht jedes Körpergefühl ist Unruhe. Druck oder Schmerz in der Brust, Luftnot, die nicht besser wird, Fieber oder etwas ganz Ungewohntes: nicht abwarten, <a href="tel:112">112</a>. Gut ist, einmal mit der Ärztin zu besprechen, bei welchen Beschwerden ${A("du", "Sie")} sofort anrufen ${A("sollst", "sollen")}. Der Plan ersetzt keine Behandlung.</p>`;
+    `;
 }
 
 /* ---------- Plan zusammenstellen ---------- */

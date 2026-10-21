@@ -289,7 +289,7 @@ function eintragenInhalt() {
     if (t.art === "person") h += personWahl();
     h += `<label class="feld">Wie lange ungefähr?</label><div class="stepper"><button class="knopf zweit" data-act="step" data-f="min" data-d="-5" aria-label="Weniger">${ic("minus")}</button><div class="wert zahl">${E.min}<small>Minuten</small></div><button class="knopf zweit" data-act="step" data-f="min" data-d="5" aria-label="Mehr">${ic("plus")}</button></div>
       <div class="chips" style="margin-top:14px">${[10, 20, 30, 45, 60, 90].map(k => chip(E.min === k, minText(k), `data-act="setz" data-f="min" data-v="${k}"`)).join("")}</div>`;
-    if (E.t === "lesen" && D.hp && D.hp.baende) { const b = D.hp.baende.find(x => x.nr === S.hp.band); if (b && !E._alt) h += schalter(!!E.kapitelWeiter, `Ein Kapitel in „${b.titel.replace("Harry Potter und d", "D")}“ geschafft`, `data-act="umschalt" data-f="kapitelWeiter"`, `Dann steht der Lesebegleiter bei Kapitel ${S.hp.kapitel + 1} von ${b.kapitel}.`); }
+    if (E.t === "lesen" && D.hp && D.hp.baende) { const b = D.hp.baende.find(x => x.nr === S.hp.band); if (b && !E._alt) h += schalter(!!E.kapitelWeiter, `Harry Potter: ein Kapitel weiter`, `data-act="umschalt" data-f="kapitelWeiter"`, `„${b.titel.replace("Harry Potter und d", "D")}“ – dann bist du bei Kapitel ${S.hp.kapitel + 1} von ${b.kapitel}.`); }
   } else if (t.art === "buch") {
     h += `<label class="feld" for="buchtitel">Welches Buch?</label><input id="buchtitel" class="text" data-feld="titel" value="${esc(E.titel)}" placeholder="Titel">`;
   } else {
@@ -318,7 +318,7 @@ function hilftSheet() {
   if (tf === "C" || tf === "D") { const lind = (D.stattDaddeln || []).filter(x => /Körper|Hören/.test(x.kat) && x.tf.includes(tf)); if (lind.length && !v.some(x => lind.includes(x))) v = [lind[Math.floor(Math.random() * lind.length)], ...v.slice(0, 2)]; }
   let html = `<p>${A("Drei Ideen für jetzt. Oder keine – auch gut.", "Drei Ideen für jetzt. Oder keine – auch gut.")}</p><div class="liste">${v.map(x => zeileBtn(katIcon(x.kat, x), x.titel, `${x.text}${x.min ? " · " + x.min + " Min." : ""}`, `data-act="idee" data-id="${x.id}"`, "k-geist")).join("")}</div>`;
   if (S.spiel.an && S.gekauft.patience && (tf === "C" || tf === "D")) html += `<div class="bogen mulde" style="margin-top:14px"><p style="margin:0 0 8px">Spiel ruhig eine Runde. Die Waldpatience hört von selbst auf, wenn die Karten liegen.</p><button class="knopf zweit voll" data-act="spiel">${ic("karten")} Waldpatience</button></div>`;
-  html += `<button class="knopf leise" data-act="hilft-neu">Andere Ideen</button><div class="liste" style="margin-top:14px">${zeileBtn("atem", "Wenn es gerade eng wird", "Kurz durchatmen, Schritt für Schritt", `data-act="ruhe-jetzt"`, "k-ruhe")}</div><p class="klein" style="margin-top:12px">${telLinks("Bei Fieber, neuen oder starken Schmerzen: Praxis anrufen, nachts 116 117, im Notfall 112.")}</p>`;
+  html += `<button class="knopf leise" data-act="hilft-neu">Andere Ideen</button><div class="liste" style="margin-top:14px">${zeileBtn("atem", "Wenn es gerade eng wird", "Kurz durchatmen, Schritt für Schritt", `data-act="ruhe-jetzt"`, "k-ruhe")}</div>`;
   sheet({ titel: "Ablenkung?", inhalt: html, id: "hilft" });
 }
 function ideeSheet(id) {
@@ -638,7 +638,7 @@ function einstellungenInhalt() {
       ${zeileBtn("lichtung", "App aufs Handy legen", "Anleitung mit Bildern", `data-act="install"`)}
       ${zeileBtn("hand", "Technik & Sicherung", "Für Max: Sicherung, Wiederherstellen, Schnell-Kacheln", `data-act="helfer"`)}
       ${zeileBtn("frage", "So funktioniert’s", "Liste, Bild, Taler – kurz erklärt", `data-act="erklaerung"`)}
-      ${zeileBtn("frage", "Über die App und Hilfe", "Wichtige Nummern", `data-act="ueber"`)}
+      ${zeileBtn("frage", "Über die App", "Von Max, für Rita", `data-act="ueber"`)}
     </div><p class="klein" style="margin-top:16px">Version ${esc(BUILD)}</p>`;
 }
 function helferSheet() { sheet({ titel: "Technik & Sicherung", inhalt: helferInhalt(), id: "helfer" }); }

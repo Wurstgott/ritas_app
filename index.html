@@ -883,10 +883,7 @@ D.timerVorlagen = [
 
 /* ---------- Hilfe & Über ---------- */
 D.ueber = [
-  "Ritas App ist eine Begleiterin für alle Tage – kein Medizinprodukt. Die App gibt keine medizinischen Ratschläge und ersetzt weder Arzt noch Stomatherapie, Physiotherapie oder psychoonkologische Beratung.",
-  "Was du dir an Bewegung zutraust, besprichst du am besten mit deinem Behandlungsteam.",
-  "Bei Fieber, plötzlichen oder neuen Schmerzen, Atemnot oder Problemen mit dem Stoma: Praxis anrufen. Nachts und am Wochenende: 116 117. Im Notfall: 112.",
-  "Wenn Sorgen sehr belasten: Psychoonkologische Beratung gibt es kostenlos, zum Beispiel beim Krebsinformationsdienst (0800 420 30 40, täglich 8–20 Uhr) oder bei der Berliner Krebsgesellschaft.",
+  "Ritas App hat Max für Rita gebaut: eine Liste, ein Bild, das mitwächst, ein paar Ideen – und Hühnchen.",
   "Alle Einträge bleiben auf diesem Handy. Nichts wird verschickt."
 ];
 
@@ -4181,6 +4178,101 @@ D.tageshinweise = [
 
 D.huehnchenReaktionen.abgehakt = ["Haken dran! Ich hätte auch gern mal den Stift.", "Weg ist es. Ich hab’s genau gesehen.", "Eins weniger. Ich zähl innerlich mit.", "Zack. So macht man das.", "Abgehakt. Ich hab nicht mal mit dem Kamm gewackelt."];
 
+/* Ablenkungsideen – neu geschrieben */
+D.stattDaddeln = [
+  /* ---------- Lesen ---------- */
+  {"id":"SD101","titel":"Der beste erste Satz","text":"Lies von fünf Büchern aus dem Regal nur den ersten Satz und küre den besten Romananfang. Der Sieger wird als Nächstes gelesen.","min":10,"tf":"ABC","kat":"Lesen","haltung":"im Sitzen","t":"lesen"},
+  {"id":"SD102","titel":"Bis der Hauself kommt","text":"Fang den zweiten Harry-Potter-Band an und lies, bis der Hauself zum ersten Mal auftaucht. Er hat es nicht eilig, du auch nicht.","min":20,"tf":"ABCD","kat":"Lesen","haltung":"im Sitzen, im Liegen","t":"lesen"},
+  {"id":"SD103","titel":"Zeitung von hinten","text":"Lies die Zeitung heute von der letzten Seite nach vorn und such die kurioseste Kurzmeldung. Die wird beim nächsten Telefonat erzählt.","min":15,"tf":"ABCD","kat":"Lesen","haltung":"im Sitzen","t":"lesen"},
+  {"id":"SD104","titel":"Kaléko, zweimal laut","text":"Lies ein Gedicht von Mascha Kaléko laut, und dann gleich noch einmal mit ganz anderer Betonung. Welche Fassung hätte ihr besser gefallen?","min":5,"tf":"ABCD","kat":"Lesen","haltung":"im Sitzen, im Liegen","t":"lesen"},
+  {"id":"SD105","titel":"Tucholsky am Stück","text":"Lies einen kurzen Text von Kurt Tucholsky in einem Rutsch. Er ist Berliner und selten länger als eine Tasse Kaffee.","min":10,"tf":"ABCD","kat":"Lesen","haltung":"im Sitzen, im Liegen","t":"lesen"},
+
+  /* ---------- Hören ---------- */
+  {"id":"SD109","titel":"Hörspiel mit Sternen","text":"Hör ein Hörspiel aus der ARD Audiothek und vergib danach Sterne für Stimmen, Geräusche und Schluss. Eine Kritikerin muss streng sein.","min":40,"tf":"ABCD","kat":"Hören","haltung":"im Sitzen, im Liegen","t":"hoerbuch"},
+  {"id":"SD110","titel":"Zeitzeichen von heute","text":"Hör die heutige Folge „Zeitzeichen“ vom WDR, eine Viertelstunde über ein Ereignis von genau diesem Datum. Merk dir die eine Zahl, die dich überrascht.","min":15,"tf":"ABCD","kat":"Hören","haltung":"im Sitzen, im Liegen","t":"radio"},
+  {"id":"SD111","titel":"Lesung, nach Probe","text":"Hör eine Lesung aus einem Buch, das du nie selbst gekauft hättest. Nach 20 Minuten wird entschieden: weiter oder weg.","min":20,"tf":"ABCD","kat":"Hören","haltung":"im Liegen","t":"hoerbuch"},
+  {"id":"SD112","titel":"Roulette am Radio","text":"Stell einen Sender ein, den du noch nie gehört hast, und halt zehn Minuten durch, bevor du urteilst. Klassik, Jazz oder Polnisch – alles gilt.","min":10,"tf":"ABCD","kat":"Hören","haltung":"im Sitzen, im Liegen","t":"radio"},
+  {"id":"SD113","titel":"Täter vor der Halbzeit","text":"Wärmflasche, Decke und ein Krimi-Hörspiel. Nenn den Täter, bevor die Hälfte rum ist, und schreib den Namen verdeckt auf.","min":30,"tf":"BCD","kat":"Hören","haltung":"im Liegen","t":"hoerbuch"},
+  {"id":"SD114","titel":"Stimmen raten","text":"Hör ein Interview im Radio und tipp, bevor der Name fällt: Wie alt ist die Person, woher kommt sie, was macht sie beruflich?","min":10,"tf":"ABCD","kat":"Hören","haltung":"im Sitzen, im Liegen","t":"radio"},
+  {"id":"SD115","titel":"Loriot mitsprechen","text":"Hör einen Loriot-Sketch, den du fast auswendig kannst, und sprich die Pointe eine Sekunde vor dem Original. „Das Bild hängt schief“ ist die Meisterprüfung.","min":10,"tf":"ABCD","kat":"Hören","haltung":"im Sitzen, im Liegen","t":"radio"},
+
+  /* ---------- Musik/Tanz ---------- */
+  {"id":"SD117","titel":"„Summertime“, drei Fassungen","text":"Hör „Summertime“ von Ella Fitzgerald, Janis Joplin und einer dritten Stimme deiner Wahl. Wer gewinnt?","min":12,"tf":"ABCD","kat":"Musik/Tanz","haltung":"im Sitzen, im Liegen","t":"musik"},
+  {"id":"SD118","titel":"Auf den Galopp warten","text":"Hör die Ouvertüre zu Rossinis „Wilhelm Tell“ von Anfang an und wart auf die Stelle, die jeder aus der Werbung kennt. Sie kommt spät.","min":12,"tf":"ABCD","kat":"Musik/Tanz","haltung":"im Sitzen, im Liegen","t":"musik"},
+  {"id":"SD119","titel":"Mit Bleistift dirigieren","text":"Leg einen Sinfoniesatz auf und dirigier ihn mit einem Bleistift als Taktstock. Einsätze geben ist ausdrücklich erwünscht.","min":8,"tf":"ABCD","kat":"Musik/Tanz","haltung":"im Sitzen","t":"sitztanz"},
+  {"id":"SD120","titel":"Cha-Cha mit zwei Fingern","text":"Tanz mit Zeige- und Mittelfinger einen Cha-Cha-Cha über die Tischplatte: Grundschritt, Drehung, Verbeugung.","min":3,"tf":"ABCD","kat":"Musik/Tanz","haltung":"im Sitzen","t":"sitztanz"},
+  {"id":"SD121","titel":"Der verhörte Liedtext","text":"Such ein Lied, bei dem du jahrelang etwas anderes verstanden hast, und lies nach, wie der Text wirklich lautet. Deine Fassung war vermutlich besser.","min":5,"tf":"ABCD","kat":"Musik/Tanz","haltung":"im Sitzen, im Liegen","t":"musik"},
+  {"id":"SD122","titel":"Die Nummer eins von damals","text":"Such dir ein Jahr aus, etwa 1962, und find heraus, was damals in Deutschland auf Platz eins stand. Mitsingen oder zum ersten Mal hören?","min":10,"tf":"ABCD","kat":"Musik/Tanz","haltung":"im Sitzen, im Liegen","t":"musik"},
+  {"id":"SD124","titel":"Eine Kombination mit Haken","text":"Bau aus vier Grundschritten eine Folge, die dein Tanzschüler in der nächsten Stunde nicht auf Anhieb schafft. Eine kleine Gemeinheit gehört dazu.","min":15,"tf":"ABC","kat":"Musik/Tanz","haltung":"im Sitzen","t":"tanzplanen"},
+  {"id":"SD125","titel":"Den Ohrwurm ausspielen","text":"Hängt ein Lied im Kopf fest? Hör es einmal ganz bis zum Ende. Ohrwürmer lieben unfertige Stellen, das sagen jedenfalls Musikpsychologen.","min":4,"tf":"ABCD","kat":"Musik/Tanz","haltung":"im Sitzen, im Liegen","t":"musik"},
+  {"id":"SD126","titel":"Ein Klavierstück, blind","text":"Hör drei kurze Klavierstücke und rate jeweils: Bach, Chopin oder Satie? Die Auflösung erst danach lesen.","min":12,"tf":"ABCD","kat":"Musik/Tanz","haltung":"im Liegen","t":"musik"},
+
+  /* ---------- Sinne ---------- */
+  {"id":"SD127","titel":"Grüntöne mit Namen","text":"Zähl vom Balkon aus, wie viele verschiedene Grüntöne du siehst, und gib den drei schönsten Namen wie auf einer Farbkarte.","min":5,"tf":"ABCD","kat":"Sinne","haltung":"im Sitzen","t":"natur"},
+  {"id":"SD129","titel":"Pflanze ohne „grün“","text":"Schau eine Balkonpflanze zwei Minuten lang an und beschreib sie dann in einem einzigen Satz, der ohne das Wort „grün“ auskommt.","min":3,"tf":"ABCD","kat":"Sinne","haltung":"im Sitzen","t":"pflanzen"},
+  {"id":"SD130","titel":"Das Fenster als Stummfilm","text":"Schau zehn Minuten aus dem Fenster, als liefe ein Film ohne Ton, und gib ihm am Ende einen Titel. Nebenrollen zählen mit.","min":10,"tf":"ABCD","kat":"Sinne","haltung":"im Sitzen","t":"licht"},
+  {"id":"SD131","titel":"Geräusche nach der Uhr","text":"Schließ die Augen und ordne alles, was du hörst, auf einem Zifferblatt an: die Amsel auf zwei Uhr, der Bus auf sieben.","min":5,"tf":"ABCD","kat":"Sinne","haltung":"im Sitzen, im Liegen","t":"natur"},
+  {"id":"SD132","titel":"Ein Apfel, genau","text":"Iss einen Apfel so langsam und aufmerksam, dass du ihn hinterher aus dem Gedächtnis zeichnen könntest, Kerngehäuse inklusive.","min":5,"tf":"ABCD","kat":"Sinne","haltung":"im Sitzen","t":"goennen"},
+  {"id":"SD133","titel":"Die Schattenuhr","text":"Merk dir, wo der Schatten des Balkongeländers gerade liegt, und schau in einer Stunde nach. Schätz vorher, wie weit er wandert.","min":3,"tf":"ABCD","kat":"Sinne","haltung":"im Sitzen","t":"licht"},
+  {"id":"SD134","titel":"Wolken bestimmen","text":"Bestimm die Wolken über dem Forst: Cumulus, Stratus oder Cirrus? Für einen Altocumulus gibt es Bonuspunkte.","min":5,"tf":"ABCD","kat":"Sinne","haltung":"im Sitzen, im Liegen","t":"licht"},
+  {"id":"SD136","titel":"Duft mit Adresse","text":"Riech an fünf Dingen in der Wohnung und schreib zu jedem auf, an welchen Ort er dich erinnert. Mit Straße, wenn’s geht.","min":10,"tf":"ABC","kat":"Sinne","haltung":"im Sitzen","t":"goennen"},
+
+  /* ---------- Körper sanft ---------- */
+  {"id":"SD137","titel":"Der Zeitlupen-Rekord","text":"Heb einen Arm so langsam, dass es eine volle Minute dauert, bis er oben ist. Klingt leicht. Ist es nicht.","min":3,"tf":"ABCD","kat":"Körper sanft","haltung":"im Sitzen, im Liegen","t":"dehnen"},
+  {"id":"SD138","titel":"Bis fünfzig atmen","text":"Zähl deine Atemzüge bis fünfzig, ohne dich zu verzählen. Wer gedanklich abbiegt, fängt wieder bei eins an.","min":5,"tf":"ABCD","kat":"Körper sanft","haltung":"im Sitzen, im Liegen","t":"ruhe"},
+  {"id":"SD139","titel":"Klavier mit den Zehen","text":"Heb nacheinander jeden Zeh einzeln an, vom großen bis zum kleinen. Beim vierten scheitern fast alle, Ehrgeiz ist trotzdem erlaubt.","min":3,"tf":"ABCD","kat":"Körper sanft","haltung":"im Sitzen, im Liegen","t":"dehnen"},
+  {"id":"SD140","titel":"Zehn Minuten offiziell nichts","text":"Stell den Ruhe-Timer und starr zehn Minuten lang ganz offiziell an die Decke. Gedanken dürfen vorbeikommen, bleiben müssen sie nicht.","min":10,"tf":"BCD","kat":"Körper sanft","haltung":"im Liegen","t":"ruhe"},
+  {"id":"SD142","titel":"Hände, die warm werden","text":"Reib die Handflächen, bis sie richtig warm sind, und leg sie dorthin, wo es dir gerade gefällt. Dreimal, mit Pause.","min":3,"tf":"BCD","kat":"Körper sanft","haltung":"im Sitzen, im Liegen","t":"waerme"},
+
+  /* ---------- Erinnern ---------- */
+  {"id":"SD143","titel":"Der Grundriss von damals","text":"Zeichne aus dem Gedächtnis den Grundriss deiner ersten eigenen Wohnung, mit Möbeln. Wo stand das Radio?","min":15,"tf":"ABC","kat":"Erinnern","haltung":"im Sitzen","t":"erinnern"},
+  {"id":"SD144","titel":"Was kostete das?","text":"Schreib auf, was früher ein Brötchen, eine Kinokarte und eine Kugel Eis gekostet haben, und prüf eine davon nach. Wer lag daneben, du oder das Internet?","min":10,"tf":"ABC","kat":"Erinnern","haltung":"im Sitzen, im Liegen","t":"erinnern"},
+  {"id":"SD145","titel":"Die alte Laufstrecke","text":"Geh im Kopf deine liebste Laufstrecke ab und notier fünf Wegmarken. Welche stehen heute noch?","min":10,"tf":"ABC","kat":"Erinnern","haltung":"im Sitzen, im Liegen","t":"erinnern"},
+  {"id":"SD146","titel":"Sätze, die blieben","text":"Schreib drei Sätze auf, die dir mal jemand gesagt hat und die du nie vergessen hast, mit Absender und Jahr.","min":10,"tf":"ABC","kat":"Erinnern","haltung":"im Sitzen, im Liegen","t":"erinnern"},
+  {"id":"SD147","titel":"Eine Ecke in der Altstadt","text":"Nimm eine Straßenecke in der Spandauer Altstadt und schreib auf, was dort vor fünfzig Jahren war: Laden, Kneipe, Kino?","min":10,"tf":"ABC","kat":"Erinnern","haltung":"im Sitzen, im Liegen","t":"erinnern"},
+  {"id":"SD148","titel":"Laufschuhe, hochgerechnet","text":"Zähl die Paar Laufschuhe auf, die du in deinem Leben durchgelaufen hast, und rechne die Kilometer hoch. Einmal um die Erde?","min":10,"tf":"ABC","kat":"Erinnern","haltung":"im Sitzen, im Liegen","t":"erinnern"},
+  {"id":"SD149","titel":"Antwort an früher","text":"Schlag ein altes Tagebuch an einer beliebigen Stelle auf und schreib deinem damaligen Ich einen Satz zurück.","min":10,"tf":"ABC","kat":"Erinnern","haltung":"im Sitzen","t":"tagebuch"},
+  {"id":"SD150","titel":"Die Musik einer Wohnung","text":"Notier zu jeder Wohnung, in der du gelebt hast, das Lied, das dort am meisten lief. Eine kleine Hitparade der Adressen.","min":10,"tf":"ABC","kat":"Erinnern","haltung":"im Sitzen, im Liegen","t":"erinnern"},
+
+  /* ---------- Listen ---------- */
+  {"id":"SD151","titel":"Das Forst-Alphabet","text":"Schreib ein Alphabet des Spandauer Forsts: A wie Ahorn, B wie Buntspecht … Für Q und X gibt es Sonderpunkte.","min":15,"tf":"ABC","kat":"Listen","haltung":"im Sitzen, im Liegen","t":"tagebuch"},
+  {"id":"SD152","titel":"Fünf Lieblingswörter","text":"Notier deine fünf deutschen Lieblingswörter und begründe jedes mit einem halben Satz. „Kladderadatsch“ ist schon vergeben.","min":10,"tf":"ABC","kat":"Listen","haltung":"im Sitzen, im Liegen","t":"tagebuch"},
+  {"id":"SD153","titel":"Kaffee mit Zauberern","text":"Mach eine Rangliste: die fünf Figuren aus dem ersten Band, mit denen du am liebsten Kaffee trinken würdest, und die eine, mit der auf keinen Fall.","min":10,"tf":"ABC","kat":"Listen","haltung":"im Sitzen, im Liegen","t":"tagebuch"},
+  {"id":"SD155","titel":"Der gereimte Einkaufszettel","text":"Schreib den nächsten Einkaufszettel so, dass er sich reimt. „Butter“ auf „Futter“ ist erlaubt, aber nur einmal.","min":10,"tf":"ABC","kat":"Listen","haltung":"im Sitzen, im Liegen","t":"tagebuch"},
+  {"id":"SD156","titel":"Unnütze Fähigkeiten","text":"Schreib alles auf, was du kannst und kein Mensch braucht: Kirschkernweitspucken, Fahrpläne auswendig, Ohrenwackeln.","min":10,"tf":"ABC","kat":"Listen","haltung":"im Sitzen, im Liegen","t":"tagebuch"},
+  {"id":"SD157","titel":"Der Tag in sieben Wörtern","text":"Fass den heutigen Tag im Tagebuch in genau sieben Wörtern zusammen. Nicht sechs, nicht acht.","min":5,"tf":"ABC","kat":"Listen","haltung":"im Sitzen, im Liegen","t":"tagebuch"},
+  {"id":"SD158","titel":"Sechs Gäste, eine Tafel","text":"Lad im Kopf sechs Gäste zum Abendessen ein, lebend oder historisch, und mach eine Sitzordnung. Wer muss neben Fontane sitzen?","min":10,"tf":"ABC","kat":"Listen","haltung":"im Sitzen, im Liegen","t":"tagebuch"},
+  {"id":"SD159","titel":"Berlinisch für Bayern","text":"Schreib zehn Berliner Ausdrücke auf und übersetz sie für jemanden aus München. „Nu mach ma’ halblang“ zählt doppelt.","min":10,"tf":"ABC","kat":"Listen","haltung":"im Sitzen, im Liegen","t":"tagebuch"},
+
+  /* ---------- Lernen ---------- */
+  {"id":"SD160","titel":"Ribbeck auswendig","text":"Lern die erste Strophe vom „Herrn von Ribbeck auf Ribbeck im Havelland“ auswendig. Morgen früh wird ohne Zettel aufgesagt.","min":10,"tf":"ABC","kat":"Lernen","haltung":"im Sitzen, im Liegen","t":"gelernt"},
+  {"id":"SD161","titel":"Woher kommt das Wort?","text":"Schlag die Herkunft von „Kiez“, „Kneipe“ und „Schlamassel“ nach. Mindestens eins kommt von weiter her, als man denkt.","min":10,"tf":"ABC","kat":"Lernen","haltung":"im Sitzen, im Liegen","t":"gelernt"},
+  {"id":"SD162","titel":"Warum Juliusturm?","text":"Find heraus, woher der Juliusturm seinen Namen hat. Die Antwort ist umstritten, und genau das macht sie gut.","min":10,"tf":"ABC","kat":"Lernen","haltung":"im Sitzen, im Liegen","t":"gelernt"},
+  {"id":"SD163","titel":"Latein für Zauberer","text":"Nimm drei Zaubersprüche aus Harry Potter und find ihre lateinischen Wurzeln. „Lumos“ ist leicht, „Wingardium Leviosa“ nicht.","min":10,"tf":"ABC","kat":"Lernen","haltung":"im Sitzen, im Liegen","t":"gelernt"},
+  {"id":"SD164","titel":"Bruegels Sprichwörter","text":"Ruf Bruegels „Niederländische Sprichwörter“ auf, das Original hängt in der Berliner Gemäldegalerie, und find zehn Redensarten im Bild.","min":15,"tf":"ABC","kat":"Lernen","haltung":"im Sitzen, im Liegen","t":"gelernt"},
+  {"id":"SD167","titel":"Wörter aus dem Forst","text":"Bilde aus „SPANDAUER FORST“ in zehn Minuten so viele Wörter wie möglich. Ab dreißig ist es eine Bestleistung.","min":10,"tf":"ABC","kat":"Lernen","haltung":"im Sitzen, im Liegen","t":"raetsel"},
+  {"id":"SD168","titel":"Drei Bäume, drei Belege","text":"Find heraus, welche drei Baumarten im Spandauer Forst am häufigsten stehen, und such beim nächsten Gang je ein Exemplar.","min":10,"tf":"ABC","kat":"Lernen","haltung":"im Sitzen, im Liegen","t":"gelernt"},
+
+  /* ---------- Kontakt ---------- */
+  {"id":"SD169","titel":"Eine Karte mit Lücke","text":"Schreib Christiane eine Karte, in der ein Wort fehlt, das sie erraten muss. Die Auflösung gibt es erst am Telefon.","min":10,"tf":"ABC","kat":"Kontakt","haltung":"im Sitzen","t":"brief"},
+  {"id":"SD170","titel":"Drei ungewöhnliche Fragen","text":"Schick Max drei Fragen, die ihm noch nie jemand gestellt hat, etwa: Welches Geräusch magst du am liebsten?","min":5,"tf":"ABC","kat":"Kontakt","haltung":"im Sitzen, im Liegen","t":"telefon"},
+  {"id":"SD171","titel":"Kompliment mit Beleg","text":"Mach jemandem im Haus ein Kompliment, das so konkret ist, dass es unmöglich ausgedacht sein kann.","min":5,"tf":"ABC","kat":"Kontakt","haltung":"im Sitzen, im Stehen","t":"nachbar"},
+  {"id":"SD172","titel":"Summ mal","text":"Summ eine Melodie als Sprachnachricht und lass raten, welches Lied das ist. Drei Versuche, dann wird aufgelöst.","min":3,"tf":"ABC","kat":"Kontakt","haltung":"im Sitzen, im Liegen","t":"telefon"},
+  {"id":"SD173","titel":"Ein Buch in einem Satz","text":"Empfiehl jemandem ein Buch in genau einem Satz, ohne den Inhalt zu verraten. Du darfst ihn dreimal umschreiben, bevor er rausgeht.","min":5,"tf":"ABC","kat":"Kontakt","haltung":"im Sitzen, im Liegen","t":"brief"},
+  {"id":"SD174","titel":"Ein Ausschnitt per Post","text":"Schneid einen Zeitungsartikel aus, der genau zu jemandem passt, und schick ihn mit einem einzigen Satz dazu.","min":10,"tf":"ABC","kat":"Kontakt","haltung":"im Sitzen","t":"brief"},
+
+  /* ---------- Hände ---------- */
+  {"id":"SD175","titel":"Die Hand, blind gezeichnet","text":"Zeichne deine linke Hand, ohne aufs Papier zu schauen. Das Ergebnis wird furchtbar und erstaunlich gut zugleich.","min":5,"tf":"ABC","kat":"Hände","haltung":"im Sitzen","t":"handarbeit"},
+  {"id":"SD177","titel":"Drei Schriften, ein Satz","text":"Schreib denselben Satz in deiner alten Schulschrift, in deiner heutigen Schrift und spiegelverkehrt. Welche ist die schönste?","min":5,"tf":"ABC","kat":"Hände","haltung":"im Sitzen","t":"handarbeit"},
+  {"id":"SD178","titel":"Stillleben mit Löffel","text":"Stell drei Dinge vom Küchentisch zusammen und zeichne sie in zehn Minuten. Der Löffel ist der schwerste.","min":10,"tf":"ABC","kat":"Hände","haltung":"im Sitzen","t":"handarbeit"},
+  {"id":"SD179","titel":"Was ist das?","text":"Fotografier etwas in der Wohnung so nah, dass es niemand erkennt, und schick es Max zum Raten.","min":5,"tf":"ABC","kat":"Hände","haltung":"im Sitzen, im Stehen","t":"foto"},
+  {"id":"SD180","titel":"Buchführung auf dem Balkon","text":"Zähl auf dem Balkon Knospen, neue Triebe und welke Blätter und trag alles in eine kleine Tabelle ein. In einer Woche wird verglichen.","min":10,"tf":"ABC","kat":"Hände","haltung":"im Sitzen, im Stehen","t":"pflanzen"},
+
+  /* ---------- Ordnen ---------- */
+  {"id":"SD181","titel":"Ein Jahrgang Fotos","text":"Such alle Fotos eines einzigen Jahres zusammen und bring sie in die richtige Reihenfolge. Die Datierung ist das eigentliche Rätsel.","min":20,"tf":"AB","kat":"Ordnen","haltung":"im Sitzen","t":"ordnung"},
+  {"id":"SD182","titel":"Gewürze von Anis bis Zimt","text":"Sortier das Gewürzregal nach dem Alphabet. Die Dose mit dem ältesten Datum bekommt eine Ehrenurkunde.","min":15,"tf":"AB","kat":"Ordnen","haltung":"im Sitzen, im Stehen","t":"ordnung"}
+];
+
 /* Angebote in Spandau – Recherche Oktober 2026 (13-angebote.json), plus bewährte ältere Einträge */
 (function(){
 const neu = [
@@ -4615,10 +4707,10 @@ D.angeboteKat = ["Tanz & Musik", "Mitmachen", "Kultur", "Ausflug in Spandau", "F
 <script>
 /* ============================================================
    Lichtung – Kern: Zustand, Rechnen, Rückmeldung, Bausteine
-   Build: 2026-10-21 23:40
+   Build: 2026-10-21 23:46
    ============================================================ */
 "use strict";
-const BUILD = "2026-10-21 23:40";
+const BUILD = "2026-10-21 23:46";
 const KEY = "lichtung-v1";
 const GV = 2;            // Zustandsversion (Migrationen)
 const RV = 1;            // Regelversion (wird je Eintrag festgeschrieben)
@@ -5352,7 +5444,7 @@ function zeichneSzene(canvas, opt = {}) {
   // ===== E2 Fernwald: Kiefernreihe mit Schneise =====
   { const r = R("fernwald"); const luecke = [0, 40, 70, 160, 190, 210, 230, 360][Math.min(st, 7)] + (st > 7 ? 60 : 0);
     const kroneF = mix("#3E5E46", unten, .42), stammF = mix("#6B4A3A", unten, .45);
-    for (let x = -30; x < VW + 40; x += 34 + r() * 26) {
+    for (let x = -30; x < VW + 40; x += 20 + r() * 14) {
       const mitte = Math.abs(x - 520); const h = 115 + r() * 55 - (mitte < luecke ? 120 : 0) - Math.min(st, 4) * 8;
       if (h < 80) continue;
       kiefer(ctx, x, HORIZONT + 70, h, r, kroneF, stammF, 2);
@@ -5393,7 +5485,7 @@ function zeichneSzene(canvas, opt = {}) {
       if (!SA.laub) aeste(ctx, x, y - h * .85, h, r, "#5C4B3A", 2); } }
 
   // ===== Haus am Waldsaum mit Fenstern (Menschen) =====
-  { const x = 820, y = 634, HK = 1.22;
+  { const x = 725, y = 652, HK = 1.42;
     ctx.save(); ctx.translate(x, y); ctx.scale(HK, HK); ctx.translate(-x, -y);
     // hintere Flachbauten (heller, weiter weg)
     const hinten = [[620, 592, 64, 58], [990, 600, 58, 72]];
@@ -5447,6 +5539,14 @@ function zeichneSzene(canvas, opt = {}) {
       const beet = new Path2D(); ellipse(beet, x - 40, y + 48, 60, 10); papier(ctx, beet, "#7A5A3E", 1);
       const bl = new Path2D(); for (let k = 0; k < 9; k++) kreis(bl, x - 90 + k * 12, y + 42 - (k % 2) * 4, 5); papier(ctx, bl, SA.blume[1], 1); }
     ctx.restore();
+    // Zufahrt: Straße führt rechts aus dem Bild zur Stadtrandstraße, davor parken Autos
+    { const st2 = new Path2D(); st2.moveTo(x - 60, y + 4); st2.lineTo(x + 150 * HK, y + 4); st2.quadraticCurveTo(VW - 40, y + 10, VW + 60, y + 70); st2.lineTo(VW + 60, y + 118); st2.quadraticCurveTo(VW - 60, y + 42, x + 150 * HK, y + 40); st2.lineTo(x - 60, y + 40); st2.closePath();
+      papier(ctx, st2, schnee ? "#DADBD6" : mix("#9C9A92", unten, .15), 2, { saum: true });
+      const mark = new Path2D(); for (let k = 0; k < 4; k++) { const t = k / 4; const mx = x + 150 * HK + 30 + t * (VW - x - 150 * HK + 10), my = y + 24 + t * t * 55; rr(mark, mx, my, 16, 3, 1); } ctx.fillStyle = "rgba(255,253,245,.55)"; ctx.fill(mark);
+      const autos = [[x - 20, "#7E93A8"], [x + 60, "#B5534A"], [x + 150, "#D8CFB8"], [x + 230, "#4F6656"]];
+      for (const [ax, farbe] of autos) { const ay = y + 30, a = new Path2D(); rr(a, ax - 30, ay - 16, 60, 16, 5); poly(a, [[ax - 18, ay - 16], [ax - 11, ay - 28], [ax + 13, ay - 28], [ax + 20, ay - 16]], null); papier(ctx, a, farbe, 2);
+        const fen = new Path2D(); poly(fen, [[ax - 14, ay - 17], [ax - 9, ay - 25], [ax + 11, ay - 25], [ax + 16, ay - 17]], null); ctx.fillStyle = nacht > .3 ? "#3D4450" : "rgba(220,232,240,.85)"; ctx.fill(fen);
+        const rad = new Path2D(); kreis(rad, ax - 17, ay, 6); kreis(rad, ax + 17, ay, 6); papier(ctx, rad, "#2A2A2A", 0); } }
   }
 
   // ===== Pavillon (Stufe 11) =====
@@ -5595,7 +5695,7 @@ function zeichneSzene(canvas, opt = {}) {
   // ===== Dickicht (verschwindet mit den Stufen: Licht fällt ein) =====
   { const n = [7, 4, 2][st] ?? 0; const r = R("dickicht");
     if (n && alt > 0) { ctx.save(); ctx.globalAlpha = .22; ctx.fillStyle = "#FFF1CC"; ctx.beginPath(); ctx.moveTo(470, 0); ctx.lineTo(560, 0); ctx.lineTo(600, VH); ctx.lineTo(500, VH); ctx.closePath(); ctx.fill(); ctx.restore(); }
-    for (let i = 0; i < n; i++) { const tief = i % 2, x = 180 + ((i * 0.618 + .1) % 1) * 640; if ((x > 470 && x < 600) || (x > 660 && x < 990)) continue;
+    for (let i = 0; i < n; i++) { const tief = i % 2, x = 180 + ((i * 0.618 + .1) % 1) * 640; if ((x > 440 && x < 990)) continue;
       kiefer(ctx, x, 880 - tief * 90 + r() * 20, (tief ? 270 : 340) + r() * 70, r, tief ? "#3C5A42" : "#2F4A36", tief ? "#6A4A36" : "#5A3E2E", tief ? 3 : 5); } }
 
   // ===== E5 Portal: Vordergrund-Stämme, Farn, Moos =====
@@ -6072,7 +6172,7 @@ function eintragenInhalt() {
     if (t.art === "person") h += personWahl();
     h += `<label class="feld">Wie lange ungefähr?</label><div class="stepper"><button class="knopf zweit" data-act="step" data-f="min" data-d="-5" aria-label="Weniger">${ic("minus")}</button><div class="wert zahl">${E.min}<small>Minuten</small></div><button class="knopf zweit" data-act="step" data-f="min" data-d="5" aria-label="Mehr">${ic("plus")}</button></div>
       <div class="chips" style="margin-top:14px">${[10, 20, 30, 45, 60, 90].map(k => chip(E.min === k, minText(k), `data-act="setz" data-f="min" data-v="${k}"`)).join("")}</div>`;
-    if (E.t === "lesen" && D.hp && D.hp.baende) { const b = D.hp.baende.find(x => x.nr === S.hp.band); if (b && !E._alt) h += schalter(!!E.kapitelWeiter, `Ein Kapitel in „${b.titel.replace("Harry Potter und d", "D")}“ geschafft`, `data-act="umschalt" data-f="kapitelWeiter"`, `Dann steht der Lesebegleiter bei Kapitel ${S.hp.kapitel + 1} von ${b.kapitel}.`); }
+    if (E.t === "lesen" && D.hp && D.hp.baende) { const b = D.hp.baende.find(x => x.nr === S.hp.band); if (b && !E._alt) h += schalter(!!E.kapitelWeiter, `Harry Potter: ein Kapitel weiter`, `data-act="umschalt" data-f="kapitelWeiter"`, `„${b.titel.replace("Harry Potter und d", "D")}“ – dann bist du bei Kapitel ${S.hp.kapitel + 1} von ${b.kapitel}.`); }
   } else if (t.art === "buch") {
     h += `<label class="feld" for="buchtitel">Welches Buch?</label><input id="buchtitel" class="text" data-feld="titel" value="${esc(E.titel)}" placeholder="Titel">`;
   } else {
@@ -6101,7 +6201,7 @@ function hilftSheet() {
   if (tf === "C" || tf === "D") { const lind = (D.stattDaddeln || []).filter(x => /Körper|Hören/.test(x.kat) && x.tf.includes(tf)); if (lind.length && !v.some(x => lind.includes(x))) v = [lind[Math.floor(Math.random() * lind.length)], ...v.slice(0, 2)]; }
   let html = `<p>${A("Drei Ideen für jetzt. Oder keine – auch gut.", "Drei Ideen für jetzt. Oder keine – auch gut.")}</p><div class="liste">${v.map(x => zeileBtn(katIcon(x.kat, x), x.titel, `${x.text}${x.min ? " · " + x.min + " Min." : ""}`, `data-act="idee" data-id="${x.id}"`, "k-geist")).join("")}</div>`;
   if (S.spiel.an && S.gekauft.patience && (tf === "C" || tf === "D")) html += `<div class="bogen mulde" style="margin-top:14px"><p style="margin:0 0 8px">Spiel ruhig eine Runde. Die Waldpatience hört von selbst auf, wenn die Karten liegen.</p><button class="knopf zweit voll" data-act="spiel">${ic("karten")} Waldpatience</button></div>`;
-  html += `<button class="knopf leise" data-act="hilft-neu">Andere Ideen</button><div class="liste" style="margin-top:14px">${zeileBtn("atem", "Wenn es gerade eng wird", "Kurz durchatmen, Schritt für Schritt", `data-act="ruhe-jetzt"`, "k-ruhe")}</div><p class="klein" style="margin-top:12px">${telLinks("Bei Fieber, neuen oder starken Schmerzen: Praxis anrufen, nachts 116 117, im Notfall 112.")}</p>`;
+  html += `<button class="knopf leise" data-act="hilft-neu">Andere Ideen</button><div class="liste" style="margin-top:14px">${zeileBtn("atem", "Wenn es gerade eng wird", "Kurz durchatmen, Schritt für Schritt", `data-act="ruhe-jetzt"`, "k-ruhe")}</div>`;
   sheet({ titel: "Ablenkung?", inhalt: html, id: "hilft" });
 }
 function ideeSheet(id) {
@@ -6421,7 +6521,7 @@ function einstellungenInhalt() {
       ${zeileBtn("lichtung", "App aufs Handy legen", "Anleitung mit Bildern", `data-act="install"`)}
       ${zeileBtn("hand", "Technik & Sicherung", "Für Max: Sicherung, Wiederherstellen, Schnell-Kacheln", `data-act="helfer"`)}
       ${zeileBtn("frage", "So funktioniert’s", "Liste, Bild, Taler – kurz erklärt", `data-act="erklaerung"`)}
-      ${zeileBtn("frage", "Über die App und Hilfe", "Wichtige Nummern", `data-act="ueber"`)}
+      ${zeileBtn("frage", "Über die App", "Von Max, für Rita", `data-act="ueber"`)}
     </div><p class="klein" style="margin-top:16px">Version ${esc(BUILD)}</p>`;
 }
 function helferSheet() { sheet({ titel: "Technik & Sicherung", inhalt: helferInhalt(), id: "helfer" }); }
@@ -6690,7 +6790,7 @@ let RUHE = { schritt: 0, modus: "jetzt", iv: 0, atemZ: 0, atemEnde: 0 };
 const RUHE_SCHRITTE = 7;
 
 function ruheP() { if (!S.ruhe) S.ruhe = frisch().ruhe; const u = S.ruhe.unterwegs.indexOf("umdrehen"); if (u >= 0) S.ruhe.unterwegs.splice(u, 1, "pause"); return S.ruhe; }
-const notfallKlein = () => `<p class="klein" style="margin-top:14px">Druck oder Schmerz in der Brust, Luftnot, die nicht besser wird, Fieber oder „So kenne ich das nicht“: nicht abwarten, <a href="tel:112">112 anrufen</a>.</p>`;
+const notfallKlein = () => "";
 function ruheSatz() { const R = ruheP(); return R.satzEigen || D.ruhe.saetze[R.satz || 0]; }
 function ruheHilftListe() { const R = ruheP(); return [...D.ruhe.hilft.filter(h => R.hilft.includes(h.id)).map(h => h.text), ...(R.eigene || [])]; }
 function ruheUnterwegsListe() { const R = ruheP(); return [...D.ruhe.unterwegs.filter(h => R.unterwegs.includes(h.id)).map(h => h.text), ...(R.unterwegsEigen || [])]; }
@@ -6713,7 +6813,7 @@ function ruheInhalt() {
       ${ruheUnterwegsListe().length ? `<p style="margin:10px 0 4px;font-weight:700">Für unterwegs</p><ul>${ruheUnterwegsListe().map(t => `<li>${esc(t)}</li>`).join("")}</ul>` : ""}
     </div>
     <button class="knopf zweit voll" style="margin-top:10px" data-act="ruhe-bearbeiten">${ic("feder")} ${A("Plan zusammenstellen", "Plan zusammenstellen")}</button>
-    <p class="klein" style="margin-top:16px">Nicht jedes Körpergefühl ist Unruhe. Druck oder Schmerz in der Brust, Luftnot, die nicht besser wird, Fieber oder etwas ganz Ungewohntes: nicht abwarten, <a href="tel:112">112</a>. Gut ist, einmal mit der Ärztin zu besprechen, bei welchen Beschwerden ${A("du", "Sie")} sofort anrufen ${A("sollst", "sollen")}. Der Plan ersetzt keine Behandlung.</p>`;
+    `;
 }
 
 /* ---------- Plan zusammenstellen ---------- */

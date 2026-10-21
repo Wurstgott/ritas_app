@@ -226,7 +226,7 @@ function zeichneSzene(canvas, opt = {}) {
   // ===== E2 Fernwald: Kiefernreihe mit Schneise =====
   { const r = R("fernwald"); const luecke = [0, 40, 70, 160, 190, 210, 230, 360][Math.min(st, 7)] + (st > 7 ? 60 : 0);
     const kroneF = mix("#3E5E46", unten, .42), stammF = mix("#6B4A3A", unten, .45);
-    for (let x = -30; x < VW + 40; x += 34 + r() * 26) {
+    for (let x = -30; x < VW + 40; x += 20 + r() * 14) {
       const mitte = Math.abs(x - 520); const h = 115 + r() * 55 - (mitte < luecke ? 120 : 0) - Math.min(st, 4) * 8;
       if (h < 80) continue;
       kiefer(ctx, x, HORIZONT + 70, h, r, kroneF, stammF, 2);
@@ -267,7 +267,7 @@ function zeichneSzene(canvas, opt = {}) {
       if (!SA.laub) aeste(ctx, x, y - h * .85, h, r, "#5C4B3A", 2); } }
 
   // ===== Haus am Waldsaum mit Fenstern (Menschen) =====
-  { const x = 820, y = 634, HK = 1.22;
+  { const x = 725, y = 652, HK = 1.42;
     ctx.save(); ctx.translate(x, y); ctx.scale(HK, HK); ctx.translate(-x, -y);
     // hintere Flachbauten (heller, weiter weg)
     const hinten = [[620, 592, 64, 58], [990, 600, 58, 72]];
@@ -321,6 +321,14 @@ function zeichneSzene(canvas, opt = {}) {
       const beet = new Path2D(); ellipse(beet, x - 40, y + 48, 60, 10); papier(ctx, beet, "#7A5A3E", 1);
       const bl = new Path2D(); for (let k = 0; k < 9; k++) kreis(bl, x - 90 + k * 12, y + 42 - (k % 2) * 4, 5); papier(ctx, bl, SA.blume[1], 1); }
     ctx.restore();
+    // Zufahrt: Straße führt rechts aus dem Bild zur Stadtrandstraße, davor parken Autos
+    { const st2 = new Path2D(); st2.moveTo(x - 60, y + 4); st2.lineTo(x + 150 * HK, y + 4); st2.quadraticCurveTo(VW - 40, y + 10, VW + 60, y + 70); st2.lineTo(VW + 60, y + 118); st2.quadraticCurveTo(VW - 60, y + 42, x + 150 * HK, y + 40); st2.lineTo(x - 60, y + 40); st2.closePath();
+      papier(ctx, st2, schnee ? "#DADBD6" : mix("#9C9A92", unten, .15), 2, { saum: true });
+      const mark = new Path2D(); for (let k = 0; k < 4; k++) { const t = k / 4; const mx = x + 150 * HK + 30 + t * (VW - x - 150 * HK + 10), my = y + 24 + t * t * 55; rr(mark, mx, my, 16, 3, 1); } ctx.fillStyle = "rgba(255,253,245,.55)"; ctx.fill(mark);
+      const autos = [[x - 20, "#7E93A8"], [x + 60, "#B5534A"], [x + 150, "#D8CFB8"], [x + 230, "#4F6656"]];
+      for (const [ax, farbe] of autos) { const ay = y + 30, a = new Path2D(); rr(a, ax - 30, ay - 16, 60, 16, 5); poly(a, [[ax - 18, ay - 16], [ax - 11, ay - 28], [ax + 13, ay - 28], [ax + 20, ay - 16]], null); papier(ctx, a, farbe, 2);
+        const fen = new Path2D(); poly(fen, [[ax - 14, ay - 17], [ax - 9, ay - 25], [ax + 11, ay - 25], [ax + 16, ay - 17]], null); ctx.fillStyle = nacht > .3 ? "#3D4450" : "rgba(220,232,240,.85)"; ctx.fill(fen);
+        const rad = new Path2D(); kreis(rad, ax - 17, ay, 6); kreis(rad, ax + 17, ay, 6); papier(ctx, rad, "#2A2A2A", 0); } }
   }
 
   // ===== Pavillon (Stufe 11) =====
@@ -469,7 +477,7 @@ function zeichneSzene(canvas, opt = {}) {
   // ===== Dickicht (verschwindet mit den Stufen: Licht fällt ein) =====
   { const n = [7, 4, 2][st] ?? 0; const r = R("dickicht");
     if (n && alt > 0) { ctx.save(); ctx.globalAlpha = .22; ctx.fillStyle = "#FFF1CC"; ctx.beginPath(); ctx.moveTo(470, 0); ctx.lineTo(560, 0); ctx.lineTo(600, VH); ctx.lineTo(500, VH); ctx.closePath(); ctx.fill(); ctx.restore(); }
-    for (let i = 0; i < n; i++) { const tief = i % 2, x = 180 + ((i * 0.618 + .1) % 1) * 640; if ((x > 470 && x < 600) || (x > 660 && x < 990)) continue;
+    for (let i = 0; i < n; i++) { const tief = i % 2, x = 180 + ((i * 0.618 + .1) % 1) * 640; if ((x > 440 && x < 990)) continue;
       kiefer(ctx, x, 880 - tief * 90 + r() * 20, (tief ? 270 : 340) + r() * 70, r, tief ? "#3C5A42" : "#2F4A36", tief ? "#6A4A36" : "#5A3E2E", tief ? 3 : 5); } }
 
   // ===== E5 Portal: Vordergrund-Stämme, Farn, Moos =====

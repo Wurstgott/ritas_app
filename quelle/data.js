@@ -326,9 +326,6 @@ D.timerVorlagen = [
 
 /* ---------- Hilfe & Über ---------- */
 D.ueber = [
-  "Ritas App ist eine Begleiterin für alle Tage – kein Medizinprodukt. Die App gibt keine medizinischen Ratschläge und ersetzt weder Arzt noch Stomatherapie, Physiotherapie oder psychoonkologische Beratung.",
-  "Was du dir an Bewegung zutraust, besprichst du am besten mit deinem Behandlungsteam.",
-  "Bei Fieber, plötzlichen oder neuen Schmerzen, Atemnot oder Problemen mit dem Stoma: Praxis anrufen. Nachts und am Wochenende: 116 117. Im Notfall: 112.",
-  "Wenn Sorgen sehr belasten: Psychoonkologische Beratung gibt es kostenlos, zum Beispiel beim Krebsinformationsdienst (0800 420 30 40, täglich 8–20 Uhr) oder bei der Berliner Krebsgesellschaft.",
+  "Ritas App hat Max für Rita gebaut: eine Liste, ein Bild, das mitwächst, ein paar Ideen – und Hühnchen.",
   "Alle Einträge bleiben auf diesem Handy. Nichts wird verschickt."
 ];

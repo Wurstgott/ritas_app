@@ -9,7 +9,7 @@ stamp = datetime.datetime.now().strftime("%Y-%m-%d %H:%M")
 
 shell = (d / "app.html").read_text()
 css = (d / "fonts.css").read_text() + (d / "app.css").read_text()
-data = "\n".join((d / f).read_text() for f in ["data.js","data-orte.js","data-inhalte.js","data-laden.js","data-korrektur.js","data-sprache.js","data-lektorat.js","data-angebote.js"] if (d / f).exists())
+data = "\n".join((d / f).read_text() for f in ["data.js","data-orte.js","data-inhalte.js","data-laden.js","data-korrektur.js","data-sprache.js","data-lektorat.js","data-ablenkung.js","data-angebote.js"] if (d / f).exists())
 app = "\n".join((d / f).read_text() for f in ["core.js","figuren.js","scene.js","views.js","ruheplan.js","game.js","main.js"]).replace("__BUILD__", stamp)
 body = shell.replace("/*CSS*/", css).replace("/*DATA*/", data).replace("/*APP*/", app)
 
