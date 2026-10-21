@@ -41,7 +41,7 @@ function eintragSpeichern(entwurf, altId) {
   const t = tat(entwurf.t);
   const vorherStufe = stufe(), vorherModell = modell();
   const e = { ...entwurf };
-  delete e.notizOffen;
+  delete e.notizOffen; delete e.tagOffen;
   e.id = altId || ("e" + Date.now().toString(36) + Math.floor(Math.random() * 1e4).toString(36));
   e.ts = e.ts || Date.now(); e.rv = RV;
   e.tf = S.tf[e.tag] || "";
@@ -106,8 +106,10 @@ function nachEintrag(r, text) {
   if (neueStufe) { S.stufeGemeldet = nachStufe; speichern(); haptik("stufe"); }
   let knopf = neueStufe ? { text: "Ansehen", act: "stufe-zeigen" } : null;
   if (!knopf && e.t === "abgehakt") { const m = NACH_HAK.find(([re]) => re.test(e.notiz || "")); if (m) { window._nachHak = m[1]; knopf = { text: `Auch als „${tat(m[1]).kurz}“ eintragen`, act: "nach-hak" }; } }
-  const zeile2 = [e.t === "abgehakt" ? "" : (huhn ? "Hühnchen: „" + huhn + "“" : info), neueStufe ? `Neu im Bild: ${D.stufen[nachStufe].name}` : (auchNeu.length ? `Neu: ${auchNeu.join(", ")}` : ""), talerTxt].filter(Boolean).join(" · ");
-  toast(`${text || "Eingetragen."}${zeile2 ? "\n" + zeile2 : ""}`, { rueck: e.id, erfolg: true, knopf, dauer: knopf ? 12000 : e.t === "abgehakt" ? 6000 : undefined });
+  // Rückmeldung immer gleich gebaut: 1. was eingetragen wurde  2. ein Satz (Hühnchen, sonst Max’ Info)  3. Taler und Neues im Bild
+  const satz = e.t === "abgehakt" && !huhn ? "" : (huhn ? "Hühnchen: „" + huhn + "“" : info);
+  const lohn = [talerTxt, neueStufe ? `Neu im Bild: ${D.stufen[nachStufe].name}` : (auchNeu.length ? `Neu: ${auchNeu.join(", ")}` : "")].filter(Boolean).join(" · ");
+  toast([text || "Eingetragen.", satz, lohn].filter(Boolean).join("\n"), { rueck: e.id, erfolg: true, knopf, dauer: knopf ? 12000 : e.t === "abgehakt" ? 6000 : undefined });
   const buehne = $("#buehne-heute") || $("#buehne-gross");
   if (buehne && neuKey) setTimeout(() => ringAn(buehne, neuKey.split(":")[0] === "fuss" || neuKey.startsWith("laterne") ? "tanz" : neuKey.split(":")[0] === "buch" ? "eiche" : neuKey.split(":")[0]), REDUCED() ? 0 : 1200);
 }
@@ -194,7 +196,7 @@ function aktion(a, d, el, ev) {
     case "go": if (d.go === "einstellungen") einstellungenSheet(); break;
 
     /* Tagesform */
-    case "tf": S.tf[heute()] = d.v; if (S.huhn) S.huhnSagt = { tag: heute(), text: { A: "Viel Energie? Dann halt ich hier die Stellung, und du ziehst los.", B: "Gemächlich ist ein schönes Tempo. Ich hab ja nur das eine.", C: "Ruhig angehen. Da bin ich Profi, ich steh seit Jahren still.", D: "Sparflamme ist auch eine Flamme. Ich bin heute leise und leiste dir Gesellschaft." }[d.v] }; try { eierTagesform(d.v); } catch (e) { } speichern(); haptik("auswahl"); el.setAttribute("aria-pressed", "true"); el.classList.add("fill-in");
+    case "tf": S.tf[heute()] = d.v; if (S.huhn) S.huhnSagt = { tag: heute(), text: { A: "Mehr Energie? Dann halt ich hier die Stellung, und du ziehst los.", B: "Gemächlich ist ein schönes Tempo. Ich hab ja nur das eine.", C: "Ruhig angehen. Da bin ich Profi, ich steh seit Jahren still.", D: "Sparflamme ist auch eine Flamme. Ich bin heute leise und leiste dir Gesellschaft." }[d.v] }; try { eierTagesform(d.v); } catch (e) { } speichern(); haptik("auswahl"); el.setAttribute("aria-pressed", "true"); el.classList.add("fill-in");
       setTimeout(() => { render({ halteScroll: true, ohneAnim: true }); const f = D.tagesformen.find(x => x.id === d.v); sag(`${f.name} gewählt.`); }, REDUCED() ? 0 : 320); break;
     case "tf-onb": S.tf[heute()] = d.v; speichern(); haptik("auswahl"); sheetInhalt(onboardingInhalt()); break;
     case "tf-aendern": delete S.tf[heute()]; speichern(); render({ halteScroll: true, ohneAnim: true }); break;
@@ -209,17 +211,24 @@ function aktion(a, d, el, ev) {
       if (d.f === "wie" && E.wie === v) v = "";
       E[d.f] = v; haptik("auswahl");
       const id = aktuellesSheet()?.dataset.id;
-      sheetInhalt(id === "zurueck" ? zurueckInhalt() : id === "timerneu" ? timerNeuInhalt() : eintragenInhalt()); break;
+      sheetInhalt(id === "zurueck" ? zurueckInhalt() : id === "timerneu" ? timerNeuInhalt() : eintragenInhalt());
+      if (d.f === "tag" && id === "eintragen") sheetFuss(eintragenFuss()); break;
     }
     case "umschalt": E[d.f] = !E[d.f]; haptik("auswahl"); sheetInhalt(aktuellesSheet()?.dataset.id === "zurueck" ? zurueckInhalt() : eintragenInhalt()); break;
     case "notiz-auf": E.notizOffen = true; sheetInhalt(eintragenInhalt()); setTimeout(() => $("#notiz")?.focus(), 50); break;
+    case "tag-auf": E.tagOffen = true; haptik("auswahl"); sheetInhalt(aktuellesSheet()?.dataset.id === "zurueck" ? zurueckInhalt() : eintragenInhalt()); break;
     case "speichern": {
       const t = tat(E.t);
       if (t.art === "buch" && !E.titel.trim()) { toast("Bitte den Buchtitel eintragen."); haptik("achtung"); break; }
       if (t.art === "buch" && D.hp) { const b = D.hp.baende.find(x => x.nr === S.hp.band); if (b && E.titel.trim() === b.titel && D.hp.baende.find(x => x.nr === b.nr + 1)) { S.hp.band = b.nr + 1; S.hp.kapitel = 0; } }
       const alt = E._alt; delete E._alt;
-      if (E.hpKap && D.hp) { const b = D.hp.baende.find(x => x.nr === S.hp.band); if (b) { const vorK = S.hp.kapitel; setTimeout(() => { if (vorK < 13 && S.hp.kapitel >= 13) eierKapitel(13); }, 50); S.hp.kapitel = Math.min(b.kapitel, S.hp.kapitel + Number(E.hpKap)); E.notiz = E.notiz || `${b.titel.replace("Harry Potter und d", "D")}, bis Kapitel ${S.hp.kapitel}`; } } delete E.hpKap;
+      if (E.hpKap && D.hp) { const b = D.hp.baende.find(x => x.nr === S.hp.band); if (b) { const vorK = S.hp.kapitel; setTimeout(() => { if (vorK < 13 && S.hp.kapitel >= 13) eierKapitel(13); }, 50); S.hp.kapitel = Math.min(b.kapitel, S.hp.kapitel + Number(E.hpKap)); E.notiz = E.notiz || `${b.titel.replace("Harry Potter und d", "D")}, bis Kapitel ${S.hp.kapitel}`; if (S.hp.kapitel >= b.kapitel) E._buchFertig = b.titel; } } delete E.hpKap;
+      const fertig = E._buchFertig; delete E._buchFertig;
       const r = eintragSpeichern(E, alt);
+      if (fertig && r) { // letztes Kapitel: das Buch kommt als eigener Eintrag dazu, der nächste Band ist dran
+        const r2 = eintragSpeichern({ t: "buchfertig", tag: E.tag, titel: fertig });
+        const b = D.hp.baende.find(x => x.titel === fertig), n = b && D.hp.baende.find(x => x.nr === b.nr + 1); if (n) { S.hp.band = n.nr; S.hp.kapitel = 0; speichern(); }
+        nachEintrag(r2 || r, `Eingetragen: ${eintragText(r.e).replace(/\.$/, "")} – und das Buch ist ausgelesen!`); break; }
       nachEintrag(r, alt ? "Geändert." : `Eingetragen: ${eintragText(r ? r.e : E).replace(/\.$/, "")}.`); break;
     }
     case "eintrag": eintragSheet(d.id); break;
@@ -237,7 +246,7 @@ function aktion(a, d, el, ev) {
     case "tschuess-auflegen": { const T = S.tschuess; if (!T || T.ende) break; T.verlauf.push(["rita", "Ich leg jetzt auf. Tschüss!"]); T.ende = "rita"; S.tschuessSiege = (S.tschuessSiege || 0) + 1; speichern(); haptik("erfolg"); render({ halteScroll: true, ohneAnim: true }); break; }
     case "liste-hilfe": listeHilfeSheet(); break;
     case "nach-hak": { $$(".toast").forEach(t => t.remove()); const t2 = window._nachHak; if (t2) eintragenSheet(t2); break; }
-    case "abend": { const t = tat(d.t), letzte = [...S.eintraege].reverse().find(e => e.t === d.t); const r = eintragSpeichern({ t: d.t, tag: heute(), km: t.art === "km" ? (letzte?.km || 2) : undefined, min: t.art === "min" || t.art === "person" ? (letzte?.min || t.std || 20) : undefined, person: t.art === "person" ? "_" : undefined, notiz: "" }); if (r) nachEintrag(r, `${t.kurz} – eingetragen.`); break; }
+    case "abend": { const t = tat(d.t), letzte = [...S.eintraege].reverse().find(e => e.t === d.t); const r = eintragSpeichern({ t: d.t, tag: heute(), km: t.art === "km" ? (letzte?.km || 2) : undefined, min: t.art === "min" || t.art === "person" ? (letzte?.min || t.std || 20) : undefined, person: t.art === "person" ? "_" : undefined, notiz: "" }); if (r) nachEintrag(r, `Eingetragen: ${eintragText(r.e)}.`); break; }
     case "abend-weg": S.abendWeg = heute(); speichern(); render({ halteScroll: true, ohneAnim: true }); break;
     case "zettel-weg": if (S.zettel) S.zettel.weg = true; speichern(); haptik("auswahl"); render({ halteScroll: true, ohneAnim: true }); break;
     case "huhn-tap": { const h = el.querySelector(".huhn"); if (h) { h.classList.remove("freut"); void h.getBBox; h.classList.add("freut"); setTimeout(() => h.classList.remove("freut"), 1100); } haptik("auswahl"); eierHuhnTap(); break; }
@@ -312,9 +321,9 @@ function aktion(a, d, el, ev) {
 
     /* Tagebuch */
     case "moment": momentSheet(); break;
-    case "moment-speichern": { const t = $("#moment-text").value.trim(); eierMoment(t); const h = heute(); const neu = !S.momente[h]; if (t) S.momente[h] = t; else delete S.momente[h]; if (t && neu) S.taler += 1; speichern(); sheetZu(); render({ halteScroll: true, ohneAnim: true }); if (t) toast("Aufgeschrieben.", { erfolg: true }); break; }
+    case "moment-speichern": { const t = $("#moment-text").value.trim(); eierMoment(t); const h = heute(); const neu = !S.momente[h]; if (t) S.momente[h] = t; else delete S.momente[h]; if (t && neu) S.taler += 1; speichern(); sheetZu(); render({ halteScroll: true, ohneAnim: true }); if (t) toast(neu ? "Aufgeschrieben.\n+1 Taler" : "Aufgeschrieben.", { erfolg: true }); break; }
     case "rueckblick": rueckblickSheet(); break;
-    case "rueckblick-fertig": { const kw = kwVon(heute()); const neu = !S.rueckblick[kw]; S.rueckblick[kw] = heute(); S.wennDann = $("#vorsatz").value.trim(); if (neu) S.taler += 10; if (S.hinweis.tag === heute()) S.hinweis.zu = true; speichern(); sheetZu(); render({ halteScroll: true, ohneAnim: true }); toast(neu ? "Woche angeschaut. +10 Taler" : "Gespeichert.", { erfolg: true }); break; }
+    case "rueckblick-fertig": { const kw = kwVon(heute()); const neu = !S.rueckblick[kw]; S.rueckblick[kw] = heute(); S.wennDann = $("#vorsatz").value.trim(); if (neu) S.taler += 10; if (S.hinweis.tag === heute()) S.hinweis.zu = true; speichern(); sheetZu(); render({ halteScroll: true, ohneAnim: true }); toast(neu ? "Woche angeschaut.\n+10 Taler" : "Gespeichert.", { erfolg: true }); break; }
     case "tb-mehr": S._tbMehr = true; render({ halteScroll: true, ohneAnim: true }); break;
 
     /* Hinweis */
@@ -326,15 +335,15 @@ function aktion(a, d, el, ev) {
     case "mission-wahl": sheetZu(); setTimeout(() => missionSheet(d.id), 240); break;
     case "mission-start": S.missionen.aktiv.push({ id: d.id, start: heute(), tage: [] }); speichern(); sheetZu(); render({ halteScroll: true, ohneAnim: true }); toast("Vorhaben begonnen. Ohne Eile."); break;
     case "mission-heute": { const a = S.missionen.aktiv.find(x => x.id === d.id), m = (D.missionen || []).find(x => x.id === d.id); if (!a.tage.includes(heute())) a.tage.push(heute()); speichern(); sheetZu();
-      if (m && m.t) { const t = tat(m.t); const r = eintragSpeichern({ t: t.id, tag: heute(), min: t.std || 15, km: t.art === "km" ? (t.std || 2) : undefined, draussen: !!t.draussen, notiz: m.titel }); nachEintrag(r, `Vorhaben: ${m.titel}.`); } else render({ halteScroll: true }); break; }
-    case "mission-fertig": { const m = (D.missionen || []).find(x => x.id === d.id); S.missionen.aktiv = S.missionen.aktiv.filter(x => x.id !== d.id); S.missionen.fertig.push({ id: d.id, tag: heute() }); S.taler += 10; speichern(); sheetZu(); render({ halteScroll: true }); toast(`Abgeschlossen: ${m.titel}. +10 Taler`, { erfolg: true }); haptik("erfolg"); break; }
+      if (m && m.t) { const t = tat(m.t); const r = eintragSpeichern({ t: t.id, tag: heute(), min: t.std || 15, km: t.art === "km" ? (t.std || 2) : undefined, draussen: !!t.draussen, notiz: m.titel }); nachEintrag(r, `Eingetragen: ${m.titel}.`); } else render({ halteScroll: true }); break; }
+    case "mission-fertig": { const m = (D.missionen || []).find(x => x.id === d.id); S.missionen.aktiv = S.missionen.aktiv.filter(x => x.id !== d.id); S.missionen.fertig.push({ id: d.id, tag: heute() }); S.taler += 10; speichern(); sheetZu(); render({ halteScroll: true }); toast(`Vorhaben abgeschlossen: ${m.titel}.\n+10 Taler`, { erfolg: true }); haptik("erfolg"); break; }
     case "mission-pause": S.missionen.aktiv = S.missionen.aktiv.filter(x => x.id !== d.id); speichern(); sheetZu(); render({ halteScroll: true }); toast("Zur Seite gelegt. Es läuft nichts ab."); break;
 
     /* Lesebegleiter */
-    case "kapitel": hpKapitel(1, true); break;
+    case "kapitel": alleSheetsZu(); setTimeout(() => { eintragenSheet("lesen"); E.hpKap = 1; sheetInhalt(eintragenInhalt()); }, 240); break;
     case "lesebegleiter": lesebegleiterSheet(); break;
     case "band": S.hp.band = Number(d.nr); S.hp.kapitel = 0; speichern(); sheetZu(); setTimeout(lesebegleiterSheet, 240); render({ halteScroll: true, ohneAnim: true }); break;
-    case "band-fertig": { const b = D.hp.baende.find(x => x.nr === Number(d.nr)); const r = eintragSpeichern({ t: "buchfertig", tag: heute(), titel: b.titel, notiz: "abgehakt" }); if (S.hp.band === b.nr) { const n = D.hp.baende.find(x => x.nr === b.nr + 1 && !S.eintraege.some(e => e.t === "buchfertig" && e.titel === x.titel)); if (n) { S.hp.band = n.nr; S.hp.kapitel = 0; } } speichern(); nachEintrag(r, `Abgehakt: ${b.titel}.`); break; }
+    case "band-fertig": { const b = D.hp.baende.find(x => x.nr === Number(d.nr)); const r = eintragSpeichern({ t: "buchfertig", tag: heute(), titel: b.titel, notiz: "abgehakt" }); if (S.hp.band === b.nr) { const n = D.hp.baende.find(x => x.nr === b.nr + 1 && !S.eintraege.some(e => e.t === "buchfertig" && e.titel === x.titel)); if (n) { S.hp.band = n.nr; S.hp.kapitel = 0; } } speichern(); nachEintrag(r, `Eingetragen: Buch ausgelesen: ${b.titel}.`); break; }
     case "kap": hpKapitel(Number(d.d), false); sheetZu(); setTimeout(lesebegleiterSheet, 240); break;
 
     /* Spiel */
@@ -398,7 +407,7 @@ function hpKapitel(dd, eintragen) {
     const r = eintragSpeichern({ t: "buchfertig", tag: heute(), titel: b.titel });
     const naechster = D.hp.baende.find(x => x.nr === S.hp.band + 1);
     if (naechster) { S.hp.band = naechster.nr; S.hp.kapitel = 0; speichern(); }
-    nachEintrag(r, `Ausgelesen: ${b.titel}.`);
+    nachEintrag(r, `Eingetragen: Buch ausgelesen: ${b.titel}.`);
   } else {
     const r = eintragSpeichern({ t: "lesen", tag: heute(), min: 20, notiz: `${b.titel}, Kapitel ${S.hp.kapitel}` });
     nachEintrag(r, `Kapitel ${S.hp.kapitel} gelesen.`);

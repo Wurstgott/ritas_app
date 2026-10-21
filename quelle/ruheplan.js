@@ -160,7 +160,7 @@ function ruheAktion(a, d) {
     case "ruhe-weiter": RUHE.schritt = Math.min(RUHE_SCHRITTE - 1, RUHE.schritt + 1); sheetInhalt(ruheSchrittHTML()); sheetFuss(ruheFussHTML()); aktuellesSheet().querySelector(".sheet-inhalt").scrollTop = 0; ruheSchrittAn(); break;
     case "ruhe-anrufen": RUHE.schritt = 5; sheetInhalt(ruheSchrittHTML()); sheetFuss(ruheFussHTML()); ruheSchrittAn(); break;
     case "ruhe-zurueck": RUHE.schritt = Math.max(0, RUHE.schritt - 1); sheetInhalt(ruheSchrittHTML()); sheetFuss(ruheFussHTML()); ruheSchrittAn(); break;
-    case "ruhe-geuebt": { ruheStopp(); R.geuebt = (R.geuebt || 0) + 1; speichern(); const r = eintragSpeichern({ t: "ruheuebung", tag: heute() }); if (r) nachEintrag(r, "Ruhe geübt."); else { alleSheetsZu(); toast("Der Haken für heute steht schon. Geübt ist geübt."); } break; }
+    case "ruhe-geuebt": { ruheStopp(); R.geuebt = (R.geuebt || 0) + 1; speichern(); const r = eintragSpeichern({ t: "ruheuebung", tag: heute() }); if (r) nachEintrag(r, "Eingetragen: Ruhe geübt."); else { alleSheetsZu(); toast("Der Haken für heute steht schon. Geübt ist geübt."); } break; }
     case "ruhe-bearbeiten": ruheBearbeitenSheet(); break;
     case "ruhe-fertig": sheetZu(); setTimeout(() => { const id = aktuellesSheet()?.dataset.id; if (id === "ruhe") sheetInhalt(ruheInhalt()); else if (id === "ruhe-flow") { sheetInhalt(ruheSchrittHTML()); sheetFuss(ruheFussHTML()); } }, 260); break;
     case "ruhe-hilft": tausch(R.hilft, d.v); neuEdit(); break;

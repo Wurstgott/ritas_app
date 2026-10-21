@@ -62,8 +62,8 @@ function bingoAktion(a, d) {
   const i = Number(d.i); B.an[i] = !B.an[i]; haptik("auswahl");
   const linien = BINGO_LINIEN.filter(l => l.every(k => B.an[k])).length;
   if (linien > B.linien) { const neu = linien - B.linien; B.linien = linien; S.taler += 5 * neu; haptik("erfolg"); ton("erfolg");
-    toast(["Bingo! Ich hab vor Freude mit dem Sockel gewackelt. Fast umgekippt.", "Reihe voll. Der Hase hat applaudiert. Mit den Ohren.", "Bingo! Das Schwein sagt, es hätte das auch gekonnt. Glaub ich nicht."][linien % 3] + ` · +${5 * neu} Taler`, { erfolg: true }); }
-  if (!B.voll && B.an.every(Boolean)) { B.voll = true; S.taler += 20; S.fundstuecke = [{ id: "bingo", tag: heute(), wer: "huhn", text: "Eine ganze Bingo-Karte voll. Ich lass sie rahmen. Also: im Kopf." }, ...(S.fundstuecke || [])]; toast("Karte voll! +20 Taler. Das kommt in die Fundstücke.", { erfolg: true }); }
+    toast(["Bingo! Ich hab vor Freude mit dem Sockel gewackelt. Fast umgekippt.", "Reihe voll. Der Hase hat applaudiert. Mit den Ohren.", "Bingo! Das Schwein sagt, es hätte das auch gekonnt. Glaub ich nicht."][linien % 3] + `\n+${5 * neu} Taler`, { erfolg: true }); }
+  if (!B.voll && B.an.every(Boolean)) { B.voll = true; S.taler += 20; S.fundstuecke = [{ id: "bingo", tag: heute(), wer: "huhn", text: "Eine ganze Bingo-Karte voll. Ich lass sie rahmen. Also: im Kopf." }, ...(S.fundstuecke || [])]; toast("Karte voll! Das kommt in die Fundstücke.\n+20 Taler", { erfolg: true }); }
   speichern(); sheetInhalt(bingoInhalt()); return true;
 }
 
@@ -101,6 +101,9 @@ function postLaden() {
     gross = document.createElement("div"); gross.className = "portrait-gross"; gross.setAttribute("aria-hidden", "true");
     gross.innerHTML = ritaSVG(170);
     gross.style.left = Math.min(innerWidth - 186, r.right + 14) + "px"; gross.style.top = (r.bottom + 10) + "px";
+    if (Math.random() < .4) { const hand = document.createElement("div"); hand.className = "portrait-hand"; hand.style.animationDelay = (600 + Math.random() * 900) + "ms";
+      hand.innerHTML = `<svg viewBox="0 0 60 80" width="58" height="78"><path d="M22 80 L20 52 Q30 48 40 52 L38 80Z" fill="#22304A"/><g transform="translate(30 50)"><path d="M-11 0 Q-14 -18 -10 -26 Q-8 -30 -5 -26 L-4 -14 L-4 -34 Q-2 -38 1 -34 L1 -16 L2 -36 Q5 -40 7 -36 L7 -16 L9 -32 Q12 -35 13 -31 L12 -12 Q16 -18 19 -15 Q20 -12 16 -6 Q10 4 0 4 Q-8 4 -11 0Z" fill="#F0C9AA" stroke="#D49A7C" stroke-width="1"/></g></svg>`;
+      gross.appendChild(hand); }
     document.body.appendChild(gross); lange = true; haptik("auswahl");
   };
   const weg = () => { clearTimeout(zeitV); if (gross) { const g = gross; g.classList.add("zu"); setTimeout(() => g.remove(), 220); gross = null; } };
@@ -112,4 +115,29 @@ function postLaden() {
   document.addEventListener("contextmenu", ev => { if (ev.target.closest("#logo")) ev.preventDefault(); });
   // langes Halten soll nicht zusätzlich die Tipp-Überraschung auslösen
   document.addEventListener("click", ev => { if (lange && ev.target.closest("#logo")) { ev.stopImmediatePropagation(); lange = false; } }, true);
+}
+
+/* ---------- Hühnchen: Finger drauf halten = großer Kopf daneben; oft antippen = Feder fliegt ---------- */
+{ let zeitH = 0, grossH = null, langH = false, taps = [];
+  const zeigen = (el) => {
+    if (grossH) return; const r = el.querySelector(".huhn")?.getBoundingClientRect() || el.getBoundingClientRect();
+    grossH = document.createElement("div"); grossH.className = "huhn-gross"; grossH.setAttribute("aria-hidden", "true");
+    grossH.innerHTML = huhnSVG({ gr: 150, kopf: true, stimmung: "spricht" });
+    grossH.style.left = Math.min(innerWidth - 166, r.right + 8) + "px"; grossH.style.top = Math.max(8, r.top - 150) + "px";
+    document.body.appendChild(grossH); langH = true; haptik("auswahl");
+  };
+  const weg = () => { clearTimeout(zeitH); if (grossH) { const g = grossH; g.classList.add("zu"); setTimeout(() => g.remove(), 220); grossH = null; } };
+  document.addEventListener("pointerdown", ev => { const el = ev.target.closest(".huhn-karte"); if (!el) return; langH = false; zeitH = setTimeout(() => zeigen(el), 340); });
+  document.addEventListener("pointerup", weg); document.addEventListener("pointercancel", weg);
+  document.addEventListener("pointerover", ev => { if (ev.pointerType === "mouse" && ev.target.closest(".huhn-karte .huhn")) { clearTimeout(zeitH); zeitH = setTimeout(() => zeigen(ev.target.closest(".huhn-karte")), 300); } });
+  document.addEventListener("pointerout", ev => { if (ev.pointerType === "mouse" && ev.target.closest(".huhn-karte") && !(ev.relatedTarget && ev.relatedTarget.closest && ev.relatedTarget.closest(".huhn-karte"))) weg(); });
+  document.addEventListener("contextmenu", ev => { if (ev.target.closest(".huhn-karte")) ev.preventDefault(); });
+  document.addEventListener("click", ev => {
+    const k = ev.target.closest(".huhn-karte"); if (!k) return;
+    if (langH) { ev.stopImmediatePropagation(); langH = false; return; }
+    const n = Date.now(); taps = taps.filter(t => n - t < 2500).concat(n);
+    if (taps.length >= 3 && !REDUCED()) { const h = k.querySelector(".huhn").getBoundingClientRect(); const f = document.createElement("div"); f.className = "feder-flug"; f.setAttribute("aria-hidden", "true");
+      f.innerHTML = `<svg viewBox="0 0 20 44" width="20" height="44"><path d="M10 43 L10 6" stroke="#8A5A2B" stroke-width="1.4"/><path d="M10 4 Q19 12 16 28 Q13 36 10 40 Q7 36 4 28 Q1 12 10 4Z" fill="#E4B24F"/><path d="M10 10 L15 16 M10 16 L15 22 M10 22 L14 28 M10 12 L5 18 M10 18 L5 24 M10 24 L6 30" stroke="#C9913C" stroke-width="1"/></svg>`;
+      f.style.left = (h.left + h.width * .4) + "px"; f.style.top = (h.top + h.height * .4) + "px"; f.style.setProperty("--dx", (Math.random() * 120 - 60) + "px"); document.body.appendChild(f); setTimeout(() => f.remove(), 3200); }
+  }, true);
 }

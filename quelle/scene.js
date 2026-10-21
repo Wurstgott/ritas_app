@@ -586,7 +586,7 @@ function huehnchenPos(ort) {
 /* Hühnchen in der Szene: dieselbe Comic-Figur wie in der Oberfläche (Pfade aus figuren.js), Fuß bei (x, y) */
 const HUHN_PFADE = [
   ["M31 83 L67 83 Q72 83 72 88 Q72 93 67 93 L31 93 Q26 93 26 88 Q26 83 31 83Z", "#5B8A47"],
-  ["M27 60 Q12 44 20 28 Q28 42 38 50Z", "#8A5A2B"], ["M25 56 Q14 48 15 38 Q24 48 32 52Z", "#5E8A3E"],
+  ["M30 60 Q16 50 19 34 Q26 44 38 50Z", "#C9913C"],
   ["M26 66 Q24 46 44 44 Q62 42 72 56 Q80 70 68 80 Q56 88 42 86 Q28 84 26 66Z", "#E4B24F"],
   ["M34 62 Q46 52 60 60 Q58 73 46 75 Q35 73 34 62Z", "#CC913C"],
   ["M48 46 Q42 22 60 18 Q78 15 79 32 Q80 47 66 51 Q54 53 48 46Z", "#E4B24F"],
@@ -650,7 +650,7 @@ function ringAn(container, ort) {
 /* Text-Beschreibung des Bildes (für Screenreader und „Bild als Liste“) */
 function bildBeschreibung(M) {
   const st = D.stufen[M.stufe]; const z = [];
-  z.push(`Stufe ${M.stufe}: ${st.name}.`);
+  z.push(`Stufe ${M.stufe + 1}: ${st.name}.`);
   if (M.km) z.push(`Der Weg: ${fmt(M.km)} km gegangen.`);
   const pers = Object.keys(M.menschen).length; if (pers) z.push(`Das Haus: ${pers} ${pers === 1 ? "Fenster leuchtet" : "Fenster leuchten"}.`);
   if (M.tanzStunden) z.push(`Der Tanzboden: ${M.tanzStunden} Paar Fußspuren.`);

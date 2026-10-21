@@ -616,6 +616,27 @@ h2, h3 { font-weight: 620; }
 .sheet-kopf { flex-wrap: nowrap; }
 .sheet-kopf h2 { flex: 1; min-width: 0; overflow-wrap: break-word; hyphens: auto; }
 .sheet-kopf .knopf { flex: none; }
+
+/* Eintrag-Blatt: ruhige, gleichmäßige Abschnitte */
+.sheet-inhalt > label.feld { margin-top: 20px; }
+.sheet-inhalt > label.feld:first-child { margin-top: 2px; }
+.zusaetze { margin-top: 16px; border-top: 1px solid var(--mulde-2); border-bottom: 1px solid var(--mulde-2); }
+.zusaetze .schalter-zeile + .schalter-zeile { border-top: 1px solid var(--mulde-2); }
+.klapp-zeile { gap: 8px; flex-wrap: wrap; margin-top: 14px; }
+.klapp-zeile .knopf { padding-left: 4px; }
+.chips.raster { display: grid; grid-template-columns: 1fr 1fr; }
+.chips.raster .chip { justify-content: center; }
+.portrait-hand { position: absolute; right: -14px; bottom: -2px; transform-origin: 50% 95%; opacity: 0; animation: pg-wink 1.6s ease-in-out forwards; }
+@keyframes pg-wink { 0% { opacity: 0; transform: translateY(20px) rotate(0); } 15% { opacity: 1; transform: translateY(0) rotate(0); } 30% { transform: rotate(-18deg); } 45% { transform: rotate(14deg); } 60% { transform: rotate(-16deg); } 75% { transform: rotate(10deg); } 90% { opacity: 1; transform: rotate(0); } 100% { opacity: 0; transform: translateY(20px); } }
+.huhn-gross { position: fixed; z-index: 70; pointer-events: none; background: var(--bogen); border-radius: 50%; padding: 6px; box-shadow: 0 10px 30px rgba(0,0,0,.25); animation: pg-auf .28s cubic-bezier(.3,1.5,.5,1) both; transform-origin: bottom left; }
+.huhn-gross.zu { animation: pg-zu .2s ease-in forwards; }
+.huhn-gross .lider { animation: huhn-blinzeln 2.4s .4s infinite; }
+.huhn-gross .huhn-schnabel .unten { animation: huhn-sprechen .25s ease-in-out 8 alternate .3s; }
+.feder-flug { position: fixed; z-index: 70; pointer-events: none; animation: feder 3s ease-in-out forwards; }
+@keyframes feder { 0% { transform: translate(0, 0) rotate(0); opacity: 0; } 10% { opacity: 1; } 30% { transform: translate(calc(var(--dx) * .4), -60px) rotate(-30deg); } 55% { transform: translate(calc(var(--dx) * -.2), -20px) rotate(25deg); } 80% { transform: translate(calc(var(--dx) * .6), 30px) rotate(-15deg); opacity: 1; } 100% { transform: translate(var(--dx), 70px) rotate(10deg); opacity: 0; } }
+.huhn-karte { -webkit-touch-callout: none; user-select: none; }
+.tf-kurz { flex: 1; min-width: 0; }
+.tf-kurz + .knopf { flex: none; }
 </style>
 <div id="app">
   <header class="kopf">
@@ -661,7 +682,7 @@ D.orte = {
   quelle:   { name: "Die Quelle", text: "Ruhe ist hier eine Quelle. Aus ihr wird ein Bach und mit der Zeit ein Weiher.", k: "k-ruhe" },
   wiese:    { name: "Die Wiese", text: "Was deine Hände tun, blüht hier – Blumen je nach Jahreszeit.", k: "k-schaffen" },
   horizont: { name: "Der Horizont", text: "Jeder Ausflug wird eine Silhouette in der Ferne und ein Andenken im Setzkasten.", k: "k-draussen" },
-  mut:      { name: "Glühwürmchen", text: "Wenn etwas Überwindung gekostet hat, leuchtet danach ein Glühwürmchen mehr im Wald.", k: "k-mut" }
+  mut:      { name: "Glühwürmchen", text: "Wenn etwas Mut gebraucht hat – etwas Neues oder Ungewohntes –, leuchtet danach ein Glühwürmchen mehr im Wald.", k: "k-mut" }
 };
 
 /* ---------- Tagesform (filtert Vorschläge, bewertet nichts) ---------- */
@@ -675,64 +696,67 @@ D.tagesformen = [
 /* ---------- Tätigkeiten ----------
    art: km | min | klein | fest | person | buch
    feld: Hauptfeld, neben: Nebenfeld (50 % der Minuten)
+   draussen: findet immer draußen statt (zählt automatisch mit Frischluft-Bonus)
+   draussenOpt: kann drinnen oder draußen sein → Eintrag-Blatt fragt „Draußen gemacht“
+   mutOpt: kann neu oder ungewohnt sein → Eintrag-Blatt fragt „Hat Mut gebraucht“ (Glühwürmchen)
    bild: Bildort; tf: an welchen Tagen vorgeschlagen; info: sachlicher Satz nach dem Eintragen */
 D.taetigkeiten = [
   // Bewegung
-  { id: "gehen", name: "Gehen", kurz: "Gehen", art: "km", std: 2, feld: "bewegung", bild: "weg", draussen: true, tf: "ABC", icon: "schuh",
+  { id: "gehen", mutOpt: true, name: "Gehen", kurz: "Gehen", art: "km", std: 2, feld: "bewegung", bild: "weg", draussen: true, tf: "ABC", icon: "schuh",
     info: ["Gehen zählt – ob zum Briefkasten oder die große Runde im Forst.", "Lieber zweimal kurz als einmal zu lang – beides zählt.", "Gehen trainiert ganz nebenbei das Gleichgewicht."] },
-  { id: "gymnastik", name: "Gymnastik oder Seniorensport", kurz: "Gymnastik", art: "min", std: 30, feld: "bewegung", bild: "weg", tf: "AB", icon: "arme",
+  { id: "gymnastik", draussenOpt: true, mutOpt: true, name: "Gymnastik oder Seniorensport", kurz: "Gymnastik", art: "min", std: 30, feld: "bewegung", bild: "weg", tf: "AB", icon: "arme",
     info: ["Kraft und Beweglichkeit machen vieles leichter: Treppe, Einkauf, Tanzstunde."] },
-  { id: "gleichgewicht", name: "Gleichgewichtsübung (wie von der Physio)", kurz: "Gleichgewicht", art: "min", std: 10, feld: "bewegung", bild: "weg", tf: "ABC", icon: "waage",
+  { id: "gleichgewicht", draussenOpt: true, name: "Gleichgewichtsübung (wie von der Physio)", kurz: "Gleichgewicht", art: "min", std: 10, feld: "bewegung", bild: "weg", tf: "ABC", icon: "waage",
     info: ["Sicher auf den Beinen – das merkt man bei jedem Schritt."] },
   { id: "ruecken", name: "Meine Rückenübungen", kurz: "Rücken", art: "min", std: 15, feld: "bewegung", bild: "weg", tf: "ABC", icon: "ruecken",
     info: ["Deine Übungen aus der Physiotherapie – genau so, wie sie für dich gedacht sind."] },
-  { id: "dehnen", name: "Dehnen oder Atmen im Sitzen", kurz: "Dehnen", art: "min", std: 10, feld: "bewegung", bild: "weg", tf: "BCD", icon: "atem",
+  { id: "dehnen", draussenOpt: true, name: "Dehnen oder Atmen im Sitzen", kurz: "Dehnen", art: "min", std: 10, feld: "bewegung", bild: "weg", tf: "BCD", icon: "atem",
     info: ["Ruhiges Atmen und Dehnen im Sitzen ist Bewegung, die an jedem Tag geht."] },
   { id: "alltag", name: "Alltagsbewegung (Treppe, kleiner Einkauf mit Trolley)", kurz: "Alltag", art: "min", std: 20, feld: "bewegung", bild: "weg", tf: "AB", icon: "tasche",
     info: ["Alltagsbewegung zählt genauso wie ein Spaziergang."] },
   { id: "sitztanz", name: "Im Sitzen zur Musik bewegt", kurz: "Sitztanz", art: "min", std: 15, feld: "bewegung", neben: "geist", bild: "tanz", tf: "BCD", icon: "note",
     info: ["Musik und Bewegung im Sitzen – Rhythmus tut dem Kopf und dem Körper gut."] },
   // Tanz & Menschen
-  { id: "tanzstunde", name: "Tanzstunde gegeben", kurz: "Tanzstunde", art: "min", std: 60, feld: "menschen", neben: "bewegung", bild: "tanz", tf: "AB", icon: "fuss",
+  { id: "tanzstunde", mutOpt: true, name: "Tanzstunde gegeben", kurz: "Tanzstunde", art: "min", std: 60, feld: "menschen", neben: "bewegung", bild: "tanz", tf: "AB", icon: "fuss",
     info: ["Tanzstunde gegeben – heute hat jemand von dir gelernt.", "Dein Tanzschüler weiß hoffentlich, was für eine Lehrerin er hat."] },
   { id: "tanzplanen", name: "Schritte und Musik für die Stunde ausgedacht", kurz: "Stunde planen", art: "min", std: 20, feld: "geist", bild: "tanz", tf: "BC", icon: "note",
     info: ["Gut vorbereitet geht die Stunde leichter von der Hand."] },
-  { id: "besuch", name: "Besuch (bekommen oder gemacht)", kurz: "Besuch", art: "person", std: 60, feld: "menschen", bild: "fenster", tf: "AB", icon: "tassen",
+  { id: "besuch", draussenOpt: true, mutOpt: true, name: "Besuch (bekommen oder gemacht)", kurz: "Besuch", art: "person", std: 60, feld: "menschen", bild: "fenster", tf: "AB", icon: "tassen",
     info: ["Zusammen gewesen – am Küchentisch, unterwegs oder in der Binger."] },
-  { id: "telefon", name: "Telefoniert", kurz: "Telefoniert", art: "person", std: 20, feld: "menschen", bild: "fenster", tf: "ABCD", icon: "telefon",
+  { id: "telefon", mutOpt: true, name: "Telefoniert", kurz: "Telefoniert", art: "person", std: 20, feld: "menschen", bild: "fenster", tf: "ABCD", icon: "telefon",
     info: ["Telefoniert. Und bestimmt an alles gedacht, was du fragen wolltest."] },
   { id: "nachbar", name: "Gespräch im Haus", kurz: "Im Haus", art: "person", std: 15, feld: "menschen", bild: "fenster", tf: "ABC", icon: "haus",
     info: ["Ein Schwatz im Haus – so bleibt man auf dem Laufenden."] },
-  { id: "brief", name: "Brief, Karte oder lange Nachricht", kurz: "Geschrieben", art: "person", std: 20, feld: "menschen", bild: "fenster", tf: "BC", icon: "brief",
+  { id: "brief", mutOpt: true, name: "Brief, Karte oder lange Nachricht", kurz: "Geschrieben", art: "person", std: 20, feld: "menschen", bild: "fenster", tf: "BC", icon: "brief",
     info: ["Geschriebene Worte kann man aufheben und noch einmal lesen."] },
-  { id: "gemeinschaft", name: "Mit dabei gewesen (Kaffeerunde, Fest, Kurs)", kurz: "Dabei gewesen", art: "min", std: 60, feld: "menschen", bild: "fenster", tf: "AB", icon: "tassen",
+  { id: "gemeinschaft", mutOpt: true, name: "Mit dabei gewesen (Kaffeerunde, Fest, Kurs)", kurz: "Dabei gewesen", art: "min", std: 60, feld: "menschen", bild: "fenster", tf: "AB", icon: "tassen",
     info: ["Gemeinsam etwas erleben, ohne viel planen zu müssen."] },
   { id: "geholfen", name: "Jemandem geholfen", kurz: "Geholfen", art: "person", std: 30, feld: "menschen", bild: "fenster", tf: "ABC", icon: "hand",
     info: ["Geholfen. Wer sonst hätte daran gedacht?"] },
   { id: "hilfe", name: "Hilfe angenommen", kurz: "Hilfe angenommen", art: "fest", w: 15, feld: "sorge", bild: "quelle", tf: "BCD", icon: "hand",
     info: ["Zu zweit geht’s schneller. Und der andere freut sich, dass er randurfte."] },
   // Lesen & Genuss
-  { id: "lesen", name: "Gelesen", kurz: "Lesen", art: "min", std: 20, feld: "geist", bild: "eiche", tf: "ABC", icon: "buch",
+  { id: "lesen", draussenOpt: true, name: "Gelesen", kurz: "Lesen", art: "min", std: 20, feld: "geist", bild: "eiche", tf: "ABC", icon: "buch",
     info: ["Gelesen. Lesezeichen rein, morgen geht’s spannend weiter.", "Seite gemerkt?"] },
-  { id: "hoerbuch", name: "Hörbuch oder Hörspiel", kurz: "Hörbuch", art: "min", std: 30, feld: "geist", bild: "eiche", tf: "BCD", icon: "kopfhoerer",
+  { id: "hoerbuch", draussenOpt: true, name: "Hörbuch oder Hörspiel", kurz: "Hörbuch", art: "min", std: 30, feld: "geist", bild: "eiche", tf: "BCD", icon: "kopfhoerer",
     info: ["Hören geht auch mit geschlossenen Augen – und zählt wie Lesen."] },
   { id: "buchfertig", name: "Ein Buch ausgelesen", kurz: "Buch fertig", art: "buch", feld: "geist", bild: "eiche", tf: "ABC", icon: "lesezeichen", w: 20,
     info: ["Ein ganzes Buch. An der Eiche hängt jetzt ein Lesezeichen mit seinem Titel."] },
   { id: "tagebuch", name: "Tagebuch geschrieben", kurz: "Tagebuch", art: "min", std: 15, feld: "geist", bild: "eiche", tf: "ABCD", icon: "feder",
     info: ["Aufgeschrieben ist aufgehoben.", "Ein paar Zeilen am Tag sortieren die Gedanken."] },
-  { id: "raetsel", name: "Rätsel auf Papier", kurz: "Rätsel", art: "min", std: 20, feld: "geist", bild: "eiche", tf: "BC", icon: "raetsel",
+  { id: "raetsel", draussenOpt: true, name: "Rätsel auf Papier", kurz: "Rätsel", art: "min", std: 20, feld: "geist", bild: "eiche", tf: "BC", icon: "raetsel",
     info: ["Knobeln hält den Kopf beweglich."] },
-  { id: "radio", name: "Radio, Podcast oder Doku bewusst", kurz: "Gehört", art: "min", std: 30, feld: "geist", bild: "eiche", tf: "BCD", icon: "radio",
+  { id: "radio", draussenOpt: true, name: "Radio, Podcast oder Doku bewusst", kurz: "Gehört", art: "min", std: 30, feld: "geist", bild: "eiche", tf: "BCD", icon: "radio",
     info: ["Gut zugehört. Das kannst du ja sowieso."] },
   { id: "gelernt", name: "Etwas Neues gelernt", kurz: "Gelernt", art: "min", std: 15, feld: "mut", bild: "mut", tf: "ABC", icon: "funke",
     info: ["Wieder was gelernt. Gesprächsstoff für die nächste Kaffeerunde."] },
   { id: "erinnern", name: "Erinnerungen aufgeschrieben oder erzählt", kurz: "Erinnert", art: "min", std: 20, feld: "geist", neben: "menschen", bild: "eiche", tf: "BC", icon: "feder",
     info: ["Erinnerungen erzählen ist wie Fotos anschauen, nur wärmer."] },
-  { id: "musik", name: "Musik gehört, die mir guttut", kurz: "Musik", art: "min", std: 20, feld: "geist", bild: "tanz", tf: "ABCD", icon: "note",
+  { id: "musik", draussenOpt: true, name: "Musik gehört, die mir guttut", kurz: "Musik", art: "min", std: 20, feld: "geist", bild: "tanz", tf: "ABCD", icon: "note",
     info: ["Ein gutes Lied hebt den ganzen Tag."] },
   { id: "singen", name: "Gesungen oder mitgesummt", kurz: "Gesungen", art: "klein", feld: "geist", bild: "tanz", tf: "ABC", icon: "note",
     info: ["Mitgesungen! Schief oder schön – zählt beides."] },
-  { id: "kultur", name: "Konzert, Theater oder Kino", kurz: "Kultur", art: "min", std: 120, feld: "geist", neben: "mut", bild: "tanz", tf: "A", icon: "maske",
+  { id: "kultur", mutOpt: true, name: "Konzert, Theater oder Kino", kurz: "Kultur", art: "min", std: 120, feld: "geist", neben: "mut", bild: "tanz", tf: "A", icon: "maske",
     info: ["Raus und was erlebt. Erzähl!"] },
   { id: "goennen", name: "Mir etwas gegönnt", kurz: "Gegönnt", art: "klein", feld: "geist", bild: "wiese", tf: "ABC", icon: "kuchen",
     info: ["Gegönnt. Steht völlig zu Recht auf der Liste."] },
@@ -741,9 +765,9 @@ D.taetigkeiten = [
   { id: "natur", name: "Etwas in der Natur entdeckt", kurz: "Entdeckt", art: "klein", feld: "geist", bild: "wiese", draussen: true, tf: "ABC", icon: "blatt",
     info: ["Wer genau hinschaut, findet im Forst jeden Tag etwas Neues."] },
   // Hände & Haus
-  { id: "kochen", name: "Mir etwas Gutes gekocht", kurz: "Gekocht", art: "min", std: 30, feld: "schaffen", bild: "wiese", tf: "BC", icon: "topf",
+  { id: "kochen", mutOpt: true, name: "Mir etwas Gutes gekocht", kurz: "Gekocht", art: "min", std: 30, feld: "schaffen", bild: "wiese", tf: "BC", icon: "topf",
     info: ["Selbst gekocht schmeckt es doppelt."] },
-  { id: "handarbeit", name: "Gemalt, gebastelt oder Handarbeit", kurz: "Handarbeit", art: "min", std: 30, feld: "schaffen", bild: "wiese", tf: "BC", icon: "pinsel",
+  { id: "handarbeit", mutOpt: true, name: "Gemalt, gebastelt oder Handarbeit", kurz: "Handarbeit", art: "min", std: 30, feld: "schaffen", bild: "wiese", tf: "BC", icon: "pinsel",
     info: ["Selbst gemacht – und kein anderer hat so eins."] },
   { id: "pflanzen", name: "Pflanzen versorgt (Balkon, Zimmer)", kurz: "Pflanzen", art: "klein", feld: "schaffen", bild: "wiese", tf: "ABC", icon: "blume",
     info: ["Etwas wächst, weil du dich kümmerst."] },
@@ -768,7 +792,7 @@ D.taetigkeiten = [
     info: ["In Ruhe gemacht, ohne Eile."] },
   { id: "getrunken", name: "Genug getrunken", kurz: "Getrunken", art: "klein", feld: "sorge", bild: "quelle", tf: "ABCD", icon: "glas",
     info: ["Glas leer, Haken dran."] },
-  { id: "ausgesprochen", name: "Etwas Belastendes ausgesprochen", kurz: "Ausgesprochen", art: "min", std: 30, feld: "menschen", neben: "sorge", bild: "quelle", tf: "BCD", icon: "sprechen",
+  { id: "ausgesprochen", mutOpt: true, name: "Etwas Belastendes ausgesprochen", kurz: "Ausgesprochen", art: "min", std: 30, feld: "menschen", neben: "sorge", bild: "quelle", tf: "BCD", icon: "sprechen",
     info: ["Gut, dass es raus ist. Gesagt ist gesagt."] },
   { id: "draussensitzen", name: "Auf dem Balkon oder draußen gesessen", kurz: "Balkon", art: "min", std: 20, feld: "sorge", bild: "quelle", draussen: true, tf: "BCD", icon: "bank",
     info: ["Frische Luft und Tageslicht tun gut, auch im Sitzen."] },
@@ -4250,7 +4274,7 @@ D.tageshinweise = [
  D.tageshinweise = [{"text": "Was steht heute auf deiner Liste? Ein Punkt, der Spaß macht, gehört immer dazu."}, {"text": "Drei Punkte für heute reichen. Wer mehr schafft, schreibt einfach welche dazu."}, {"text": "Kleine Vorhaben findest du unter „Ideen“. Mit Kästchen zum Abhaken."}, {"text": "Ein Anruf, eine Karte, ein Besuch: Was davon passt heute am besten?"}, {"text": "Wer hat bald Geburtstag? Karte schreiben, abschicken, abhaken."}, {"text": "Taler verfallen nie. Ein Blick in den Kramladen lohnt sich trotzdem ab und zu."}, {"text": "Lieblingslied an, Schultern locker – das kannst du als Musik eintragen."}, {"text": "Tanzstunde in Sicht? Schritte und Musik vorher auf einen Zettel, dann geht’s gleich los."}, {"text": "Wer einen Ausflug plant, hat schon die halbe Freude. Die Checkliste liegt bereit."}, {"text": "Etwas zum ersten Mal gemacht? Dann leuchtet heute Abend ein Glühwürmchen mehr im Wald."}, {"text": "Ein guter Satz aus dem Buch? Ab damit in den „Schönsten Moment“ unter „Rückblick“."}, {"text": "Heute schon gelacht? Dann ist der wichtigste Haken schon dran."}, {"text": "Rätselheft, Stift, Kaffee: Mehr braucht ein guter Nachmittag nicht."}, {"text": "In die Binger? Kuchen einpacken, Lieblingsmusik mitnehmen, los."}, {"text": "Was hat heute gut geschmeckt? Rezept notieren, dann gibt’s das bald wieder."}, {"text": "Wochenplan gefällig? Drei feste Punkte, der Rest bleibt Überraschung."}, {"text": "Spandauer Altstadt: Markt, Kaffee, Leute gucken. Ein Ausflug mit vielen Bänken."}, {"text": "Ein Punkt auf der Liste darf auch „Sofa“ heißen. Haken dran."}, {"text": "Ausflug geschafft? Im Setzkasten wartet ein Fach auf das Andenken."}, {"text": "Ein Glas Wasser neben der Liste – dann wird beim Abhaken gleich mitgetrunken."}, {"text": "Zeitumstellung am letzten Oktobersonntag: Uhren am Herd und im Auto nicht vergessen.", "monate": [10]}, {"text": "Kastanien und Eicheln sammeln: Ein paar davon machen sich gut auf der Fensterbank.", "monate": [10]}, {"text": "Kraniche ziehen über den Forst. Man hört sie, bevor man sie sieht.", "monate": [10]}, {"text": "Die Balkonpflanzen wollen bald ins Winterquartier. Ein guter Punkt für die Liste.", "monate": [10, 11]}, {"text": "Im Herbst ist Pilzzeit. Gucken ist erlaubt, Bestimmen überlassen wir den Profis.", "monate": [9, 10]}, {"text": "Novembergrau? Eine Verabredung zum Kaffee macht jeden Kalender bunter.", "monate": [11]}, {"text": "Plätzchenliste schreiben: Welche Sorten, für wen? Den Rest erledigt der Ofen.", "monate": [11, 12]}, {"text": "Weihnachtspost nach Schweden ist ein paar Tage unterwegs. Früh losschicken lohnt sich.", "monate": [11, 12]}, {"text": "Geschenkeliste angefangen? Abhaken macht im Dezember doppelt Freude.", "monate": [12]}, {"text": "Weihnachten in der Binger: Was nimmst du mit? Ab auf die Liste.", "monate": [12]}, {"text": "Neuer Kalender: Geburtstage gleich eintragen, solange er noch so schön sauber ist.", "monate": [1]}, {"text": "Januar ist Sortiermonat: eine Schublade, ein Fach. Mehr muss es nicht sein.", "monate": [1, 2]}, {"text": "Faschingsdienstag: Pfannkuchen holen ist auch ein kleiner Ausflug.", "monate": [2]}, {"text": "Frühjahrsputz auf dem Balkon: Töpfe raus, frische Erde rein, fertig.", "monate": [3, 4]}, {"text": "Ostern kommt. Wer bekommt dieses Jahr eine Karte? Liste machen!", "monate": [3, 4]}, {"text": "Nach den Eisheiligen Mitte Mai dürfen die Balkonblumen raus. Einkaufsliste schreiben?", "monate": [5]}, {"text": "Spargelzeit! Ein guter Grund für ein Mittagessen in Gesellschaft.", "monate": [5, 6]}, {"text": "Sommerabende sind lang. Balkon, kühles Getränk, Musik – fertig ist der Plan.", "monate": [6, 7, 8]}, {"text": "Heiß draußen? Die Runde in den Morgen verlegen und Wasser einpacken.", "monate": [6, 7, 8]}, {"text": "September ist Pflaumenkuchenzeit. Wer bekommt ein Stück ab?", "monate": [9]}];
  D.stattDaddeln = [{"id": "SD01", "titel": "Ein Kapitel Harry Potter", "text": "Lies genau ein Kapitel in deinem Band, leg das Lesezeichen mit Absicht ein und hak es ab – Kapitelende ist Ehrensache.", "min": 20, "tf": "ABC", "kat": "Lesen", "haltung": "im Sitzen, im Liegen", "t": "lesen"}, {"id": "SD03", "titel": "Ein Gedicht zum Grinsen", "text": "Lies ein Gedicht von Heinz Erhardt oder Ringelnatz und such dir die Zeile aus, die du heute jemandem vorträgst.", "min": 5, "tf": "ABC", "kat": "Lesen", "haltung": "im Sitzen, im Liegen", "t": "lesen"}, {"id": "SD05", "titel": "Lesen, bis der Timer klingelt", "text": "Stell den Ruhe-Timer auf 15 Minuten und lies, bis er klingelt – wie viele Seiten es werden, ist egal.", "min": 15, "tf": "ABC", "kat": "Lesen", "haltung": "im Sitzen, im Liegen", "t": "lesen"}, {"id": "SD06", "titel": "Den besten Satz klauen", "text": "Such im aktuellen Buch den besten Satz heraus und schreib ihn auf einen Zettel, für die Pinnwand oder fürs nächste Telefonat.", "min": 5, "tf": "ABC", "kat": "Lesen", "haltung": "im Sitzen", "t": "lesen"}, {"id": "SD62", "titel": "Krimi mit Verdacht", "text": "Lies ein Kapitel Krimi und notier, wen du verdächtigst – am Ende wird abgerechnet.", "min": 20, "tf": "ABC", "kat": "Lesen", "haltung": "im Sitzen, im Liegen", "t": "lesen"}, {"id": "SD07", "titel": "Hörbuch mit geschlossenen Augen", "text": "Leg dich bequem hin und hör ein Hörbuch-Kapitel lang einfach zu; ein gehörtes Kapitel zählt wie ein gelesenes.", "min": 20, "tf": "ABCD", "kat": "Hören", "haltung": "im Liegen", "t": "hoerbuch"}, {"id": "SD63", "titel": "Harry Potter zum Hören", "text": "Hör ein Kapitel aus deinem Band als Hörbuch, bei dem Rufus Beck jeder Figur eine eigene Stimme gibt.", "min": 30, "tf": "ABCD", "kat": "Hören", "haltung": "im Sitzen, im Liegen", "t": "hoerbuch"}, {"id": "SD08", "titel": "Ein Krimi-Hörspiel", "text": "Hör ein Krimi- oder Komödien-Hörspiel aus der ARD Audiothek und rate mit, bevor der Kommissar es tut.", "min": 40, "tf": "ABCD", "kat": "Hören", "haltung": "im Sitzen, im Liegen", "t": "hoerbuch"}, {"id": "SD11", "titel": "Vogelstimmen-Rätsel", "text": "Spiel dir drei Vogelstimmen vor (etwa auf den Seiten des NABU) und rate die Art, bevor du den Namen liest – ein Punkt pro Treffer.", "min": 10, "tf": "ABCD", "kat": "Hören", "haltung": "im Sitzen, im Liegen", "t": "radio"}, {"id": "SD64", "titel": "Kabarett zum Wegkichern", "text": "Hör eine Aufnahme von Loriot oder Heinz Erhardt und zähl, wie oft du laut lachen musst.", "min": 15, "tf": "ABCD", "kat": "Hören", "haltung": "im Sitzen, im Liegen", "t": "radio"}, {"id": "SD14", "titel": "Eine schöne Karte planen", "text": "Plane und gestalte eine Karte für jemanden, der sie gerade gut brauchen kann: Motiv, Spruch, Briefmarke, fertig.", "min": 15, "tf": "ABC", "kat": "Hände", "haltung": "im Sitzen", "t": "handarbeit"}, {"id": "SD15", "titel": "Herbstblatt-Lesezeichen", "text": "Press ein buntes Blatt im Buch und mach in ein paar Tagen ein Lesezeichen daraus, für dich oder zum Verschenken.", "min": 5, "tf": "ABC", "kat": "Hände", "haltung": "im Sitzen", "t": "handarbeit"}, {"id": "SD16", "titel": "Hühnchen in fünf Minuten", "text": "Zeichne Hühnchen in fünf Minuten ohne Radiergummi – je schiefer, desto lustiger.", "min": 5, "tf": "ABC", "kat": "Hände", "haltung": "im Sitzen", "t": "handarbeit"}, {"id": "SD17", "titel": "Eine Pflanze versorgen", "text": "Gieß eine Pflanze, dreh sie zum Licht und schau nach, ob ein neues Blatt kommt (Umtopfen lieber mit Handschuhen oder Hilfe).", "min": 5, "tf": "ABC", "kat": "Hände", "haltung": "im Sitzen, im Stehen", "t": "pflanzen"}, {"id": "SD18", "titel": "Eine kleine Reparatur", "text": "Erledige eine winzige Flickarbeit, die schon lange liegt, etwa einen Knopf oder einen Saum, und streich sie von der Liste.", "min": 10, "tf": "AB", "kat": "Hände", "haltung": "im Sitzen", "t": "handarbeit"}, {"id": "SD19", "titel": "Eine Postkarte, die überrascht", "text": "Schreib jemandem eine Postkarte, der nicht damit rechnet; drei Sätze reichen.", "min": 10, "tf": "ABC", "kat": "Kontakt", "haltung": "im Sitzen", "t": "brief"}, {"id": "SD21", "titel": "Sprachnachricht an Max", "text": "Sprich Max eine kurze Nachricht ein, was du gerade liest oder was im Haus los ist.", "min": 3, "tf": "ABC", "kat": "Kontakt", "haltung": "im Sitzen, im Liegen", "t": "telefon"}, {"id": "SD65", "titel": "Ein Witz mit Benotung", "text": "Schick Max deinen besten Witz und verlang eine Note von 1 bis 10 – Widerspruch zwecklos.", "min": 3, "tf": "ABC", "kat": "Kontakt", "haltung": "im Sitzen, im Liegen", "t": "telefon"}, {"id": "SD24", "titel": "Ein Dankeszettel", "text": "Schreib jemandem aus deinem Alltag einen kleinen Dankeszettel, etwa dem Hausmeister, der Bäckerin oder deinem Tanzschüler.", "min": 5, "tf": "ABC", "kat": "Kontakt", "haltung": "im Sitzen", "t": "brief"}, {"id": "SD66", "titel": "Etwas für Christiane vorbereiten", "text": "Überleg, was Christiane nach der Schulter-OP mit einer Hand schwerfällt, und biete ihr genau das an.", "min": 10, "tf": "ABC", "kat": "Kontakt", "haltung": "im Sitzen", "t": "geholfen"}, {"id": "SD67", "titel": "Rückenwind für den Tanzschüler", "text": "Schreib deinem Tanzschüler einen Zettel mit einem Tipp, wie er seine Auserwählte zum Tanzen auffordert.", "min": 5, "tf": "ABC", "kat": "Kontakt", "haltung": "im Sitzen", "t": "tanzplanen"}, {"id": "SD68", "titel": "Ein Gruß nach Schweden", "text": "Schick eine Postkarte mit einem richtig Berliner Motiv nach Schweden – Currywurst, Bär oder Brandenburger Tor.", "min": 10, "tf": "ABC", "kat": "Kontakt", "haltung": "im Sitzen", "t": "brief"}, {"id": "SD25", "titel": "Füße kreisen", "text": "Kreis jeden Fuß zehnmal in jede Richtung, dann spreiz die Zehen und kralle sie ein.", "min": 3, "tf": "ABCD", "kat": "Körper sanft", "haltung": "im Sitzen, im Liegen", "t": "dehnen"}, {"id": "SD26", "titel": "Lange ausatmen", "text": "Ganz normal einatmen, nicht tief, und dann langsam ausatmen, etwa vier Zählzeiten ein und sechs aus. Zehn Runden lang.", "min": 3, "tf": "ABCD", "kat": "Körper sanft", "haltung": "im Sitzen, im Liegen", "t": "dehnen"}, {"id": "SD27", "titel": "Schultern loslassen", "text": "Zieh die Schultern hoch, halte kurz und lass sie fallen, fünfmal, und neig danach den Kopf sanft zu jeder Seite.", "min": 3, "tf": "ABCD", "kat": "Körper sanft", "haltung": "im Sitzen", "t": "dehnen"}, {"id": "SD28", "titel": "Deine Physio-Übung im Sitzen", "text": "Mach eine Übung aus deinem Physio-Blatt, die im Sitzen geht – mehr braucht es heute nicht.", "min": 3, "tf": "ABC", "kat": "Körper sanft", "haltung": "im Sitzen", "t": "ruecken"}, {"id": "SD29", "titel": "Eine Runde über den Flur", "text": "Geh einmal den Flur entlang und zurück und zähl dabei die Fenster – oder die Nachbarn, die dich aufhalten.", "min": 5, "tf": "ABC", "kat": "Körper sanft", "haltung": "im Stehen", "t": "alltag"}, {"id": "SD30", "titel": "Deine Gleichgewichtsübung", "text": "Die Gleichgewichtsübung, die du schon kennst – mit beiden Händen in Griffnähe.", "min": 3, "tf": "AB", "kat": "Körper sanft", "haltung": "im Stehen", "t": "gleichgewicht"}, {"id": "SD61", "titel": "Einfach liegen bleiben", "text": "Decke, Wärmflasche, Augen zu – das ist heute genug.", "min": 0, "tf": "CD", "kat": "Körper sanft", "haltung": "im Liegen", "t": "ruhe"}, {"id": "SD31", "titel": "Vogel-Bingo am Fenster", "text": "Notier fünf Vogelarten als Bingo-Zettel und kreuz an, was in zehn Minuten am Fenster vorbeikommt.", "min": 10, "tf": "ABCD", "kat": "Sinne", "haltung": "im Sitzen", "t": "natur"}, {"id": "SD32", "titel": "Geräusche zählen", "text": "Kipp das Fenster, schließ die Augen und zähl, wie viele verschiedene Geräusche du in drei Minuten hörst – neuer Rekord?", "min": 3, "tf": "ABCD", "kat": "Sinne", "haltung": "im Sitzen, im Liegen", "t": "licht"}, {"id": "SD33", "titel": "Gewürze blind raten", "text": "Riech mit geschlossenen Augen an drei Gewürzdosen und rate, welche es ist; jeder Treffer ist ein Punkt.", "min": 3, "tf": "ABCD", "kat": "Sinne", "haltung": "im Sitzen", "t": "goennen"}, {"id": "SD34", "titel": "Wärme mit Aufmerksamkeit", "text": "Leg eine Wärmflasche oder ein Kirschkernkissen auf und spür einfach nur der Wärme nach.", "min": 15, "tf": "CD", "kat": "Sinne", "haltung": "im Liegen", "t": "waerme"}, {"id": "SD35", "titel": "Wolkentiere suchen", "text": "Schau in den Himmel und find in den Wolken drei Tiere – eins davon muss ein Huhn sein.", "min": 5, "tf": "ABCD", "kat": "Sinne", "haltung": "im Sitzen, im Liegen", "t": "licht"}, {"id": "SD36", "titel": "Schokolade wie eine Weinprüferin", "text": "Lass ein Stück Schokolade ganz langsam zergehen und gib ihm Noten für Duft, Schmelz und Abgang.", "min": 3, "tf": "ABCD", "kat": "Sinne", "haltung": "im Sitzen, im Liegen", "t": "goennen"}, {"id": "SD37", "titel": "Die Geschichte hinter dem Foto", "text": "Such ein altes Foto heraus und schreib die Geschichte dahinter auf, die außer dir niemand kennt.", "min": 10, "tf": "ABC", "kat": "Erinnern", "haltung": "im Sitzen", "t": "erinnern"}, {"id": "SD38", "titel": "Eine Erzählfrage", "text": "Beantworte eine der Erzählfragen – schriftlich, als Sprachaufnahme oder nur im Kopf.", "min": 10, "tf": "ABC", "kat": "Erinnern", "haltung": "im Sitzen, im Liegen", "t": "erinnern"}, {"id": "SD39", "titel": "Ein Rezept aufschreiben", "text": "Schreib ein Familienrezept so auf, wie du es wirklich kochst, mit jedem „ein bisschen“ und „nach Gefühl“.", "min": 15, "tf": "ABC", "kat": "Erinnern", "haltung": "im Sitzen", "t": "erinnern"}, {"id": "SD40", "titel": "Die beste Panne meines Lebens", "text": "Schreib die lustigste Panne auf, die dir je passiert ist – im Auto, im Urlaub oder auf der Tanzfläche.", "min": 10, "tf": "ABC", "kat": "Erinnern", "haltung": "im Sitzen, im Liegen", "t": "erinnern"}, {"id": "SD42", "titel": "Der erste Tanz", "text": "Notier ein paar Stichworte zu deinem ersten Tanz: Wo war das, wer hat ihn dir gezeigt, welche Musik lief?", "min": 10, "tf": "ABC", "kat": "Erinnern", "haltung": "im Sitzen", "t": "erinnern"}, {"id": "SD43", "titel": "Eine einzige Schublade", "text": "Räum eine Schublade aus und leg nur Schönes und Nötiges wieder hinein – der Rest bekommt eine Kiste.", "min": 15, "tf": "AB", "kat": "Ordnen", "haltung": "im Sitzen, im Stehen", "t": "ordnung"}, {"id": "SD46", "titel": "Das nächste Buch bereitlegen", "text": "Leg fest, welches Buch als Nächstes dran ist, und leg es genau dorthin, wo sonst das Handy liegt.", "min": 3, "tf": "ABC", "kat": "Ordnen", "haltung": "im Stehen", "t": "ordnung"}, {"id": "SD47", "titel": "Die Ausflugstasche packen", "text": "Pack eine leichte Ausflugstasche mit Wasser, Sitzkissen, Ersatzversorgung, Snack und Plan-B-Zettel, damit ein guter Tag ohne Hürde beginnt.", "min": 15, "tf": "ABC", "kat": "Ordnen", "haltung": "im Sitzen, im Stehen", "t": "ordnung"}, {"id": "SD69", "titel": "Das Handy aufräumen", "text": "Schieb die Spiele-Apps auf die letzte Bildschirmseite und leg Hörbuch und Kamera nach vorn.", "min": 5, "tf": "ABC", "kat": "Ordnen", "haltung": "im Sitzen, im Liegen", "t": "ordnung"}, {"id": "SD45", "titel": "Drei Vorhaben für morgen", "text": "Schreib drei kleine Vorhaben auf einen Zettel: eins für den Körper, eins für den Kopf, eins für Menschen.", "min": 5, "tf": "ABC", "kat": "Listen", "haltung": "im Sitzen", "t": "tagebuch"}, {"id": "SD70", "titel": "Die Schon-geschafft-Liste", "text": "Schreib fünf Dinge auf, die du heute schon geschafft hast, und hak sie genüsslich ab – Kaffee kochen zählt.", "min": 5, "tf": "ABC", "kat": "Listen", "haltung": "im Sitzen, im Liegen", "t": "tagebuch"}, {"id": "SD71", "titel": "Wunschliste für gute Tage", "text": "Leg eine Liste mit zehn Dingen für den nächsten guten Tag an, vom Eis an der Havel bis zur Zitadelle.", "min": 10, "tf": "ABC", "kat": "Listen", "haltung": "im Sitzen, im Liegen", "t": "tagebuch"}, {"id": "SD72", "titel": "Der Bücherstapel als Rangliste", "text": "Schreib auf, welche Bücher du noch lesen willst, und ordne sie nach Lust – Platz 1 kommt als Nächstes dran.", "min": 10, "tf": "ABC", "kat": "Listen", "haltung": "im Sitzen, im Liegen", "t": "tagebuch"}, {"id": "SD73", "titel": "Tanzlieder-Hitparade", "text": "Stell deine Top 10 der Tanzlieder zusammen, jeweils mit Tanz und Takt dazu.", "min": 10, "tf": "ABC", "kat": "Listen", "haltung": "im Sitzen, im Liegen", "t": "tanzplanen"}, {"id": "SD74", "titel": "Papierkram: der kleinste zuerst", "text": "Sammle allen offenen Papierkram auf einer Liste und erledige heute nur den kleinsten Punkt.", "min": 10, "tf": "ABC", "kat": "Listen", "haltung": "im Sitzen", "t": "papier"}, {"id": "SD75", "titel": "Plan-B-Zettel für den Ausflug", "text": "Schreib für den nächsten Ausflug Toilette, Bank, Café, Pausenplatz und Taxinummer auf einen Zettel.", "min": 10, "tf": "ABC", "kat": "Listen", "haltung": "im Sitzen", "t": "tagebuch"}, {"id": "SD76", "titel": "Fragen für den nächsten Termin", "text": "Schreib vor dem nächsten Arzttermin drei Fragen auf und mach beim Termin einen Haken hinter jede Antwort.", "min": 5, "tf": "ABC", "kat": "Listen", "haltung": "im Sitzen, im Liegen", "t": "papier"}, {"id": "SD77", "titel": "Spandaus Café-Rangliste", "text": "Mach eine Rangliste deiner Spandauer Lieblingscafés mit Punkten für Kuchen, Sitzplatz und Toilette.", "min": 10, "tf": "ABC", "kat": "Listen", "haltung": "im Sitzen, im Liegen", "t": "tagebuch"}, {"id": "SD78", "titel": "Die Statt-Daddeln-Liste", "text": "Schreib fünf Sachen auf, die du statt Solitär machen willst, und steck den Zettel in die Handyhülle.", "min": 5, "tf": "ABC", "kat": "Listen", "haltung": "im Sitzen, im Liegen", "t": "tagebuch"}, {"id": "SD79", "titel": "Vorrat-Check", "text": "Zähl deine Versorgungsartikel durch und schreib auf, was bald nachbestellt werden muss.", "min": 10, "tf": "ABC", "kat": "Listen", "haltung": "im Sitzen", "t": "versorgung"}, {"id": "SD50", "titel": "Fünf Wörter Schwedisch", "text": "Lern fünf schwedische Wörter, etwa „fika“ für Kaffeepause, und bau eins beim nächsten Anruf ein.", "min": 10, "tf": "ABC", "kat": "Lernen", "haltung": "im Sitzen, im Liegen", "t": "gelernt"}, {"id": "SD51", "titel": "Einer Frage nachgehen", "text": "Geh einer Frage nach, die dich schon lange wundert – etwa, warum Kraniche im Keil fliegen und wer eigentlich vorne fliegen muss.", "min": 10, "tf": "ABC", "kat": "Lernen", "haltung": "im Sitzen, im Liegen", "t": "gelernt"}, {"id": "SD52", "titel": "Ein Wissenshäppchen weitergeben", "text": "Lies ein Häppchen aus dem Wissen und erzähl es heute jemandem weiter, als hättest du es schon immer gewusst.", "min": 3, "tf": "ABC", "kat": "Lernen", "haltung": "im Sitzen, im Liegen", "t": "gelernt"}, {"id": "SD54", "titel": "Ein Sternbild finden", "text": "Such dir ein Sternbild aus, etwa den Großen Wagen, und finde es abends vom Fenster oder Balkon aus.", "min": 10, "tf": "ABC", "kat": "Lernen", "haltung": "im Sitzen, im Stehen", "t": "gelernt"}, {"id": "SD80", "titel": "Kurioses über Hühner", "text": "Find drei kuriose Fakten über Hühner heraus und erzähl den besten deinem Hühnchen – oder Max.", "min": 10, "tf": "ABC", "kat": "Lernen", "haltung": "im Sitzen, im Liegen", "t": "gelernt"}, {"id": "SD81", "titel": "Rätsel gegen die Uhr", "text": "Lös ein Sudoku oder Kreuzworträtsel auf Papier mit dem Ruhe-Timer und versuch, deine letzte Zeit zu schlagen.", "min": 15, "tf": "ABC", "kat": "Lernen", "haltung": "im Sitzen", "t": "raetsel"}, {"id": "SD82", "titel": "Ein Spandau-Quiz bauen", "text": "Denk dir drei knifflige Quizfragen über Spandau aus, an denen sich Max oder dein Tanzschüler die Zähne ausbeißen.", "min": 10, "tf": "ABC", "kat": "Lernen", "haltung": "im Sitzen, im Liegen", "t": "gelernt"}, {"id": "SD55", "titel": "Ein Lied aus der Jugend", "text": "Such ein Lied von damals heraus, hör es ganz und summ mit.", "min": 4, "tf": "ABCD", "kat": "Musik/Tanz", "haltung": "im Sitzen, im Liegen", "t": "musik"}, {"id": "SD83", "titel": "Walzer, Foxtrott oder Cha-Cha?", "text": "Hör Radio mit Schlagern oder Swing und rate bei jedem Lied den passenden Tanz – ein Punkt pro Treffer.", "min": 15, "tf": "ABCD", "kat": "Musik/Tanz", "haltung": "im Sitzen, im Liegen", "t": "musik"}, {"id": "SD59", "titel": "Ein Satz Klassik, ganz", "text": "Hör einen einzigen Satz eines Konzerts oder einer Sinfonie ganz durch, ohne nebenher etwas anderes zu tun.", "min": 8, "tf": "ABCD", "kat": "Musik/Tanz", "haltung": "im Liegen", "t": "musik"}, {"id": "SD56", "titel": "Tanzschritte ausdenken", "text": "Denk dir im Sitzen die Schrittfolge für die nächste Tanzstunde aus und schreib sie als Mini-Plan auf.", "min": 10, "tf": "ABC", "kat": "Musik/Tanz", "haltung": "im Sitzen", "t": "tanzplanen"}, {"id": "SD58", "titel": "Musik für die Tanzstunde", "text": "Stell drei Lieder für die nächste Stunde zusammen: eins langsam, einen Walzer und eins zum Lachen.", "min": 15, "tf": "ABC", "kat": "Musik/Tanz", "haltung": "im Sitzen, im Liegen", "t": "tanzplanen"}, {"id": "SD57", "titel": "Sitztanz", "text": "Leg ein schwungvolles Lied auf und tanz im Sitzen mit Armen, Schultern und Füßen mit.", "min": 4, "tf": "ABC", "kat": "Musik/Tanz", "haltung": "im Sitzen", "t": "sitztanz"}, {"id": "SD60", "titel": "Laut mitsingen", "text": "Ruf ein Lied mit eingeblendetem Text auf und sing laut mit – ob es schön klingt, spielt keine Rolle.", "min": 4, "tf": "ABC", "kat": "Musik/Tanz", "haltung": "im Sitzen, im Stehen", "t": "singen"}, {"id": "SD84", "titel": "Ein Lied für jemanden", "text": "Such ein Lied heraus, das genau zu jemandem passt, und schick es ohne Erklärung los.", "min": 5, "tf": "ABC", "kat": "Musik/Tanz", "haltung": "im Sitzen, im Liegen", "t": "musik"}];
  D.missionen = [{"id": "M01", "titel": "Eine Woche, jeden Tag ein Kapitel", "text": "Ein Kapitel am Tag, egal welches Buch. An ruhigen Tagen zählt auch ein Hörbuch-Kapitel.", "tage": 7, "wennDann": "Wenn ich nach dem Mittagessen meinen Tee eingieße, dann lese ich ein Kapitel.", "tf": "ABCD", "t": "lesen"}, {"id": "M31", "titel": "Harry Potter, Band zwei", "text": "Wenn der erste Band durch ist, kommt „Die Kammer des Schreckens“, Kapitel für Kapitel mit Haken auf der Kapitelliste.", "tage": 14, "wennDann": "Wenn ich mich abends auf die Couch setze, dann lese ich erst ein Kapitel, bevor das Handy dran ist.", "tf": "ABC", "t": "lesen"}, {"id": "M27", "titel": "Lesen zu zweit", "text": "Max und du lest euch am Telefon abwechselnd eine Seite vor. Geht wunderbar im Liegen.", "tage": 14, "wennDann": "Wenn Max und ich telefonieren, dann liest einer von uns eine Seite vor.", "tf": "ABC", "t": "lesen"}, {"id": "M21", "titel": "Abende mit Papier", "text": "Eine Woche lang gehört der Abend dem Buch, das Handy lädt in der Küche. Ein Hörbuch mit Timer ist erlaubt.", "tage": 7, "wennDann": "Wenn ich die Nachttischlampe anknipse, dann nehme ich das Buch.", "tf": "ABC", "t": "lesen"}, {"id": "M14", "titel": "Eine Woche Tauschen statt Verbieten", "text": "Geht an jedem Tag, egal wie viel Schwung. Keine Strafe, keine Zählung.", "tage": 7, "wennDann": "Wenn ich die Spiele-App öffnen will, dann öffne ich zuerst „Ablenkung?“ und schaue eine Idee an; danach spiele ich, wenn ich mag.", "tf": "ABCD", "t": "frei"}, {"id": "M04", "titel": "Einen Tanz beibringen", "text": "Schritte lassen sich im Sitzen planen. Beim Vorführen reicht es, zu zählen und zu erklären; Drehungen übt der Schüler mit seiner Tanzpartnerin.", "tage": 14, "wennDann": "Wenn mein Schüler zur Stunde klingelt, dann zeige ich zuerst die neue Figur und danach die alte.", "tf": "ABC", "t": "tanzplanen"}, {"id": "M32", "titel": "Ein Lehrplan für den Tanzschüler", "text": "Leg eine Liste an: welche Figur wann, welche Musik, was schon sitzt. Mit jedem Haken rückt der große Auftritt näher.", "tage": 14, "wennDann": "Wenn eine Tanzstunde vorbei ist, dann trage ich ein, was saß und was nächstes Mal dran ist.", "tf": "ABC", "t": "tanzplanen"}, {"id": "M30", "titel": "Ein kleiner Tanznachmittag im Haus", "text": "Die Gastgeberin legt die Musik auf und gibt den Takt an, gern im Sitzen. Und vielleicht tanzt dein Schüler zum ersten Mal vor Publikum.", "tage": 14, "wennDann": "Wenn ich die Hausleitung sehe, dann frage ich nach dem Gemeinschaftsraum.", "tf": "AB", "t": "gemeinschaft"}, {"id": "M33", "titel": "Hilfeplan für Christiane", "text": "Schreib auf, was du rund um Christianes Schulter-OP übernehmen kannst – Fahrten, Einkäufe, Gesellschaft – und stimm die Liste mit ihr ab.", "tage": 14, "wennDann": "Wenn ich in die Binger fahre, dann nehme ich die Liste mit und hake ab, was erledigt ist.", "tf": "ABC", "t": "geholfen"}, {"id": "M22", "titel": "Die Spandau-Tour für Gäste", "text": "Plane eine Führung durch dein Spandau für Christiane oder Max – mit drei Stationen, einem Café und einem Plan B.", "tage": 14, "wennDann": "Wenn jemand fragt, was wir unternehmen, dann ziehe ich meinen Tourplan aus der Tasche.", "tf": "AB", "t": "besuch"}, {"id": "M34", "titel": "Spandau-Quiz für Max", "text": "Stell zehn knifflige Fragen über Spandau zusammen und frag Max beim nächsten Treffen ab. Verliert er, zahlt er den Kuchen.", "tage": 7, "wennDann": "Wenn mir unterwegs eine Spandauer Kuriosität auffällt, dann mache ich daraus eine Quizfrage.", "tf": "ABC", "t": "gelernt"}, {"id": "M35", "titel": "Der Fragezettel", "text": "Sammle eine Woche lang Fragen, über die du dich wunderst (Warum fliegen Kraniche im Keil? Warum heißt der Ohrwurm Ohrwurm?), und jag jeden Tag einer die Antwort ab.", "tage": 7, "wennDann": "Wenn ich mich über etwas wundere, dann schreibe ich die Frage sofort auf den Fragezettel.", "tf": "ABC", "t": "gelernt"}, {"id": "M11", "titel": "Ein lustiges Gedicht auswendig", "text": "Zum Beispiel Heinz Erhardts „Die Made“ – ideal zum Vortragen beim nächsten Essen in der Binger. Geht auch im Liegen.", "tage": 7, "wennDann": "Wenn ich die Zähne geputzt habe, dann lerne ich zwei Zeilen.", "tf": "ABC", "t": "gelernt"}, {"id": "M08", "titel": "Kartenwerkstatt", "text": "Gestalte drei besonders schöne Karten auf Vorrat, für die nächsten Anlässe, die garantiert kommen.", "tage": 7, "wennDann": "Wenn ich nachmittags meinen Kaffee trinke, dann arbeite ich an einer Karte weiter.", "tf": "ABC", "t": "handarbeit"}, {"id": "M03", "titel": "Ein echter Brief", "text": "Ein Absatz pro Tag; am fünften Tag geht der Brief in den Kasten.", "tage": 5, "wennDann": "Wenn ich morgens die Post hole, dann schreibe ich einen Absatz.", "tf": "ABC", "t": "brief"}, {"id": "M36", "titel": "Ein Paket nach Schweden", "text": "Sammle zwei Wochen lang kleine Berliner Dinge – Süßes, ein Foto, eine Karte – und schick sie als Paket nach Schweden.", "tage": 14, "wennDann": "Wenn ich beim Einkaufen etwas typisch Berlinerisches sehe, dann lege ich es ins Schweden-Paket.", "tf": "ABC", "t": "brief"}, {"id": "M37", "titel": "Weihnachten in Ruhe planen", "text": "Eine Liste für den Advent: Wer bekommt was, was wird bestellt, was gebacken. Dann bleibt der Dezember für die schönen Dinge.", "tage": 14, "wennDann": "Wenn mir eine Geschenkidee kommt, dann schreibe ich sie sofort auf die Weihnachtsliste.", "tf": "ABC", "t": "papier"}, {"id": "M38", "titel": "Die Liste der guten Tage", "text": "Sammle zehn Dinge für gute Tage, vom Eis an der Havel bis zur Zitadelle, und hak eins nach dem anderen ab.", "tage": 14, "wennDann": "Wenn ich morgens merke, dass ein guter Tag ist, dann nehme ich mir einen Punkt von der Liste vor.", "tf": "ABC", "t": "erstesmal"}, {"id": "M39", "titel": "Vorrat ohne Stress", "text": "Eine Liste für Versorgung und Medikamente: Was ist da, was wird wann bestellt? Einmal eingerichtet, spart sie jeden Monat Nerven.", "tage": 5, "wennDann": "Wenn ich eine neue Packung anbreche, dann trage ich es auf der Vorratsliste ein.", "tf": "ABC", "t": "versorgung"}, {"id": "M15", "titel": "Ein kleines Familien-Rezeptheft", "text": "Fünf Rezepte, so aufgeschrieben, wie du sie wirklich kochst. Eins davon kochst du mit jemandem zusammen.", "tage": 14, "wennDann": "Wenn ich gekocht habe, dann schreibe ich hinterher das Rezept auf.", "tf": "ABC", "t": "kochen"}, {"id": "M02", "titel": "Die beste Bank im Forst", "text": "Vergib Sterne für die Bänke auf deinen Runden: Aussicht, Sitzkomfort, Nähe zum Parkplatz. Am Ende steht die Siegerbank fest.", "tage": 14, "wennDann": "Wenn ich mich unterwegs auf eine Bank setze, dann gebe ich ihr Sterne und mache ein Foto.", "tf": "AB", "t": "gehen"}, {"id": "M29", "titel": "Die Havel entlang (Kilometer-Reise)", "text": "Deine Kilometer füllen eine virtuelle Havelstrecke von 30 km. Pausentage sind normal, die Strecke wartet.", "tage": 14, "wennDann": "Wenn ich vom Spaziergang zurückkomme, dann trage ich die Kilometer ein.", "tf": "ABC", "t": "gehen"}, {"id": "M05", "titel": "Vogel-Bingo", "text": "Leg eine Bingo-Karte mit neun Vogelarten an und kreuz an, was am Fenster oder unterwegs auftaucht.", "tage": 7, "wennDann": "Wenn ich mich morgens mit dem Kaffee hinsetze, dann schaue ich zehn Minuten aus dem Fenster.", "tf": "ABCD", "t": "natur"}, {"id": "M26", "titel": "Pilze finden, nicht essen", "text": "Drei Pilzarten am Wegrand fotografieren und zu Hause bestimmen. Gegessen wird nichts.", "tage": 7, "wennDann": "Wenn ich im Forst bin, dann schaue ich am Wegrand nach Pilzen und fotografiere sie.", "tf": "AB", "t": "natur"}, {"id": "M06", "titel": "Kraniche sehen", "text": "Ein Ausflug nach Linum für einen guten Tag, etwa 45 Minuten mit dem Auto, Beobachtung vom Parkplatzrand. Vorher herausfinden, warum die so laut trompeten.", "tage": 10, "wennDann": "Wenn Max das nächste Mal anruft, dann frage ich nach einem Termin für Linum.", "tf": "AB", "t": "natur"}, {"id": "M28", "titel": "Ein Ausflug mit Plan B", "text": "Die ersten Tage dienen der Planung, der Ausflug selbst kommt an einem guten Tag. Der Plan-B-Zettel fährt immer mit.", "tage": 7, "wennDann": "Wenn mir die Strecke zu weit vorkommt, dann schaue ich auf meinen Plan-B-Zettel: Pausenplatz, Toiletten, Taxinummer, wen ich anrufen kann.", "tf": "ABC", "t": "erstesmal"}, {"id": "M13", "titel": "Sicher auf dem E-Roller", "text": "Zuerst mit dem Behandlungsteam klären, ob das für dich passt. Danach nur an guten Tagen, nur in Begleitung und mit Helm.", "tage": 10, "wennDann": "Wenn Max zu Besuch ist, dann üben wir 15 Minuten auf einem leeren Parkplatz: Anfahren, Bremsen, Kurve.", "tf": "A", "t": "eroller"}, {"id": "M18", "titel": "Zehn Tage Gleichgewicht", "text": "Nur mit Übungen, die dir die Physiotherapie gezeigt hat. Hände immer in Griffnähe.", "tage": 10, "wennDann": "Wenn der Wasserkocher läuft, dann mache ich am Tresen meine Gleichgewichtsübung von der Physio.", "tf": "AB", "t": "gleichgewicht"}, {"id": "M10", "titel": "Fünf Erzählfragen", "text": "Jede Antwortform zählt: schriftlich, als Sprachaufnahme oder einfach erzählt.", "tage": 10, "wennDann": "Wenn Max anruft, dann erzähle ich ihm eine meiner Antworten.", "tf": "ABC", "t": "erinnern"}];
- const TF = { A: ["Viel Energie", "Kraft und Lust, rauszugehen"], B: ["Gemächlich", "Etwas vorhaben, nicht zu weit"], C: ["Ruhig angehen", "Müde, oder es zwickt"], D: ["Sparflamme", "Heute reicht das Nötigste"] };
+ const TF = { A: ["Mehr Energie", "Lust, was zu unternehmen"], B: ["Gemächlich", "Etwas vorhaben, nicht zu weit"], C: ["Ruhig angehen", "Müde, oder es zwickt"], D: ["Sparflamme", "Heute reicht das Nötigste"] };
  D.tagesformen.forEach(f => { if (TF[f.id]) { f.name = TF[f.id][0]; f.text = TF[f.id][1]; } });
 })();
 
@@ -5238,10 +5262,10 @@ D.gutscheine = [
 <script>
 /* ============================================================
    Lichtung – Kern: Zustand, Rechnen, Rückmeldung, Bausteine
-   Build: 2026-10-22 01:15
+   Build: 2026-10-22 01:36
    ============================================================ */
 "use strict";
-const BUILD = "2026-10-22 01:15";
+const BUILD = "2026-10-22 01:36";
 const KEY = "lichtung-v1";
 const GV = 2;            // Zustandsversion (Migrationen)
 const RV = 1;            // Regelversion (wird je Eintrag festgeschrieben)
@@ -5472,7 +5496,7 @@ function toast(text, opt = {}) {
   const t = document.createElement("div"); t.className = "toast"; t.setAttribute("role", "status");
   const haken = opt.erfolg ? `<svg class="haken-svg" viewBox="0 0 30 30" aria-hidden="true"><circle cx="15" cy="15" r="13" fill="none" stroke="currentColor" stroke-width="2" opacity=".35"/><path d="M8.5 15.5l4.2 4.2 8.8-9.4" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"/></svg>` : "";
   const [kopf, ...weiter] = String(text).split("\n");
-  t.innerHTML = `${haken}<div class="text">${esc(kopf)}${weiter.length ? `<small>${esc(weiter.join(" "))}</small>` : ""}</div><div class="toast-knoepfe"><button class="knopf zu" data-act="toast-zu">Schließen</button>${opt.rueck ? `<button class="knopf leise-hell" data-act="toast-rueck">Rückgängig</button>` : ""}${opt.knopf ? `<button class="knopf" data-act="${opt.knopf.act}">${esc(opt.knopf.text)}</button>` : ""}</div>`;
+  t.innerHTML = `${haken}<div class="text">${esc(kopf)}${weiter.filter(Boolean).map(z => `<small>${esc(z)}</small>`).join("")}</div><div class="toast-knoepfe"><button class="knopf zu" data-act="toast-zu">Schließen</button>${opt.rueck ? `<button class="knopf leise-hell" data-act="toast-rueck">Rückgängig</button>` : ""}${opt.knopf ? `<button class="knopf" data-act="${opt.knopf.act}">${esc(opt.knopf.text)}</button>` : ""}</div>`;
   t._rueck = opt.rueck;
   document.body.appendChild(t);
   hebeToast();
@@ -5697,7 +5721,7 @@ function huhnSVG(opt = {}) {
   return `<svg class="huhn ${stimmung}" viewBox="${vb}" style="width:${gr}px;height:${gr}px" aria-hidden="true">
   ${nurKopf ? "" : `<ellipse cx="50" cy="95" rx="26" ry="3.2" fill="rgba(20,28,24,.16)"/><rect x="26" y="83" width="46" height="10" rx="5" fill="#5B8A47"/>
   <g class="huhn-koerper">
-    <path d="M27 60 Q12 44 20 28 Q28 42 38 50Z" fill="#8A5A2B"/><path d="M25 56 Q14 48 15 38 Q24 48 32 52Z" fill="#5E8A3E"/>
+    <path d="M30 60 Q16 50 19 34 Q26 44 38 50Z" fill="#C9913C"/>
     <path d="M26 66 Q24 46 44 44 Q62 42 72 56 Q80 70 68 80 Q56 88 42 86 Q28 84 26 66Z" fill="#E4B24F"/>
     <path class="huhn-fluegel" d="M34 62 Q46 52 60 60 Q58 73 46 75 Q35 73 34 62Z" fill="#CC913C"/>
   </g>`}
@@ -6347,7 +6371,7 @@ function huehnchenPos(ort) {
 /* Hühnchen in der Szene: dieselbe Comic-Figur wie in der Oberfläche (Pfade aus figuren.js), Fuß bei (x, y) */
 const HUHN_PFADE = [
   ["M31 83 L67 83 Q72 83 72 88 Q72 93 67 93 L31 93 Q26 93 26 88 Q26 83 31 83Z", "#5B8A47"],
-  ["M27 60 Q12 44 20 28 Q28 42 38 50Z", "#8A5A2B"], ["M25 56 Q14 48 15 38 Q24 48 32 52Z", "#5E8A3E"],
+  ["M30 60 Q16 50 19 34 Q26 44 38 50Z", "#C9913C"],
   ["M26 66 Q24 46 44 44 Q62 42 72 56 Q80 70 68 80 Q56 88 42 86 Q28 84 26 66Z", "#E4B24F"],
   ["M34 62 Q46 52 60 60 Q58 73 46 75 Q35 73 34 62Z", "#CC913C"],
   ["M48 46 Q42 22 60 18 Q78 15 79 32 Q80 47 66 51 Q54 53 48 46Z", "#E4B24F"],
@@ -6411,7 +6435,7 @@ function ringAn(container, ort) {
 /* Text-Beschreibung des Bildes (für Screenreader und „Bild als Liste“) */
 function bildBeschreibung(M) {
   const st = D.stufen[M.stufe]; const z = [];
-  z.push(`Stufe ${M.stufe}: ${st.name}.`);
+  z.push(`Stufe ${M.stufe + 1}: ${st.name}.`);
   if (M.km) z.push(`Der Weg: ${fmt(M.km)} km gegangen.`);
   const pers = Object.keys(M.menschen).length; if (pers) z.push(`Das Haus: ${pers} ${pers === 1 ? "Fenster leuchtet" : "Fenster leuchten"}.`);
   if (M.tanzStunden) z.push(`Der Tanzboden: ${M.tanzStunden} Paar Fußspuren.`);
@@ -6483,14 +6507,14 @@ function viewHeute() {
     html += `<div class="tagesform">${D.tagesformen.map(f => `<button class="tf" aria-pressed="false" data-act="tf" data-v="${f.id}">${ic(f.icon)}<span>${f.name}<br><span class="tf-text">${esc(f.text)}</span></span></button>`).join("")}</div><p class="klein" style="margin-top:8px">${A("Es gibt keine falsche Antwort. Danach richten sich nur die Vorschläge.", "Es gibt keine falsche Antwort. Danach richten sich nur die Vorschläge.")}</p>`;
   } else {
     const f = D.tagesformen.find(x => x.id === tf);
-    html += `<div class="bogen mulde zeile zwischen" style="padding:10px 12px 10px 16px"><span class="tf-kurz">${ic(f.icon)}<span><span style="font-weight:700">${f.name}</span><br><span class="klein">${esc(f.text)}</span></span></span><button class="knopf klein leise" data-act="tf-aendern">Ändern</button></div>`;
+    html += `<div class="bogen mulde zeile zwischen" style="padding:10px 12px 10px 16px"><span class="tf-kurz">${ic(f.icon)}<span><span style="font-weight:700">${f.name}</span><br><span class="klein">${esc(TF_WIRKUNG[tf] || f.text)}</span></span></span><button class="knopf klein leise" data-act="tf-aendern">Ändern</button></div>`;
   }
   html += `</section>`;
 
   // Hühnchen sagt etwas (ein Satz am Tag), ab und zu Post von Max
   if (S.huhn && tf) html += `<section class="abschnitt"><div class="huhn-karte" data-act="huhn-tap">${huhnSVG({ gr: 84, stimmung: "spricht" })}<div class="sprechblase"><span class="wer">Hühnchen</span>${esc(huehnchenSatz())}</div></div></section>`;
   const st = D.stufen[stufe()];
-  html += `<section class="abschnitt"><div class="buehne flach" id="buehne-heute"><canvas id="bild-heute" role="img" aria-label="${esc(bildBeschreibung(modell()).join(" "))}"></canvas><button class="ueber" data-tab="lichtung" aria-label="Dein Zuhause im Bild ansehen"></button></div>
+  html += `<section class="abschnitt"><div class="buehne flach" id="buehne-heute"><canvas id="bild-heute" role="img" aria-label="${esc(bildBeschreibung(modell()).join(" "))}"></canvas><button class="ueber" data-tab="lichtung" aria-label="Das Bild groß ansehen"></button></div>
     <p class="klein" style="margin-top:8px">${esc(st.name)}${modell().letzte && D.orte[modell().letzte] ? ` · zuletzt gewachsen: ${esc(D.orte[modell().letzte].name)}` : ""}</p></section>`;
   const post = postHeute();
   if (post) { const von = EI_WER[post.wer] || "Max", gruss = post.wer === "christiane" ? "Deine Christiane" : post.wer === "huhn" ? "Dein Hühnchen" : "Dein Max";
@@ -6500,10 +6524,13 @@ function viewHeute() {
   html += zettelHTML();
   html += raetselHTML();
   html += abendkarteHTML(tf);
+  const ruhig = tf === "C" || tf === "D";
+  if (tf === "A") html += draussenVorschlagHTML();
+  if (ruhig) html += `<section class="abschnitt"><button class="kachel breit k-ruhe" data-act="hilft">${ic("waerme")}<span><span class="titel">Ablenkung?</span><br><span class="unter">${A("Wenn der Rücken ärgert oder das Handyspiel lockt.", "Wenn der Rücken ärgert oder das Handyspiel lockt.")}</span></span></button></section>`;
   html += listeHTML();
-  html += `<section class="abschnitt"><h2>Eintragen</h2><div class="kacheln">${S.schnell.map(id => { const t = tat(id); return kachel(t, zuletztText(id), `data-act="eintragen" data-t="${id}"`); }).join("")}</div>
+  html += `<section class="abschnitt"><h2>Eintragen</h2><div class="kacheln">${schnellHeute(tf).map(id => { const t = tat(id); return kachel(t, zuletztText(id), `data-act="eintragen" data-t="${id}"`); }).join("")}</div>
     <button class="knopf haupt voll" style="margin-top:12px" data-act="alles">${ic("plus")} Etwas anderes eintragen</button></section>`;
-  html += `<section class="abschnitt"><button class="kachel breit k-ruhe" data-act="hilft">${ic("waerme")}<span><span class="titel">Ablenkung?</span><br><span class="unter">${A("Wenn der Rücken ärgert oder das Handyspiel lockt.", "Wenn der Rücken ärgert oder das Handyspiel lockt.")}</span></span></button></section>`;
+  if (!ruhig) html += `<section class="abschnitt"><button class="kachel breit k-ruhe" data-act="hilft">${ic("waerme")}<span><span class="titel">Ablenkung?</span><br><span class="unter">${A("Wenn der Rücken ärgert oder das Handyspiel lockt.", "Wenn der Rücken ärgert oder das Handyspiel lockt.")}</span></span></button></section>`;
   // Heute eingetragen
   const ohneHaken = liste.filter(e => e.t !== "abgehakt");
   if (ohneHaken.length) {
@@ -6561,8 +6588,6 @@ function hinweisDesTages() {
   if (n >= 5 && !weg.euro) kandidaten.push({ id: "euro", immer: true, html: "Für unterwegs: Mit dem Euroschlüssel öffnen sich viele barrierefreie Toiletten. Mit Stoma bekommt man ihn in der Regel (CBF Darmstadt).", knopf: `<button class="knopf klein zweit" data-act="praktisch">Mehr dazu</button>` });
   // Tageshinweis mit Hühnchen oder aus dem Vorrat
   const mon = d.getMonth() + 1; const pool = (D.tageshinweise || []).filter((x, i) => !weg["th" + i] && (!x.monate || x.monate.includes(mon)));
-  const l = modell().letzte;
-  if (S.huhn && l && (hash32(h) % 3 === 0)) kandidaten.push({ id: "huhn", html: esc(D.huehnchenOrt[l] || "Hühnchen schaut heute aus dem Fenster.") });
   if (pool.length) { const i = hash32("th" + h) % pool.length; const idx = (D.tageshinweise || []).indexOf(pool[i]); kandidaten.push({ id: "th" + idx, html: esc(pool[i].text || pool[i]) }); }
   return kandidaten[0] || null;
 }
@@ -6629,7 +6654,7 @@ function viewLichtung() {
   const anteil = naechste ? clamp((w - S0.w) / (naechste.w - S0.w), 0, 1) : 1;
   let html = `<div class="gruss"><h1>Zuhause</h1><div class="datum">${A("Tippe auf eine Stelle im Bild, um mehr zu sehen.", "Tippen Sie auf eine Stelle im Bild, um mehr zu sehen.")}</div></div>`;
   html += `<section class="abschnitt"><div class="buehne" id="buehne-gross"><canvas id="bild-gross" role="img" aria-label="${esc(bildBeschreibung(M).join(" "))}"></canvas></div></section>`;
-  html += `<section class="abschnitt"><div class="bogen stufe-karte"><div class="stufe-nr">Stufe ${st} von ${D.stufen.length - 1}</div><h2>${esc(S0.name)}</h2><p>${esc(S0.text)}</p>
+  html += `<section class="abschnitt"><div class="bogen stufe-karte"><div class="stufe-nr">Stufe ${st + 1} von ${D.stufen.length}</div><h2>${esc(S0.name)}</h2><p>${esc(S0.text)}</p>
     ${naechste ? `<div class="fortschritt" role="img" aria-label="Weg zur nächsten Stufe"><i style="width:${Math.round(anteil * 100)}%"></i></div><p class="klein" style="margin-top:6px">Als Nächstes: ${esc(naechste.name)}</p>` : `<p class="klein">Das Bild wächst weiter mit allem, was du tust.</p>`}</div>`;
   if (M.km > 0) { const ziel = [...D.massstab].reverse().find(z => M.km >= z.km); html += `<div class="bogen streifen k-bewegung"><p style="margin:0"><span class="zahl" style="font-weight:700">${fmt(M.km)} km</span> gegangen${ziel ? ` – so weit wie ${esc(ziel.ziel)}` : ""}.</p>${massstabZeile(M.km)}</div>`; }
   html += `</section>`;
@@ -6673,7 +6698,7 @@ function viewTagebuch() {
   // Woche
   const wo = wochenZahlen(h);
   html += `<section class="abschnitt"><div class="bogen"><h3>Diese Woche</h3><p style="margin:0">${wo.length ? esc(wo.join(" · ")) : "Noch nichts eingetragen."}</p>
-    <div class="zeile" style="margin-top:12px;flex-wrap:wrap"><button class="knopf klein zweit" data-act="moment">${ic("stern")} Schönster Moment heute</button>${tagDatum(h).getDay() === 0 || S.rueckblick[kwVon(tagPlus(h, -7))] === undefined ? `<button class="knopf klein leise" data-act="rueckblick">Wochenrückblick</button>` : ""}</div></div></section>`;
+    <div class="zeile" style="margin-top:12px;flex-wrap:wrap"><button class="knopf klein zweit" data-act="moment">${ic("stern")} Schönster Moment heute</button>${tagDatum(h).getDay() === 0 || (tagDatum(h).getDay() === 1 && !S.rueckblick[kwVon(tagPlus(h, -1))]) ? `<button class="knopf klein leise" data-act="rueckblick">Wochenrückblick</button>` : ""}</div></div></section>`;
   html += rueckblickExtras(h);
   if ((S.briefe || []).length) html += `<section class="abschnitt"><details class="bogen" data-id="briefe"><summary style="font-weight:700;cursor:pointer;min-height:44px;display:flex;align-items:center">${ic("brief")}&nbsp; Briefe (${S.briefe.length})</summary>${S.briefe.slice().reverse().map(b => `<div class="brief-papier" style="margin-top:12px;animation:none"><p class="brief-anrede">Liebe ${esc(S.name)},</p><p class="brief-text">${esc(b.text)}</p><p class="brief-gruss">${b.wer === "christiane" ? "Deine Christiane" : b.wer === "huhn" ? "Dein Hühnchen" : "Dein Max"} <span aria-hidden="true">♥</span> · ${datumLang(b.tag)}</p></div>`).join("")}</details></section>`;
   // Tage
@@ -6721,31 +6746,61 @@ function eintragenSheet(tid, vorlage) {
   const letzte = [...S.eintraege].reverse().find(e => e.t === tid);
   E = vorlage ? { ...vorlage } : { t: tid, tag: heute(), km: letzte?.km || t.std || 2, min: letzte?.min || t.std || 20, person: t.art === "person" ? (letzte?.person || "") : "", draussen: !!t.draussen, mut: false, notiz: "", wie: "", titel: "" };
   if (t.art === "buch" && !E.titel && D.hp?.baende) { const b = D.hp.baende.find(b => b.nr === S.hp.band); if (b) E.titel = b.titel; }
-  sheet({ titel: vorlage ? "Eintrag ändern" : t.name, inhalt: eintragenInhalt(), fuss: `<button class="knopf haupt voll" data-act="speichern">${ic("haken")} ${vorlage ? "Änderung speichern" : "Eintragen"}</button>`, id: "eintragen" });
+  sheet({ titel: vorlage ? "Eintrag ändern" : t.name, inhalt: eintragenInhalt(), fuss: eintragenFuss(), id: "eintragen" });
 }
+/* Fuß: ein Knopf, der sagt, was passiert – auch für welchen Tag */
+function eintragenFuss() {
+  const anderer = E && E.tag && E.tag !== heute();
+  const text = E && E._alt ? "Änderung speichern" : anderer ? `Für ${datumRelativ(E.tag).replace(/^(Heute|Gestern|Vorgestern)$/, m => m.toLowerCase())} eintragen` : "Eintragen";
+  return `<button class="knopf haupt voll" data-act="speichern">${ic("haken")} ${esc(text)}</button>`;
+}
+/* Minuten: vier sinnvolle Werte rund um die übliche Dauer der Tätigkeit */
+function minKurz(m) { if (m < 60) return `${m} Min.`; if (m === 90) return "1½ Std."; if (m % 60 === 0) return `${m / 60} Std.`; return minText(m); }
+function minutenWerte(t, aktuell) {
+  const std = t.std || 20;
+  const w = std <= 15 ? [5, 10, 15, 30] : std <= 30 ? [10, 20, 30, 60] : std <= 60 ? [30, 45, 60, 90] : [60, 90, 120, 180];
+  if (aktuell && !w.includes(aktuell)) { w.push(aktuell); w.sort((a, b) => a - b); }
+  return w;
+}
+/* Eintrag-Blatt: zeigt nur, was zur Tätigkeit passt.
+   1. Wie viel (km, Minuten, mit wem, welches Buch)  2. höchstens zwei passende Zusätze
+   3. „Wie ging’s dir danach?“ nur bei Bewegung  4. Notiz und anderer Tag eingeklappt */
 function eintragenInhalt() {
   const t = tat(E.t); let h = "";
   if (t.art === "km") {
-    h += `<div class="stepper"><button class="knopf zweit" data-act="step" data-f="km" data-d="-0.5" aria-label="Weniger">${ic("minus")}</button><div class="wert zahl" aria-live="polite">${fmt(E.km)}<small>Kilometer</small></div><button class="knopf zweit" data-act="step" data-f="km" data-d="0.5" aria-label="Mehr">${ic("plus")}</button></div>
-      <div class="chips" style="margin-top:14px">${[1, 2, 3, 4, 5, 6].map(k => chip(E.km === k, k + " km", `data-act="setz" data-f="km" data-v="${k}"`)).join("")}</div>
-      <p class="klein" style="margin-top:10px">Die Zahl von der Uhr oder grob geschätzt – beides ist in Ordnung.${E.km > 6 ? " Ein langer Weg heute. Lieber zweimal kurz als einmal zu lang." : ""}</p>`;
+    h += `<label class="feld">Wie weit ungefähr?</label><div class="stepper"><button class="knopf zweit" data-act="step" data-f="km" data-d="-0.5" aria-label="Einen halben Kilometer weniger">${ic("minus")}</button><div class="wert zahl" aria-live="polite">${fmt(E.km)}<small>Kilometer</small></div><button class="knopf zweit" data-act="step" data-f="km" data-d="0.5" aria-label="Einen halben Kilometer mehr">${ic("plus")}</button></div>
+      <p class="klein" style="margin-top:8px">Von der Uhr abgelesen oder grob geschätzt – beides ist in Ordnung.${E.km > 6 ? " Ein langer Weg heute. Lieber zweimal kurz als einmal zu lang." : ""}</p>`;
   } else if (t.art === "min" || t.art === "person") {
     if (t.art === "person") h += personWahl();
-    h += `<label class="feld">Wie lange ungefähr?</label><div class="stepper"><button class="knopf zweit" data-act="step" data-f="min" data-d="-5" aria-label="Weniger">${ic("minus")}</button><div class="wert zahl">${E.min}<small>Minuten</small></div><button class="knopf zweit" data-act="step" data-f="min" data-d="5" aria-label="Mehr">${ic("plus")}</button></div>
-      <div class="chips" style="margin-top:14px">${[10, 20, 30, 45, 60, 90].map(k => chip(E.min === k, minText(k), `data-act="setz" data-f="min" data-v="${k}"`)).join("")}</div>`;
-    if (E.t === "lesen" && D.hp && D.hp.baende) { const b = D.hp.baende.find(x => x.nr === S.hp.band); if (b && !E._alt) { const n = E.hpKap || 0; h += `<label class="feld">Harry Potter dabei?</label><div class="chips">${[[0, "Nein, was anderes"], [1, "1 Kapitel"], [2, "2 Kapitel"], [3, "3 Kapitel"]].map(([v, l]) => chip(n === v, l, `data-act="setz" data-f="hpKap" data-v="${v}"`, "k-geist")).join("")}</div><p class="klein" style="margin-top:6px">„${esc(b.titel.replace("Harry Potter und d", "D"))}“: ${n ? `danach bist du bei Kapitel ${Math.min(b.kapitel, S.hp.kapitel + n)} von ${b.kapitel}` : `du bist bei Kapitel ${S.hp.kapitel} von ${b.kapitel}`}.</p>`; } }
+    h += `<label class="feld">Wie lange ungefähr?</label><div class="chips raster">${minutenWerte(t, E.min).map(k => chip(E.min === k, minKurz(k), `data-act="setz" data-f="min" data-v="${k}"`)).join("")}</div>`;
+    if (E.t === "lesen" && D.hp && D.hp.baende) { const b = D.hp.baende.find(x => x.nr === S.hp.band); if (b && !E._alt) { const n = E.hpKap || 0; h += `<label class="feld">Harry Potter dabei?</label><div class="chips">${[[0, "Nein"], [1, "1 Kapitel"], [2, "2 Kapitel"], [3, "3 Kapitel"]].map(([v, l]) => chip(n === v, l, `data-act="setz" data-f="hpKap" data-v="${v}"`, "k-geist")).join("")}</div><p class="klein" style="margin-top:6px">„${esc(b.titel.replace("Harry Potter und d", "D"))}“: ${n ? `danach bist du bei Kapitel ${Math.min(b.kapitel, S.hp.kapitel + n)} von ${b.kapitel}` : `du bist bei Kapitel ${S.hp.kapitel} von ${b.kapitel}`}.</p>`; } }
   } else if (t.art === "buch") {
     h += `<label class="feld" for="buchtitel">Welches Buch?</label><input id="buchtitel" class="text" data-feld="titel" value="${esc(E.titel)}" placeholder="Titel">`;
   } else {
-    h += `<p>${esc(t.info?.[0] || "Eintragen und fertig.")}</p>`;
+    h += `<p class="klein" style="margin-top:0">Ohne Minuten – einmal eintragen genügt.</p>`;
   }
-  // Bewegung/Mut: „Wie war’s danach?“ – optional, höchstens einmal am Tag angeboten
-  if ((t.feld === "bewegung" || t.mut) && S.nachherTag !== heute())
-    h += `<label class="feld">Wie war’s danach? <span class="klein">(freiwillig)</span></label><div class="chips">${[["gut", "Gut"], ["gleich", "Ging so"], ["zuviel", "War zu viel"]].map(([v, l]) => chip(E.wie === v, l, `data-act="setz" data-f="wie" data-v="${v}"`)).join("")}</div>`;
-  if (!t.mut && t.art !== "fest") h += schalter(E.mut, "Hat Überwindung gekostet", `data-act="umschalt" data-f="mut"`, "Dann leuchtet ein Glühwürmchen mehr im Wald.");
-  if (!t.draussen && t.art !== "fest" && t.art !== "klein" && t.feld !== "menschen") h += schalter(E.draussen, "Draußen gewesen", `data-act="umschalt" data-f="draussen"`);
-  h += `<label class="feld">Wann?</label><div class="chips">${[0, -1, -2].map(n => { const tg = tagPlus(heute(), n); return chip(E.tag === tg, datumRelativ(tg), `data-act="setz" data-f="tag" data-v="${tg}"`); }).join("")}</div>`;
-  h += E.notizOffen || E.notiz ? `<label class="feld" for="notiz">Notiz</label><textarea id="notiz" class="text" data-feld="notiz" placeholder="Ein Satz, wenn du magst">${esc(E.notiz)}</textarea>` : `<button class="knopf leise" data-act="notiz-auf">Notiz hinzufügen</button>`;
+  // Zusätze nur, wo sie passen
+  const zusatz = [];
+  if (t.draussenOpt) zusatz.push(schalter(E.draussen, "Draußen gemacht", `data-act="umschalt" data-f="draussen"`, "Frische Luft zählt im Bild etwas mehr."));
+  if (t.mutOpt) zusatz.push(schalter(E.mut, "Hat Mut gebraucht", `data-act="umschalt" data-f="mut"`, "Neu oder ungewohnt? Dann leuchtet ein Glühwürmchen mehr im Wald."));
+  if (zusatz.length) h += `<div class="zusaetze">${zusatz.join("")}</div>`;
+  // Bewegung und Mut: „Wie ging’s dir danach?“ – freiwillig, höchstens einmal am Tag
+  if ((t.feld === "bewegung" || t.mut) && (S.nachherTag !== heute() || E.wie))
+    h += wieDanachHTML();
+  h += notizUndTag();
+  return h;
+}
+function wieDanachHTML() {
+  return `<label class="feld">Wie ging’s dir danach? <span class="klein">(freiwillig)</span></label><div class="chips">${[["gut", "Gut"], ["gleich", "Ging so"], ["zuviel", "War zu viel"]].map(([v, l]) => chip(E.wie === v, l, `data-act="setz" data-f="wie" data-v="${v}"`)).join("")}</div>${E.wie === "zuviel" ? `<p class="klein" style="margin-top:6px">Gut, dass du’s merkst. Im Bild steht dafür eine Bank zum Ausruhen.</p>` : ""}`;
+}
+/* Notiz und anderer Tag: eingeklappt, bis man sie braucht (gemeinsam für Eintrag und Ausflug) */
+function notizUndTag(notizId = "notiz") {
+  const tagAuf = E.tagOffen || (E.tag && E.tag !== heute());
+  const notizAuf = E.notizOffen || E.notiz;
+  let h = "";
+  if (notizAuf) h += `<label class="feld" for="${notizId}">Notiz</label><textarea id="${notizId}" class="text" data-feld="notiz" placeholder="Ein Satz, wenn du magst">${esc(E.notiz)}</textarea>`;
+  if (tagAuf) h += `<label class="feld">Für welchen Tag?</label><div class="chips">${[0, -1, -2].map(n => { const tg = tagPlus(heute(), n); return chip(E.tag === tg, datumRelativ(tg), `data-act="setz" data-f="tag" data-v="${tg}"`); }).join("")}</div>`;
+  if (!notizAuf || !tagAuf) h += `<div class="zeile klapp-zeile">${notizAuf ? "" : `<button class="knopf klein leise" data-act="notiz-auf">${ic("plus")} Notiz</button>`}${tagAuf ? "" : `<button class="knopf klein leise" data-act="tag-auf">${ic("plus")} Anderer Tag</button>`}</div>`;
   return h;
 }
 function personWahl() {
@@ -6754,7 +6809,7 @@ function personWahl() {
 }
 function alleSheet() {
   const eig = (S.eigeneT || []).filter(x => !x.weg);
-  sheet({ titel: "Etwas eintragen", inhalt: `<h3 style="margin-top:4px">Eigene</h3>${eig.length ? `<div class="liste">${eig.map(x => { const t = tat(x.id); return `<div class="zeile" style="gap:8px">${zeileBtn(t.icon, t.name, "", `data-act="waehle-t" data-t="${x.id}"`, D.felder[t.feld]?.k).replace('class="liste-zeile', 'style="flex:1" class="liste-zeile')}<button class="knopf klein leise" data-act="eigen-bearbeiten" data-id="${x.id}" aria-label="${esc(x.name)} ändern">Ändern</button></div>`; }).join("")}</div>` : `<p class="klein">Was hier fehlt, kannst du selbst anlegen – es zählt wie ähnliche Dinge.</p>`}<button class="knopf zweit voll" style="margin-top:10px" data-act="eigen-neu">${ic("plus")} Eigene Tätigkeit anlegen</button>` + D.gruppen.map(g => `<h3 style="margin-top:14px">${esc(g.name)}</h3><div class="liste">${g.ids.map(id => { const t = tat(id); return zeileBtn(t.icon, t.name, "", `data-act="waehle-t" data-t="${id}"`, D.felder[t.feld]?.k); }).join("")}</div>`).join("") + `<h3 style="margin-top:14px">Ausflug</h3><div class="liste">${zeileBtn("rucksack", "Ausflug eintragen oder planen", "", `data-act="ausflug"`, "k-draussen")}</div>` });
+  sheet({ titel: "Etwas anderes eintragen", inhalt: `<h3 style="margin-top:4px">Eigene</h3>${eig.length ? `<div class="liste">${eig.map(x => { const t = tat(x.id); return `<div class="zeile" style="gap:8px">${zeileBtn(t.icon, t.name, "", `data-act="waehle-t" data-t="${x.id}"`, D.felder[t.feld]?.k).replace('class="liste-zeile', 'style="flex:1" class="liste-zeile')}<button class="knopf klein leise" data-act="eigen-bearbeiten" data-id="${x.id}" aria-label="${esc(x.name)} ändern">Ändern</button></div>`; }).join("")}</div>` : `<p class="klein">Was hier fehlt, kannst du selbst anlegen – es zählt wie ähnliche Dinge.</p>`}<button class="knopf zweit voll" style="margin-top:10px" data-act="eigen-neu">${ic("plus")} Eigene Tätigkeit anlegen</button>` + D.gruppen.map(g => `<h3 style="margin-top:14px">${esc(g.name)}</h3><div class="liste">${g.ids.map(id => { const t = tat(id); return zeileBtn(t.icon, t.name, "", `data-act="waehle-t" data-t="${id}"`, D.felder[t.feld]?.k); }).join("")}</div>`).join("") + `<h3 style="margin-top:14px">Ausflug</h3><div class="liste">${zeileBtn("rucksack", "Ausflug eintragen oder planen", "", `data-act="ausflug"`, "k-draussen")}</div>` });
 }
 
 /* ---------- Statt Daddeln: „Ablenkung?“ ---------- */
@@ -6909,11 +6964,11 @@ function zurueckInhalt() {
   return `${leer ? `<label class="feld" for="ztitel">Wohin ging’s?</label><input id="ztitel" class="text" data-feld="titel" value="${esc(E.titel)}" placeholder="z. B. Havelufer">` : `<p><span style="font-weight:700">${esc(E.titel)}</span></p>`}
     <label class="feld">Wie weit weg war das?</label><div class="chips">${D.leiter.map(l => chip(E.leiter === l.s, `${l.s}. ${l.name}`, `data-act="setz" data-f="leiter" data-v="${l.s}"`, "k-draussen")).join("")}</div>
     ${leer ? `<label class="feld">Was soll dafür im Bild am Horizont stehen?</label><div class="chips">${D.formen.map(f => chip(E.form === f.id, f.name, `data-act="setz" data-f="form" data-v="${f.id}"`, "k-draussen")).join("")}</div>` : ""}
-    <label class="feld">Wie war’s?</label><div class="chips">${[["gut", "Gut"], ["gleich", "Ging so"], ["zuviel", "War zu viel"]].map(([v, l]) => chip(E.wie === v, l, `data-act="setz" data-f="wie" data-v="${v}"`)).join("")}</div>
+    ${wieDanachHTML()}
     ${schalter(E.umgekehrt, "Ich bin bewusst umgekehrt", `data-act="umschalt" data-f="umgekehrt"`, "Zählt auch. Der Weg ist ja nicht weg.")}
-    ${schalter(E.mut, "Hat Überwindung gekostet", `data-act="umschalt" data-f="mut"`)}
+    ${schalter(E.mut, "Hat Mut gebraucht", `data-act="umschalt" data-f="mut"`, "Neu oder ungewohnt? Dann leuchtet ein Glühwürmchen mehr im Wald.")}
     <label class="feld" for="znotiz">Was war schön?</label><textarea id="znotiz" class="text" data-feld="notiz" placeholder="Ein Satz reicht">${esc(E.notiz)}</textarea>
-    <label class="feld">Wann?</label><div class="chips">${[0, -1, -2].map(n => { const tg = tagPlus(heute(), n); return chip(E.tag === tg, datumRelativ(tg), `data-act="setz" data-f="tag" data-v="${tg}"`); }).join("")}</div>`;
+    ${E.tagOffen || E.tag !== heute() ? `<label class="feld">Für welchen Tag?</label><div class="chips">${[0, -1, -2].map(n => { const tg = tagPlus(heute(), n); return chip(E.tag === tg, datumRelativ(tg), `data-act="setz" data-f="tag" data-v="${tg}"`); }).join("")}</div>` : `<div class="zeile klapp-zeile"><button class="knopf klein leise" data-act="tag-auf">${ic("plus")} Anderer Tag</button></div>`}`;
 }
 
 /* ---------- Kramladen ---------- */
@@ -6999,12 +7054,12 @@ function ortSheet(reg) {
 }
 function stufenSheet() {
   const st = stufe();
-  sheet({ titel: "Alle Stufen", inhalt: `<div class="liste">${D.stufen.map((s, i) => i <= st ? `<div class="bogen ${i === st ? "streifen" : ""}"><div class="klein">Stufe ${i}</div><h3>${esc(s.name)}</h3><p style="margin:0">${esc(s.text)}</p></div>` : i === st + 1 ? `<div class="bogen mulde"><div class="klein">Als Nächstes</div><h3>${esc(s.name)}</h3></div>` : "").join("")}</div>` });
+  sheet({ titel: "Alle Stufen", inhalt: `<div class="liste">${D.stufen.map((s, i) => i <= st ? `<div class="bogen ${i === st ? "streifen" : ""}"><div class="klein">Stufe ${i + 1}</div><h3>${esc(s.name)}</h3><p style="margin:0">${esc(s.text)}</p></div>` : i === st + 1 ? `<div class="bogen mulde"><div class="klein">Als Nächstes</div><h3>${esc(s.name)}</h3></div>` : "").join("")}</div>` });
 }
 function stufeMoment(neuSt, auchNeu) {
   $$(".toast").forEach(t => t.remove());
   const s = D.stufen[neuSt];
-  sheet({ titel: "Neu im Bild", inhalt: `<div class="buehne klein" style="margin-bottom:14px"><canvas id="bild-moment"></canvas></div><div class="klein">Stufe ${neuSt}</div><h2>${esc(s.name)}</h2><p>${esc(s.text)}</p>${auchNeu && auchNeu.length ? `<p class="klein">Auch neu: ${esc(auchNeu.join(", "))}</p>` : ""}`, fuss: `<button class="knopf haupt voll" data-act="sheet-zu">Klasse!</button>`, id: "moment" });
+  sheet({ titel: "Neu im Bild", inhalt: `<div class="buehne klein" style="margin-bottom:14px"><canvas id="bild-moment"></canvas></div><div class="klein">Stufe ${neuSt + 1} von ${D.stufen.length}</div><h2>${esc(s.name)}</h2><p>${esc(s.text)}</p>${auchNeu && auchNeu.length ? `<p class="klein">Auch neu: ${esc(auchNeu.join(", "))}</p>` : ""}`, fuss: `<button class="knopf haupt voll" data-act="sheet-zu">Klasse!</button>`, id: "moment" });
   setTimeout(() => { const c = $("#bild-moment"); if (c) zeichneSzene(c, {}); }, 60);
   haptik("stufe"); ton("erfolg");
 }
@@ -7147,7 +7202,7 @@ function onboardingSheet() {
 const maxZettel = (html) => `<div class="max-karte">${maxSVG(60)}<div class="bogen post brief" style="flex:1;min-width:0;margin:0">${html}</div></div>`;
 function onboardingInhalt() {
   const kaestchen = `<div class="zeile" style="gap:6px;margin:0 0 14px" aria-label="Schritt ${ONB} von 3">${[1, 2, 3].map(i => `<span class="onb-punkt ${i <= ONB ? "an" : ""}"></span>`).join("")}</div>`;
-  if (ONB === 1) return kaestchen + maxZettel(`<p>Liebe ${esc(S.name)},</p><p>ich hab dir was gebaut: eine Liste, die dir auch mal was zurückschreibt. Was du vorhast, kommt drauf, was du gemacht hast, hakst du ab.</p><p style="margin:0">Zwei Sachen noch, dann geht’s los.</p>`) +
+  if (ONB === 1) return kaestchen + maxZettel(`<p>Liebe ${esc(S.name)},</p><p>ich hab dir eine kleine App gebaut. Hier schreibst du auf, was du vorhast, und hakst ab, was du geschafft hast. Dafür wächst ein Bild von deinem Zuhause, und Hühnchen und ich melden uns ab und zu.</p><p style="margin:0">Zwei Sachen noch, dann geht’s los.</p>`) +
     `<label class="feld" for="o-name" style="margin-top:16px">So nennt dich die App</label><input id="o-name" class="text" data-einst="name" value="${esc(S.name)}"><p class="klein" style="margin-top:6px">Lieber „Sie“? Geht später in den Einstellungen.</p>`;
   if (ONB === 2) return kaestchen + maxZettel(`<p style="margin:0">Kannst du das gut lesen? Tipp die Größe an, bei der du nicht blinzeln musst.</p>`) +
     `<div class="liste" style="margin-top:14px">${[[1, "Normal", 18], [2, "Groß", 21], [3, "Sehr groß", 27]].map(([v, l, px]) => `<button class="liste-zeile" data-act="einst" data-k="size" data-v="${v}" aria-pressed="${S.size === v}">${ic(S.size === v ? "boxhaken" : "box")}<span class="text"><span class="titel">${l}</span><br><span style="font-size:${px}px">Heute 3 km gegangen.</span></span></button>`).join("")}</div>
@@ -7202,10 +7257,10 @@ function maxPost() {
 }
 
 function erklaerungSheet() {
-  sheet({ titel: "So funktioniert’s", inhalt: `${maxZettel(`<p style="margin:0">Kurz gesagt: Du hakst ab, die App schreibt mit, das Bild wächst. Der Rest hier ist zum Nachschlagen.</p>`)}
-    <div class="bogen" style="margin-top:14px"><h3>Meine To-do-Liste</h3><p style="margin:0">Auf „Heute“ schreibst du auf, was ansteht. Antippen, und es ist erledigt. Die Striche darunter zählen, was du diese Woche geschafft hast.</p></div>
-    <div class="bogen"><h3>Das Bild</h3><p style="margin:0">Alles, was du einträgst, wächst im Bild an seinem Platz: Gehen wird zum Weg, Lesen zur Eiche, Zeit mit anderen zu Blumen an den Häusern, Ruhe zur Quelle, Ausflüge zu Orten am Horizont. Nichts verschwindet wieder.</p></div>
-    <div class="bogen"><h3>Stufen</h3><p style="margin:0">Mit der Zeit kommen neue Dinge dazu: eine Bank, ein Steg, Laternen, ein Hochsitz … Was als Nächstes kommt, steht unter „Zuhause“.</p></div>
+  sheet({ titel: "So funktioniert’s", inhalt: `${maxZettel(`<p style="margin:0">Kurz gesagt: Du trägst ein, was du gemacht hast, und hakst ab, was auf deiner Liste stand. Beides wächst im Bild und bringt Taler. Der Rest hier ist zum Nachschlagen.</p>`)}
+    <div class="bogen" style="margin-top:14px"><h3>Eintragen und Abhaken</h3><p style="margin:0 0 8px"><span style="font-weight:700">Eintragen</span> heißt: festhalten, was du gemacht hast – gegangen, gelesen, telefoniert. Mit den Kacheln auf „Heute“ oder mit „Etwas anderes eintragen“.</p><p style="margin:0">Auf deiner <span style="font-weight:700">To-do-Liste</span> steht, was du vorhast. Ist es erledigt, tippst du drauf: abgehakt. Die Striche zählen alles, was du diese Woche geschafft hast.</p></div>
+    <div class="bogen"><h3>Das Bild</h3><p style="margin:0">Alles, was du einträgst, wächst im Bild an seinem Platz: Gehen wird zum Weg, Lesen zur Eiche, Zeit mit anderen zu Blumen an den Häusern, Ruhe zur Quelle, Ausflüge zu Orten am Horizont. Nichts verschwindet wieder.</p><p style="margin:8px 0 0">Manche Einträge fragen zusätzlich: <span style="font-weight:700">Draußen gemacht?</span> – frische Luft zählt etwas mehr. <span style="font-weight:700">Hat Mut gebraucht?</span> – dann leuchtet ein Glühwürmchen mehr im Wald.</p></div>
+    <div class="bogen"><h3>Stufen</h3><p style="margin:0">Mit der Zeit kommen neue Dinge dazu: eine Bank, ein Steg, Laternen, ein Hochsitz … Was als Nächstes kommt, steht unter „Bild“.</p></div>
     <div class="bogen"><h3>Taler</h3><p style="margin:0">Für jeden Eintrag gibt es ein paar Taler. Damit kannst du im Kramladen Dinge freischalten: Gedichte, Rezepte, den Tanz-Taktgeber, Schönes fürs Bild. Taler verfallen nie.</p></div>
     <div class="bogen"><h3>Der Stern ✱</h3><p style="margin:0">Ein Stern heißt: ruhiger Tag – und trotzdem was geschafft. Er ist nur am selben Tag zu sehen.</p></div>
     <div class="bogen"><h3>Spielmarken</h3><p style="margin:0">Eine Marke reicht für 10 Minuten Waldpatience. An ruhigen Tagen ist das Spiel ohne Marken frei.</p></div>
@@ -7374,6 +7429,23 @@ function markenWitz() {
   return `<g fill="#1C2620"><rect x="55" y="25" width="20" height="11" rx="5"/><path d="M55 29 L44 26" stroke="#1C2620" stroke-width="2"/></g><path d="M58 28 L63 28" stroke="#fff" stroke-width="1.4" opacity=".7"/>`;
 }
 
+/* Tagesform: was sie heute bewirkt (sichtbar unter der Wahl) */
+const TF_WIRKUNG = {
+  A: "Heute: Ideen für draußen, Bingo und was in Spandau los ist.",
+  B: "Heute: Ideen für zu Hause und in der Nähe.",
+  C: "Heute: ruhige Ideen. Jeder Eintrag bekommt einen Stern ✱, die Patience ist frei.",
+  D: "Heute zählt jede Kleinigkeit, mit Stern ✱. Ablenkung steht oben, die Patience ist frei."
+};
+function schnellHeute(tf) {
+  const k = S.schnell.slice();
+  if (tf === "C" || tf === "D") { const tausch = { gehen: "ruhe", tanzstunde: "hoerbuch", besuch: "musik", gymnastik: "waerme" }; return k.map(id => tausch[id] && !k.includes(tausch[id]) ? tausch[id] : id); }
+  return k;
+}
+function draussenVorschlagHTML() {
+  const a = (D.angebote || []).filter(x => !angebotVorbei(x) && angebotNaechstes(x)).sort((x, y) => angebotNaechstes(x) < angebotNaechstes(y) ? -1 : 1)[0];
+  return `<section class="abschnitt"><div class="bogen streifen k-draussen"><h3>Heute raus?</h3>${a ? `<p style="margin:0 0 8px">${esc(angebotKurz(a))}</p>` : ""}<div class="zeile" style="flex-wrap:wrap;gap:8px">${a ? `<button class="knopf klein zweit" data-act="angebote">Angebote ansehen</button>` : ""}<button class="knopf klein zweit" data-act="bingo-auf">${ic("blatt")} Forst-Bingo</button><button class="knopf klein leise" data-act="ausflug">Ausflug planen</button></div></div></section>`;
+}
+
 /* ============================================================
    Mein Ruhe-Plan – für Momente, in denen es eng wird.
    Bewusst allgemein formuliert (zu Hause oder unterwegs), ohne Anlass zu benennen.
@@ -7536,7 +7608,7 @@ function ruheAktion(a, d) {
     case "ruhe-weiter": RUHE.schritt = Math.min(RUHE_SCHRITTE - 1, RUHE.schritt + 1); sheetInhalt(ruheSchrittHTML()); sheetFuss(ruheFussHTML()); aktuellesSheet().querySelector(".sheet-inhalt").scrollTop = 0; ruheSchrittAn(); break;
     case "ruhe-anrufen": RUHE.schritt = 5; sheetInhalt(ruheSchrittHTML()); sheetFuss(ruheFussHTML()); ruheSchrittAn(); break;
     case "ruhe-zurueck": RUHE.schritt = Math.max(0, RUHE.schritt - 1); sheetInhalt(ruheSchrittHTML()); sheetFuss(ruheFussHTML()); ruheSchrittAn(); break;
-    case "ruhe-geuebt": { ruheStopp(); R.geuebt = (R.geuebt || 0) + 1; speichern(); const r = eintragSpeichern({ t: "ruheuebung", tag: heute() }); if (r) nachEintrag(r, "Ruhe geübt."); else { alleSheetsZu(); toast("Der Haken für heute steht schon. Geübt ist geübt."); } break; }
+    case "ruhe-geuebt": { ruheStopp(); R.geuebt = (R.geuebt || 0) + 1; speichern(); const r = eintragSpeichern({ t: "ruheuebung", tag: heute() }); if (r) nachEintrag(r, "Eingetragen: Ruhe geübt."); else { alleSheetsZu(); toast("Der Haken für heute steht schon. Geübt ist geübt."); } break; }
     case "ruhe-bearbeiten": ruheBearbeitenSheet(); break;
     case "ruhe-fertig": sheetZu(); setTimeout(() => { const id = aktuellesSheet()?.dataset.id; if (id === "ruhe") sheetInhalt(ruheInhalt()); else if (id === "ruhe-flow") { sheetInhalt(ruheSchrittHTML()); sheetFuss(ruheFussHTML()); } }, 260); break;
     case "ruhe-hilft": tausch(R.hilft, d.v); neuEdit(); break;
@@ -7574,6 +7646,7 @@ function eigeneRegistrieren() {
   for (const x of (S.eigeneT || [])) {
     const b = EIGEN_BEREICHE.find(b => b.feld === x.feld) || EIGEN_BEREICHE[3];
     D.taetigkeiten.push({ id: x.id, name: x.name, kurz: x.name.length > 16 ? x.name.slice(0, 15) + "…" : x.name, art: x.minuten ? "min" : "klein", std: 20, feld: b.feld, bild: b.bild, tf: "ABCD", icon: x.icon || b.icon, eigen: true,
+      draussenOpt: !!x.minuten && b.feld === "bewegung", mutOpt: !!x.minuten && ["bewegung", "menschen", "schaffen"].includes(b.feld),
       info: ["Eigenes. Zählt genauso.", "Selbst ausgedacht, selbst gemacht."] });
   }
 }
@@ -7786,8 +7859,8 @@ function bingoAktion(a, d) {
   const i = Number(d.i); B.an[i] = !B.an[i]; haptik("auswahl");
   const linien = BINGO_LINIEN.filter(l => l.every(k => B.an[k])).length;
   if (linien > B.linien) { const neu = linien - B.linien; B.linien = linien; S.taler += 5 * neu; haptik("erfolg"); ton("erfolg");
-    toast(["Bingo! Ich hab vor Freude mit dem Sockel gewackelt. Fast umgekippt.", "Reihe voll. Der Hase hat applaudiert. Mit den Ohren.", "Bingo! Das Schwein sagt, es hätte das auch gekonnt. Glaub ich nicht."][linien % 3] + ` · +${5 * neu} Taler`, { erfolg: true }); }
-  if (!B.voll && B.an.every(Boolean)) { B.voll = true; S.taler += 20; S.fundstuecke = [{ id: "bingo", tag: heute(), wer: "huhn", text: "Eine ganze Bingo-Karte voll. Ich lass sie rahmen. Also: im Kopf." }, ...(S.fundstuecke || [])]; toast("Karte voll! +20 Taler. Das kommt in die Fundstücke.", { erfolg: true }); }
+    toast(["Bingo! Ich hab vor Freude mit dem Sockel gewackelt. Fast umgekippt.", "Reihe voll. Der Hase hat applaudiert. Mit den Ohren.", "Bingo! Das Schwein sagt, es hätte das auch gekonnt. Glaub ich nicht."][linien % 3] + `\n+${5 * neu} Taler`, { erfolg: true }); }
+  if (!B.voll && B.an.every(Boolean)) { B.voll = true; S.taler += 20; S.fundstuecke = [{ id: "bingo", tag: heute(), wer: "huhn", text: "Eine ganze Bingo-Karte voll. Ich lass sie rahmen. Also: im Kopf." }, ...(S.fundstuecke || [])]; toast("Karte voll! Das kommt in die Fundstücke.\n+20 Taler", { erfolg: true }); }
   speichern(); sheetInhalt(bingoInhalt()); return true;
 }
 
@@ -7825,6 +7898,9 @@ function postLaden() {
     gross = document.createElement("div"); gross.className = "portrait-gross"; gross.setAttribute("aria-hidden", "true");
     gross.innerHTML = ritaSVG(170);
     gross.style.left = Math.min(innerWidth - 186, r.right + 14) + "px"; gross.style.top = (r.bottom + 10) + "px";
+    if (Math.random() < .4) { const hand = document.createElement("div"); hand.className = "portrait-hand"; hand.style.animationDelay = (600 + Math.random() * 900) + "ms";
+      hand.innerHTML = `<svg viewBox="0 0 60 80" width="58" height="78"><path d="M22 80 L20 52 Q30 48 40 52 L38 80Z" fill="#22304A"/><g transform="translate(30 50)"><path d="M-11 0 Q-14 -18 -10 -26 Q-8 -30 -5 -26 L-4 -14 L-4 -34 Q-2 -38 1 -34 L1 -16 L2 -36 Q5 -40 7 -36 L7 -16 L9 -32 Q12 -35 13 -31 L12 -12 Q16 -18 19 -15 Q20 -12 16 -6 Q10 4 0 4 Q-8 4 -11 0Z" fill="#F0C9AA" stroke="#D49A7C" stroke-width="1"/></g></svg>`;
+      gross.appendChild(hand); }
     document.body.appendChild(gross); lange = true; haptik("auswahl");
   };
   const weg = () => { clearTimeout(zeitV); if (gross) { const g = gross; g.classList.add("zu"); setTimeout(() => g.remove(), 220); gross = null; } };
@@ -7836,6 +7912,31 @@ function postLaden() {
   document.addEventListener("contextmenu", ev => { if (ev.target.closest("#logo")) ev.preventDefault(); });
   // langes Halten soll nicht zusätzlich die Tipp-Überraschung auslösen
   document.addEventListener("click", ev => { if (lange && ev.target.closest("#logo")) { ev.stopImmediatePropagation(); lange = false; } }, true);
+}
+
+/* ---------- Hühnchen: Finger drauf halten = großer Kopf daneben; oft antippen = Feder fliegt ---------- */
+{ let zeitH = 0, grossH = null, langH = false, taps = [];
+  const zeigen = (el) => {
+    if (grossH) return; const r = el.querySelector(".huhn")?.getBoundingClientRect() || el.getBoundingClientRect();
+    grossH = document.createElement("div"); grossH.className = "huhn-gross"; grossH.setAttribute("aria-hidden", "true");
+    grossH.innerHTML = huhnSVG({ gr: 150, kopf: true, stimmung: "spricht" });
+    grossH.style.left = Math.min(innerWidth - 166, r.right + 8) + "px"; grossH.style.top = Math.max(8, r.top - 150) + "px";
+    document.body.appendChild(grossH); langH = true; haptik("auswahl");
+  };
+  const weg = () => { clearTimeout(zeitH); if (grossH) { const g = grossH; g.classList.add("zu"); setTimeout(() => g.remove(), 220); grossH = null; } };
+  document.addEventListener("pointerdown", ev => { const el = ev.target.closest(".huhn-karte"); if (!el) return; langH = false; zeitH = setTimeout(() => zeigen(el), 340); });
+  document.addEventListener("pointerup", weg); document.addEventListener("pointercancel", weg);
+  document.addEventListener("pointerover", ev => { if (ev.pointerType === "mouse" && ev.target.closest(".huhn-karte .huhn")) { clearTimeout(zeitH); zeitH = setTimeout(() => zeigen(ev.target.closest(".huhn-karte")), 300); } });
+  document.addEventListener("pointerout", ev => { if (ev.pointerType === "mouse" && ev.target.closest(".huhn-karte") && !(ev.relatedTarget && ev.relatedTarget.closest && ev.relatedTarget.closest(".huhn-karte"))) weg(); });
+  document.addEventListener("contextmenu", ev => { if (ev.target.closest(".huhn-karte")) ev.preventDefault(); });
+  document.addEventListener("click", ev => {
+    const k = ev.target.closest(".huhn-karte"); if (!k) return;
+    if (langH) { ev.stopImmediatePropagation(); langH = false; return; }
+    const n = Date.now(); taps = taps.filter(t => n - t < 2500).concat(n);
+    if (taps.length >= 3 && !REDUCED()) { const h = k.querySelector(".huhn").getBoundingClientRect(); const f = document.createElement("div"); f.className = "feder-flug"; f.setAttribute("aria-hidden", "true");
+      f.innerHTML = `<svg viewBox="0 0 20 44" width="20" height="44"><path d="M10 43 L10 6" stroke="#8A5A2B" stroke-width="1.4"/><path d="M10 4 Q19 12 16 28 Q13 36 10 40 Q7 36 4 28 Q1 12 10 4Z" fill="#E4B24F"/><path d="M10 10 L15 16 M10 16 L15 22 M10 22 L14 28 M10 12 L5 18 M10 18 L5 24 M10 24 L6 30" stroke="#C9913C" stroke-width="1"/></svg>`;
+      f.style.left = (h.left + h.width * .4) + "px"; f.style.top = (h.top + h.height * .4) + "px"; f.style.setProperty("--dx", (Math.random() * 120 - 60) + "px"); document.body.appendChild(f); setTimeout(() => f.remove(), 3200); }
+  }, true);
 }
 
 /* ============================================================
@@ -8089,7 +8190,7 @@ function eintragSpeichern(entwurf, altId) {
   const t = tat(entwurf.t);
   const vorherStufe = stufe(), vorherModell = modell();
   const e = { ...entwurf };
-  delete e.notizOffen;
+  delete e.notizOffen; delete e.tagOffen;
   e.id = altId || ("e" + Date.now().toString(36) + Math.floor(Math.random() * 1e4).toString(36));
   e.ts = e.ts || Date.now(); e.rv = RV;
   e.tf = S.tf[e.tag] || "";
@@ -8154,8 +8255,10 @@ function nachEintrag(r, text) {
   if (neueStufe) { S.stufeGemeldet = nachStufe; speichern(); haptik("stufe"); }
   let knopf = neueStufe ? { text: "Ansehen", act: "stufe-zeigen" } : null;
   if (!knopf && e.t === "abgehakt") { const m = NACH_HAK.find(([re]) => re.test(e.notiz || "")); if (m) { window._nachHak = m[1]; knopf = { text: `Auch als „${tat(m[1]).kurz}“ eintragen`, act: "nach-hak" }; } }
-  const zeile2 = [e.t === "abgehakt" ? "" : (huhn ? "Hühnchen: „" + huhn + "“" : info), neueStufe ? `Neu im Bild: ${D.stufen[nachStufe].name}` : (auchNeu.length ? `Neu: ${auchNeu.join(", ")}` : ""), talerTxt].filter(Boolean).join(" · ");
-  toast(`${text || "Eingetragen."}${zeile2 ? "\n" + zeile2 : ""}`, { rueck: e.id, erfolg: true, knopf, dauer: knopf ? 12000 : e.t === "abgehakt" ? 6000 : undefined });
+  // Rückmeldung immer gleich gebaut: 1. was eingetragen wurde  2. ein Satz (Hühnchen, sonst Max’ Info)  3. Taler und Neues im Bild
+  const satz = e.t === "abgehakt" && !huhn ? "" : (huhn ? "Hühnchen: „" + huhn + "“" : info);
+  const lohn = [talerTxt, neueStufe ? `Neu im Bild: ${D.stufen[nachStufe].name}` : (auchNeu.length ? `Neu: ${auchNeu.join(", ")}` : "")].filter(Boolean).join(" · ");
+  toast([text || "Eingetragen.", satz, lohn].filter(Boolean).join("\n"), { rueck: e.id, erfolg: true, knopf, dauer: knopf ? 12000 : e.t === "abgehakt" ? 6000 : undefined });
   const buehne = $("#buehne-heute") || $("#buehne-gross");
   if (buehne && neuKey) setTimeout(() => ringAn(buehne, neuKey.split(":")[0] === "fuss" || neuKey.startsWith("laterne") ? "tanz" : neuKey.split(":")[0] === "buch" ? "eiche" : neuKey.split(":")[0]), REDUCED() ? 0 : 1200);
 }
@@ -8242,7 +8345,7 @@ function aktion(a, d, el, ev) {
     case "go": if (d.go === "einstellungen") einstellungenSheet(); break;
 
     /* Tagesform */
-    case "tf": S.tf[heute()] = d.v; if (S.huhn) S.huhnSagt = { tag: heute(), text: { A: "Viel Energie? Dann halt ich hier die Stellung, und du ziehst los.", B: "Gemächlich ist ein schönes Tempo. Ich hab ja nur das eine.", C: "Ruhig angehen. Da bin ich Profi, ich steh seit Jahren still.", D: "Sparflamme ist auch eine Flamme. Ich bin heute leise und leiste dir Gesellschaft." }[d.v] }; try { eierTagesform(d.v); } catch (e) { } speichern(); haptik("auswahl"); el.setAttribute("aria-pressed", "true"); el.classList.add("fill-in");
+    case "tf": S.tf[heute()] = d.v; if (S.huhn) S.huhnSagt = { tag: heute(), text: { A: "Mehr Energie? Dann halt ich hier die Stellung, und du ziehst los.", B: "Gemächlich ist ein schönes Tempo. Ich hab ja nur das eine.", C: "Ruhig angehen. Da bin ich Profi, ich steh seit Jahren still.", D: "Sparflamme ist auch eine Flamme. Ich bin heute leise und leiste dir Gesellschaft." }[d.v] }; try { eierTagesform(d.v); } catch (e) { } speichern(); haptik("auswahl"); el.setAttribute("aria-pressed", "true"); el.classList.add("fill-in");
       setTimeout(() => { render({ halteScroll: true, ohneAnim: true }); const f = D.tagesformen.find(x => x.id === d.v); sag(`${f.name} gewählt.`); }, REDUCED() ? 0 : 320); break;
     case "tf-onb": S.tf[heute()] = d.v; speichern(); haptik("auswahl"); sheetInhalt(onboardingInhalt()); break;
     case "tf-aendern": delete S.tf[heute()]; speichern(); render({ halteScroll: true, ohneAnim: true }); break;
@@ -8257,17 +8360,24 @@ function aktion(a, d, el, ev) {
       if (d.f === "wie" && E.wie === v) v = "";
       E[d.f] = v; haptik("auswahl");
       const id = aktuellesSheet()?.dataset.id;
-      sheetInhalt(id === "zurueck" ? zurueckInhalt() : id === "timerneu" ? timerNeuInhalt() : eintragenInhalt()); break;
+      sheetInhalt(id === "zurueck" ? zurueckInhalt() : id === "timerneu" ? timerNeuInhalt() : eintragenInhalt());
+      if (d.f === "tag" && id === "eintragen") sheetFuss(eintragenFuss()); break;
     }
     case "umschalt": E[d.f] = !E[d.f]; haptik("auswahl"); sheetInhalt(aktuellesSheet()?.dataset.id === "zurueck" ? zurueckInhalt() : eintragenInhalt()); break;
     case "notiz-auf": E.notizOffen = true; sheetInhalt(eintragenInhalt()); setTimeout(() => $("#notiz")?.focus(), 50); break;
+    case "tag-auf": E.tagOffen = true; haptik("auswahl"); sheetInhalt(aktuellesSheet()?.dataset.id === "zurueck" ? zurueckInhalt() : eintragenInhalt()); break;
     case "speichern": {
       const t = tat(E.t);
       if (t.art === "buch" && !E.titel.trim()) { toast("Bitte den Buchtitel eintragen."); haptik("achtung"); break; }
       if (t.art === "buch" && D.hp) { const b = D.hp.baende.find(x => x.nr === S.hp.band); if (b && E.titel.trim() === b.titel && D.hp.baende.find(x => x.nr === b.nr + 1)) { S.hp.band = b.nr + 1; S.hp.kapitel = 0; } }
       const alt = E._alt; delete E._alt;
-      if (E.hpKap && D.hp) { const b = D.hp.baende.find(x => x.nr === S.hp.band); if (b) { const vorK = S.hp.kapitel; setTimeout(() => { if (vorK < 13 && S.hp.kapitel >= 13) eierKapitel(13); }, 50); S.hp.kapitel = Math.min(b.kapitel, S.hp.kapitel + Number(E.hpKap)); E.notiz = E.notiz || `${b.titel.replace("Harry Potter und d", "D")}, bis Kapitel ${S.hp.kapitel}`; } } delete E.hpKap;
+      if (E.hpKap && D.hp) { const b = D.hp.baende.find(x => x.nr === S.hp.band); if (b) { const vorK = S.hp.kapitel; setTimeout(() => { if (vorK < 13 && S.hp.kapitel >= 13) eierKapitel(13); }, 50); S.hp.kapitel = Math.min(b.kapitel, S.hp.kapitel + Number(E.hpKap)); E.notiz = E.notiz || `${b.titel.replace("Harry Potter und d", "D")}, bis Kapitel ${S.hp.kapitel}`; if (S.hp.kapitel >= b.kapitel) E._buchFertig = b.titel; } } delete E.hpKap;
+      const fertig = E._buchFertig; delete E._buchFertig;
       const r = eintragSpeichern(E, alt);
+      if (fertig && r) { // letztes Kapitel: das Buch kommt als eigener Eintrag dazu, der nächste Band ist dran
+        const r2 = eintragSpeichern({ t: "buchfertig", tag: E.tag, titel: fertig });
+        const b = D.hp.baende.find(x => x.titel === fertig), n = b && D.hp.baende.find(x => x.nr === b.nr + 1); if (n) { S.hp.band = n.nr; S.hp.kapitel = 0; speichern(); }
+        nachEintrag(r2 || r, `Eingetragen: ${eintragText(r.e).replace(/\.$/, "")} – und das Buch ist ausgelesen!`); break; }
       nachEintrag(r, alt ? "Geändert." : `Eingetragen: ${eintragText(r ? r.e : E).replace(/\.$/, "")}.`); break;
     }
     case "eintrag": eintragSheet(d.id); break;
@@ -8285,7 +8395,7 @@ function aktion(a, d, el, ev) {
     case "tschuess-auflegen": { const T = S.tschuess; if (!T || T.ende) break; T.verlauf.push(["rita", "Ich leg jetzt auf. Tschüss!"]); T.ende = "rita"; S.tschuessSiege = (S.tschuessSiege || 0) + 1; speichern(); haptik("erfolg"); render({ halteScroll: true, ohneAnim: true }); break; }
     case "liste-hilfe": listeHilfeSheet(); break;
     case "nach-hak": { $$(".toast").forEach(t => t.remove()); const t2 = window._nachHak; if (t2) eintragenSheet(t2); break; }
-    case "abend": { const t = tat(d.t), letzte = [...S.eintraege].reverse().find(e => e.t === d.t); const r = eintragSpeichern({ t: d.t, tag: heute(), km: t.art === "km" ? (letzte?.km || 2) : undefined, min: t.art === "min" || t.art === "person" ? (letzte?.min || t.std || 20) : undefined, person: t.art === "person" ? "_" : undefined, notiz: "" }); if (r) nachEintrag(r, `${t.kurz} – eingetragen.`); break; }
+    case "abend": { const t = tat(d.t), letzte = [...S.eintraege].reverse().find(e => e.t === d.t); const r = eintragSpeichern({ t: d.t, tag: heute(), km: t.art === "km" ? (letzte?.km || 2) : undefined, min: t.art === "min" || t.art === "person" ? (letzte?.min || t.std || 20) : undefined, person: t.art === "person" ? "_" : undefined, notiz: "" }); if (r) nachEintrag(r, `Eingetragen: ${eintragText(r.e)}.`); break; }
     case "abend-weg": S.abendWeg = heute(); speichern(); render({ halteScroll: true, ohneAnim: true }); break;
     case "zettel-weg": if (S.zettel) S.zettel.weg = true; speichern(); haptik("auswahl"); render({ halteScroll: true, ohneAnim: true }); break;
     case "huhn-tap": { const h = el.querySelector(".huhn"); if (h) { h.classList.remove("freut"); void h.getBBox; h.classList.add("freut"); setTimeout(() => h.classList.remove("freut"), 1100); } haptik("auswahl"); eierHuhnTap(); break; }
@@ -8360,9 +8470,9 @@ function aktion(a, d, el, ev) {
 
     /* Tagebuch */
     case "moment": momentSheet(); break;
-    case "moment-speichern": { const t = $("#moment-text").value.trim(); eierMoment(t); const h = heute(); const neu = !S.momente[h]; if (t) S.momente[h] = t; else delete S.momente[h]; if (t && neu) S.taler += 1; speichern(); sheetZu(); render({ halteScroll: true, ohneAnim: true }); if (t) toast("Aufgeschrieben.", { erfolg: true }); break; }
+    case "moment-speichern": { const t = $("#moment-text").value.trim(); eierMoment(t); const h = heute(); const neu = !S.momente[h]; if (t) S.momente[h] = t; else delete S.momente[h]; if (t && neu) S.taler += 1; speichern(); sheetZu(); render({ halteScroll: true, ohneAnim: true }); if (t) toast(neu ? "Aufgeschrieben.\n+1 Taler" : "Aufgeschrieben.", { erfolg: true }); break; }
     case "rueckblick": rueckblickSheet(); break;
-    case "rueckblick-fertig": { const kw = kwVon(heute()); const neu = !S.rueckblick[kw]; S.rueckblick[kw] = heute(); S.wennDann = $("#vorsatz").value.trim(); if (neu) S.taler += 10; if (S.hinweis.tag === heute()) S.hinweis.zu = true; speichern(); sheetZu(); render({ halteScroll: true, ohneAnim: true }); toast(neu ? "Woche angeschaut. +10 Taler" : "Gespeichert.", { erfolg: true }); break; }
+    case "rueckblick-fertig": { const kw = kwVon(heute()); const neu = !S.rueckblick[kw]; S.rueckblick[kw] = heute(); S.wennDann = $("#vorsatz").value.trim(); if (neu) S.taler += 10; if (S.hinweis.tag === heute()) S.hinweis.zu = true; speichern(); sheetZu(); render({ halteScroll: true, ohneAnim: true }); toast(neu ? "Woche angeschaut.\n+10 Taler" : "Gespeichert.", { erfolg: true }); break; }
     case "tb-mehr": S._tbMehr = true; render({ halteScroll: true, ohneAnim: true }); break;
 
     /* Hinweis */
@@ -8374,15 +8484,15 @@ function aktion(a, d, el, ev) {
     case "mission-wahl": sheetZu(); setTimeout(() => missionSheet(d.id), 240); break;
     case "mission-start": S.missionen.aktiv.push({ id: d.id, start: heute(), tage: [] }); speichern(); sheetZu(); render({ halteScroll: true, ohneAnim: true }); toast("Vorhaben begonnen. Ohne Eile."); break;
     case "mission-heute": { const a = S.missionen.aktiv.find(x => x.id === d.id), m = (D.missionen || []).find(x => x.id === d.id); if (!a.tage.includes(heute())) a.tage.push(heute()); speichern(); sheetZu();
-      if (m && m.t) { const t = tat(m.t); const r = eintragSpeichern({ t: t.id, tag: heute(), min: t.std || 15, km: t.art === "km" ? (t.std || 2) : undefined, draussen: !!t.draussen, notiz: m.titel }); nachEintrag(r, `Vorhaben: ${m.titel}.`); } else render({ halteScroll: true }); break; }
-    case "mission-fertig": { const m = (D.missionen || []).find(x => x.id === d.id); S.missionen.aktiv = S.missionen.aktiv.filter(x => x.id !== d.id); S.missionen.fertig.push({ id: d.id, tag: heute() }); S.taler += 10; speichern(); sheetZu(); render({ halteScroll: true }); toast(`Abgeschlossen: ${m.titel}. +10 Taler`, { erfolg: true }); haptik("erfolg"); break; }
+      if (m && m.t) { const t = tat(m.t); const r = eintragSpeichern({ t: t.id, tag: heute(), min: t.std || 15, km: t.art === "km" ? (t.std || 2) : undefined, draussen: !!t.draussen, notiz: m.titel }); nachEintrag(r, `Eingetragen: ${m.titel}.`); } else render({ halteScroll: true }); break; }
+    case "mission-fertig": { const m = (D.missionen || []).find(x => x.id === d.id); S.missionen.aktiv = S.missionen.aktiv.filter(x => x.id !== d.id); S.missionen.fertig.push({ id: d.id, tag: heute() }); S.taler += 10; speichern(); sheetZu(); render({ halteScroll: true }); toast(`Vorhaben abgeschlossen: ${m.titel}.\n+10 Taler`, { erfolg: true }); haptik("erfolg"); break; }
     case "mission-pause": S.missionen.aktiv = S.missionen.aktiv.filter(x => x.id !== d.id); speichern(); sheetZu(); render({ halteScroll: true }); toast("Zur Seite gelegt. Es läuft nichts ab."); break;
 
     /* Lesebegleiter */
-    case "kapitel": hpKapitel(1, true); break;
+    case "kapitel": alleSheetsZu(); setTimeout(() => { eintragenSheet("lesen"); E.hpKap = 1; sheetInhalt(eintragenInhalt()); }, 240); break;
     case "lesebegleiter": lesebegleiterSheet(); break;
     case "band": S.hp.band = Number(d.nr); S.hp.kapitel = 0; speichern(); sheetZu(); setTimeout(lesebegleiterSheet, 240); render({ halteScroll: true, ohneAnim: true }); break;
-    case "band-fertig": { const b = D.hp.baende.find(x => x.nr === Number(d.nr)); const r = eintragSpeichern({ t: "buchfertig", tag: heute(), titel: b.titel, notiz: "abgehakt" }); if (S.hp.band === b.nr) { const n = D.hp.baende.find(x => x.nr === b.nr + 1 && !S.eintraege.some(e => e.t === "buchfertig" && e.titel === x.titel)); if (n) { S.hp.band = n.nr; S.hp.kapitel = 0; } } speichern(); nachEintrag(r, `Abgehakt: ${b.titel}.`); break; }
+    case "band-fertig": { const b = D.hp.baende.find(x => x.nr === Number(d.nr)); const r = eintragSpeichern({ t: "buchfertig", tag: heute(), titel: b.titel, notiz: "abgehakt" }); if (S.hp.band === b.nr) { const n = D.hp.baende.find(x => x.nr === b.nr + 1 && !S.eintraege.some(e => e.t === "buchfertig" && e.titel === x.titel)); if (n) { S.hp.band = n.nr; S.hp.kapitel = 0; } } speichern(); nachEintrag(r, `Eingetragen: Buch ausgelesen: ${b.titel}.`); break; }
     case "kap": hpKapitel(Number(d.d), false); sheetZu(); setTimeout(lesebegleiterSheet, 240); break;
 
     /* Spiel */
@@ -8446,7 +8556,7 @@ function hpKapitel(dd, eintragen) {
     const r = eintragSpeichern({ t: "buchfertig", tag: heute(), titel: b.titel });
     const naechster = D.hp.baende.find(x => x.nr === S.hp.band + 1);
     if (naechster) { S.hp.band = naechster.nr; S.hp.kapitel = 0; speichern(); }
-    nachEintrag(r, `Ausgelesen: ${b.titel}.`);
+    nachEintrag(r, `Eingetragen: Buch ausgelesen: ${b.titel}.`);
   } else {
     const r = eintragSpeichern({ t: "lesen", tag: heute(), min: 20, notiz: `${b.titel}, Kapitel ${S.hp.kapitel}` });
     nachEintrag(r, `Kapitel ${S.hp.kapitel} gelesen.`);

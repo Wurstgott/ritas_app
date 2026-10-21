@@ -11,7 +11,7 @@ function huhnSVG(opt = {}) {
   return `<svg class="huhn ${stimmung}" viewBox="${vb}" style="width:${gr}px;height:${gr}px" aria-hidden="true">
   ${nurKopf ? "" : `<ellipse cx="50" cy="95" rx="26" ry="3.2" fill="rgba(20,28,24,.16)"/><rect x="26" y="83" width="46" height="10" rx="5" fill="#5B8A47"/>
   <g class="huhn-koerper">
-    <path d="M27 60 Q12 44 20 28 Q28 42 38 50Z" fill="#8A5A2B"/><path d="M25 56 Q14 48 15 38 Q24 48 32 52Z" fill="#5E8A3E"/>
+    <path d="M30 60 Q16 50 19 34 Q26 44 38 50Z" fill="#C9913C"/>
     <path d="M26 66 Q24 46 44 44 Q62 42 72 56 Q80 70 68 80 Q56 88 42 86 Q28 84 26 66Z" fill="#E4B24F"/>
     <path class="huhn-fluegel" d="M34 62 Q46 52 60 60 Q58 73 46 75 Q35 73 34 62Z" fill="#CC913C"/>
   </g>`}

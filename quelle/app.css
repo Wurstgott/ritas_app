@@ -593,3 +593,24 @@ h2, h3 { font-weight: 620; }
 .sheet-kopf { flex-wrap: nowrap; }
 .sheet-kopf h2 { flex: 1; min-width: 0; overflow-wrap: break-word; hyphens: auto; }
 .sheet-kopf .knopf { flex: none; }
+
+/* Eintrag-Blatt: ruhige, gleichmäßige Abschnitte */
+.sheet-inhalt > label.feld { margin-top: 20px; }
+.sheet-inhalt > label.feld:first-child { margin-top: 2px; }
+.zusaetze { margin-top: 16px; border-top: 1px solid var(--mulde-2); border-bottom: 1px solid var(--mulde-2); }
+.zusaetze .schalter-zeile + .schalter-zeile { border-top: 1px solid var(--mulde-2); }
+.klapp-zeile { gap: 8px; flex-wrap: wrap; margin-top: 14px; }
+.klapp-zeile .knopf { padding-left: 4px; }
+.chips.raster { display: grid; grid-template-columns: 1fr 1fr; }
+.chips.raster .chip { justify-content: center; }
+.portrait-hand { position: absolute; right: -14px; bottom: -2px; transform-origin: 50% 95%; opacity: 0; animation: pg-wink 1.6s ease-in-out forwards; }
+@keyframes pg-wink { 0% { opacity: 0; transform: translateY(20px) rotate(0); } 15% { opacity: 1; transform: translateY(0) rotate(0); } 30% { transform: rotate(-18deg); } 45% { transform: rotate(14deg); } 60% { transform: rotate(-16deg); } 75% { transform: rotate(10deg); } 90% { opacity: 1; transform: rotate(0); } 100% { opacity: 0; transform: translateY(20px); } }
+.huhn-gross { position: fixed; z-index: 70; pointer-events: none; background: var(--bogen); border-radius: 50%; padding: 6px; box-shadow: 0 10px 30px rgba(0,0,0,.25); animation: pg-auf .28s cubic-bezier(.3,1.5,.5,1) both; transform-origin: bottom left; }
+.huhn-gross.zu { animation: pg-zu .2s ease-in forwards; }
+.huhn-gross .lider { animation: huhn-blinzeln 2.4s .4s infinite; }
+.huhn-gross .huhn-schnabel .unten { animation: huhn-sprechen .25s ease-in-out 8 alternate .3s; }
+.feder-flug { position: fixed; z-index: 70; pointer-events: none; animation: feder 3s ease-in-out forwards; }
+@keyframes feder { 0% { transform: translate(0, 0) rotate(0); opacity: 0; } 10% { opacity: 1; } 30% { transform: translate(calc(var(--dx) * .4), -60px) rotate(-30deg); } 55% { transform: translate(calc(var(--dx) * -.2), -20px) rotate(25deg); } 80% { transform: translate(calc(var(--dx) * .6), 30px) rotate(-15deg); opacity: 1; } 100% { transform: translate(var(--dx), 70px) rotate(10deg); opacity: 0; } }
+.huhn-karte { -webkit-touch-callout: none; user-select: none; }
+.tf-kurz { flex: 1; min-width: 0; }
+.tf-kurz + .knopf { flex: none; }

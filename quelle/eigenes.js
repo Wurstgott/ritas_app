@@ -18,6 +18,7 @@ function eigeneRegistrieren() {
   for (const x of (S.eigeneT || [])) {
     const b = EIGEN_BEREICHE.find(b => b.feld === x.feld) || EIGEN_BEREICHE[3];
     D.taetigkeiten.push({ id: x.id, name: x.name, kurz: x.name.length > 16 ? x.name.slice(0, 15) + "…" : x.name, art: x.minuten ? "min" : "klein", std: 20, feld: b.feld, bild: b.bild, tf: "ABCD", icon: x.icon || b.icon, eigen: true,
+      draussenOpt: !!x.minuten && b.feld === "bewegung", mutOpt: !!x.minuten && ["bewegung", "menschen", "schaffen"].includes(b.feld),
       info: ["Eigenes. Zählt genauso.", "Selbst ausgedacht, selbst gemacht."] });
   }
 }
