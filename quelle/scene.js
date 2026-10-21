@@ -645,6 +645,7 @@ function ringAn(container, ort) {
   const ring = document.createElement("div"); ring.className = "ring";
   ring.style.left = (SZ.ox + (reg.x + reg.w / 2) * SZ.sk) + "px"; ring.style.top = (SZ.oy + (reg.y + reg.h / 2) * SZ.sk) + "px";
   container.appendChild(ring); setTimeout(() => ring.remove(), 2500);
+  const cv = container.querySelector("canvas"); if (cv) { const r = container.getBoundingClientRect(); if (r.bottom < 60 || r.top > innerHeight - 80) container.scrollIntoView({ block: "center", behavior: "smooth" }); cv.style.transformOrigin = `${ring.style.left} ${ring.style.top}`; cv.classList.remove("zoom"); void cv.offsetWidth; cv.classList.add("zoom"); setTimeout(() => cv.classList.remove("zoom"), 2400); }
 }
 /* Text-Beschreibung des Bildes (für Screenreader und „Bild als Liste“) */
 function bildBeschreibung(M) {

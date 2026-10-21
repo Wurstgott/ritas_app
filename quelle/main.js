@@ -372,7 +372,7 @@ function aktion(a, d, el, ev) {
     case "einspielen-ja": { if (!window._import) break; const vorher = JSON.stringify(S); S = window._import; window._import = null; try { migrieren(); eigeneRegistrieren(); alleSheetsZu(); render(); } catch (err) { S = JSON.parse(vorher); speichern(); alleSheetsZu(); render(); toast("Diese Sicherung ließ sich nicht lesen. Es bleibt alles, wie es war."); break; } toast("Sicherung eingespielt.", { erfolg: true }); break; }
     case "wiederher": eintragWiederher(d.id); sheetInhalt(helferInhalt()); break;
     case "reset-1": sheet({ titel: "Wirklich alles löschen?", inhalt: `<p>Alle Einträge, das Bild, Taler und Einstellungen auf diesem Handy werden gelöscht. Das lässt sich nicht rückgängig machen.</p><button class="knopf zweit voll" data-act="sichern-kopie">Vorher Sicherung kopieren</button>`, fuss: `<div class="stapel"><button class="knopf voll rand warn" data-act="reset-2">Ja, alles löschen</button><button class="knopf haupt voll" data-act="sheet-zu">Nein, behalten</button></div>` }); break;
-    case "reset-2": { const behalte = { name: S.name, anrede: S.anrede, size: S.size, theme: S.theme }; S = frisch(); Object.assign(S, behalte); S.onboard = true; speichern(); alleSheetsZu(); TAB = "heute"; render(); toast("Alles gelöscht. Auf ein Neues!"); break; }
+    case "reset-2": { S = frisch(); speichern(); eigeneRegistrieren(); alleSheetsZu(); TAB = "heute"; ONB = 1; LISTE_EDIT = false; EINST_OFFEN = new Set(["aussehen"]); render(); setTimeout(onboardingSheet, 350); break; }
 
     /* Installation */
     case "install": installSheet(); break;
@@ -386,7 +386,7 @@ function aktion(a, d, el, ev) {
     case "ton-probe": ton("erfolg", true); break;
     case "angebot-kat": ANG_KAT = d.v; haptik("auswahl"); sheetInhalt(angeboteInhalt()); aktuellesSheet().querySelector(".sheet-inhalt").scrollTop = 0; break;
     case "angebot-liste": { const x = D.angebote.find(y => y.id === d.id); if (!x) break; S.liste = S.liste || []; const text = angebotKurz(x); if (!S.liste.some(y => !y.erledigt && (y.angebot === x.id || y.text === text))) S.liste.push({ id: "l" + Date.now().toString(36), text, angebot: x.id }); speichern(); haptik("auswahl"); toast(`Steht auf ${A("deiner", "Ihrer")} Liste.`, { erfolg: true, dauer: 4000 }); el.outerHTML = `<p class="klein" style="margin:6px 0 0">${ic("haken")} Steht auf ${A("deiner", "Ihrer")} Liste.</p>`; render({ halteScroll: true, ohneAnim: true }); break; }
-    default: if (a && a.startsWith("ruhe-") && typeof ruheAktion === "function") ruheAktion(a, d, el); else if (a && (a.startsWith("eigen") || a.startsWith("eig-"))) eigenAktion(a, d);
+    default: if (a && a.startsWith("ruhe-") && typeof ruheAktion === "function") ruheAktion(a, d, el); else if (a && (a.startsWith("eigen") || a.startsWith("eig-"))) eigenAktion(a, d); else if (a === "bingo" || a === "bingo-drinnen") bingoAktion(a, d); else if (a === "bingo-auf") bingoSheet(); else if (a === "raetsel") raetselAktion(d); else if (a === "gutschein") gutscheinSheet(d.id);
   }
 }
 
@@ -445,6 +445,7 @@ function start() {
   const q = new URLSearchParams(location.search);
   if (q.get("zeit")) { const z = new Date(q.get("zeit")); if (!isNaN(z)) ZEITVERSATZ = z - Date.now(); }
   try { eierTag(); render(); } catch (err) { notfall(err); return; }
+  postLaden();
   if (!S.onboard) setTimeout(onboardingSheet, 300);
   else if (S.timer) setTimeout(() => { if (timerRest() <= 0) timerSheet(); }, 400);
   addEventListener("resize", () => { clearTimeout(window._rs); window._rs = setTimeout(() => bilderZeichnen(), 150); });
@@ -486,3 +487,5 @@ function logoSpass(el) {
   if (a === "huhn") { const h = document.createElement("span"); h.className = "logo-huhn"; h.innerHTML = huhnSVG({ gr: 30, stimmung: "freut" }); h.style.left = (r.right - 4) + "px"; h.style.top = (r.top + 8) + "px"; document.body.appendChild(h); setTimeout(() => h.remove(), 1900); return; }
   if (a === "sprech") { const t = ["Kitzelt!", "Na, du?", "Ich hab alles im Blick.", "Heute schon gelacht?", "Bitte nicht so fest, ich bin frisch frisiert.", "Huch!", "Hallo, ich bin’s, Rita. Ach, das weißt du ja."][Math.floor(Math.random() * 7)]; const b = document.createElement("span"); b.className = "logo-sprech"; b.textContent = t; b.style.left = (r.left + 4) + "px"; b.style.top = (r.bottom + 6) + "px"; document.body.appendChild(b); setTimeout(() => b.remove(), 2300); }
 }
+
+document.addEventListener("toggle", ev => { const g = ev.target && ev.target.dataset && ev.target.dataset.einstGruppe; if (g) { if (ev.target.open) EINST_OFFEN.add(g); else EINST_OFFEN.delete(g); } }, true);

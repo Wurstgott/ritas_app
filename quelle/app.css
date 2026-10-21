@@ -562,3 +562,34 @@ h2, h3 { font-weight: 620; }
 .zettel-nadel { position: absolute; top: -7px; left: 50%; width: 14px; height: 14px; margin-left: -7px; border-radius: 50%; background: #C8372D; box-shadow: 0 2px 0 rgba(0,0,0,.2); }
 .zettel-initial { width: 40px; height: 40px; flex: none; border-radius: 50%; background: #E2A93B; color: #2A2A22; display: grid; place-items: center; font-family: Fraunces, Georgia, serif; font-weight: 700; font-size: 1.2rem; }
 .huhn-karte[data-act] { cursor: pointer; }
+.buehne canvas.zoom { animation: bild-zoom 2.2s cubic-bezier(.3,.1,.2,1); }
+@keyframes bild-zoom { 0% { transform: scale(1); } 30%, 60% { transform: scale(1.35); } 100% { transform: scale(1); } }
+.bingo { display: grid; grid-template-columns: repeat(3, 1fr); gap: 8px; }
+.bingo-feld { position: relative; aspect-ratio: 1; border: 0; border-radius: 12px; background: var(--bogen); box-shadow: var(--schatten-2); color: var(--tinte); font: inherit; font-size: .9rem; font-weight: 700; line-height: 1.2; padding: 6px; display: grid; place-items: center; text-align: center; cursor: pointer; overflow-wrap: anywhere; }
+.bingo-feld.an { background: color-mix(in srgb, var(--moos) 22%, var(--bogen)); }
+.bingo-haken { position: absolute; top: 4px; right: 8px; color: var(--moos); font-size: 1.2rem; }
+.zettel-notiz.raetsel { background: #F4E6FF; transform: rotate(.8deg); }
+.portrait-gross { position: fixed; z-index: 70; pointer-events: none; border-radius: 50%; box-shadow: 0 10px 30px rgba(0,0,0,.25); animation: pg-auf .28s cubic-bezier(.3,1.5,.5,1) both; transform-origin: top left; }
+.portrait-gross.zu { animation: pg-zu .2s ease-in forwards; }
+@keyframes pg-auf { from { transform: scale(.3); opacity: 0; } }
+@keyframes pg-zu { to { transform: scale(.3); opacity: 0; } }
+.portrait-gross .auge-l, .portrait-gross .auge-r { transform-box: fill-box; transform-origin: center; animation: pg-blinz 2.6s ease-in-out .5s infinite; }
+@keyframes pg-blinz { 0%, 90%, 100% { transform: scaleY(1); } 94% { transform: scaleY(.1); } }
+.portrait-gross svg > path[fill="#9A3A2E"], .portrait-gross svg > path[fill="#FFFDF5"] { transform-box: fill-box; transform-origin: center top; animation: pg-laecheln 2.6s ease-in-out .2s infinite; }
+@keyframes pg-laecheln { 0%, 100% { transform: scale(1); } 40%, 60% { transform: scale(1.18, 1.25); } }
+.logo-knopf { -webkit-touch-callout: none; user-select: none; touch-action: manipulation; }
+.einst-gruppe { background: var(--bogen); border-radius: 14px; box-shadow: var(--schatten-2); margin-bottom: 10px; overflow: hidden; }
+.einst-gruppe > summary { list-style: none; display: flex; align-items: center; gap: 12px; padding: 14px 16px; min-height: 64px; cursor: pointer; }
+.einst-gruppe > summary::-webkit-details-marker { display: none; }
+.einst-gruppe > summary .text { flex: 1; min-width: 0; }
+.einst-gruppe > summary .titel { font-weight: 700; }
+.einst-gruppe > summary .unter { font-size: .9rem; color: var(--tinte-2); }
+.einst-gruppe > summary .pfeil { transition: transform .2s; }
+.einst-gruppe[open] > summary .pfeil { transform: rotate(90deg); }
+.einst-inhalt { padding: 0 16px 16px; }
+.einst-gruppe > summary > svg { width: 26px; height: 26px; flex: none; color: var(--moos); }
+.einst-gruppe > summary > svg.pfeil { width: 20px; height: 20px; color: var(--tinte-2); }
+.bingo-feld { font-size: .82rem; hyphens: auto; -webkit-hyphens: auto; overflow-wrap: normal; word-break: normal; }
+.sheet-kopf { flex-wrap: nowrap; }
+.sheet-kopf h2 { flex: 1; min-width: 0; overflow-wrap: break-word; hyphens: auto; }
+.sheet-kopf .knopf { flex: none; }

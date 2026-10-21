@@ -71,6 +71,7 @@ function viewHeute() {
     ? `<section class="abschnitt"><div class="brief-papier"><span class="brief-marke" aria-hidden="true">${post.wer === "max" ? maxSVG(52) : huhnSVG({ gr: 52, kopf: true })}</span><p class="brief-anrede">Liebe ${esc(S.name)},</p><p class="brief-text">${esc(post.text)}</p><p class="brief-gruss">${gruss} <span aria-hidden="true">♥</span></p>${post.extra ? `<button class="knopf klein leise" style="padding-left:0" data-act="post-gelesen">Zumachen</button>` : tschuessHTML()}</div></section>`
     : `<section class="abschnitt"><button class="umschlag" data-act="post-auf" aria-label="Post von ${von} – zum Öffnen antippen">${umschlagSVG(von)}<span class="umschlag-hinweis">Post von ${von} · zum Öffnen antippen</span></button></section>`; }
   html += zettelHTML();
+  html += raetselHTML();
   html += abendkarteHTML(tf);
   html += listeHTML();
   html += `<section class="abschnitt"><h2>Eintragen</h2><div class="kacheln">${S.schnell.map(id => { const t = tat(id); return kachel(t, zuletztText(id), `data-act="eintragen" data-t="${id}"`); }).join("")}</div>
@@ -161,6 +162,7 @@ function tuerSheet(was) {
   let html = "";
   if (was === "draussen") {
     html += `<div class="liste">
+    ${zeileBtn("blatt", "Forst-Bingo", "Hühnchens Karte für diese Woche", `data-act="bingo-auf"`, "k-draussen")}
     ${zeileBtn("rucksack", "Ausflug planen", "Mut-Leiter, Ziele, Checkliste", `data-act="ausflug"`, "k-draussen")}
     ${zeileBtn("haus", "In die Binger", "Zu Christiane und Micha", `data-act="ziel" data-id="binger"`, "k-menschen")}
     ${zeileBtn("tassen", "Angebote in Spandau", "Tanznachmittage, Konzerte, Treffs – mit Terminen", `data-act="angebote"`, "k-menschen")}
@@ -509,6 +511,7 @@ function ladenOeffnen(id) {
   if (m[id]) return ` <button class="knopf klein leise" data-act="lesen" data-was="${id}">Öffnen</button>`;
   if (id === "takt") return ` <button class="knopf klein leise" data-act="takt">Öffnen</button>`;
   if (id === "patience") return ` <button class="knopf klein leise" data-act="spiel">Spielen</button>`;
+  if ((D.gutscheine || []).some(g => g.id === id)) return ` <button class="knopf klein leise" data-act="gutschein" data-id="${id}">Einlösen</button>`;
   return "";
 }
 function kaufenFrage(id) {
@@ -635,29 +638,39 @@ function infoListe(titel, arr, felder) {
 
 /* ---------- Einstellungen ---------- */
 function einstellungenSheet() { sheet({ titel: "Einstellungen", inhalt: einstellungenInhalt(), id: "einst" }); }
+let EINST_OFFEN = new Set(["aussehen"]);
+function einstGruppe(id, icon, titel, unter, inhalt) {
+  return `<details class="einst-gruppe" data-einst-gruppe="${id}" ${EINST_OFFEN.has(id) ? "open" : ""}><summary>${ic(icon)}<span class="text"><span class="titel">${titel}</span><br><span class="unter">${unter}</span></span>${ic("pfeil", "pfeil")}</summary><div class="einst-inhalt">${inhalt}</div></details>`;
+}
 function einstellungenInhalt() {
-  return `<h3>Name und Anrede</h3><label class="feld" for="e-name">Name</label><input id="e-name" class="text" data-einst="name" value="${esc(S.name)}">
-    <div class="chips" style="margin-top:10px">${chip(S.anrede === "du", "Du", `data-act="einst" data-k="anrede" data-v="du"`)}${chip(S.anrede === "sie", "Sie", `data-act="einst" data-k="anrede" data-v="sie"`)}</div>
-    <h3 style="margin-top:20px">Schriftgröße</h3><div class="chips">${[[1, "Normal"], [2, "Groß"], [3, "Sehr groß"]].map(([v, l]) => chip(S.size === v, l, `data-act="einst" data-k="size" data-v="${v}"`)).join("")}</div>
-    <p class="klein" style="margin-top:6px">So sieht dein Text aus. Heute bin ich 4 km gegangen.</p>
-    <h3 style="margin-top:20px">Hell oder dunkel</h3><div class="chips">${[["auto", "Wie das Handy"], ["light", "Hell"], ["dark", "Dunkel"]].map(([v, l]) => chip(S.theme === v, l, `data-act="einst" data-k="theme" data-v="${v}"`)).join("")}</div>
-    <h3 style="margin-top:20px">Rückmeldung</h3>
-    ${IOS ? "" : schalter(S.vib, "Vibration", `data-act="einst-um" data-k="vib"`)}
-    ${schalter(S.ton, "Leiser Ton beim Eintragen", `data-act="einst-um" data-k="ton"`)}
-    ${schalter(S.motion === "ruhig", "Bewegung reduzieren", `data-act="einst-motion"`, "Keine Animationen")}
-    ${schalter(S.huhn, "Hühnchen zeigen und sprechen lassen", `data-act="einst-um" data-k="huhn"`)}
-    ${schalter(!S.eierAus, "Kleine Überraschungen", `data-act="eier-um"`, "Ab und zu melden sich Max, Hühnchen oder Christiane")}
-    <h3 style="margin-top:20px">Waldpatience</h3>
-    ${schalter(S.spiel.an, "Spiel anzeigen", `data-act="spiel-an"`)}
-    ${S.spiel.an ? `<label class="feld">Spielmarken pro Tag (je 10 Minuten)</label><div class="chips">${[0, 1, 2, 3, 4, 5, 6].map(n => chip((S.spiel.limitNeu ?? S.spiel.limit) === n, String(n), `data-act="spiel-limit" data-v="${n}" aria-label="${n} Spielmarken pro Tag"`)).join("")}</div><p class="klein">${S.spiel.limitNeu != null && S.spiel.limitNeu !== S.spiel.limit ? "Gilt ab morgen." : "Änderungen gelten ab dem nächsten Tag."}</p>` : ""}
-    <h3 style="margin-top:20px">Herzensmenschen</h3><div class="liste">${S.menschen.map((m, i) => `<div class="liste-zeile" style="cursor:default"><span style="width:28px;height:28px;border-radius:4px;background:${m.farbe};flex:none"></span><span class="text"><span class="titel">${esc(m.name)}</span><br><span class="unter">${esc(m.rolle || "")}</span></span><button class="knopf klein leise" data-act="mensch-weg" data-i="${i}" aria-label="${esc(m.name)} entfernen">Entfernen</button></div>`).join("")}</div>
-    <div class="zeile" style="margin-top:10px"><input id="neu-mensch" class="text" placeholder="Name"><button class="knopf zweit" data-act="mensch-neu">Dazu</button></div>
-    <h3 style="margin-top:20px">Mehr</h3><div class="liste">
+  return einstGruppe("aussehen", "sonne", "Schrift und Farben", "Schriftgröße, hell oder dunkel",
+      `<h3>Schriftgröße</h3><div class="chips">${[[1, "Normal"], [2, "Groß"], [3, "Sehr groß"]].map(([v, l]) => chip(S.size === v, l, `data-act="einst" data-k="size" data-v="${v}"`)).join("")}</div>
+      <p class="klein" style="margin-top:6px">So sieht dein Text aus. Heute bin ich 4 km gegangen.</p>
+      <h3 style="margin-top:16px">Hell oder dunkel</h3><div class="chips">${[["auto", "Wie das Handy"], ["light", "Hell"], ["dark", "Dunkel"]].map(([v, l]) => chip(S.theme === v, l, `data-act="einst" data-k="theme" data-v="${v}"`)).join("")}</div>`)
+    + einstGruppe("name", "hand", "Name und Anrede", `${esc(S.name)} · ${S.anrede === "sie" ? "Sie" : "Du"}`,
+      `<label class="feld" for="e-name">Name</label><input id="e-name" class="text" data-einst="name" value="${esc(S.name)}">
+      <div class="chips" style="margin-top:10px">${chip(S.anrede === "du", "Du", `data-act="einst" data-k="anrede" data-v="du"`)}${chip(S.anrede === "sie", "Sie", `data-act="einst" data-k="anrede" data-v="sie"`)}</div>`)
+    + einstGruppe("huhn", "stern", "Hühnchen und Überraschungen", "Wer spricht und wie oft",
+      `${schalter(S.huhn, "Hühnchen zeigen und sprechen lassen", `data-act="einst-um" data-k="huhn"`)}
+      ${schalter(!S.eierAus, "Kleine Überraschungen", `data-act="eier-um"`, "Ab und zu melden sich Max, Hühnchen oder Christiane")}`)
+    + einstGruppe("rueck", "glocke", "Ton, Vibration, Bewegung", "Rückmeldung beim Tippen",
+      `${IOS ? "" : schalter(S.vib, "Vibration", `data-act="einst-um" data-k="vib"`)}
+      ${schalter(S.ton, "Leiser Ton beim Eintragen", `data-act="einst-um" data-k="ton"`)}
+      ${schalter(S.motion === "ruhig", "Bewegung reduzieren", `data-act="einst-motion"`, "Keine Animationen")}`)
+    + einstGruppe("menschen", "tassen", "Herzensmenschen", `${S.menschen.length} in der Auswahl`,
+      `<div class="liste">${S.menschen.map((m, i) => `<div class="liste-zeile" style="cursor:default"><span style="width:28px;height:28px;border-radius:4px;background:${m.farbe};flex:none"></span><span class="text"><span class="titel">${esc(m.name)}</span><br><span class="unter">${esc(m.rolle || "")}</span></span><button class="knopf klein leise" data-act="mensch-weg" data-i="${i}" aria-label="${esc(m.name)} entfernen">Entfernen</button></div>`).join("")}</div>
+      <div class="zeile" style="margin-top:10px"><input id="neu-mensch" class="text" placeholder="Name" aria-label="Neuer Herzensmensch"><button class="knopf zweit" data-act="mensch-neu">Dazu</button></div>`)
+    + einstGruppe("spiel", "karten", "Waldpatience", S.spiel.an ? `${S.spiel.limitNeu ?? S.spiel.limit} Spielmarken pro Tag` : "ausgeblendet",
+      `${schalter(S.spiel.an, "Spiel anzeigen", `data-act="spiel-an"`)}
+      ${S.spiel.an ? `<label class="feld">Spielmarken pro Tag (je 10 Minuten)</label><div class="chips">${[0, 1, 2, 3, 4, 5, 6].map(n => chip((S.spiel.limitNeu ?? S.spiel.limit) === n, String(n), `data-act="spiel-limit" data-v="${n}" aria-label="${n} Spielmarken pro Tag"`)).join("")}</div><p class="klein">${S.spiel.limitNeu != null && S.spiel.limitNeu !== S.spiel.limit ? "Gilt ab morgen." : "Änderungen gelten ab dem nächsten Tag."}</p>` : ""}`)
+    + einstGruppe("hilfe", "frage", "Hilfe und Infos", "So funktioniert’s, aufs Handy legen",
+      `<div class="liste">${zeileBtn("frage", "So funktioniert’s", "Liste, Bild, Taler – kurz erklärt", `data-act="erklaerung"`)}
       ${zeileBtn("lichtung", "App aufs Handy legen", "Anleitung mit Bildern", `data-act="install"`)}
-      ${zeileBtn("hand", "Technik & Sicherung", "Für Max: Sicherung, Wiederherstellen, Schnell-Kacheln", `data-act="helfer"`)}
-      ${zeileBtn("frage", "So funktioniert’s", "Liste, Bild, Taler – kurz erklärt", `data-act="erklaerung"`)}
-      ${zeileBtn("frage", "Über die App", "Von Max, für Rita", `data-act="ueber"`)}
-    </div><p class="klein" style="margin-top:16px">Version ${esc(BUILD)}</p>`;
+      ${zeileBtn("frage", "Über die App", "Von Max, für Rita", `data-act="ueber"`)}</div>`)
+    + einstGruppe("daten", "kiste", "Daten und Neustart", "Sicherung, Technik, alles zurücksetzen",
+      `<div class="liste">${zeileBtn("hand", "Technik & Sicherung", "Für Max: Sicherung, Wiederherstellen, Schnell-Kacheln, Geburtstag", `data-act="helfer"`)}</div>
+      <button class="knopf zweit voll rand warn" style="margin-top:12px" data-act="reset-1">Alles zurücksetzen und neu anfangen</button>`)
+    + `<p class="klein" style="margin-top:16px">Version ${esc(BUILD)}</p>`;
 }
 function helferSheet() { sheet({ titel: "Technik & Sicherung", inhalt: helferInhalt(), id: "helfer" }); }
 function helferInhalt() {
@@ -801,11 +814,8 @@ function umschlagSVG(von = "Max") {
     <g transform="translate(232 14) rotate(4)">
       <rect x="0" y="0" width="52" height="62" rx="2" fill="#FFFDF5" stroke="#FFFDF5" stroke-width="6" stroke-dasharray="3 3"/>
       <rect x="4" y="4" width="44" height="54" fill="#CFE3DA"/>
-      <ellipse cx="26" cy="51" rx="11" ry="2.5" fill="#5B8A47"/>
-      <path d="M26 19 C35 19 38 28 38 36 C38 45 33 50 26 50 C19 50 14 45 14 36 C14 28 17 19 26 19Z" fill="#E4B24F"/>
-      <circle cx="23" cy="19" r="2.6" fill="#D9473A"/><circle cx="26" cy="17" r="3" fill="#D9473A"/><circle cx="29" cy="19" r="2.6" fill="#D9473A"/>
-      <circle cx="22.5" cy="31" r="1.7" fill="#1C2620"/><circle cx="29.5" cy="31" r="1.7" fill="#1C2620"/><path d="M24 35 L28 35 L26 38Z" fill="#F4B92A"/>
-      <text x="26" y="12" text-anchor="middle" font-family="Nunito, system-ui, sans-serif" font-size="6.5" font-weight="700" fill="#1F4A34">1 KUSS</text>
+      <svg x="4" y="10" width="44" height="48" viewBox="8 2 92 98">${huhnSVG({ gr: 10 }).replace(/^<svg[^>]*>/, "").replace(/<\/svg>\s*$/, "")}${markenWitz()}</svg>
+      <text x="26" y="11" text-anchor="middle" font-family="Nunito, sans-serif" font-size="6.5" font-weight="800" fill="#1F4A34">1 KUSS</text>
     </g>
     <g transform="translate(206 66)" opacity=".7" fill="none" stroke="var(--ziegel)" stroke-width="1.6">
       <circle cx="0" cy="0" r="20"/><circle cx="0" cy="0" r="15" stroke-width=".8"/>
@@ -925,4 +935,14 @@ function abendkarteHTML(tf) {
   const ids = [...ABEND_IDS, ...(S.eigeneT || []).filter(x => !x.weg).map(x => x.id)].filter(id => D.taetigkeiten.some(t => t.id === id));
   const heuteT = new Set(eintraegeAm(h).map(e => e.t));
   return `<section class="abschnitt"><div class="bogen streifen k-geist"><h3>Was war heute dabei?</h3><p class="klein" style="margin-top:0">Antippen genügt – ungefähre Werte, Ändern geht im Rückblick.</p><div class="chips">${ids.map(id => chip(heuteT.has(id), tat(id).kurz, heuteT.has(id) ? "disabled" : `data-act="abend" data-t="${id}"`)).join("")}</div><button class="knopf klein leise" style="padding-left:0;margin-top:6px" data-act="abend-weg">Fertig für heute</button></div></section>`;
+}
+
+/* Briefmarke: Hühnchen mit wechselndem Ulk (Schnurrbart, Brille, Zylinder, Fliege, Sonnenbrille) */
+function markenWitz() {
+  const v = hash32("marke" + heute()) % 5;
+  if (v === 0) return `<path d="M74 47 Q80 43 86 47 Q92 51 96 46 Q93 54 86 51 Q80 49 74 52 Q70 52 74 47Z" fill="#3A2618"/>`;
+  if (v === 1) return `<g fill="none" stroke="#1C2620" stroke-width="2.2"><circle cx="65" cy="31" r="10.5"/><path d="M54.5 30 L44 27"/></g>`;
+  if (v === 2) return `<g fill="#1C2620"><rect x="52" y="-4" width="20" height="16" rx="2"/><rect x="47" y="10" width="30" height="4" rx="2"/><rect x="52" y="6" width="20" height="3" fill="#C8372D"/></g>`;
+  if (v === 3) return `<g fill="#C8372D"><path d="M58 60 L46 54 L46 66Z"/><path d="M58 60 L70 54 L70 66Z"/><circle cx="58" cy="60" r="3"/></g>`;
+  return `<g fill="#1C2620"><rect x="55" y="25" width="20" height="11" rx="5"/><path d="M55 29 L44 26" stroke="#1C2620" stroke-width="2"/></g><path d="M58 28 L63 28" stroke="#fff" stroke-width="1.4" opacity=".7"/>`;
 }

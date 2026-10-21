@@ -9,8 +9,8 @@ stamp = datetime.datetime.now().strftime("%Y-%m-%d %H:%M")
 
 shell = (d / "app.html").read_text()
 css = (d / "fonts.css").read_text() + (d / "app.css").read_text()
-data = "\n".join((d / f).read_text() for f in ["data.js","data-orte.js","data-inhalte.js","data-laden.js","data-korrektur.js","data-sprache.js","data-lektorat.js","data-ablenkung.js","data-angebote.js","data-eier.js"] if (d / f).exists())
-app = "\n".join((d / f).read_text() for f in ["core.js","figuren.js","scene.js","views.js","ruheplan.js","eigenes.js","eier.js","game.js","main.js"]).replace("__BUILD__", stamp)
+data = "\n".join((d / f).read_text() for f in ["data.js","data-orte.js","data-inhalte.js","data-laden.js","data-korrektur.js","data-sprache.js","data-lektorat.js","data-ablenkung.js","data-angebote.js","data-eier.js","data-eier2.js"] if (d / f).exists())
+app = "\n".join((d / f).read_text() for f in ["core.js","figuren.js","scene.js","views.js","ruheplan.js","eigenes.js","eier.js","extras.js","game.js","main.js"]).replace("__BUILD__", stamp)
 body = shell.replace("/*CSS*/", css).replace("/*DATA*/", data).replace("/*APP*/", app)
 
 HEAD_COMMON = """<meta charset="utf-8">
