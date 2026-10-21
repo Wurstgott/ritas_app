@@ -1,0 +1,455 @@
+/* ============================================================
+   Lichtung – Steuerung: Rendern, ein Klick-Handler, Aktionen
+   ============================================================ */
+function themaAnwenden() {
+  const r = document.documentElement;
+  r.dataset.size = S.size;
+  if (S.theme === "auto") delete r.dataset.theme; else r.dataset.theme = S.theme;
+  if (S.motion === "ruhig") r.dataset.motion = "ruhig"; else delete r.dataset.motion;
+}
+function render(opt = {}) {
+  themaAnwenden();
+  const main = $("#main");
+  const offen = $$("details[open]", main).map(d => d.dataset.id).filter(Boolean);
+  const y = scrollY;
+  const views = { heute: viewHeute, ideen: viewIdeen, lichtung: viewLichtung, tagebuch: viewTagebuch };
+  main.innerHTML = `<div class="ansicht${opt.ohneAnim ? "" : ""}" style="${opt.ohneAnim ? "animation:none" : ""}">${views[TAB]()}</div>`;
+  offen.forEach(id => { const d = $(`details[data-id="${id}"]`, main); if (d) d.open = true; });
+  $("#tabs").innerHTML = TABS.map(t => `<button data-tab="${t.id}" ${TAB === t.id ? 'aria-current="page"' : ""}>${ic(t.icon)}<span>${t.name}</span></button>`).join("");
+  if (opt.halteScroll) scrollTo(0, y);
+  bilderZeichnen(opt.neu);
+  figurenMalen();
+  const lg = $("#logo"); if (lg && !lg.firstChild) lg.innerHTML = ritaSVG(34);
+  armHaptics();
+}
+function bilderZeichnen(neu) {
+  const c1 = $("#bild-heute"), c2 = $("#bild-gross");
+  requestAnimationFrame(() => {
+    if (c1) bildMitAnkunft(c1, neu);
+    if (c2) bildMitAnkunft(c2, neu);
+  });
+}
+function wechsleTab(id) {
+  if (TAB === id) { scrollTo({ top: 0, behavior: REDUCED() ? "auto" : "smooth" }); return; }
+  TAB = id; alleSheetsZu(); $$(".toast").forEach(t => t.remove()); render(); scrollTo(0, 0);
+  haptik("auswahl");
+}
+
+/* ---------- Eintragen ---------- */
+function eintragSpeichern(entwurf, altId) {
+  const t = tat(entwurf.t);
+  const vorherStufe = stufe(), vorherModell = modell();
+  const e = { ...entwurf };
+  delete e.notizOffen;
+  e.id = altId || ("e" + Date.now().toString(36) + Math.floor(Math.random() * 1e4).toString(36));
+  e.ts = e.ts || Date.now(); e.rv = RV;
+  e.tf = S.tf[e.tag] || "";
+  e.stern = !!(t.stern || e.tf === "C" || e.tf === "D");
+  if (t.art !== "km") delete e.km; if (!["min", "person"].includes(t.art) && e.t !== "timer") { if (t.art !== "min") delete e.min; }
+  if (t.art !== "person") delete e.person;
+  if (e.wie === "zuviel") e.zuViel = true;
+  if (e.wie) S.nachherTag = heute();
+  if (e.person === "_") e.person = "";
+  // Doppel-Schutz: identischer Eintrag innerhalb 3 s
+  const l = S.eintraege[S.eintraege.length - 1];
+  if (!altId && l && l.t === e.t && Date.now() - l.ts < 3000 && l.km === e.km && l.min === e.min && l.notiz === e.notiz && l.person === e.person) return null;
+  let alt = null;
+  if (altId) { const i = S.eintraege.findIndex(x => x.id === altId); alt = S.eintraege[i]; S.eintraege.splice(i, 1); S.taler -= (alt.taler || 0); }
+  const vorher = S.eintraege.filter(x => x.tag === e.tag);
+  e.w = rechneWirkung(e, vorher);
+  if (altId && alt) e.w = Math.max(e.w, 0); // Festschreiben: neu gerechnet nur für die geänderte Eingabe
+  e.taler = e.w / 4;
+  S.eintraege.push(e);
+  S.eintraege.sort((a, b) => a.tag < b.tag ? -1 : a.tag > b.tag ? 1 : a.ts - b.ts);
+  S.taler += e.taler;
+  const neuSt = stufeVon(wSumme());
+  if (neuSt > S.maxStufe) S.maxStufe = neuSt;
+  // Missionen: passende Tätigkeit trägt den Tag ein
+  for (const a of S.missionen.aktiv) { const m = (D.missionen || []).find(x => x.id === a.id); if (m && m.t === e.t) { a.tage = a.tage || []; if (!a.tage.includes(e.tag)) a.tage.push(e.tag); } }
+  speichern();
+  return { e, vorherStufe, nachStufe: stufe(), neuKey: neuSchluessel(e, vorherModell) };
+}
+function neuSchluessel(e, M) {
+  const t = tat(e.t);
+  if (e.t === "ausflug") return "horizont:" + (e.ziel || "eigen:" + e.titel);
+  if (t.bild === "fenster" || (e.person && t.feld === "menschen")) return "fenster:" + (e.person || "_");
+  if (e.t === "tanzstunde") return "fuss:" + Math.min(M.tanzStunden, 23);
+  if (t.bild === "tanz") return "laterne:" + Math.min(M.musik + M.tanzStunden, 15);
+  if (e.t === "buchfertig") return "buch:" + Math.min(M.buecher.length, 15);
+  if (t.bild === "eiche") return "eiche";
+  if (t.bild === "quelle") return "quelle";
+  if (t.bild === "wiese") return "wiese:" + Math.min(M.wiese, 69);
+  if (t.bild === "weg") return "weg";
+  if (t.bild === "mut" || e.mut) return "mut:" + Math.min(M.mut, 29);
+  return null;
+}
+function nachEintrag(r, text) {
+  if (!r) return;
+  const { e, vorherStufe, nachStufe, neuKey } = r;
+  const t = tat(e.t);
+  const info = e.t === "ausflug" ? (e.umgekehrt ? "Umgekehrt? Auch das ist eine gute Entscheidung." : "Am Horizont steht jetzt eine neue Silhouette.") : waehle(t.info || ["Eingetragen. Das zählt."], e.id);
+  const ort = e.t === "ausflug" ? "horizont" : e.t === "tagebuch" ? "tagebuch" : e.t === "abgehakt" ? "abgehakt" : (e.mut ? "mut" : tat(e.t).bild);
+  const huhn = S.huhn ? huehnchenReagiert(ort) : "";
+  const taler = Math.round(e.taler * 10) / 10;
+  alleSheetsZu();
+  haptik("erfolg"); ton("erfolg");
+  const ersterHeute = eintraegeAm(heute()).length === 1;
+  render({ neu: neuKey, halteScroll: true, ohneAnim: true });
+  if (ersterHeute && !REDUCED()) { const wm = $(".wm-haken"); if (wm) { wm.classList.remove("zeichnen"); void wm.offsetWidth; wm.classList.add("zeichnen"); } }
+  const talerTxt = taler >= .5 ? `+${Math.max(1, Math.round(taler))} Taler` : "";
+  if (e.t === "abgehakt") toast(`${text}${talerTxt ? "\n" + talerTxt : ""}`, { rueck: e.id, erfolg: true, dauer: 6000 });
+  else toast(`${text || "Eingetragen."}\n${huhn ? "Hühnchen: „" + huhn + "“" : info}${talerTxt ? " · " + talerTxt : ""}`, { rueck: e.id, erfolg: true });
+  // Ring nach 1,8 s, Stufenkarte nach 2,6 s
+  const buehne = $("#buehne-heute") || $("#buehne-gross");
+  if (buehne && neuKey) setTimeout(() => ringAn(buehne, neuKey.split(":")[0] === "fuss" || neuKey.startsWith("laterne") ? "tanz" : neuKey.split(":")[0] === "buch" ? "eiche" : neuKey.split(":")[0]), REDUCED() ? 0 : 1800);
+  const auchNeu = [];
+  if (e.t === "ausflug" && !S.leiter.neuland[e.leiter] && !e.umgekehrt) { S.leiter.neuland[e.leiter] = e.tag; const bonus = 5 * e.leiter; S.taler += bonus; auchNeu.push(`Neuland auf Sprosse ${e.leiter} (+${bonus} Taler)`); speichern(); }
+  if (e.t === "buchfertig" && !S.meilensteine.buch) { S.meilensteine.buch = e.tag; auchNeu.push("das erste Lesezeichen an der Eiche"); speichern(); }
+  if (nachStufe > (S.gesehenStufe || 0)) {
+    window._auchNeu = auchNeu;
+    if (S.stufeGemeldet >= nachStufe) return; S.stufeGemeldet = nachStufe; speichern();
+    const zeig = (n = 0) => { if (SHEETS.length) return; if ($(".toast") && n < 25) { setTimeout(() => zeig(n + 1), 1000); return; } toast(`Neu im Bild: ${D.stufen[nachStufe].name}.`, { erfolg: true, knopf: { text: "Ansehen", act: "stufe-zeigen" }, dauer: 9000 }); haptik("stufe"); };
+    setTimeout(zeig, REDUCED() ? 300 : 2600);
+  } else if (auchNeu.length) setTimeout(() => toast(`Neu: ${auchNeu.join(", ")}.`, { erfolg: true }), 3200);
+}
+function eintragLoeschen(id, still) {
+  const i = S.eintraege.findIndex(x => x.id === id); if (i < 0) return;
+  const e = S.eintraege[i]; S.eintraege.splice(i, 1);
+  if (e.t === "abgehakt") { const x = (S.liste || []).find(y => y.eintrag === id || (e.listeId && y.id === e.listeId)); if (x) { delete x.erledigt; delete x.eintrag; } }
+  S.taler = Math.max(0, S.taler - (e.taler || 0));
+  if (!still) { S.geloescht.push({ ...e, weg: Date.now() }); }
+  speichern(); render({ halteScroll: true, ohneAnim: true });
+  if (!still) toast("Eintrag gelöscht.", { rueck: "wieder:" + id });
+}
+function eintragWiederher(id) {
+  const i = S.geloescht.findIndex(x => x.id === id); if (i < 0) return;
+  const e = S.geloescht.splice(i, 1)[0]; delete e.weg;
+  S.eintraege.push(e); S.eintraege.sort((a, b) => a.tag < b.tag ? -1 : a.tag > b.tag ? 1 : a.ts - b.ts);
+  if (e.t === "abgehakt" && e.listeId) { const x = (S.liste || []).find(y => y.id === e.listeId); if (x) { x.erledigt = e.tag; x.eintrag = e.id; } }
+  S.taler += e.taler || 0; speichern(); render({ halteScroll: true, ohneAnim: true });
+}
+
+/* ---------- Sicherung ---------- */
+function sicherungText() { return JSON.stringify({ app: "lichtung", gv: GV, gesichert: new Date().toISOString(), S }); }
+function sicherungPruefen(txt) {
+  try { const o = JSON.parse(txt.trim()); const s = o.S || o; if (!s || !Array.isArray(s.eintraege)) throw 0; return s; } catch (e) { return null; }
+}
+function sicherungFrage(s) {
+  sheet({ titel: "Sicherung einspielen", inhalt: `<p>Diese Sicherung enthält <span style="font-weight:700">${s.eintraege.length} Einträge</span> für ${esc(s.name || "—")}.</p><p>Sie ersetzt alles, was jetzt auf diesem Handy ist (${S.eintraege.length} Einträge).</p><button class="knopf zweit voll" data-act="sichern-kopie">Vorher aktuellen Stand kopieren</button>`,
+    fuss: `<div class="stapel"><button class="knopf haupt voll" data-act="einspielen-ja">Ja, einspielen</button><button class="knopf leise" data-act="sheet-zu">Abbrechen</button></div>` });
+  window._import = s;
+}
+async function kopieren(text, meldung = "Kopiert.") {
+  try { await navigator.clipboard.writeText(text); toast(meldung); }
+  catch (e) { const ta = document.createElement("textarea"); ta.value = text; document.body.appendChild(ta); ta.select(); try { document.execCommand("copy"); toast(meldung); } catch (x) { toast("Kopieren ging nicht. Bitte lange auf den Text tippen."); } ta.remove(); }
+}
+function dateiSpeichern() {
+  const blob = new Blob([sicherungText()], { type: "application/json" });
+  const name = `ritas-app-sicherung-${heute()}.json`;
+  const f = new File([blob], name, { type: "application/json" });
+  if (navigator.canShare && navigator.canShare({ files: [f] })) { navigator.share({ files: [f], title: "Ritas App – Sicherung" }).then(() => { S.letzteSicherung = heute(); speichern(); }).catch(() => { }); return; }
+  const a = document.createElement("a"); a.href = URL.createObjectURL(blob); a.download = name; document.body.appendChild(a); a.click(); a.remove();
+  S.letzteSicherung = heute(); speichern(); toast("Sicherung gespeichert. Wenn kein Download kommt: „Sicherung kopieren“.");
+}
+
+/* ---------- Ein Klick-Handler für alles ---------- */
+document.addEventListener("click", ev => {
+  const el = ev.target.closest("[data-act],[data-tab]"); if (!el) return;
+  if (el.disabled || gesperrt(el)) return;
+  if (el.dataset.tab) { wechsleTab(el.dataset.tab); return; }
+  const a = el.dataset.act, d = el.dataset;
+  // Füllung vom Fingerpunkt bei Auswahl
+  if ((el.classList.contains("tf") || el.classList.contains("chip")) && !REDUCED()) { const r = el.getBoundingClientRect(); el.style.setProperty("--x", (ev.clientX - r.left) + "px"); el.style.setProperty("--y", (ev.clientY - r.top) + "px"); }
+  aktion(a, d, el, ev);
+});
+document.addEventListener("keydown", ev => {
+  if (ev.key === "Enter" && ev.target.id === "liste-neu") { ev.preventDefault(); aktion("liste-neu", {}, ev.target, ev); return; }
+  if ((ev.key === "Enter" || ev.key === " ") && ev.target.matches(".schalter-zeile")) { ev.preventDefault(); ev.target.click(); }
+});
+document.addEventListener("input", ev => {
+  const el = ev.target;
+  if (el.dataset.feld && E) { E[el.dataset.feld] = el.value; }
+  if (el.dataset.einst) { S[el.dataset.einst] = el.value.trim() || (el.dataset.einst === "name" ? "Rita" : ""); speichern(); }
+  if (el.dataset.lb) { S.lebensbuch[el.dataset.lb] = el.value; speichern(); }
+});
+document.addEventListener("change", ev => {
+  const el = ev.target;
+  if (el.dataset.actFile === "import" && el.files[0]) { const fr = new FileReader(); fr.onload = () => { const s = sicherungPruefen(fr.result); if (s) sicherungFrage(s); else toast("Diese Datei ist keine Sicherung von Ritas App."); }; fr.readAsText(el.files[0]); }
+});
+
+function aktion(a, d, el, ev) {
+  switch (a) {
+    /* Allgemein */
+    case "sheet-zu": sheetZu(); break;
+    case "toast-zu": $$(".toast").forEach(t => t.remove()); break;
+    case "toast-rueck": {
+      const t = el.closest(".toast"), r = t && t._rueck; t && t.remove();
+      if (!r) break;
+      if (r.startsWith("wieder:")) eintragWiederher(r.slice(7));
+      else if (r.startsWith("kauf:")) { const id = r.slice(5), x = D.laden.find(y => y.id === id); if (S.gekauft[id]) { delete S.gekauft[id]; S.taler += x.preis; S.talerAusgegeben -= x.preis; speichern(); render({ halteScroll: true, ohneAnim: true }); toast("Rückgängig gemacht. Die Taler sind wieder da."); } }
+      else { eintragLoeschen(r, true); toast("Rückgängig gemacht."); }
+      haptik("achtung"); break;
+    }
+    case "go": if (d.go === "einstellungen") einstellungenSheet(); break;
+
+    /* Tagesform */
+    case "tf": S.tf[heute()] = d.v; speichern(); haptik("auswahl"); el.setAttribute("aria-pressed", "true"); el.classList.add("fill-in");
+      setTimeout(() => { render({ halteScroll: true, ohneAnim: true }); const f = D.tagesformen.find(x => x.id === d.v); sag(`${f.name} gewählt.`); if (d.v === "D") toast("Sparflamme ist auch eine Flamme. Heute zählt jede Kleinigkeit."); }, REDUCED() ? 0 : 320); break;
+    case "tf-onb": S.tf[heute()] = d.v; speichern(); haptik("auswahl"); sheetInhalt(onboardingInhalt()); break;
+    case "tf-aendern": delete S.tf[heute()]; speichern(); render({ halteScroll: true, ohneAnim: true }); break;
+
+    /* Eintragen */
+    case "eintragen": eintragenSheet(d.t); break;
+    case "alles": alleSheet(); break;
+    case "waehle-t": sheetZu(); setTimeout(() => eintragenSheet(d.t), 240); break;
+    case "step": { const f = d.f, dd = Number(d.d); E[f] = f === "km" ? clamp(Math.round((E[f] + dd) * 2) / 2, .5, 40) : clamp(E[f] + dd, 5, 300); haptik("auswahl"); sheetInhalt(eintragenInhalt()); break; }
+    case "setz": {
+      let v = d.v; if (["km", "min", "leiter"].includes(d.f)) v = Number(v);
+      if (d.f === "wie" && E.wie === v) v = "";
+      E[d.f] = v; haptik("auswahl");
+      const id = aktuellesSheet()?.dataset.id;
+      sheetInhalt(id === "zurueck" ? zurueckInhalt() : id === "timerneu" ? timerNeuInhalt() : eintragenInhalt()); break;
+    }
+    case "umschalt": E[d.f] = !E[d.f]; haptik("auswahl"); sheetInhalt(aktuellesSheet()?.dataset.id === "zurueck" ? zurueckInhalt() : eintragenInhalt()); break;
+    case "notiz-auf": E.notizOffen = true; sheetInhalt(eintragenInhalt()); setTimeout(() => $("#notiz")?.focus(), 50); break;
+    case "speichern": {
+      const t = tat(E.t);
+      if (t.art === "buch" && !E.titel.trim()) { toast("Bitte den Buchtitel eintragen."); haptik("achtung"); break; }
+      if (t.art === "buch" && D.hp) { const b = D.hp.baende.find(x => x.nr === S.hp.band); if (b && E.titel.trim() === b.titel && D.hp.baende.find(x => x.nr === b.nr + 1)) { S.hp.band = b.nr + 1; S.hp.kapitel = 0; } }
+      const alt = E._alt; delete E._alt;
+      if (E.kapitelWeiter && D.hp) { const b = D.hp.baende.find(x => x.nr === S.hp.band); if (b) { S.hp.kapitel = Math.min(b.kapitel, S.hp.kapitel + 1); E.notiz = E.notiz || `${b.titel}, Kapitel ${S.hp.kapitel}`; } } delete E.kapitelWeiter;
+      const r = eintragSpeichern(E, alt);
+      nachEintrag(r, alt ? "Geändert." : `Eingetragen: ${eintragText(r ? r.e : E).replace(/\.$/, "")}.`); break;
+    }
+    case "eintrag": eintragSheet(d.id); break;
+    case "aendern": { if (aktuellesSheet()) sheetZu(); const e = S.eintraege.find(x => x.id === d.id); if (!e) break; if (e.t === "ausflug" || e.t === "planung") { toast("Ausflüge lassen sich löschen und neu eintragen."); break; } eintragenSheet(e.t, { ...e, _alt: e.id, notizOffen: !!e.notiz, wie: e.zuViel ? "zuviel" : e.wie || "" }); break; }
+    case "loeschen": if (aktuellesSheet()) sheetZu(); eintragLoeschen(d.id); break;
+    case "liste-neu": { const inp = $("#liste-neu"); const t = inp.value.trim(); if (!t) { inp.focus(); break; } S.liste = S.liste || []; S.liste.push({ id: "l" + Date.now().toString(36), text: t, neu: heute() }); speichern(); render({ halteScroll: true, ohneAnim: true }); setTimeout(() => $("#liste-neu")?.focus(), 30); break; }
+    case "liste-hak": { const x = (S.liste || []).find(y => y.id === d.id); if (!x) break; x.erledigt = heute(); const r = eintragSpeichern({ t: "abgehakt", tag: heute(), notiz: x.text, listeId: x.id }); x.eintrag = r && r.e.id; speichern(); if (r) nachEintrag(r, `Abgehakt: ${x.text}.`); else render({ halteScroll: true, ohneAnim: true }); break; }
+    case "liste-zurueck": { const x = (S.liste || []).find(y => y.id === d.id); if (!x) break; delete x.erledigt; if (x.eintrag) eintragLoeschen(x.eintrag, true); speichern(); render({ halteScroll: true, ohneAnim: true }); break; }
+    case "erklaerung": erklaerungSheet(); break;
+    case "post-auf": S.postOffen = heute(); speichern(); haptik("auswahl"); render({ halteScroll: true, ohneAnim: true }); break;
+    case "tschuess-los": S.tschuess = { tag: heute(), verlauf: [["rita", "Danke, Max!"], ["max", "Gern! Tschüss!"]], grenze: 2 + Math.floor(Math.random() * 4), n: 0 }; speichern(); haptik("auswahl"); render({ halteScroll: true, ohneAnim: true }); break;
+    case "tschuess": { const T = S.tschuess; if (!T || T.ende) break; T.n++; T.verlauf.push(["rita", TSCHUESS[Math.floor(Math.random() * TSCHUESS.length)]]); if (T.n >= T.grenze) { T.verlauf.push(["max", "Ich leg jetzt auf. Tschüss!"]); T.ende = "max"; } else T.verlauf.push(["max", TSCHUESS[Math.floor(Math.random() * TSCHUESS.length)]]); if (T.verlauf.length > 8) T.verlauf = T.verlauf.slice(-8); speichern(); haptik("auswahl"); render({ halteScroll: true, ohneAnim: true }); break; }
+    case "tschuess-auflegen": { const T = S.tschuess; if (!T || T.ende) break; T.verlauf.push(["rita", "Ich leg jetzt auf. Tschüss!"]); T.ende = "rita"; S.tschuessSiege = (S.tschuessSiege || 0) + 1; speichern(); haptik("erfolg"); render({ halteScroll: true, ohneAnim: true }); break; }
+    case "liste-hilfe": listeHilfeSheet(); break;
+    case "post-gelesen": S.postGelesen = heute(); speichern(); render({ halteScroll: true, ohneAnim: true }); break;
+    case "stufe-zeigen": $$(".toast").forEach(t => t.remove()); S.gesehenStufe = stufe(); speichern(); stufeMoment(stufe(), window._auchNeu || []); break;
+
+    /* Hilft / Ideen */
+    case "hilft": alleSheetsZu(); hilftSheet(); break;
+    case "hilft-neu": sheetZu(); setTimeout(hilftSheet, 240); break;
+    case "idee": ideeSheet(d.id); break;
+    case "idee-erledigt": { const v = (D.stattDaddeln || []).find(x => x.id === d.id); const t = tat(v?.t || "frei"); const ent = { t: t.id, tag: heute(), min: v?.min || t.std || 10, km: t.art === "km" ? 1 : undefined, draussen: !!t.draussen, mut: false, notiz: v?.titel || "" }; if (t.art === "person") ent.person = ""; const r = eintragSpeichern(ent); nachEintrag(r, `Eingetragen: ${v?.titel || t.name}.`); break; }
+    case "mischen": S._mischen = (S._mischen || 0) + 1; render({ halteScroll: true, ohneAnim: true }); break;
+
+    /* Timer */
+    case "timer-neu": timerNeuSheet(); break;
+    case "timer-start": { const v = D.timerVorlagen.find(x => x.id === d.t); alleSheetsZu(); timerStarten(d.t, Number(d.min), d.name || v?.name || tat(d.t).name); break; }
+    case "timer-los": { const v = D.timerVorlagen.find(x => x.id === E.t); const kl = E.klang; sheetZu(); timerStarten(E.t, E.min, v?.name || tat(E.t).name, kl); break; }
+    case "timer-zeigen": timerSheet(); break;
+    case "timer-pause": S.timer.pause = Date.now(); speichern(); klangStopp(); $("#timer-ansicht").innerHTML = timerAnsicht(); armHaptics(); break;
+    case "timer-fort": S.timer.pauseSum = (S.timer.pauseSum || 0) + (Date.now() - S.timer.pause); S.timer.pause = 0; speichern(); if (S.timer.klang) klangStart(S.timer.klang); $("#timer-ansicht").innerHTML = timerAnsicht(); armHaptics(); break;
+    case "timer-weiter": { const T = S.timer; T.start = Date.now(); T.pauseSum = 0; T.pause = 0; T.gemeldet = false; T.vorher = (T.vorher || 0) + T.min * 60; speichern(); $("#timer-ansicht").innerHTML = timerAnsicht(); timerTick(); armHaptics(); break; }
+    case "timer-ende": timerBeenden(); break;
+
+    /* Ausflüge */
+    case "ausflug": alleSheetsZu(); ausflugSheet(); break;
+    case "leiter": leiterSheet(Number(d.s)); break;
+    case "ziel": zielSheet(d.id); break;
+    case "eigenes-ziel": sheetZu(); setTimeout(() => { E = null; planNeu({ id: "", name: "", leiter: Number(d.s), form: "huegel" }, true); }, 240); break;
+    case "planen": { const z = (D.ausflugsziele || []).find(x => x.id === d.id); planNeu(z); break; }
+    case "plan": planSheet(d.id); break;
+    case "check": S.checkliste[Number(d.i)].an = !S.checkliste[Number(d.i)].an; speichern(); haptik("auswahl"); $("#checkliste").innerHTML = checklisteHTML(); armHaptics(); break;
+    case "wenndann": { const p = S.plaene.find(x => x.status === "geplant" && aktuellesSheet()?.querySelector(`[data-act="losgehen"][data-id="${x.id}"]`)); if (p) { p.wennDann = Number(d.i); speichern(); sheetZu(); setTimeout(() => planSheet(p.id), 240); } break; }
+    case "losgehen": { const p = S.plaene.find(x => x.id === d.id); p.status = "unterwegs"; p.los = Date.now(); S.checkliste.forEach(c => c.an = false); speichern(); alleSheetsZu(); TAB = "heute"; render(); scrollTo(0, 0); toast("Viel Spaß unterwegs! Wenn du zurück bist, tipp auf „Ich bin zurück“."); haptik("erfolg"); break; }
+    case "plan-weg": { const p = S.plaene.find(x => x.id === d.id); S.plaene = S.plaene.filter(x => x.id !== d.id); speichern(); alleSheetsZu(); render({ halteScroll: true }); window._planWeg = p; toast("Plan verworfen.", { knopf: { text: "Rückgängig", act: "plan-zurueck" } }); break; }
+    case "plan-zurueck": if (window._planWeg) { S.plaene.push(window._planWeg); window._planWeg = null; speichern(); render({ halteScroll: true }); $$(".toast").forEach(t => t.remove()); } break;
+    case "ausflug-zurueck": zurueckSheet(d.id); break;
+    case "ausflug-nachtragen": alleSheetsZu(); zurueckSheet(null, d.id || null); break;
+    case "ausflug-speichern": {
+      if (!E.titel.trim()) { toast("Bitte eintragen, wohin es ging."); haptik("achtung"); break; }
+      const planId = E.planId; delete E.planId;
+      if (!E.ziel) E.ziel = "eigen:" + E.titel.trim();
+      const r = eintragSpeichern(E);
+      if (planId) S.plaene = S.plaene.filter(x => x.id !== planId);
+      S.taler += 3; speichern();
+      nachEintrag(r, `Willkommen zurück: ${E.titel}.`); break;
+    }
+    case "kopieren": kopieren($("#" + d.was).textContent, "Text kopiert."); break;
+    case "kopieren-text": kopieren(d.text, "Kopiert."); break;
+    case "runden": infoListe("Runden im Forst", D.runden, ["text", "km"]); break;
+    case "angebote": angeboteSheet(); break;
+    case "praktisch": infoListe("Praktisches für unterwegs", D.praktisch, ["text"]); break;
+
+    /* Lichtung */
+    case "laden": alleSheetsZu(); ladenSheet(); break;
+    case "kaufen": kaufenFrage(d.id); break;
+    case "kaufen-ja": { const x = D.laden.find(y => y.id === d.id); if (talerStand() < x.preis) break; S.taler -= x.preis; S.talerAusgegeben += x.preis; S.gekauft[x.id] = heute(); if (x.id === "patience") S.spiel.marken += 3; speichern(); sheetZu(); haptik("erfolg"); ton("erfolg");
+      setTimeout(() => { sheetInhalt(ladenInhalt()); toast(`Freigeschaltet: ${x.name}.`, { rueck: "kauf:" + x.id, erfolg: true }); render({ halteScroll: true, ohneAnim: true }); }, 260); break; }
+    case "lesen": leseSheet(d.was); break;
+    case "takt": taktSheet(); break;
+    case "takt-tanz": { const t = TAENZE.find(x => x.id === d.v); TAKT.tanz = t.id; TAKT.bpm = t.bpm; const an = TAKT.an; taktStopp(); sheetInhalt(taktInhalt()); if (an) { taktStart(); sheetInhalt(taktInhalt()); } break; }
+    case "takt-bpm": { TAKT.bpm = clamp(TAKT.bpm + Number(d.d), 40, 200); const an = TAKT.an; if (an) { taktStopp(); taktStart(); } sheetInhalt(taktInhalt()); break; }
+    case "takt-an": if (TAKT.an) taktStopp(); else taktStart(); sheetInhalt(taktInhalt()); break;
+    case "setzkasten": setzkastenSheet(); break;
+    case "andenken": andenkenSheet(Number(d.i)); break;
+    case "bildliste": bildListeSheet(); break;
+    case "stufen": stufenSheet(); break;
+    case "wissen": wissenSheet(); break;
+    case "lebensbuch": lebensbuchSheet(); break;
+
+    /* Tagebuch */
+    case "moment": momentSheet(); break;
+    case "moment-speichern": { const t = $("#moment-text").value.trim(); const h = heute(); const neu = !S.momente[h]; if (t) S.momente[h] = t; else delete S.momente[h]; if (t && neu) S.taler += 1; speichern(); sheetZu(); render({ halteScroll: true, ohneAnim: true }); if (t) toast("Aufgeschrieben.", { erfolg: true }); break; }
+    case "rueckblick": rueckblickSheet(); break;
+    case "rueckblick-fertig": { const kw = kwVon(heute()); const neu = !S.rueckblick[kw]; S.rueckblick[kw] = heute(); S.wennDann = $("#vorsatz").value.trim(); if (neu) S.taler += 10; if (S.hinweis.tag === heute()) S.hinweis.zu = true; speichern(); sheetZu(); render({ halteScroll: true, ohneAnim: true }); toast(neu ? "Woche angeschaut. +10 Taler" : "Gespeichert.", { erfolg: true }); break; }
+    case "tb-mehr": S._tbMehr = true; render({ halteScroll: true, ohneAnim: true }); break;
+
+    /* Hinweis */
+    case "hinweis-weg": { if (d.fuerImmer === "1") S.hinweis.weg[d.id] = heute(); S.hinweis.tag = heute(); S.hinweis.zu = true; speichern(); render({ halteScroll: true, ohneAnim: true }); break; }
+
+    /* Missionen */
+    case "missionen": missionenSheet(); break;
+    case "mission": missionSheet(d.id); break;
+    case "mission-wahl": sheetZu(); setTimeout(() => missionSheet(d.id), 240); break;
+    case "mission-start": S.missionen.aktiv.push({ id: d.id, start: heute(), tage: [] }); speichern(); sheetZu(); render({ halteScroll: true, ohneAnim: true }); toast("Vorhaben begonnen. Ohne Eile."); break;
+    case "mission-heute": { const a = S.missionen.aktiv.find(x => x.id === d.id), m = (D.missionen || []).find(x => x.id === d.id); if (!a.tage.includes(heute())) a.tage.push(heute()); speichern(); sheetZu();
+      if (m && m.t) { const t = tat(m.t); const r = eintragSpeichern({ t: t.id, tag: heute(), min: t.std || 15, km: t.art === "km" ? (t.std || 2) : undefined, draussen: !!t.draussen, notiz: m.titel }); nachEintrag(r, `Vorhaben: ${m.titel}.`); } else render({ halteScroll: true }); break; }
+    case "mission-fertig": { const m = (D.missionen || []).find(x => x.id === d.id); S.missionen.aktiv = S.missionen.aktiv.filter(x => x.id !== d.id); S.missionen.fertig.push({ id: d.id, tag: heute() }); S.taler += 10; speichern(); sheetZu(); render({ halteScroll: true }); toast(`Abgeschlossen: ${m.titel}. +10 Taler`, { erfolg: true }); haptik("erfolg"); break; }
+    case "mission-pause": S.missionen.aktiv = S.missionen.aktiv.filter(x => x.id !== d.id); speichern(); sheetZu(); render({ halteScroll: true }); toast("Zur Seite gelegt. Es läuft nichts ab."); break;
+
+    /* Lesebegleiter */
+    case "kapitel": hpKapitel(1, true); break;
+    case "lesebegleiter": lesebegleiterSheet(); break;
+    case "band": S.hp.band = Number(d.nr); S.hp.kapitel = 0; speichern(); sheetZu(); setTimeout(lesebegleiterSheet, 240); render({ halteScroll: true, ohneAnim: true }); break;
+    case "band-fertig": { const b = D.hp.baende.find(x => x.nr === Number(d.nr)); const r = eintragSpeichern({ t: "buchfertig", tag: heute(), titel: b.titel, notiz: "abgehakt" }); if (S.hp.band === b.nr) { const n = D.hp.baende.find(x => x.nr === b.nr + 1 && !S.eintraege.some(e => e.t === "buchfertig" && e.titel === x.titel)); if (n) { S.hp.band = n.nr; S.hp.kapitel = 0; } } speichern(); nachEintrag(r, `Abgehakt: ${b.titel}.`); break; }
+    case "kap": hpKapitel(Number(d.d), false); sheetZu(); setTimeout(lesebegleiterSheet, 240); break;
+
+    /* Spiel */
+    case "spiel": alleSheetsZu(); setTimeout(spielStarten, 10); break;
+    case "spiel-nochmal": alleSheetsZu(); S.spiel.laufend = null; setTimeout(spielOeffnen, 260); break;
+    case "marke-nutzen": markeEinloesen(false); break;
+    case "marke-kaufen": markeEinloesen(true); break;
+    case "g-stapel": gewaehlt = null; stapelTipp(); spielRender(); break;
+    case "g-karte": spielKarteTipp(d.q, d.i); break;
+    case "g-leer": if (gewaehlt) spielKarteTipp(d.q, 0); break;
+    case "g-zurueck": if (G.hist.length) { const h = JSON.parse(G.hist.pop()); Object.assign(G, h); gewaehlt = null; spielRender(); } break;
+    case "g-tipp": { const t = tippHinweis(); if (!t) { toast("Gerade passt nichts mehr. „Neu geben“ ist erlaubt."); break; } toast(t.q === "stock" ? "Tipp: eine Karte vom Stapel ziehen." : "Tipp: Diese Karte kann wandern – einfach antippen."); spielRender(); const sel = t.q === "stock" ? `[data-act="g-stapel"]` : t.q === "waste" ? `[data-q="waste"]` : `[data-q="${t.q}"][data-i="${t.i}"]`; const k = $(sel); if (k) { k.classList.add("hinweis-puls"); k.scrollIntoView({ block: "nearest" }); } break; }
+    case "g-auto": automatischLegen(); break;
+    case "g-neu": G = neuesSpiel(hash32(S.seed + ":" + Date.now())); gewaehlt = null; spielRender(); break;
+    case "g-aufhoeren": spielPausieren(); spielEnde(false); break;
+
+    /* Einstellungen */
+    case "einst": { let v = d.v; if (d.k === "size") v = Number(v); if (d.k === "ton") v = v === "1"; S[d.k] = v; speichern(); themaAnwenden(); haptik("auswahl");
+      if (aktuellesSheet()?.dataset.id === "onboard") sheetInhalt(onboardingInhalt()); else sheetInhalt(einstellungenInhalt()); render({ halteScroll: true, ohneAnim: true }); break; }
+    case "einst-um": S[d.k] = !S[d.k]; speichern(); haptik("auswahl"); sheetInhalt(einstellungenInhalt()); render({ halteScroll: true, ohneAnim: true }); break;
+    case "einst-motion": S.motion = S.motion === "ruhig" ? "normal" : "ruhig"; speichern(); themaAnwenden(); sheetInhalt(einstellungenInhalt()); break;
+    case "spiel-an": S.spiel.an = !S.spiel.an; speichern(); sheetInhalt(einstellungenInhalt()); render({ halteScroll: true, ohneAnim: true }); break;
+    case "spiel-limit": S.spiel.limitNeu = Number(d.v); speichern(); sheetInhalt(einstellungenInhalt()); break;
+    case "spiel-frei": S.spiel.frei = !S.spiel.frei; speichern(); sheetInhalt(helferInhalt()); break;
+    case "mensch-weg": { const i = Number(d.i), m = S.menschen[i]; S.menschen.splice(i, 1); speichern(); sheetInhalt(einstellungenInhalt()); window._menschWeg = [i, m]; toast(`${m.name} aus der Liste genommen. Einträge bleiben.`, { knopf: { text: "Rückgängig", act: "mensch-zurueck" } }); break; }
+    case "mensch-zurueck": if (window._menschWeg) { const [i, m] = window._menschWeg; S.menschen.splice(i, 0, m); window._menschWeg = null; speichern(); sheetInhalt(einstellungenInhalt()); $$(".toast").forEach(t => t.remove()); } break;
+    case "mensch-neu": { const inp = $("#neu-mensch"); const n = inp.value.trim(); if (!n) break; const farben = ["#7A5A9A", "#3F7A6A", "#9A6A3A", "#5A7A9A", "#9A4A5A"]; S.menschen.push({ id: "m" + Date.now().toString(36), name: n, rolle: "", farbe: farben[S.menschen.length % farben.length] }); speichern(); sheetInhalt(einstellungenInhalt()); break; }
+    case "helfer": helferSheet(); break;
+    case "ueber": ueberSheet(); break;
+    case "schnell": S.schnellGeaendert = true; S.schnell[Number(d.i)] = d.v; speichern(); sheetInhalt(helferInhalt()); render({ halteScroll: true, ohneAnim: true }); break;
+    case "sichern-datei": dateiSpeichern(); break;
+    case "sichern-kopie": kopieren(sicherungText(), "Sicherung kopiert. Am besten in eine Notiz oder Mail einfügen."); S.letzteSicherung = heute(); speichern(); break;
+    case "einspielen-text": { const s = sicherungPruefen($("#import-text").value); if (s) sicherungFrage(s); else { toast("Das sieht nicht wie eine Sicherung von Ritas App aus."); haptik("achtung"); } break; }
+    case "einspielen-ja": { if (!window._import) break; S = window._import; migrieren(); window._import = null; alleSheetsZu(); render(); toast("Sicherung eingespielt.", { erfolg: true }); break; }
+    case "wiederher": eintragWiederher(d.id); sheetInhalt(helferInhalt()); break;
+    case "reset-1": sheet({ titel: "Wirklich alles löschen?", inhalt: `<p>Alle Einträge, das Bild, Taler und Einstellungen auf diesem Handy werden gelöscht. Das lässt sich nicht rückgängig machen.</p><button class="knopf zweit voll" data-act="sichern-kopie">Vorher Sicherung kopieren</button>`, fuss: `<div class="stapel"><button class="knopf voll rand warn" data-act="reset-2">Ja, alles löschen</button><button class="knopf haupt voll" data-act="sheet-zu">Nein, behalten</button></div>` }); break;
+    case "reset-2": { const behalte = { name: S.name, anrede: S.anrede, size: S.size, theme: S.theme }; S = frisch(); Object.assign(S, behalte); S.onboard = true; speichern(); alleSheetsZu(); TAB = "heute"; render(); toast("Alles gelöscht. Auf ein Neues!"); break; }
+
+    /* Installation */
+    case "install": installSheet(); break;
+    case "install-andere": sheetZu(); setTimeout(() => installSheet(true), 240); break;
+    case "install-spaeter": S.installKarte = tagPlus(heute(), 7); speichern(); render({ halteScroll: true, ohneAnim: true }); break;
+    case "install-direkt": if (window._installPrompt) { window._installPrompt.prompt(); window._installPrompt = null; } break;
+
+    /* Einrichtung */
+    case "onb-weiter": if (ONB < 3) { ONB++; sheetInhalt(onboardingInhalt()); sheetFuss(onboardingFuss()); aktuellesSheet().querySelector(".sheet-inhalt").scrollTop = 0; } else onboardingFertig(); break;
+    case "onb-zurueck": ONB = Math.max(1, ONB - 1); sheetInhalt(onboardingInhalt()); sheetFuss(onboardingFuss()); break;
+    case "ton-probe": ton("erfolg", true); break;
+    case "angebot-kat": ANG_KAT = d.v; haptik("auswahl"); sheetInhalt(angeboteInhalt()); aktuellesSheet().querySelector(".sheet-inhalt").scrollTop = 0; break;
+    case "angebot-liste": { const x = D.angebote.find(y => y.id === d.id); if (!x) break; S.liste = S.liste || []; const text = angebotKurz(x); if (!S.liste.some(y => !y.erledigt && (y.angebot === x.id || y.text === text))) S.liste.push({ id: "l" + Date.now().toString(36), text, angebot: x.id }); speichern(); haptik("auswahl"); toast(`Steht auf ${A("deiner", "Ihrer")} Liste.`, { erfolg: true, dauer: 4000 }); el.outerHTML = `<p class="klein" style="margin:6px 0 0">${ic("haken")} Steht auf ${A("deiner", "Ihrer")} Liste.</p>`; render({ halteScroll: true, ohneAnim: true }); break; }
+    default: if (a && a.startsWith("ruhe-") && typeof ruheAktion === "function") ruheAktion(a, d, el);
+  }
+}
+
+function hpKapitel(dd, eintragen) {
+  const b = D.hp.baende.find(x => x.nr === S.hp.band);
+  S.hp.kapitel = clamp(S.hp.kapitel + dd, 0, b.kapitel); speichern();
+  if (!eintragen) return;
+  if (S.hp.kapitel >= b.kapitel) {
+    const r = eintragSpeichern({ t: "buchfertig", tag: heute(), titel: b.titel });
+    const naechster = D.hp.baende.find(x => x.nr === S.hp.band + 1);
+    if (naechster) { S.hp.band = naechster.nr; S.hp.kapitel = 0; speichern(); }
+    nachEintrag(r, `Ausgelesen: ${b.titel}.`);
+  } else {
+    const r = eintragSpeichern({ t: "lesen", tag: heute(), min: 20, notiz: `${b.titel}, Kapitel ${S.hp.kapitel}` });
+    nachEintrag(r, `Kapitel ${S.hp.kapitel} gelesen.`);
+  }
+}
+function planNeu(z, eigen) {
+  if (eigen) {
+    sheet({ titel: "Eigenes Ziel", inhalt: `<label class="feld" for="eig">Wohin?</label><input id="eig" class="text" placeholder="z. B. Café am Lindenufer">`, fuss: `<button class="knopf haupt voll" data-act="eigen-weiter" data-s="${z.leiter}">Weiter</button>` });
+    $("[data-act='eigen-weiter']").addEventListener("click", () => { const n = $("#eig").value.trim(); if (!n) return; sheetZu(); setTimeout(() => planNeu({ id: "eigen:" + n, name: n, leiter: z.leiter, form: "huegel" }), 240); }, { once: true });
+    return;
+  }
+  const p = { id: "p" + Date.now().toString(36), ziel: z.id, titel: z.name, leiter: z.leiter, form: z.form || "huegel", status: "geplant", wennDann: -1 };
+  S.plaene.push(p);
+  const vorher = S.eintraege.filter(x => x.tag === heute());
+  const e = { t: "planung", tag: heute(), titel: z.name, leiter: z.leiter, id: "e" + Date.now().toString(36), ts: Date.now(), rv: RV };
+  e.w = rechneWirkung(e, vorher); e.taler = e.w / 4; S.eintraege.push(e); S.taler += e.taler;
+  speichern(); alleSheetsZu(); setTimeout(() => planSheet(p.id), 240);
+  toast("Planen zählt schon. Eingetragen.", { erfolg: true });
+}
+function timerStarten(tid, min, name, klang) {
+  if (S.timer) { toast("Es läuft schon ein Timer."); timerSheet(); return; }
+  S.timer = { t: tid, min, name, start: Date.now(), pause: 0, pauseSum: 0, gemeldet: false, klang: klang || "" };
+  speichern(); audio(); if (klang) klangStart(klang);
+  timerSheet(); render({ halteScroll: true, ohneAnim: true });
+}
+function timerBeenden() {
+  const T = S.timer; if (!T) return;
+  const sek = timerGelaufen() + (T.vorher || 0);
+  const min = Math.round(sek / 60);
+  S.timer = null; klangStopp(); clearInterval(timerIv);
+  S.taler += 2; speichern();
+  if (min < 1) { alleSheetsZu(); render({ halteScroll: true }); toast("Timer beendet."); return; }
+  const t = tat(T.t);
+  const eigen = T.name && T.name !== t.name && !D.timerVorlagen.some(v => v.name === T.name);
+  const r = eintragSpeichern({ t: t.id, tag: heute(), min: Math.max(min, 1), draussen: false, notiz: eigen ? T.name : "", mut: false });
+  nachEintrag(r, `${min} ${min === 1 ? "Minute" : "Minuten"} ${T.name.toLowerCase().startsWith("les") ? "gelesen" : "– " + T.name} – eingetragen.`.replace("– eingetragen", "· eingetragen"));
+}
+
+/* ---------- Start ---------- */
+function start() {
+  migrieren();
+  themaAnwenden();
+  // Testzugang: ?t=JJJJ-MM-TTTHH:MM setzt die Uhr (nur für Prüfungen)
+  const q = new URLSearchParams(location.search);
+  if (q.get("zeit")) { const z = new Date(q.get("zeit")); if (!isNaN(z)) ZEITVERSATZ = z - Date.now(); }
+  render();
+  if (!S.onboard) setTimeout(onboardingSheet, 300);
+  else if (S.timer) setTimeout(() => { if (timerRest() <= 0) timerSheet(); }, 400);
+  addEventListener("resize", () => { clearTimeout(window._rs); window._rs = setTimeout(() => bilderZeichnen(), 150); });
+  document.addEventListener("visibilitychange", () => { if (!document.hidden) { render({ halteScroll: true, ohneAnim: true }); } });
+  // Bild alle 10 Minuten neu (Sonnenstand)
+  setInterval(() => { if (!document.hidden && !SHEETS.length) bilderZeichnen(); }, 600000);
+  addEventListener("beforeinstallprompt", e => { e.preventDefault(); window._installPrompt = e; });
+  // Antippen im großen Bild → Ort erklären
+  document.addEventListener("click", ev => {
+    const c = ev.target.closest("#bild-gross"); if (!c) return;
+    const reg = bildRegion(c, ev.clientX, ev.clientY); if (reg) { haptik("auswahl"); ortSheet(reg); }
+  });
+  // iOS-Haptik für neu gerenderte Elemente nachrüsten
+  if (IOS) { let raf = 0; new MutationObserver(() => { cancelAnimationFrame(raf); raf = requestAnimationFrame(armHaptics); }).observe(document.body, { childList: true, subtree: true }); }
+}
+try { if ("serviceWorker" in navigator && /github\.io$/.test(location.hostname)) navigator.serviceWorker.register("sw.js"); } catch (e) { }
+start();
+
+/* Eingabefeld im Blatt nicht unter der Knopfleiste verstecken */
+document.addEventListener("focusin", ev => { if (ev.target.matches("input.text, textarea") && ev.target.closest(".sheet")) setTimeout(() => ev.target.scrollIntoView({ block: "center", behavior: REDUCED() ? "auto" : "smooth" }), 300); });
