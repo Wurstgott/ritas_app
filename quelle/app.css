@@ -1025,3 +1025,7 @@ button.gruss-himmel svg { width: 46px; height: 50px; overflow: visible; }
 .tel-leiste .unter { font-size: .85rem; opacity: .75; }
 .tel-leiste .pfeil { width: 20px; height: 20px; flex: none; opacity: .6; }
 .exkurs-karte, .notfall-leiste, .tel-leiste, .tuer-gross, .tel-karte-knopf, .tel-kontakt { position: relative; }
+/* Keine System-Vergrößerung/Lupe/Kontextmenüs beim langen Drücken (eigene Vergrößerungen haben Vorrang) */
+html, body { touch-action: manipulation; -webkit-text-size-adjust: 100%; }
+.portrait, .huhn, .figur-bild, #buehne-gross, canvas, svg, .tel-leiste, .tel-kontakt, .er-figur, .logo-knopf, .huhn-karte { -webkit-touch-callout: none; -webkit-user-select: none; user-select: none; }
+#buehne-gross, .huhn-karte, .logo-knopf { -webkit-tap-highlight-color: transparent; }

@@ -466,6 +466,7 @@ function start() {
   if (q.get("zeit")) { const z = new Date(q.get("zeit")); if (!isNaN(z)) ZEITVERSATZ = z - Date.now(); }
   try { eierTag(); render(); } catch (err) { notfall(err); return; }
   try { ereignisPruefen(); } catch (e) { }
+  ["gesturestart", "gesturechange"].forEach(t => document.addEventListener(t, e => e.preventDefault(), { passive: false }));
   postLaden(); try { angeboteAnwenden(); } catch (e) { } angeboteLaden(); tvLaden(); wetterLaden().then(W => { if (W) render({ halteScroll: true, ohneAnim: true }); });
   if (!S.onboard) setTimeout(onboardingSheet, 300);
   else if (S.timer) setTimeout(() => { if (timerRest() <= 0) timerSheet(); }, 400);

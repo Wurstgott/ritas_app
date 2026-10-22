@@ -2,7 +2,7 @@
 <html lang="de">
 <head>
 <meta charset="utf-8">
-<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no, viewport-fit=cover">
 <title>Ritas App</title>
 <meta name="description" content="Ritas App: Liste, rausgehen, lesen, tanzen – und Hühnchen ist dabei.">
 <meta name="theme-color" content="#F3EDE0" media="(prefers-color-scheme: light)">
@@ -1051,6 +1051,10 @@ button.gruss-himmel svg { width: 46px; height: 50px; overflow: visible; }
 .tel-leiste .unter { font-size: .85rem; opacity: .75; }
 .tel-leiste .pfeil { width: 20px; height: 20px; flex: none; opacity: .6; }
 .exkurs-karte, .notfall-leiste, .tel-leiste, .tuer-gross, .tel-karte-knopf, .tel-kontakt { position: relative; }
+/* Keine System-Vergrößerung/Lupe/Kontextmenüs beim langen Drücken (eigene Vergrößerungen haben Vorrang) */
+html, body { touch-action: manipulation; -webkit-text-size-adjust: 100%; }
+.portrait, .huhn, .figur-bild, #buehne-gross, canvas, svg, .tel-leiste, .tel-kontakt, .er-figur, .logo-knopf, .huhn-karte { -webkit-touch-callout: none; -webkit-user-select: none; user-select: none; }
+#buehne-gross, .huhn-karte, .logo-knopf { -webkit-tap-highlight-color: transparent; }
 </style>
 <div id="app">
   <header class="kopf">
@@ -9056,10 +9060,10 @@ D.tv={"stand": "2026-10-22", "mediathek": [{"titel": "Kommissar Beck – Vilhelm
 <script>
 /* ============================================================
    Lichtung – Kern: Zustand, Rechnen, Rückmeldung, Bausteine
-   Build: 2026-10-22 04:11
+   Build: 2026-10-22 04:13
    ============================================================ */
 "use strict";
-const BUILD = "2026-10-22 04:11";
+const BUILD = "2026-10-22 04:13";
 const KEY = "lichtung-v1";
 const GV = 2;            // Zustandsversion (Migrationen)
 const RV = 1;            // Regelversion (wird je Eintrag festgeschrieben)
@@ -13788,6 +13792,7 @@ function start() {
   if (q.get("zeit")) { const z = new Date(q.get("zeit")); if (!isNaN(z)) ZEITVERSATZ = z - Date.now(); }
   try { eierTag(); render(); } catch (err) { notfall(err); return; }
   try { ereignisPruefen(); } catch (e) { }
+  ["gesturestart", "gesturechange"].forEach(t => document.addEventListener(t, e => e.preventDefault(), { passive: false }));
   postLaden(); try { angeboteAnwenden(); } catch (e) { } angeboteLaden(); tvLaden(); wetterLaden().then(W => { if (W) render({ halteScroll: true, ohneAnim: true }); });
   if (!S.onboard) setTimeout(onboardingSheet, 300);
   else if (S.timer) setTimeout(() => { if (timerRest() <= 0) timerSheet(); }, 400);

@@ -9,7 +9,7 @@ stamp = datetime.datetime.now().strftime("%Y-%m-%d %H:%M")
 
 shell = (d / "app.html").read_text()
 css = (d / "fonts.css").read_text() + (d / "app.css").read_text()
-data = "\n".join((d / f).read_text() for f in ["data.js","data-orte.js","data-inhalte.js","data-laden.js","data-korrektur.js","data-sprache.js","data-lektorat.js","data-ablenkung.js", "data-winter.js","data-angebote.js","data-eier.js","data-eier2.js","data-anrufe.js", "data-brevvan.js", "data-feinschliff.js"] if (d / f).exists())
+data = "\n".join((d / f).read_text() for f in ["data.js","data-orte.js","data-inhalte.js","data-laden.js","data-korrektur.js","data-sprache.js","data-lektorat.js","data-ablenkung.js", "data-winter.js","data-angebote.js","data-eier.js","data-eier2.js","data-anrufe.js", "data-anrufe2.js", "data-brevvan.js", "data-ereignisse2.js", "data-feinschliff.js"] if (d / f).exists())
 _tj = d / "tv.json"
 if _tj.exists():
     import json as _json2
@@ -19,11 +19,11 @@ if _aj.exists():
     import json as _json
     _a = _json.loads(_aj.read_text())
     data += "\n/* Angebote aus angebote.json */\n(function(){var A=" + _json.dumps(_a, ensure_ascii=False) + ";D.angeboteStand=A.stand;if(A.kategorien)D.angeboteKat=A.kategorien;D.angebote=A.angebote.map(function(x){return Object.assign({},x,{id:'an-'+angebotId(x.name)})});})();\n"
-app = "\n".join((d / f).read_text() for f in ["core.js","figuren.js","scene.js","views.js","ruheplan.js","eigenes.js","eier.js","extras.js","telefon.js", "brevvan.js", "buecher.js", "tv.js", "winter.js", "ereignisse.js", "wunsch.js","game.js","main.js"]).replace("__BUILD__", stamp)
+app = "\n".join((d / f).read_text() for f in ["core.js","figuren.js","scene.js","views.js","ruheplan.js","eigenes.js","eier.js","extras.js","telefon.js", "brevvan.js", "buecher.js", "tv.js", "winter.js", "ereignisse.js", "wunsch.js", "wetter.js","game.js","main.js"]).replace("__BUILD__", stamp)
 body = shell.replace("/*CSS*/", css).replace("/*DATA*/", data).replace("/*APP*/", app)
 
 HEAD_COMMON = """<meta charset="utf-8">
-<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no, viewport-fit=cover">
 <title>Ritas App</title>
 <meta name="description" content="Ritas App: Liste, rausgehen, lesen, tanzen – und Hühnchen ist dabei.">
 <meta name="theme-color" content="#F3EDE0" media="(prefers-color-scheme: light)">
