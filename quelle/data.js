@@ -18,14 +18,14 @@ D.felder = {
 
 /* Bildorte: wo eine Tätigkeit in der Lichtung sichtbar wird */
 D.orte = {
-  weg:      { name: "Der Weg", text: "Jeder Weg, den du gehst, wird hier sichtbar: Steine am Rand, ab und zu ein Pfahl, später Wegweiser.", k: "k-bewegung" },
+  weg:      { name: "Der Weg", text: "Jeder Weg, den du gehst, macht den Weg im Bild länger: erst Steine am Rand, später Wegweiser.", k: "k-bewegung" },
   fenster:  { name: "Die Häuser", text: "Jeder Herzensmensch hat hier ein helles Fenster. Wenn ihr Zeit miteinander verbringt, blühen vor dem Haus Blumen in den Kästen.", k: "k-menschen" },
   tanz:     { name: "Der Tanzboden", text: "Jede Tanzstunde legt Fußspuren auf den Boden, Musik hängt eine Laterne an die Schnur.", k: "k-tanz" },
   eiche:    { name: "Die Leseeiche", text: "Lesen und Hören lassen die Krone dichter werden. Jedes ausgelesene Buch hängt als Band am Ast.", k: "k-geist" },
-  quelle:   { name: "Die Quelle", text: "Ruhe ist hier eine Quelle. Aus ihr wird ein Bach und mit der Zeit ein Weiher.", k: "k-ruhe" },
-  wiese:    { name: "Die Wiese", text: "Was deine Hände tun, blüht hier – Blumen je nach Jahreszeit.", k: "k-schaffen" },
-  horizont: { name: "Der Horizont", text: "Jeder Ausflug wird eine Silhouette in der Ferne und ein Andenken im Setzkasten.", k: "k-draussen" },
-  mut:      { name: "Glühwürmchen", text: "Wenn etwas Mut gebraucht hat – etwas Neues oder Ungewohntes –, leuchtet danach ein Glühwürmchen mehr im Wald.", k: "k-mut" }
+  quelle:   { name: "Die Quelle", text: "Alles, was du für dich tust – ausruhen, Wärmflasche, in Ruhe machen –, lässt hier Wasser fließen: erst eine Quelle, dann ein Bach, später ein kleiner Teich.", k: "k-ruhe" },
+  wiese:    { name: "Die Wiese", text: "Kochen, Basteln, Pflanzen, Aufräumen: Dafür blühen hier Blumen, je nach Jahreszeit.", k: "k-schaffen" },
+  horizont: { name: "Der Horizont", text: "Für jeden Ausflug erscheint in der Ferne der Umriss des Ortes, etwa ein Kirchturm. Dazu kommt ein Andenken in den Setzkasten.", k: "k-draussen" },
+  mut:      { name: "Glühwürmchen", text: "Hast du etwas Neues oder Ungewohntes gemacht, leuchtet danach ein Glühwürmchen mehr im Wald.", k: "k-mut" }
 };
 
 /* ---------- Tagesform (filtert Vorschläge, bewertet nichts) ---------- */
@@ -55,6 +55,8 @@ D.taetigkeiten = [
     info: ["Deine Übungen aus der Physiotherapie – genau so, wie sie für dich gedacht sind."] },
   { id: "dehnen", draussenOpt: true, name: "Dehnen oder Atmen im Sitzen", kurz: "Dehnen", art: "min", std: 10, feld: "bewegung", bild: "weg", tf: "BCD", icon: "atem",
     info: ["Ruhiges Atmen und Dehnen im Sitzen ist Bewegung, die an jedem Tag geht."] },
+  { id: "hofladen", draussenOpt: true, name: "Zum Hofladen gefahren", kurz: "Hofladen", art: "klein", feld: "sorge", neben: "bewegung", bild: "weg", tf: "AB", icon: "tasche",
+    info: ["Hofladen! Was Feines mitgebracht? Psst – nur nichts verraten.", "Frisch vom Hof. Hühnchen fragt besser nicht nach.", "Eingekauft, wo’s schmeckt. Ein guter Tag."] },
   { id: "alltag", name: "Alltagsbewegung (Treppe, kleiner Einkauf mit Trolley)", kurz: "Alltag", art: "min", std: 20, feld: "bewegung", bild: "weg", tf: "AB", icon: "tasche",
     info: ["Alltagsbewegung zählt genauso wie ein Spaziergang."] },
   { id: "sitztanz", name: "Im Sitzen zur Musik bewegt", kurz: "Sitztanz", art: "min", std: 15, feld: "bewegung", neben: "geist", bild: "tanz", tf: "BCD", icon: "note",
@@ -64,15 +66,15 @@ D.taetigkeiten = [
     info: ["Tanzstunde gegeben – heute hat jemand von dir gelernt.", "Dein Tanzschüler weiß hoffentlich, was für eine Lehrerin er hat."] },
   { id: "tanzplanen", name: "Schritte und Musik für die Stunde ausgedacht", kurz: "Stunde planen", art: "min", std: 20, feld: "geist", bild: "tanz", tf: "BC", icon: "note",
     info: ["Gut vorbereitet geht die Stunde leichter von der Hand."] },
-  { id: "besuch", draussenOpt: true, mutOpt: true, name: "Besuch (bekommen oder gemacht)", kurz: "Besuch", art: "person", std: 60, feld: "menschen", bild: "fenster", tf: "AB", icon: "tassen",
+  { id: "besuch", draussenOpt: true, mutOpt: true, muehOpt: true, name: "Besuch (bekommen oder gemacht)", kurz: "Besuch", art: "person", std: 60, feld: "menschen", bild: "fenster", tf: "AB", icon: "tassen",
     info: ["Zusammen gewesen – am Küchentisch, unterwegs oder in der Binger."] },
-  { id: "telefon", mutOpt: true, name: "Telefoniert", kurz: "Telefoniert", art: "person", std: 20, feld: "menschen", bild: "fenster", tf: "ABCD", icon: "telefon",
+  { id: "telefon", muehOpt: true, name: "Telefoniert", kurz: "Telefoniert", art: "person", std: 20, feld: "menschen", bild: "fenster", tf: "ABCD", icon: "telefon",
     info: ["Telefoniert. Und bestimmt an alles gedacht, was du fragen wolltest."] },
   { id: "nachbar", name: "Gespräch im Haus", kurz: "Im Haus", art: "person", std: 15, feld: "menschen", bild: "fenster", tf: "ABC", icon: "haus",
     info: ["Ein Schwatz im Haus – so bleibt man auf dem Laufenden."] },
-  { id: "brief", mutOpt: true, name: "Brief, Karte oder lange Nachricht", kurz: "Geschrieben", art: "person", std: 20, feld: "menschen", bild: "fenster", tf: "BC", icon: "brief",
+  { id: "brief", muehOpt: true, name: "Brief, Karte oder lange Nachricht", kurz: "Geschrieben", art: "person", std: 20, feld: "menschen", bild: "fenster", tf: "BC", icon: "brief",
     info: ["Geschriebene Worte kann man aufheben und noch einmal lesen."] },
-  { id: "gemeinschaft", mutOpt: true, name: "Mit dabei gewesen (Kaffeerunde, Fest, Kurs)", kurz: "Dabei gewesen", art: "min", std: 60, feld: "menschen", bild: "fenster", tf: "AB", icon: "tassen",
+  { id: "gemeinschaft", mutOpt: true, muehOpt: true, name: "Mit dabei gewesen (Kaffeerunde, Fest, Kurs)", kurz: "Dabei gewesen", art: "min", std: 60, feld: "menschen", bild: "fenster", tf: "AB", icon: "tassen",
     info: ["Gemeinsam etwas erleben, ohne viel planen zu müssen."] },
   { id: "geholfen", name: "Jemandem geholfen", kurz: "Geholfen", art: "person", std: 30, feld: "menschen", bild: "fenster", tf: "ABC", icon: "hand",
     info: ["Geholfen. Wer sonst hätte daran gedacht?"] },
@@ -84,12 +86,12 @@ D.taetigkeiten = [
   { id: "hoerbuch", draussenOpt: true, name: "Hörbuch oder Hörspiel", kurz: "Hörbuch", art: "min", std: 30, feld: "geist", bild: "eiche", tf: "BCD", icon: "kopfhoerer",
     info: ["Hören geht auch mit geschlossenen Augen – und zählt wie Lesen."] },
   { id: "buchfertig", name: "Ein Buch ausgelesen", kurz: "Buch fertig", art: "buch", feld: "geist", bild: "eiche", tf: "ABC", icon: "lesezeichen", w: 20,
-    info: ["Ein ganzes Buch. An der Eiche hängt jetzt ein Lesezeichen mit seinem Titel."] },
+    info: ["Ein ganzes Buch! An der Leseeiche hängt jetzt ein Band mit seinem Titel."] },
   { id: "tagebuch", name: "Tagebuch geschrieben", kurz: "Tagebuch", art: "min", std: 15, feld: "geist", bild: "eiche", tf: "ABCD", icon: "feder",
     info: ["Aufgeschrieben ist aufgehoben.", "Ein paar Zeilen am Tag sortieren die Gedanken."] },
   { id: "raetsel", draussenOpt: true, name: "Rätsel auf Papier", kurz: "Rätsel", art: "min", std: 20, feld: "geist", bild: "eiche", tf: "BC", icon: "raetsel",
     info: ["Knobeln hält den Kopf beweglich."] },
-  { id: "radio", draussenOpt: true, name: "Radio, Podcast oder Doku bewusst", kurz: "Gehört", art: "min", std: 30, feld: "geist", bild: "eiche", tf: "BCD", icon: "radio",
+  { id: "radio", draussenOpt: true, name: "Radio, Podcast oder Doku gehört", kurz: "Gehört", art: "min", std: 30, feld: "geist", bild: "eiche", tf: "BCD", icon: "radio",
     info: ["Gut zugehört. Das kannst du ja sowieso."] },
   { id: "gelernt", name: "Etwas Neues gelernt", kurz: "Gelernt", art: "min", std: 15, feld: "mut", bild: "mut", tf: "ABC", icon: "funke",
     info: ["Wieder was gelernt. Gesprächsstoff für die nächste Kaffeerunde."] },
@@ -108,15 +110,15 @@ D.taetigkeiten = [
   { id: "natur", name: "Etwas in der Natur entdeckt", kurz: "Entdeckt", art: "klein", feld: "geist", bild: "wiese", draussen: true, tf: "ABC", icon: "blatt",
     info: ["Wer genau hinschaut, findet im Forst jeden Tag etwas Neues."] },
   // Hände & Haus
-  { id: "kochen", mutOpt: true, name: "Mir etwas Gutes gekocht", kurz: "Gekocht", art: "min", std: 30, feld: "schaffen", bild: "wiese", tf: "BC", icon: "topf",
+  { id: "kochen", mutOpt: true, muehOpt: true, name: "Mir etwas Gutes gekocht", kurz: "Gekocht", art: "min", std: 30, feld: "schaffen", bild: "wiese", tf: "BC", icon: "topf",
     info: ["Selbst gekocht schmeckt es doppelt."] },
-  { id: "handarbeit", mutOpt: true, name: "Gemalt, gebastelt oder Handarbeit", kurz: "Handarbeit", art: "min", std: 30, feld: "schaffen", bild: "wiese", tf: "BC", icon: "pinsel",
+  { id: "handarbeit", mutOpt: true, name: "Gemalt, gebastelt oder Handarbeit", kurz: "Kreativ", art: "min", std: 30, feld: "schaffen", bild: "wiese", tf: "BC", icon: "pinsel",
     info: ["Selbst gemacht – und kein anderer hat so eins."] },
   { id: "pflanzen", name: "Pflanzen versorgt (Balkon, Zimmer)", kurz: "Pflanzen", art: "klein", feld: "schaffen", bild: "wiese", tf: "ABC", icon: "blume",
     info: ["Etwas wächst, weil du dich kümmerst."] },
-  { id: "ordnung", name: "Eine kleine Ecke aufgeräumt", kurz: "Aufgeräumt", art: "min", std: 15, feld: "schaffen", bild: "wiese", tf: "BC", icon: "kiste",
+  { id: "ordnung", muehOpt: true, name: "Eine kleine Ecke aufgeräumt", kurz: "Aufgeräumt", art: "min", std: 15, feld: "schaffen", bild: "wiese", tf: "BC", icon: "kiste",
     info: ["Eine Schublade, ein Fach – kleine Ordnung, sichtbarer Unterschied."] },
-  { id: "papier", name: "Papierkram erledigt", kurz: "Papierkram", art: "klein", feld: "schaffen", bild: "wiese", tf: "BC", icon: "brief",
+  { id: "papier", muehOpt: true, name: "Papierkram erledigt", kurz: "Papierkram", art: "klein", feld: "schaffen", bild: "wiese", tf: "BC", icon: "brief",
     info: ["Erledigt. Eine Sache weniger im Kopf."] },
   { id: "foto", name: "Ein schönes Foto gemacht", kurz: "Foto", art: "klein", feld: "schaffen", bild: "wiese", tf: "ABC", icon: "kamera",
     info: ["Ein Foto hält einen Moment fest, den man sonst vergessen hätte."] },
@@ -135,7 +137,7 @@ D.taetigkeiten = [
     info: ["In Ruhe gemacht, ohne Eile."] },
   { id: "getrunken", name: "Genug getrunken", kurz: "Getrunken", art: "klein", feld: "sorge", bild: "quelle", tf: "ABCD", icon: "glas",
     info: ["Glas leer, Haken dran."] },
-  { id: "ausgesprochen", mutOpt: true, name: "Etwas Belastendes ausgesprochen", kurz: "Ausgesprochen", art: "min", std: 30, feld: "menschen", neben: "sorge", bild: "quelle", tf: "BCD", icon: "sprechen",
+  { id: "ausgesprochen", muehOpt: true, name: "Etwas Belastendes ausgesprochen", kurz: "Ausgesprochen", art: "min", std: 30, feld: "menschen", neben: "sorge", bild: "quelle", tf: "BCD", icon: "sprechen",
     info: ["Gut, dass es raus ist. Gesagt ist gesagt."] },
   { id: "draussensitzen", name: "Auf dem Balkon oder draußen gesessen", kurz: "Balkon", art: "min", std: 20, feld: "sorge", bild: "quelle", draussen: true, tf: "BCD", icon: "bank",
     info: ["Frische Luft und Tageslicht tun gut, auch im Sitzen."] },
@@ -158,7 +160,7 @@ D.gruppen = [
   { name: "Bewegung", ids: ["gehen", "gymnastik", "gleichgewicht", "ruecken", "dehnen", "alltag", "sitztanz"] },
   { name: "Menschen", ids: ["telefon", "besuch", "nachbar", "brief", "tanzstunde", "gemeinschaft", "geholfen", "ausgesprochen"] },
   { name: "Lesen, Hören, Musik", ids: ["tagebuch", "lesen", "hoerbuch", "buchfertig", "musik", "singen", "tanzplanen", "radio", "raetsel", "erinnern", "kultur"] },
-  { name: "Draußen & Neues", ids: ["draussensitzen", "natur", "licht", "eroller", "erstesmal", "gelernt"] },
+  { name: "Draußen & Neues", ids: ["hofladen", "draussensitzen", "natur", "licht", "eroller", "erstesmal", "gelernt"] },
   { name: "Hände & Haus", ids: ["kochen", "handarbeit", "pflanzen", "ordnung", "papier", "foto", "zimmer"] },
   { name: "Gut für mich", ids: ["ruhe", "arzt", "durchgehalten", "waerme", "versorgung", "getrunken", "hilfe", "goennen"] },
   { name: "Sonst", ids: ["frei"] }
@@ -211,15 +213,15 @@ D.leiter = [
   { s: 2, name: "Im Forst", text: "Eine deiner Runden im Spandauer Forst.", dauer: "bis 1 Std." },
   { s: 3, name: "Kleine Erledigung", text: "Mit Auto oder Bus zum Bäcker, zur Apotheke, auf den Markt.", dauer: "1–2 Std." },
   { s: 4, name: "Café, Park, See", text: "Ein Ort in der Nähe, allein, zu zweit oder mit Freunden.", dauer: "2–3 Std." },
-  { s: 5, name: "In die Stadt", text: "Ausflug in die Stadt oder zu Freunden – mit bekanntem Ankerpunkt.", dauer: "halber Tag" },
+  { s: 5, name: "In die Stadt", text: "Ausflug in die Stadt oder zu Freunden – zu einem Ort, den du schon kennst.", dauer: "halber Tag" },
   { s: 6, name: "Neuer Ort", text: "Etwas Neues, gern zu zweit: Museum, Garten, Konzert am Nachmittag.", dauer: "halber bis ganzer Tag" },
   { s: 7, name: "Großer Ausflug", text: "Ein ganzer Tag oder eine Übernachtung.", dauer: "Tag und mehr" }
 ];
 
 /* Checkliste „Unterwegs“ – ihre eigene Liste, änderbar */
 D.checkliste = [
-  { id: "wechsel", text: "Wechselset dabei (Beutel, Tücher, Abwurfbeutel)" },
-  { id: "leeren", text: "Beutel vor dem Losgehen geleert" },
+  { id: "wechsel", text: "Wechselsachen eingepackt" },
+  { id: "leeren", text: "Vor dem Losgehen noch mal ins Bad" },
   { id: "wc", text: "Toilette am Ziel und unterwegs überlegt" },
   { id: "euro", text: "Euroschlüssel eingesteckt (falls vorhanden)" },
   { id: "wasser", text: "Wasser und etwas zu essen" },
@@ -227,6 +229,7 @@ D.checkliste = [
   { id: "bescheid", text: "Jemandem Bescheid gesagt" },
   { id: "rueckweg", text: "Rückweg geklärt (Taxi, Bus, Abholung)" },
   { id: "handy", text: "Handy geladen" },
+  { id: "maske", text: "FFP2-Maske eingesteckt (und eine Ersatzmaske)" },
   { id: "desinf", text: "Kleines Handdesinfektionsmittel" }
 ];
 
@@ -275,30 +278,30 @@ D.massstab = [
 
 /* ---------- Kramladen (Taler) ---------- */
 D.laden = [
-  { id: "patience", gruppe: "Spiel", name: "Waldpatience", preis: 60, text: "Eine ruhige Patience mit Karten aus dem Forst. Jede Runde hat ein Ende.", icon: "karten" },
-  { id: "rueckenmotiv", gruppe: "Spiel", name: "Kartenrücken „Kiefernzapfen“", preis: 30, text: "Ein anderer Rücken für die Karten.", icon: "karten" },
+  { id: "patience", gruppe: "Spiel", name: "Waldpatience", preis: 60, text: "Das bekannte Kartenspiel für eine Person: Alle Karten nach Farben von Ass bis König ablegen. Ohne Zeitdruck, jeder Zug lässt sich zurücknehmen.", icon: "karten" },
+  { id: "rueckenmotiv", gruppe: "Spiel", name: "Kartenrücken „Kiefernzapfen“", preis: 30, text: "Ein neues Muster für die Rückseite der Patience-Karten: Kiefernzapfen.", icon: "karten" },
 
-  { id: "rotkehlchen", gruppe: "Wald & Garten", name: "Rotkehlchen", preis: 50, text: "Kommt morgens und sitzt auf dem Zaun oder der Bank.", icon: "vogel" },
-  { id: "traenke", gruppe: "Wald & Garten", name: "Vogeltränke", preis: 40, text: "Eine flache Schale aus Stein am Rand der Wiese.", icon: "schale" },
-  { id: "igelhaus", gruppe: "Wald & Garten", name: "Igelhaus", preis: 60, text: "Ein kleines Haus aus Laub und Holz unter der Hecke.", icon: "igel" },
-  { id: "rosenbogen", gruppe: "Wald & Garten", name: "Rosenbogen", preis: 120, text: "Ein Bogen mit Kletterrosen über dem Weg.", icon: "blume" },
-  { id: "haengematte", gruppe: "Wald & Garten", name: "Hängematte", preis: 150, text: "Zwischen zwei Kiefern, für lange Nachmittage.", icon: "decke" },
-  { id: "sternbilder", gruppe: "Wald & Garten", name: "Sternbilder", preis: 250, text: "Nachts erscheinen Großer Wagen, Kassiopeia und Orion am Himmel.", icon: "stern" },
+  { id: "rotkehlchen", gruppe: "Wald & Garten", name: "Rotkehlchen", preis: 50, text: "Ein Rotkehlchen für dein Bild. Es sitzt morgens auf dem Zaun oder der Bank.", icon: "vogel" },
+  { id: "traenke", gruppe: "Wald & Garten", name: "Vogeltränke", preis: 40, text: "Für dein Bild: eine flache Steinschale am Rand der Wiese, aus der die Vögel trinken.", icon: "schale" },
+  { id: "igelhaus", gruppe: "Wald & Garten", name: "Igelhaus", preis: 60, text: "Für dein Bild: ein kleines Igelhaus aus Laub und Holz unter der Hecke.", icon: "igel" },
+  { id: "rosenbogen", gruppe: "Wald & Garten", name: "Rosenbogen", preis: 120, text: "Für dein Bild: ein Bogen mit Kletterrosen über dem Weg.", icon: "blume" },
+  { id: "haengematte", gruppe: "Wald & Garten", name: "Hängematte", preis: 150, text: "Für dein Bild: eine Hängematte zwischen zwei Kiefern.", icon: "decke" },
+  { id: "sternbilder", gruppe: "Wald & Garten", name: "Sternbilder", preis: 250, text: "In deinem Bild leuchten nachts Großer Wagen, Kassiopeia und Orion am Himmel.", icon: "stern" },
 
   { id: "klangschale", gruppe: "Klänge", name: "Timer-Gong: Klangschale", preis: 40, text: "Ein weicher Klang, wenn der Ruhe-Timer endet.", icon: "glocke" },
-  { id: "spieluhr", gruppe: "Klänge", name: "Timer-Gong: Spieluhr", preis: 40, text: "Drei helle Töne zum Ende des Timers.", icon: "glocke" },
-  { id: "regen", gruppe: "Klänge", name: "Klangteppich „Regen am Fenster“", preis: 80, text: "Leises Rauschen, während der Ruhe-Timer läuft.", icon: "regen" },
-  { id: "waldmorgen", gruppe: "Klänge", name: "Klangteppich „Waldmorgen“", preis: 80, text: "Wind in den Kiefern und ab und zu ein Vogel.", icon: "blatt" },
-  { id: "takt", gruppe: "Klänge", name: "Tanz-Taktgeber", preis: 120, text: "Für die Tanzstunden: Walzer, Langsamer Walzer, Foxtrott, Cha-Cha – Tempo einstellbar.", icon: "note" },
+  { id: "spieluhr", gruppe: "Klänge", name: "Timer-Gong: Spieluhr", preis: 40, text: "Drei helle Töne, wenn der Ruhe-Timer endet.", icon: "glocke" },
+  { id: "regen", gruppe: "Klänge", name: "Hintergrundklang „Regen am Fenster“", preis: 80, text: "Leises Regenrauschen, solange der Ruhe-Timer läuft.", icon: "regen" },
+  { id: "waldmorgen", gruppe: "Klänge", name: "Hintergrundklang „Waldmorgen“", preis: 80, text: "Wind in den Kiefern und ab und zu ein Vogel – leise, solange der Ruhe-Timer läuft.", icon: "blatt" },
+  { id: "takt", gruppe: "Klänge", name: "Tanz-Taktgeber", preis: 120, text: "Klickt den Takt für deine Tanzstunde: Walzer, Langsamer Walzer, Foxtrott, Cha-Cha. Das Tempo stellst du selbst ein.", icon: "note" },
 
-  { id: "gedichte1", gruppe: "Zum Lesen", name: "Gedichte: Jahreszeiten", preis: 40, text: "Kurze Gedichte von Mörike, Eichendorff, Rilke und anderen.", icon: "feder" },
-  { id: "gedichte2", gruppe: "Zum Lesen", name: "Gedichte: Unterwegs", preis: 40, text: "Gedichte übers Wandern, Reisen und Ankommen.", icon: "feder" },
-  { id: "rezepte1", gruppe: "Zum Lesen", name: "Rezeptheft „Einfach & warm“", preis: 50, text: "Fünf einfache Gerichte für einen Topf und wenig Aufwand.", icon: "topf" },
-  { id: "rezepte2", gruppe: "Zum Lesen", name: "Rezeptheft „Kuchen für Besuch“", preis: 50, text: "Fünf Kuchen, die gelingen und Besuch anlocken.", icon: "kuchen" },
+  { id: "gedichte1", gruppe: "Zum Lesen", name: "Gedichte: Jahreszeiten", preis: 40, text: "Vier kurze Gedichte zu den Jahreszeiten, von Mörike, Heine und Morgenstern.", icon: "feder" },
+  { id: "gedichte2", gruppe: "Zum Lesen", name: "Gedichte: Unterwegs", preis: 40, text: "Drei Gedichte übers Unterwegssein, von Goethe, Ringelnatz und Eichendorff.", icon: "feder" },
+  { id: "rezepte1", gruppe: "Zum Lesen", name: "Rezeptheft „Einfach & warm“", preis: 50, text: "Fünf einfache warme Gerichte mit wenig Arbeit und wenig Abwasch.", icon: "topf" },
+  { id: "rezepte2", gruppe: "Zum Lesen", name: "Rezeptheft „Kuchen für Besuch“", preis: 50, text: "Fünf Kuchen, die sicher gelingen – für den nächsten Besuch.", icon: "kuchen" },
   { id: "briefe", gruppe: "Zum Lesen", name: "Briefanfänge an Herzensmenschen", preis: 60, text: "Erste Sätze für Karten und Briefe – den Rest schreibst du.", icon: "brief" },
-  { id: "fragen", gruppe: "Zum Lesen", name: "Fragekarten fürs Telefonat", preis: 50, text: "„Erzähl mal …“ – Fragen, die ein Gespräch öffnen.", icon: "telefon" },
-  { id: "tanzkarten", gruppe: "Zum Lesen", name: "Tanzschritt-Karten zum Unterrichten", preis: 80, text: "Grundschritte erklärt, so wie man sie einem Anfänger zeigt.", icon: "fuss" },
-  { id: "orte2", gruppe: "Ausflüge", name: "Ausflugspaket „Weiter weg“", preis: 100, text: "Zusätzliche Ziele für halbe und ganze Tage, mit Toiletten- und Pausenangaben.", icon: "karte" }
+  { id: "fragen", gruppe: "Zum Lesen", name: "Fragekarten fürs Telefonat", preis: 50, text: "25 Fragen für Telefonate, zum Beispiel: „Was hat dich diese Woche zum Lachen gebracht?“", icon: "telefon" },
+  { id: "tanzkarten", gruppe: "Zum Lesen", name: "Tanzschritt-Karten zum Unterrichten", preis: 80, text: "Grundschritte für Langsamen Walzer, Foxtrott, Cha-Cha-Cha und Rumba – zum Nachlesen für deine Tanzstunde.", icon: "fuss" },
+  { id: "orte2", gruppe: "Ausflüge", name: "Ausflugspaket „Weiter weg“", preis: 100, text: "Mehr Ausflugsziele für einen halben oder ganzen Tag – jeweils mit Hinweisen zu Toiletten und Bänken.", icon: "karte" }
 ];
 
 /* ---------- Hühnchen: wo es steht (je Bildort) ---------- */
@@ -319,7 +322,7 @@ D.timerVorlagen = [
   { id: "lesen", name: "Lesen", min: 10 },
   { id: "hoerbuch", name: "Hörbuch hören", min: 20 },
   { id: "ruhe", name: "Ausruhen", min: 20 },
-  { id: "handarbeit", name: "Handarbeit", min: 20 },
+  { id: "handarbeit", name: "Malen & Basteln", min: 20 },
   { id: "tanzplanen", name: "Tanzstunde vorbereiten", min: 15 },
   { id: "brief", name: "Brief schreiben", min: 15 },
   { id: "raetsel", name: "Rätsel", min: 15 },

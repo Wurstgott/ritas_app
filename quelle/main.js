@@ -20,7 +20,7 @@ function render(opt = {}) {
   if (!SHEETS.length && (document.activeElement === document.body || !document.activeElement || !document.contains(document.activeElement))) { const z = (opt.fokus && $(opt.fokus, main)) || null; if (z) z.focus({ preventScroll: true }); }
   bilderZeichnen(opt.neu);
   figurenMalen();
-  const lg = $("#logo"); if (lg && !lg.firstChild) lg.innerHTML = ritaSVG(58);
+  const lg = $("#logo"); if (lg && !lg.firstChild) lg.innerHTML = ritaSVG(72);
   armHaptics();
 }
 function bilderZeichnen(neu) {
@@ -89,9 +89,9 @@ function nachEintrag(r, text) {
   if (!r) return;
   const { e, vorherStufe, nachStufe, neuKey } = r;
   const t = tat(e.t);
-  const info = e.t === "ausflug" ? (e.umgekehrt ? "Umgekehrt? Auch das ist eine gute Entscheidung." : "Am Horizont steht jetzt eine neue Silhouette.") : waehle(t.info || ["Eingetragen. Das zählt."], e.id);
+  const info = e.t === "ausflug" ? (e.umgekehrt ? "Umgekehrt? Auch das ist eine gute Entscheidung." : "Am Horizont steht jetzt ein neuer Ort.") : waehle(t.info || ["Eingetragen. Das zählt."], e.id);
   const ort = e.t === "ausflug" ? "horizont" : e.t === "tagebuch" ? "tagebuch" : e.t === "abgehakt" ? "abgehakt" : e.t === "ruheuebung" ? "ruhe" : (e.mut ? "mut" : tat(e.t).bild);
-  const huhn = S.huhn ? huehnchenReagiert(ort) : "";
+  const huhn = S.huhn ? (e.t === "hofladen" ? huehnchenReagiert("hofladen") : huehnchenReagiert(ort)) : "";
   try { eierEintrag(e); } catch (err) { }
   const taler = Math.round(e.taler * 10) / 10;
   alleSheetsZu();
@@ -99,7 +99,7 @@ function nachEintrag(r, text) {
   render({ neu: neuKey, halteScroll: true, ohneAnim: true });
   const talerTxt = taler >= .5 ? `+${Math.max(1, Math.round(taler))} Taler` : "";
   const auchNeu = [];
-  if (e.t === "ausflug" && !S.leiter.neuland[e.leiter] && !e.umgekehrt) { S.leiter.neuland[e.leiter] = e.tag; const bonus = 5 * e.leiter; S.taler += bonus; auchNeu.push(`Neuland auf Sprosse ${e.leiter} (+${bonus} Taler)`); speichern(); }
+  if (e.t === "ausflug" && !S.leiter.neuland[e.leiter] && !e.umgekehrt) { S.leiter.neuland[e.leiter] = e.tag; const bonus = 5 * e.leiter; S.taler += bonus; auchNeu.push(`Zum ersten Mal auf Sprosse ${e.leiter} (+${bonus} Taler)`); speichern(); }
   if (e.t === "buchfertig" && !S.meilensteine.buch) { S.meilensteine.buch = e.tag; auchNeu.push("das erste Lesezeichen an der Eiche"); speichern(); }
   window._auchNeu = auchNeu;
   const neueStufe = nachStufe > (S.gesehenStufe || 0) && !(S.stufeGemeldet >= nachStufe);
@@ -185,6 +185,11 @@ function aktion(a, d, el, ev) {
     /* Allgemein */
     case "sheet-zu": sheetZu(); break;
     case "toast-zu": $$(".toast").forEach(t => t.remove()); break;
+    case "toast-daumen": { const t = el.closest(".toast"), r = el.getBoundingClientRect(); S.daumen = (S.daumen || 0) + 1; speichern(); haptik("erfolg");
+      const n = 1 + (Math.random() < .25 ? 2 : 0); for (let i = 0; i < n; i++) { const f = document.createElement("div"); f.className = "daumen-flug"; f.innerHTML = DAUMEN_SVG; f.style.left = (r.left + r.width / 2 - 20 + (i - (n - 1) / 2) * 34) + "px"; f.style.top = (r.top - 10) + "px"; f.style.animationDelay = i * 90 + "ms"; document.body.appendChild(f); setTimeout(() => f.remove(), 1500); }
+      if (t) { t.classList.add("weg"); setTimeout(() => t.remove(), 260); }
+      if (S.huhn && Math.random() < .35) { S.huhnSagt = { tag: heute(), text: ["Daumen hoch! Ich hab keinen, aber ich hätte einen gehoben.", "Ich nehm den Daumen als Applaus.", "Daumen gesehen. Gut gemacht."][Math.floor(Math.random() * 3)] }; speichern(); setTimeout(() => render({ halteScroll: true, ohneAnim: true }), 300); }
+      break; }
     case "toast-rueck": {
       const t = el.closest(".toast"), r = t && t._rueck; t && t.remove();
       if (!r) break;
@@ -393,9 +398,13 @@ function aktion(a, d, el, ev) {
     case "onb-weiter": if (ONB < 3) { ONB++; sheetInhalt(onboardingInhalt()); sheetFuss(onboardingFuss()); aktuellesSheet().querySelector(".sheet-inhalt").scrollTop = 0; } else onboardingFertig(); break;
     case "onb-zurueck": ONB = Math.max(1, ONB - 1); sheetInhalt(onboardingInhalt()); sheetFuss(onboardingFuss()); break;
     case "ton-probe": ton("erfolg", true); break;
+    case "spotify-an": S.spotify = !S.spotify; speichern(); sheetInhalt(einstellungenInhalt()); break;
+    case "spotify-an-info": S.spotify = true; speichern(); sheetZu(); toast("Spotify eingeschaltet. Bei Hörtipps gibt’s jetzt einen Spotify-Knopf.", { erfolg: true }); break;
+    case "spotify-info": spotifyInfoSheet(); break;
+    case "ang-luft": S.angLuft = !!el.checked; speichern(); sheetInhalt(angeboteInhalt()); break;
     case "angebot-kat": ANG_KAT = d.v; haptik("auswahl"); sheetInhalt(angeboteInhalt()); aktuellesSheet().querySelector(".sheet-inhalt").scrollTop = 0; break;
     case "angebot-liste": { const x = D.angebote.find(y => y.id === d.id); if (!x) break; S.liste = S.liste || []; const text = angebotKurz(x); if (!S.liste.some(y => !y.erledigt && (y.angebot === x.id || y.text === text))) S.liste.push({ id: "l" + Date.now().toString(36), text, angebot: x.id }); speichern(); haptik("auswahl"); toast(`Steht auf ${A("deiner", "Ihrer")} Liste.`, { erfolg: true, dauer: 4000 }); el.outerHTML = `<p class="klein" style="margin:6px 0 0">${ic("haken")} Steht auf ${A("deiner", "Ihrer")} Liste.</p>`; render({ halteScroll: true, ohneAnim: true }); break; }
-    default: if (a && a.startsWith("ruhe-") && typeof ruheAktion === "function") ruheAktion(a, d, el); else if (a && (a.startsWith("eigen") || a.startsWith("eig-"))) eigenAktion(a, d); else if (a === "bingo" || a === "bingo-drinnen") bingoAktion(a, d); else if (a === "bingo-auf") bingoSheet(); else if (a === "raetsel") raetselAktion(d); else if (a === "gutschein") gutscheinSheet(d.id);
+    default: if (a && a.startsWith("ruhe-") && typeof ruheAktion === "function") ruheAktion(a, d, el); else if (a && (a.startsWith("eigen") || a.startsWith("eig-"))) eigenAktion(a, d); else if (a === "bingo" || a === "bingo-drinnen") bingoAktion(a, d); else if (a === "bingo-auf") bingoSheet(); else if (a === "raetsel") raetselAktion(d); else if (a === "gutschein") gutscheinSheet(d.id); else if (a && a.startsWith("tel-")) telAktion(a, d); else if (a && a.startsWith("tb-")) tbAktion(a, d); else if (a && a.startsWith("bv-")) bvAktion(a, d, el); else if (a && (a.startsWith("buch-") || a.startsWith("bn-"))) buchAktion(a, d); else if (a && a.startsWith("tv-")) tvAktion(a, d); else if (a && a.startsWith("wi-")) winterAktion(a, d); else if (a && a.startsWith("wunsch-")) wunschAktion(a, d);
   }
 }
 
@@ -454,11 +463,12 @@ function start() {
   const q = new URLSearchParams(location.search);
   if (q.get("zeit")) { const z = new Date(q.get("zeit")); if (!isNaN(z)) ZEITVERSATZ = z - Date.now(); }
   try { eierTag(); render(); } catch (err) { notfall(err); return; }
-  postLaden();
+  try { ereignisPruefen(); } catch (e) { }
+  postLaden(); try { angeboteAnwenden(); } catch (e) { } angeboteLaden(); tvLaden();
   if (!S.onboard) setTimeout(onboardingSheet, 300);
   else if (S.timer) setTimeout(() => { if (timerRest() <= 0) timerSheet(); }, 400);
   addEventListener("resize", () => { clearTimeout(window._rs); window._rs = setTimeout(() => bilderZeichnen(), 150); });
-  document.addEventListener("visibilitychange", () => { if (!document.hidden) { try { eierTag(); } catch (e) { } render({ halteScroll: true, ohneAnim: true }); } });
+  document.addEventListener("visibilitychange", () => { if (!document.hidden) { try { eierTag(); } catch (e) { } render({ halteScroll: true, ohneAnim: true }); try { ereignisPruefen(); } catch (e) { } } });
   // Bild alle 10 Minuten neu (Sonnenstand)
   setInterval(() => { if (!document.hidden && !SHEETS.length) bilderZeichnen(); }, 600000);
   addEventListener("beforeinstallprompt", e => { e.preventDefault(); window._installPrompt = e; });

@@ -74,7 +74,7 @@ function frisch() {
     timer: null,
     rueckblick: {},
     spiel: { an: true, frei: false, limit: 4, limitNeu: null, limitAb: "", marken: 0, tag: "", genutzt: 0, geschenkt: 0, laufend: null, restSek: 0, rueckenmotiv: false },
-    hp: { band: 1, kapitel: 0 },
+    hp: { band: 4, kapitel: 0 },
     installKarte: "", nachherTag: "", meilensteine: {},
     letzteSicherung: ""
   };
@@ -99,7 +99,12 @@ function migrieren() {
   if (!S.gv) S.gv = 1;
   S.gekauft.patience = true;
   if (!S.eintraege.some(e => e.person === "tanzschueler")) S.menschen = S.menschen.filter(m => m.id !== "tanzschueler");
+  if (Array.isArray(S.checkliste) && !S.checkliste.some(c => c.id === "maske")) { const i = S.checkliste.findIndex(c => c.id === "desinf"); S.checkliste.splice(i < 0 ? S.checkliste.length : i, 0, { id: "maske", text: "FFP2-Maske eingesteckt (und eine Ersatzmaske)", an: false }); }
+  if (Array.isArray(S.checkliste)) S.checkliste.forEach(c => { const neu = (D.checkliste || []).find(x => x.id === c.id); if (neu && c.text !== neu.text && !c.eigen) c.text = neu.text; });
+  if ((S.gv || 0) < 3) { if (S.hp && S.hp.band < 4 && !S.hp.kapitel && !S.eintraege.some(e => e.t === "buchfertig" && /Harry Potter/.test(e.titel || ""))) S.hp.band = 4; if (!Array.isArray(S.buecherEigen)) S.buecherEigen = []; }
+  if (!Array.isArray(S.buecherEigen)) S.buecherEigen = [];
   if (S.gv < 2) { const i = S.schnell.indexOf("tanzstunde"); if (i >= 0 && !S.schnellGeaendert) S.schnell[i] = "tagebuch"; S.gv = 2; }
+  if (S.gv < 3) S.gv = 3;
   // künftige Migrationen: if (S.gv < 2) { …; S.gv = 2 }
   // Papierkorb: älter als 30 Tage endgültig weg
   const grenze = Date.now() - 30 * 864e5;
@@ -149,6 +154,7 @@ function rechneWirkung(e, vorher) {
     }
   }
   if (e.mut && !vorher.some(x => x.mut)) w += 5;
+  if (e.anstrengend && vorher.filter(x => x.anstrengend).length < 2) w += 3;
   return Math.round(w * 10) / 10;
 }
 const wSumme = () => S.eintraege.reduce((s, e) => s + (e.w || 0), 0);
@@ -194,7 +200,7 @@ function haptik(art) {
   try { if (navigator.vibrate) navigator.vibrate(VIB[art] || 10); } catch (e) { }
 }
 /* iOS: echter Schalter unter einem label erzeugt den System-Tick (ab iOS 18) */
-const HAPSEL = ".bingo-feld,.huhn-karte,.tuer,.logo-knopf,.knopf,.kachel,.tf,.chip,.liste-zeile,nav.tabs button,.karte:not(.zu),.fach:not(.leer),.schalter-zeile";
+const HAPSEL = ".tel-kontakt,.bingo-feld,.huhn-karte,.tuer,.logo-knopf,.knopf,.kachel,.tf,.chip,.liste-zeile,nav.tabs button,.karte:not(.zu),.fach:not(.leer),.schalter-zeile";
 function armHaptics() {
   if (!IOS || !S.vib) return;
   $$(HAPSEL).forEach(el => {
@@ -227,6 +233,7 @@ function ton(art, zwang) {
 function sag(text) { const l = $("#live"); l.textContent = ""; setTimeout(() => l.textContent = text, 30); }
 
 /* ---------- Toast mit Rückgängig ---------- */
+const DAUMEN_SVG = `<svg viewBox="0 0 24 24" width="28" height="28" aria-hidden="true"><path fill="currentColor" d="M2 21h4V9H2v12zm20-11c0-1.1-.9-2-2-2h-6.31l.95-4.57.03-.32c0-.41-.17-.79-.44-1.06L13.17 1 6.59 7.59C6.22 7.95 6 8.45 6 9v10c0 1.1.9 2 2 2h9c.83 0 1.54-.5 1.84-1.22l3.02-7.05c.09-.23.14-.47.14-.73v-2z"/></svg>`;
 let toastTimer = null;
 function toast(text, opt = {}) {
   $$(".toast").forEach(t => t.remove());
@@ -234,7 +241,7 @@ function toast(text, opt = {}) {
   const t = document.createElement("div"); t.className = "toast"; t.setAttribute("role", "status");
   const haken = opt.erfolg ? `<svg class="haken-svg" viewBox="0 0 30 30" aria-hidden="true"><circle cx="15" cy="15" r="13" fill="none" stroke="currentColor" stroke-width="2" opacity=".35"/><path d="M8.5 15.5l4.2 4.2 8.8-9.4" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"/></svg>` : "";
   const [kopf, ...weiter] = String(text).split("\n");
-  t.innerHTML = `${haken}<div class="text">${esc(kopf)}${weiter.filter(Boolean).map(z => `<small>${esc(z)}</small>`).join("")}</div><div class="toast-knoepfe"><button class="knopf zu" data-act="toast-zu">Schließen</button>${opt.rueck ? `<button class="knopf leise-hell" data-act="toast-rueck">Rückgängig</button>` : ""}${opt.knopf ? `<button class="knopf" data-act="${opt.knopf.act}">${esc(opt.knopf.text)}</button>` : ""}</div>`;
+  t.innerHTML = `${haken}<div class="text">${esc(kopf)}${weiter.filter(Boolean).map(z => `<small>${esc(z)}</small>`).join("")}</div><div class="toast-knoepfe">${opt.rueck ? `<button class="knopf rueck-mini" data-act="toast-rueck">Rückgängig</button>` : ""}<button class="knopf zu" data-act="toast-zu">Schließen</button>${opt.rueck ? `<button class="knopf daumen" data-act="toast-daumen" aria-label="Daumen hoch">${DAUMEN_SVG}</button>` : ""}${opt.knopf ? `<button class="knopf" data-act="${opt.knopf.act}">${esc(opt.knopf.text)}</button>` : ""}</div>`;
   t._rueck = opt.rueck;
   document.body.appendChild(t);
   hebeToast();

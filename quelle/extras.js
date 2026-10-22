@@ -88,6 +88,16 @@ function gutscheinSheet(id) {
 }
 
 /* ---------- Echte Post von Max aus dem Repo (post.json) ---------- */
+/* Angebote: jeden Sonntag frisch (angebote.json im Repo) */
+function angeboteAnwenden() {
+  const A = S.angeboteRepo; if (!A || !Array.isArray(A.angebote) || !A.stand || (D.angeboteStand && A.stand < D.angeboteStand)) return;
+  D.angeboteStand = A.stand; if (Array.isArray(A.kategorien)) D.angeboteKat = A.kategorien;
+  D.angebote = A.angebote.filter(x => x && typeof x.name === "string").map(x => ({ ...x, id: "an-" + angebotId(x.name) }));
+}
+function angeboteLaden() {
+  if (!/github\.io$/.test(location.hostname)) return;
+  fetch("angebote.json", { cache: "no-store" }).then(r => r.ok ? r.json() : null).then(A => { if (A && Array.isArray(A.angebote) && A.stand && (!S.angeboteRepo || S.angeboteRepo.stand !== A.stand)) { S.angeboteRepo = A; speichern(); angeboteAnwenden(); } }).catch(() => { });
+}
 function postLaden() {
   if (!/github\.io$/.test(location.hostname)) return;
   fetch("post.json", { cache: "no-store" }).then(r => r.ok ? r.json() : []).then(arr => { if (Array.isArray(arr)) { S.postRepo = arr.filter(b => b && typeof b.text === "string" && /^\d{4}-\d{2}-\d{2}$/.test(b.datum || "")); speichern(); } }).catch(() => { });
@@ -101,12 +111,12 @@ function postLaden() {
     gross = document.createElement("div"); gross.className = "portrait-gross"; gross.setAttribute("aria-hidden", "true");
     gross.innerHTML = ritaSVG(170);
     gross.style.left = Math.min(innerWidth - 186, r.right + 14) + "px"; gross.style.top = (r.bottom + 10) + "px";
-    if (Math.random() < .4) { const hand = document.createElement("div"); hand.className = "portrait-hand"; hand.style.animationDelay = (600 + Math.random() * 900) + "ms";
-      hand.innerHTML = `<svg viewBox="0 0 60 80" width="58" height="78"><path d="M22 80 L20 52 Q30 48 40 52 L38 80Z" fill="#22304A"/><g transform="translate(30 50)"><path d="M-11 0 Q-14 -18 -10 -26 Q-8 -30 -5 -26 L-4 -14 L-4 -34 Q-2 -38 1 -34 L1 -16 L2 -36 Q5 -40 7 -36 L7 -16 L9 -32 Q12 -35 13 -31 L12 -12 Q16 -18 19 -15 Q20 -12 16 -6 Q10 4 0 4 Q-8 4 -11 0Z" fill="#F0C9AA" stroke="#D49A7C" stroke-width="1"/></g></svg>`;
-      gross.appendChild(hand); }
+    if ((window._ritaGewunken || 0) < 2 || Math.random() < .6) { window._ritaGewunken = (window._ritaGewunken || 0) + 1; gross._bis = Date.now() + 2300; const verz = (180 + Math.random() * 250) / 1000;
+      const arm = `<defs><clipPath id="pg-clip"><rect x="0" y="0" width="100" height="100"/></clipPath></defs><g clip-path="url(#pg-clip)"><g class="winkarm" style="animation-delay:${verz}s"><path d="M80 93 Q86 99 88 110" stroke="#22304A" stroke-width="12" stroke-linecap="round" fill="none"/><g class="winkunter" style="animation-delay:${verz + .25}s"><path d="M88 110 Q84 92 89 71" stroke="#22304A" stroke-width="10" stroke-linecap="round" fill="none"/><path d="M84.4 71.5 Q89 69.6 93.6 71.5" stroke="#3A4B6B" stroke-width="2.4" stroke-linecap="round" fill="none"/><g class="winkhand" style="animation-delay:${verz + .25}s"><g transform="translate(7 5) translate(166 0) scale(-1 1)"><path d="M78 66 Q76 60 77 54 Q77.5 52 79 53 L79.6 58 L79.5 50 Q80 48 81.4 49 L81.8 57 L82.4 48.6 Q83.2 47 84.4 48.4 L84.2 57 L85.4 51 Q86.6 49.8 87.4 51.2 L86.6 60 Q88.6 57.6 90 58.6 Q90.6 60 88.6 62.6 Q86 67 82 67.6 Q79.6 67.8 78 66Z" fill="#F0C9AA" stroke="#D49A7C" stroke-width=".5"/></g></g></g></g></g>`;
+      gross.innerHTML = gross.innerHTML.replace("</svg>", arm + "</svg>"); }
     document.body.appendChild(gross); lange = true; haptik("auswahl");
   };
-  const weg = () => { clearTimeout(zeitV); if (gross) { const g = gross; g.classList.add("zu"); setTimeout(() => g.remove(), 220); gross = null; } };
+  const weg = () => { clearTimeout(zeitV); if (gross) { const g = gross; gross = null; const rest = Math.max(0, (g._bis || 0) - Date.now()); setTimeout(() => { g.classList.add("zu"); setTimeout(() => g.remove(), 220); }, rest); } };
   document.addEventListener("pointerdown", ev => { const el = ev.target.closest("#logo"); if (!el) return; lange = false; zeitV = setTimeout(() => zeigen(el), 320); });
   document.addEventListener("pointerup", () => { weg(); });
   document.addEventListener("pointercancel", weg);
@@ -119,11 +129,28 @@ function postLaden() {
 
 /* ---------- Hühnchen: Finger drauf halten = großer Kopf daneben; oft antippen = Feder fliegt ---------- */
 { let zeitH = 0, grossH = null, langH = false, taps = [];
+  let mal = [];
   const zeigen = (el) => {
     if (grossH) return; const r = el.querySelector(".huhn")?.getBoundingClientRect() || el.getBoundingClientRect();
-    grossH = document.createElement("div"); grossH.className = "huhn-gross"; grossH.setAttribute("aria-hidden", "true");
-    grossH.innerHTML = huhnSVG({ gr: 150, kopf: true, stimmung: "spricht" });
+    const jetztMs = Date.now(); mal = mal.filter(t => jetztMs - t < 8000).concat(jetztMs); const n = mal.length;
+    grossH = document.createElement("div"); grossH.className = "huhn-gross hg-guckt"; grossH.setAttribute("aria-hidden", "true");
+    const rot = `<path class="hg-rotkopf" d="M48 46 Q42 22 60 18 Q78 15 79 32 Q80 47 66 51 Q54 53 48 46Z" fill="#E2584A"/><g class="hg-striche" stroke="#B8382C" stroke-width="1.4" stroke-linecap="round"><path d="M53 40 L51 44"/><path d="M57 40.5 L55 44.5"/><path d="M61 41 L59 45"/></g>`;
+    grossH.innerHTML = `<div class="hg-dreh"><div class="hg-seite">${huhnSVG({ gr: 150, kopf: true, stimmung: "spricht" }).replace('<g class="huhn-augen">', rot + '<g class="huhn-augen">')}</div><div class="hg-vorn">${huhnFrontSVG(150)}</div></div>`;
     grossH.style.left = Math.min(innerWidth - 166, r.right + 8) + "px"; grossH.style.top = Math.max(8, r.top - 150) + "px";
+    const blase = t => { const b = document.createElement("span"); b.className = "hg-blase"; b.textContent = t; grossH.appendChild(b); };
+    let art;
+    const zuf = arr => arr[Math.floor(Math.random() * arr.length)];
+    if (n === 2) art = zuf(["rot", "cool", "frech"]);
+    else if (n === 3) art = zuf(["frage", "frech", "cool"]);
+    else if (n >= 4) art = "weg";
+    else art = zuf(["zwinkern", "kamm", "noten", "herz", "nicken", "cool", "frech"]);
+    if (art === "rot" && Math.random() < .5) blase(zuf(["Guck nicht so.", "Oh. Du schon wieder.", "Ich werd ja ganz verlegen."]));
+    if (art === "frage") blase(zuf(["Ist was?", "Hab ich was im Gesicht?", "Ich hab Körner gezählt. Was gibt's?"]));
+    if (art === "weg") blase(zuf(["Hmpf. Ich guck jetzt woandershin.", "Bin nicht da.", "Pause. Hühnerpause."]));
+    if (art === "cool") blase(zuf(["Läuft bei mir.", "Sonnenbrille. Weil ich’s kann.", "Ich bin aus Peru. Ich bin cool geboren.", "Autogramme gibt’s später."]));
+    if (art === "frech") blase(zuf(["Na, auch hier?", "Was guckst du? Ich bin handgemacht.", "Erst die Liste, dann das Hühnchen!", "Ich hab dich zuerst gesehen.", "Schon wieder du? Ich fühl mich geehrt."]));
+    grossH.classList.add("hg-" + art);
+    if (art === "noten" || art === "herz") for (let i = 0; i < 3; i++) { const z = document.createElement("span"); z.className = "hg-flug"; z.textContent = art === "noten" ? ["♪", "♫", "♪"][i] : "♥"; z.style.left = (95 + i * 14) + "px"; z.style.top = "40px"; z.style.animationDelay = (1950 + i * 160) + "ms"; z.style.setProperty("--dx", (8 + i * 10) + "px"); grossH.appendChild(z); }
     document.body.appendChild(grossH); langH = true; haptik("auswahl");
   };
   const weg = () => { clearTimeout(zeitH); if (grossH) { const g = grossH; g.classList.add("zu"); setTimeout(() => g.remove(), 220); grossH = null; } };
@@ -140,4 +167,50 @@ function postLaden() {
       f.innerHTML = `<svg viewBox="0 0 20 44" width="20" height="44"><path d="M10 43 L10 6" stroke="#8A5A2B" stroke-width="1.4"/><path d="M10 4 Q19 12 16 28 Q13 36 10 40 Q7 36 4 28 Q1 12 10 4Z" fill="#E4B24F"/><path d="M10 10 L15 16 M10 16 L15 22 M10 22 L14 28 M10 12 L5 18 M10 18 L5 24 M10 24 L6 30" stroke="#C9913C" stroke-width="1"/></svg>`;
       f.style.left = (h.left + h.width * .4) + "px"; f.style.top = (h.top + h.height * .4) + "px"; f.style.setProperty("--dx", (Math.random() * 120 - 60) + "px"); document.body.appendChild(f); setTimeout(() => f.remove(), 3200); }
   }, true);
+}
+
+/* ---------- Fürs Tagebuch: eine Frage aus dem, was heute in der App steht ---------- */
+const TB_FRAGEN = {
+  person: ["Was hat {P} erzählt, das du behalten willst?", "Worüber habt ihr gelacht, {P} und du?", "Was fragst du {P} beim nächsten Mal?"],
+  gehen: ["Was hast du unterwegs gesehen, das nächste Woche schon anders aussieht?", "Wer oder was ist dir unterwegs begegnet?", "Wie hat der Forst heute gerochen?"],
+  lesen: ["Welcher Satz oder welche Figur ist hängen geblieben?", "Was würdest du der Figur gern mal sagen?", "Wie geht's weiter, was meinst du?"],
+  musik: ["Welches Lied lief, und woran hat es dich erinnert?"],
+  hak: ["„{N}“ ist erledigt. War's leichter oder schwerer als gedacht?", "„{N}“ abgehakt. Wer sollte das erfahren?"],
+  moment: ["Dein schönster Moment heute: „{M}“. Wie kam's dazu?"],
+  allg: ["Was war heute das Beste, auch wenn's klein war?", "Worüber hast du heute den Kopf geschüttelt?", "Was soll morgen anders laufen als heute?", "Wen hättest du heute gern dabeigehabt, und wobei?", "Welches Wort passt zu heute?"]
+};
+function tbTag(h) { if (eintraegeAm(h).some(e => e.t !== "tagebuch") || S.momente[h]) return h; const g = tagPlus(h, -1); return eintraegeAm(g).length || S.momente[g] ? g : h; }
+function tbFragen(tag) {
+  const out = [], es = eintraegeAm(tag).filter(e => e.t !== "tagebuch" && e.notiz !== "App eingerichtet");
+  if (S.momente[tag]) out.push(...TB_FRAGEN.moment.map(f => f.replace("{M}", S.momente[tag])));
+  for (const e of es) {
+    const p = e.person && S.menschen.find(m => m.id === e.person);
+    if (p) out.push(...TB_FRAGEN.person.map(f => f.replace("{P}", p.name)));
+    else if (e.t === "abgehakt" && e.notiz) out.push(...TB_FRAGEN.hak.map(f => f.replace("{N}", e.notiz)));
+    else if (["gehen", "ausflug", "draussen"].includes(e.t) || e.draussen) out.push(...TB_FRAGEN.gehen);
+    else if (["lesen", "hoerbuch", "buchfertig"].includes(e.t)) out.push(...TB_FRAGEN.lesen);
+    else if (tat(e.t).bild === "tanz") out.push(...TB_FRAGEN.musik);
+  }
+  return [...new Set(out.concat(TB_FRAGEN.allg))];
+}
+function tagebuchKarte(h) {
+  const tag = tbTag(h), es = eintraegeAm(tag).filter(e => e.t !== "tagebuch" && e.notiz !== "App eingerichtet");
+  const was = [...new Set(es.map(e => e.t === "abgehakt" ? e.notiz : (e.person && (S.menschen.find(m => m.id === e.person) || {}).name ? `${tat(e.t).kurz || tat(e.t).name} (${S.menschen.find(m => m.id === e.person).name})` : tat(e.t).kurz || tat(e.t).name)))].filter(Boolean);
+  const fr = tbFragen(tag), i = (S.tbDreh || 0) % fr.length, schon = eintraegeAm(h).some(e => e.t === "tagebuch");
+  const wann = tag === h ? "Heute" : "Gestern";
+  return `<section class="abschnitt"><div class="bogen streifen k-geist tb-karte"><h3>Für dein Tagebuch</h3>
+    ${was.length ? `<p class="klein" style="margin:0 0 8px"><span style="font-weight:700">${wann} in der App:</span> ${esc(was.join(", "))}</p>` : `<p class="klein" style="margin:0 0 8px">Noch nichts eingetragen – eine Frage gibt's trotzdem.</p>`}
+    <p class="serif tb-frage">${esc(fr[i])}</p>
+    ${schon ? `<p class="klein" style="margin:10px 0 0">✓ Heute schon ins Tagebuch geschrieben. Hühnchen liest nicht mit, Ehrenwort.</p><div class="zeile" style="margin-top:8px"><button class="knopf klein leise" data-act="tb-andere">Andere Frage</button></div>`
+      : `<div class="zeile" style="gap:8px;flex-wrap:wrap;margin-top:10px"><button class="knopf klein haupt" data-act="tb-geschrieben">${ic("feder")} Hab's aufgeschrieben</button><button class="knopf klein leise" data-act="tb-andere">Andere Frage</button></div>`}
+  </div></section>`;
+}
+function tbAktion(a) {
+  if (a === "tb-andere") { S.tbDreh = (S.tbDreh || 0) + 1; speichern(); haptik("auswahl"); render({ halteScroll: true, ohneAnim: true }); return; }
+  if (a === "tb-geschrieben") {
+    const fr = tbFragen(tbTag(heute())), f = fr[(S.tbDreh || 0) % fr.length];
+    const r = eintragSpeichern({ t: "tagebuch", tag: heute(), min: 15, notiz: f });
+    if (r) { S.huhnSagt = { tag: heute(), text: ["Steht drin! Ich hab nicht reingeguckt. Fast nicht.", "Tagebuch geschrieben. Das Papier freut sich.", "Aufgeschrieben ist aufgehoben."][Math.floor(Math.random() * 3)] }; speichern(); nachEintrag(r); }
+    render({ halteScroll: true, ohneAnim: true });
+  }
 }

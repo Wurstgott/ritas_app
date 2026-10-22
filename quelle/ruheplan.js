@@ -1,5 +1,5 @@
 /* ============================================================
-   Mein Ruhe-Plan – für Momente, in denen es eng wird.
+   Mein Notfallplan – für Momente, in denen es eng wird.
    Bewusst allgemein formuliert (zu Hause oder unterwegs), ohne Anlass zu benennen.
    Es wird nie erfasst, WANN es eng war – nur das Üben zählt als Eintrag.
    Grundlage: „Mein kleiner Notfallplan bei Angst und Panik“ (von Max mitgegeben).
@@ -27,7 +27,7 @@ D.ruhe = {
   ],
   unterwegs: [
     { id: "pausen", text: "Pausen vorher einplanen" },
-    { id: "halt", text: "Wissen, wo ich anhalten oder aussteigen kann" },
+    { id: "halt", text: "Wissen, wo ich mich hinsetzen oder umkehren kann" },
     { id: "bescheid", text: "Jemand weiß, dass ich unterwegs bin" },
     { id: "ohren", text: "Musik oder Hörbuch dabei" },
     { id: "wasser", text: "Wasser und ein Bonbon in der Tasche" },
@@ -48,10 +48,10 @@ function ruheHilftListe() { const R = ruheP(); return [...D.ruhe.hilft.filter(h 
 function ruheUnterwegsListe() { const R = ruheP(); return [...D.ruhe.unterwegs.filter(h => R.unterwegs.includes(h.id)).map(h => h.text), ...(R.unterwegsEigen || [])]; }
 
 /* ---------- Übersicht ---------- */
-function ruheSheet() { sheet({ titel: "Mein Ruhe-Plan", inhalt: ruheInhalt(), id: "ruhe" }); }
+function ruheSheet() { sheet({ titel: "Mein Notfallplan", inhalt: ruheInhalt(), id: "ruhe" }); }
 function ruheInhalt() {
   const R = ruheP(), hilft = ruheHilftListe();
-  return `<p>${A("Für Momente, in denen es eng wird – zu Hause oder unterwegs. Am besten an ruhigen Tagen üben, gern auch mal auf einer Bank oder im Café. Dann sitzt es, wenn es drauf ankommt.", "Für Momente, in denen es eng wird – zu Hause oder unterwegs. Am besten an ruhigen Tagen üben, gern auch mal auf einer Bank oder im Café. Dann sitzt es, wenn es drauf ankommt.")}</p>
+  return `<p>${A("Wenn es eng wird – zu Hause oder unterwegs –, steht hier, was dann hilft. Geübt wird an ruhigen Tagen, dann sitzt es im Ernstfall.", "Wenn es eng wird – zu Hause oder unterwegs –, steht hier, was dann hilft. Geübt wird an ruhigen Tagen, dann sitzt es im Ernstfall.")}</p>
     <button class="knopf haupt voll" data-act="ruhe-jetzt">${ic("atem")} Jetzt Schritt für Schritt</button>
     <h3 style="margin-top:20px">Üben</h3><div class="liste">
       ${zeileBtn("atem", "Atmen üben", "2 Minuten, länger aus als ein", `data-act="ruhe-atmen"`, "k-ruhe")}
@@ -97,7 +97,7 @@ function ruheSchrittHTML() {
   const punkte = `<p class="sr">Schritt ${i + 1} von ${RUHE_SCHRITTE}</p><div class="ruhe-punkte" aria-hidden="true">${Array.from({ length: RUHE_SCHRITTE }, (_, k) => `<i class="${k <= i ? "an" : ""}"></i>`).join("")}</div>`;
   const gross = t => `<p class="ruhe-gross">${t}</p>`;
   let h = "";
-  if (i === 0) h = `<h2>Erst ein sicherer Platz</h2>${gross("Erst sicher stehen oder sitzen. Dann alles Weitere.")}<p>${A("Unterwegs: aufmerksam bleiben, langsamer werden und an der nächsten sicheren Stelle anhalten. Das Handy erst in die Hand nehmen, wenn du stehst. Zu Hause: hinsetzen, beide Füße auf den Boden.", "Unterwegs: aufmerksam bleiben, langsamer werden und an der nächsten sicheren Stelle anhalten. Das Handy erst in die Hand nehmen, wenn Sie stehen. Zu Hause: hinsetzen, beide Füße auf den Boden.")}</p>`;
+  if (i === 0) h = `<h2>Erst ein sicherer Platz</h2>${gross("Erst sicher stehen oder sitzen. Dann alles Weitere.")}<p>${A("Unterwegs: stehen bleiben oder die nächste Bank suchen. Zu Hause: hinsetzen, beide Füße auf den Boden.", "Unterwegs: stehen bleiben oder die nächste Bank suchen. Zu Hause: hinsetzen, beide Füße auf den Boden.")}</p>`;
   else if (i === 1) h = `<h2>Innehalten</h2>${gross("„Aha. Da ist sie, die Unruhe.“")}<p>Woher sie kommt, ist jetzt egal. Lösen muss ich auch nichts. Erst mal durchatmen.</p>`;
   else if (i === 2) h = `<h2>Atmen</h2>${atemKreisHTML()}<p class="klein" style="text-align:center">Ganz normal einatmen, nicht besonders tief. Langsam ausatmen, wie durch einen Strohhalm. Passt ein anderes Tempo besser, ist das richtig.</p>`;
   else if (i === 3) h = `<h2>Ankommen</h2><ul class="ruhe-fragen"><li>Was sehe ich gerade?</li><li>Was höre ich?</li><li>Was spüre ich unter Händen und Füßen?</li></ul><p class="klein">Ein paar Antworten reichen. Laut sagen hilft.</p>`;

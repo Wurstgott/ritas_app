@@ -102,6 +102,6 @@ setInterval(() => { if (!document.hidden && Date.now() - EI_SITZUNG > 600000 && 
 /* Zettel auf „Heute“ */
 function zettelHTML() {
   const z = S.zettel; if (!z || z.tag !== heute() || z.weg) return "";
-  const kopf = z.wer === "max" ? maxSVG(40) : z.wer === "huhn" ? huhnSVG({ gr: 40, kopf: true }) : `<span class="zettel-initial">${(EI_WER[z.wer] || "?")[0]}</span>`;
+  const kopf = z.wer === "max" ? maxSVG(40) : z.wer === "huhn" ? huhnSVG({ gr: 40, kopf: true }) : z.wer === "christiane" ? janeSVG(40) : z.wer === "micha" ? michaSVG(40) : `<span class="zettel-initial">${(EI_WER[z.wer] || "?")[0]}</span>`;
   return `<section class="abschnitt"><div class="zettel-notiz"><span class="zettel-nadel" aria-hidden="true"></span><div class="zeile" style="gap:10px;align-items:flex-start">${kopf}<div style="flex:1;min-width:0"><span class="klein" style="font-weight:700">${esc(EI_WER[z.wer] || "")}</span><p style="margin:2px 0 0">${esc(z.text)}</p></div></div><button class="knopf klein leise" data-act="zettel-weg" style="margin-top:6px">Schön, danke</button></div></section>`;
 }

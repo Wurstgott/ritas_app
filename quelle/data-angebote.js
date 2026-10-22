@@ -42,7 +42,7 @@ const neu = [
 "kategorie": "Tanz & Musik",
 "wann": "Di 17.11.2026, 15:00–18:00 (weitere: 26.1., 23.2., 23.3.2027)",
 "wo": "Seniorenklub Südpark, Weverstr. 38, 13595 Berlin",
-"text": "Einmal im Monat legt Thomas Biber auf – ein schöner Anlass, mit deinem Tanzschüler hinzufahren und zu sehen, wie sich das Geübte im echten Saal anfühlt.",
+"text": "Einmal im Monat legt Thomas Biber Tanzmusik auf. Mittanzen oder zuhören – beides geht.",
 "kosten": "4,00 € (Musikbeitrag)",
 "wc": null,
 "tel": "030 362 867 99",
@@ -386,11 +386,11 @@ const neu = [
 "pruefen": true
 },
 {
-"name": "Ehrenamt im Johannesstift – z. B. im Tanzcafé oder im Besuchsdienst „LeNa“",
+"name": "Ehrenamt im Johannesstift, z. B. im Tanzcafé",
 "kategorie": "Ehrenamt",
 "wann": "nach Absprache; Infos bei der Ehrenamtskoordination",
 "wo": "Ev. Johannesstift, Amanda-Wichern-Haus (Haus 12), Schönwalder Allee 26, 13587 Berlin",
-"text": "Du bringst schon einem Nachbarn das Tanzen bei – im Tanzcafé des Johannesstifts kannst du genau das weitergeben, und das gleich um die Ecke. Engagierte bekommen außerdem Ausflüge und eine Weihnachtsfeier.",
+"text": "Das Tanzcafé im Johannesstift sucht Leute, die mit anpacken – gleich um die Ecke. Wer mitmacht, wird auch zu Ausflügen und zur Weihnachtsfeier eingeladen.",
 "kosten": "kostenlos",
 "wc": null,
 "tel": "030 33609-173",

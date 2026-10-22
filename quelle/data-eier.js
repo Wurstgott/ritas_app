@@ -2,13 +2,13 @@
 D.eier = {
 "huhn-nachtschicht": {
 "wer": "huhn",
-"text": "Nachtschicht? Ich auch. Meine Augen gehen sowieso nicht zu. Fehler beim Brennen.",
+"text": "Nachtschicht? Ich auch. Meine Augen sind aufgemalt, die gehen sowieso nicht zu.",
 "form": "sprechblase",
 "selten": 0.5
 },
 "huhn-zehn-minuten": {
 "wer": "huhn",
-"text": "Wir zwei sind schon eine ganze Weile hier drin. Ich steh ja gern rum. Aber das Lesezeichen da drüben guckt schon ganz beleidigt.",
+"text": "Wir zwei sind schon eine ganze Weile in der App. Ich steh ja gern rum. Aber dein Buch da drüben guckt schon ganz beleidigt.",
 "form": "toast",
 "selten": 0.5
 },

@@ -614,3 +614,276 @@ h2, h3 { font-weight: 620; }
 .huhn-karte { -webkit-touch-callout: none; user-select: none; }
 .tf-kurz { flex: 1; min-width: 0; }
 .tf-kurz + .knopf { flex: none; }
+/* Hühnchen groß: sofort eine kleine Animation */
+.huhn-gross .huhn-kopf { transform-box: fill-box; transform-origin: 40% 90%; }
+.huhn-gross.hg-zwinkern .lider { animation: hg-zwink 1.2s ease-in-out .2s 2; }
+@keyframes hg-zwink { 0%, 30%, 100% { opacity: 0; } 10%, 22% { opacity: 1; } }
+.huhn-gross.hg-kamm .huhn-kamm { transform-box: fill-box; transform-origin: 50% 100%; animation: hg-kamm .35s ease-in-out .15s 5 alternate; }
+@keyframes hg-kamm { to { transform: rotate(14deg) translateY(-2px); } }
+.huhn-gross.hg-nicken .huhn-kopf { animation: hg-nick .45s ease-in-out .15s 4 alternate; }
+@keyframes hg-nick { to { transform: rotate(-9deg) translateY(3px); } }
+.huhn-gross.hg-herz .froh, .huhn-gross.hg-noten .froh { display: inline !important; }
+.huhn-gross.hg-herz .pupillen, .huhn-gross.hg-noten .pupillen { display: none; }
+.hg-flug { position: absolute; font-size: 22px; color: #C8372D; opacity: 0; animation: hg-flug 1.4s ease-out forwards; }
+.hg-noten .hg-flug { color: #1F4A34; }
+@keyframes hg-flug { 0% { opacity: 0; transform: translate(0, 10px) scale(.6); } 20% { opacity: 1; } 100% { opacity: 0; transform: translate(var(--dx), -50px) scale(1.2); } }
+.huhn-gross.hg-herz .huhn-augen > ellipse, .huhn-gross.hg-noten .huhn-augen > ellipse { display: none; }
+/* Wortmarke in Schreibschrift */
+.wm-text { font-family: "Dancing Script", "Fraunces", cursive; text-transform: none; letter-spacing: 0; font-size: 1.8em; font-weight: 700; line-height: 1; color: var(--moos); font-variation-settings: "wght" 700; }
+/* Spaß-Telefon */
+.tel-wahl { display: grid; grid-template-columns: repeat(3, 1fr); gap: 10px; }
+.tel-kontakt { position: relative; display: grid; justify-items: center; gap: 6px; padding: 14px 6px; border: 0; border-radius: 16px; background: var(--bogen); box-shadow: var(--schatten-2); color: var(--tinte); font: inherit; cursor: pointer; text-align: center; }
+.tel-kontakt .titel { font-weight: 800; } .tel-kontakt .unter { font-size: .78rem; color: var(--tinte-2); line-height: 1.2; }
+.tel-initial { display: grid; place-items: center; border-radius: 50%; background: #E8B4A0; color: #5A2A1E; font-family: Fraunces, Georgia, serif; font-weight: 700; flex: none; }
+.tel-klingel { text-align: center; padding: 20px 0; }
+.tel-klingel > :first-child { animation: tel-wackel .5s ease-in-out infinite; display: inline-block; }
+@keyframes tel-wackel { 0%, 100% { transform: rotate(0); } 25% { transform: rotate(-6deg); } 75% { transform: rotate(6deg); } }
+.tel-kopf { display: flex; gap: 10px; align-items: center; padding-bottom: 10px; border-bottom: 1px solid var(--mulde); }
+.tel-verlauf { display: grid; gap: 8px; padding: 12px 0; }
+.tel-zeile { display: flex; gap: 6px; align-items: flex-end; }
+.tel-zeile.rita { justify-content: flex-end; }
+.tel-mini { flex: none; width: 30px; height: 30px; display: grid; place-items: center; overflow: hidden; border-radius: 50%; }
+.tel-blase { max-width: 78%; padding: 8px 12px; border-radius: 16px; background: var(--mulde); font-family: Fraunces, Georgia, serif; font-weight: 400; line-height: 1.4; animation: einschieben .2s ease-out both; }
+.tel-zeile.rita .tel-blase { background: color-mix(in srgb, var(--moos) 18%, var(--bogen)); border-bottom-right-radius: 4px; }
+.tel-zeile.fig .tel-blase { border-bottom-left-radius: 4px; }
+.tel-zeile.tippt .tel-blase { opacity: .6; letter-spacing: .2em; }
+.tel-antworten { display: grid; gap: 8px; margin-top: 6px; }
+.tel-antworten .knopf { justify-content: flex-start; text-align: left; font-family: Nunito, system-ui, sans-serif; }
+.portrait-gross .winkarm { transform-box: view-box; transform-origin: 76px 100px; opacity: 0; animation: arm-hoch 2.2s ease-in-out forwards; }
+@keyframes arm-hoch { 0% { opacity: 0; transform: rotate(25deg) translateY(16px); } 15% { opacity: 1; transform: rotate(0) translateY(0); } 85% { opacity: 1; transform: rotate(0); } 100% { opacity: 0; transform: rotate(25deg) translateY(16px); } }
+.portrait-gross .winkhand { transform-box: view-box; transform-origin: 82px 66px; animation: hand-wink .32s ease-in-out .3s 5 alternate; }
+@keyframes hand-wink { from { transform: rotate(-14deg); } to { transform: rotate(14deg); } }
+.portrait-hand { display: none; }
+/* Hühnchen groß: erst angucken, dann sofort etwas Witziges; beim 2./3./4. Mal anders */
+.huhn-gross .hg-rotkopf, .huhn-gross .hg-striche { opacity: 0; }
+.huhn-gross.hg-guckt .pupillen { animation: hg-guck 1.5s ease-out both; }
+@keyframes hg-guck { 0% { transform: translate(0, 0); } 10%, 75% { transform: translate(-3.2px, .8px); } 100% { transform: translate(-1px, 0); } }
+.huhn-gross.hg-guckt .huhn-kopf { animation: hg-ruck .22s ease-out; }
+@keyframes hg-ruck { 0% { transform: rotate(4deg); } 60% { transform: rotate(-3deg); } 100% { transform: rotate(0); } }
+.huhn-gross.hg-zwinkern .lider { animation-delay: .45s; }
+.huhn-gross.hg-kamm .huhn-kamm, .huhn-gross.hg-nicken .huhn-kopf { animation-delay: .4s; }
+.huhn-gross.hg-nicken .huhn-kopf { animation: hg-ruck .22s ease-out, hg-nick .4s ease-in-out .35s 4 alternate; }
+.huhn-gross.hg-rot .hg-rotkopf { animation: hg-rot 2.4s ease-in-out .25s both; }
+.huhn-gross.hg-rot .hg-striche { animation: hg-rot 2.4s ease-in-out .45s both; }
+@keyframes hg-rot { 0% { opacity: 0; } 25%, 80% { opacity: .78; } 100% { opacity: .5; } }
+.huhn-gross.hg-rot .pupillen { animation: hg-verlegen 2.4s ease-in-out both; }
+@keyframes hg-verlegen { 0% { transform: translate(0, 0); } 10% { transform: translate(-3px, .8px); } 30%, 100% { transform: translate(1.5px, 3px); } }
+.huhn-gross.hg-frage .huhn-kopf { animation: hg-ruck .22s ease-out, hg-schief .5s ease-out .3s forwards; }
+@keyframes hg-schief { to { transform: rotate(-12deg); } }
+.huhn-gross.hg-frage .huhn-kamm { transform-box: fill-box; transform-origin: 50% 100%; animation: hg-kamm .3s ease-in-out .5s 2 alternate; }
+.huhn-gross.hg-weg svg { animation: hg-wegdreh .35s ease-in .55s forwards; }
+@keyframes hg-wegdreh { to { transform: scaleX(-1); } }
+.huhn-gross.hg-weg .pupillen { animation: hg-guck 1.5s ease-out both; }
+.hg-blase { position: absolute; left: 40%; top: -14px; transform: translateX(-30%); background: var(--bogen, #fffaf0); color: var(--text, #1c2620); border: 1.5px solid rgba(0,0,0,.15); border-radius: 14px; padding: 5px 10px; font: 700 15px/1.25 Nunito, system-ui, sans-serif; width: max-content; max-width: 170px; text-align: center; box-shadow: 0 4px 12px rgba(0,0,0,.15); opacity: 0; animation: hg-blase .3s ease-out .4s forwards; }
+@keyframes hg-blase { from { opacity: 0; transform: translate(-30%, 6px) scale(.8); } to { opacity: 1; transform: translate(-30%, 0) scale(1); } }
+@media (prefers-reduced-motion: reduce) { .huhn-gross .hg-blase { animation: none; opacity: 1; } .huhn-gross.hg-rot .hg-rotkopf { opacity: .7; } }
+.tb-frage { font-size: 1.15rem; line-height: 1.35; margin: 4px 0 0; text-wrap: balance; }
+
+/* Entdecken: Lupe über dem großen Bild */
+#buehne-gross { touch-action: none; -webkit-user-select: none; user-select: none; -webkit-touch-callout: none; }
+.entdeck-hinweis { margin: 8px 4px 0; text-align: center; font-style: italic; }
+.entdeck-hinweis.gefunden { font-style: normal; opacity: .85; }
+.lupe { position: fixed; left: 0; top: 0; z-index: 900; width: 120px; pointer-events: none; opacity: 0; transform: scale(.6) translateY(16px); transform-origin: 50% 100%; transition: opacity .16s ease, transform .2s cubic-bezier(.3,1.4,.5,1); }
+.lupe.an { opacity: 1; transform: none; }
+.lupe canvas { display: block; width: 120px; height: 120px; border-radius: 50%; background: #F3EDE0; box-shadow: 0 0 0 4px #FBF7EE, 0 0 0 5.5px rgba(60,48,32,.35), 0 10px 26px rgba(20,28,24,.35); }
+.lupe-text { position: absolute; top: 132px; left: 50%; transform: translateX(-50%); width: max-content; max-width: 220px; padding: 5px 10px; border-radius: 10px; background: #FBF7EE; color: #2E2A24; font-size: 15px; line-height: 1.3; text-align: center; box-shadow: 0 4px 14px rgba(20,28,24,.25); }
+@media (prefers-reduced-motion: reduce) { .lupe { transition: none; transform: none; } }
+.idee-schritte { margin: 8px 0 4px; padding-left: 1.4em; display: grid; gap: 6px; }
+/* Toast: Rückgängig klein, Daumen hoch groß */
+.toast .knopf.rueck-mini { background: transparent; color: var(--papier); min-height: 44px; padding: 4px 6px; font-size: .82rem; font-weight: 600; opacity: .75; text-decoration: underline; text-underline-offset: 3px; margin-right: auto; }
+.toast .knopf.rueck-mini ~ .knopf.zu { margin-right: 0; }
+.toast .knopf.daumen { min-width: 64px; padding: 6px 14px; }
+.toast .knopf.daumen svg { color: #2F7A4F; }
+.toast.weg { animation: toast-weg .25s ease-in forwards; }
+@keyframes toast-weg { to { opacity: 0; transform: translateY(12px) scale(.97); } }
+.daumen-flug { position: fixed; z-index: 90; pointer-events: none; width: 40px; height: 40px; color: #2F7A4F; animation: daumen-flug 1.3s cubic-bezier(.2,.8,.3,1) forwards; }
+.daumen-flug svg { width: 40px; height: 40px; filter: drop-shadow(0 2px 3px rgba(0,0,0,.2)); }
+@keyframes daumen-flug { 0% { opacity: 0; transform: translateY(10px) scale(.5) rotate(-10deg); } 20% { opacity: 1; transform: translateY(-20px) scale(1.25) rotate(8deg); } 100% { opacity: 0; transform: translateY(-140px) scale(1) rotate(-4deg); } }
+/* Brieffreundin Karin */
+.bv-kopf { display: flex; gap: 12px; align-items: center; margin-bottom: 14px; }
+.bv-umschlag { position: relative; display: block; width: 100%; min-height: 150px; border: none; border-radius: 10px; cursor: pointer; text-align: left; padding: 18px; background: #F6EBD6; color: #2A2A22; box-shadow: 0 6px 16px rgba(0,0,0,.14); background-image: repeating-linear-gradient(135deg, #2F5E8E 0 10px, #F6EBD6 10px 20px, #D2382E 20px 30px, #F6EBD6 30px 40px); background-size: 100% 8px; background-repeat: no-repeat; }
+.bv-umschlag::after { content: ""; position: absolute; inset: 8px 0 0; background: #F6EBD6; border-radius: 0 0 10px 10px; z-index: 0; }
+.bv-umschlag > span { position: relative; z-index: 1; }
+.bv-marke { position: absolute !important; right: 16px; top: 22px; width: 58px; height: 70px; display: grid; place-items: end center; padding-bottom: 6px; font: 700 9px/1 Nunito, sans-serif; letter-spacing: .08em; color: #F2C230; background: #2F5E8E; border: 3px dotted #F6EBD6; outline: 1px solid #2F5E8E; background-image: linear-gradient(#F2C230, #F2C230), linear-gradient(#F2C230, #F2C230); background-size: 100% 8px, 8px 100%; background-position: 0 26px, 18px 0; background-repeat: no-repeat; transform: rotate(4deg); }
+.bv-an { display: block; margin-top: 40px; font-family: "Dancing Script", cursive; font-size: 1.5rem; line-height: 1.2; }
+.bv-auf { display: inline-block; margin-top: 14px; font-weight: 700; color: #1F4A34; text-decoration: underline; text-underline-offset: 4px; }
+.bv-verlauf { display: grid; gap: 10px; padding: 12px 0; }
+.bv-zeile { display: flex; }
+.bv-zeile.rita { justify-content: flex-end; }
+.bv-papier { max-width: 86%; padding: 12px 14px; background: #FBF5E8; color: #2A2A22; border-radius: 4px; box-shadow: 0 2px 6px rgba(0,0,0,.12); background-image: repeating-linear-gradient(transparent 0 27px, rgba(47,94,142,.13) 27px 28px); animation: einschieben .25s ease-out both; transform: rotate(-.6deg); }
+.bv-papier.rita { background-color: #EEF3EA; transform: rotate(.5deg); }
+.bv-papier.tippt { opacity: .6; font-style: italic; }
+.bv-sv { display: block; font-family: Fraunces, Georgia, serif; font-size: 1.08rem; line-height: 1.5; }
+.bv-de { display: block; margin-top: 6px; font-size: .9rem; color: #5A5A4E; border-top: 1px dashed rgba(0,0,0,.18); padding-top: 6px; }
+.bv-ue { margin-top: 6px; padding: 4px 0; min-height: 32px; background: none; border: none; color: #2F5E8E; font: 600 .85rem Nunito, sans-serif; text-decoration: underline; text-underline-offset: 3px; cursor: pointer; }
+.bv-antwort { flex-direction: column; align-items: flex-start; gap: 2px; }
+.bv-antwort span[lang] { font-family: Fraunces, Georgia, serif; }
+.bv-de-k { font-weight: 400; font-size: .82rem; opacity: .75; }
+.bv-ord { margin-top: 12px; padding: 12px 14px; border-radius: 12px; background: color-mix(in srgb, #2F5E8E 12%, var(--bogen)); border-left: 5px solid #F2C230; }
+/* Lesen & Bücherregal */
+.buch-cover { display: block; border-radius: 4px; box-shadow: 2px 3px 8px rgba(0,0,0,.22); flex: none; }
+.buch-zeile { display: flex; gap: 12px; align-items: flex-start; padding: 10px 0; border-bottom: 1px solid var(--mulde); }
+.regal { display: flex; flex-wrap: wrap; gap: 12px 10px; padding: 12px 10px 14px; border-radius: 8px; background: linear-gradient(transparent calc(100% - 10px), #8A6A45 calc(100% - 10px)); background-color: color-mix(in srgb, #8A6A45 12%, var(--bogen)); }
+.regal-buch { padding: 0; border: none; background: none; cursor: pointer; border-radius: 4px; }
+.buch-tipp { display: flex; gap: 12px; align-items: flex-start; }
+/* Wortmarke: Handschrift mit Schwung und Farbe */
+:root { --wm-a: #C8462F; --wm-b: #D9822B; --wm-c: #1F4A34; --wm-swash: #D9822B; }
+@media (prefers-color-scheme: dark) { :root:not([data-theme="light"]) { --wm-a: #F08A6C; --wm-b: #F2B35A; --wm-c: #9FD3A8; --wm-swash: #F2B35A; } }
+:root[data-theme="dark"] { --wm-a: #F08A6C; --wm-b: #F2B35A; --wm-c: #9FD3A8; --wm-swash: #F2B35A; }
+.wm-text { position: relative; font-family: "Kaushan Script", "Dancing Script", cursive; font-weight: 400; font-variation-settings: normal; font-size: 2.05em; line-height: 1.15; padding: 0 .12em .12em .02em; transform: rotate(-4deg); transform-origin: left center;
+  background: linear-gradient(100deg, var(--wm-a) 0%, var(--wm-b) 48%, var(--wm-c) 100%); -webkit-background-clip: text; background-clip: text; color: transparent; }
+.wm-text::after { content: ""; position: absolute; left: 4%; right: -2%; bottom: -.12em; height: .32em; background: var(--wm-swash); opacity: .8;
+  -webkit-mask: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 200 20' preserveAspectRatio='none'%3E%3Cpath d='M2 14 C40 4 90 2 130 8 S185 16 198 4 C186 18 140 14 120 12 C80 8 40 10 2 14Z' fill='%23000'/%3E%3C/svg%3E") center / 100% 100% no-repeat;
+  mask: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 200 20' preserveAspectRatio='none'%3E%3Cpath d='M2 14 C40 4 90 2 130 8 S185 16 198 4 C186 18 140 14 120 12 C80 8 40 10 2 14Z' fill='%23000'/%3E%3C/svg%3E") center / 100% 100% no-repeat; }
+.portrait-gross svg { overflow: visible; }
+.portrait-gross .winkarm { transform-origin: 78px 86px; }
+.portrait-gross .winkunter { transform-box: view-box; transform-origin: 95px 97px; animation: unterarm-wink .36s ease-in-out .3s 5 alternate; }
+@keyframes unterarm-wink { from { transform: rotate(-9deg); } to { transform: rotate(9deg); } }
+.portrait-gross .winkhand { transform-origin: 93px 70px; animation: hand-wink .36s ease-in-out .3s 5 alternate-reverse; }
+@keyframes hand-wink { from { transform: rotate(-6deg); } to { transform: rotate(6deg); } }
+@media (max-width: 370px) { .wm-text { font-size: 1.62em; } }
+/* Hühnchen dreht den Kopf zum Betrachter: Seite schrumpft weg, Vorderansicht klappt auf */
+.hg-dreh { position: relative; width: 150px; height: 150px; }
+.hg-dreh > div { position: absolute; inset: 0; }
+.hg-seite { animation: hg-seite-weg .16s ease-in .12s forwards; transform-origin: 50% 50%; }
+.hg-vorn { transform: scaleX(0); animation: hg-vorn-her .2s cubic-bezier(.3,1.4,.5,1) .28s forwards; transform-origin: 50% 50%; }
+@keyframes hg-seite-weg { to { transform: scaleX(.08) translateX(-6px); opacity: 0; } }
+@keyframes hg-vorn-her { from { transform: scaleX(.08); } to { transform: scaleX(1); } }
+.huhn-gross .hg-vorn .pupillen { animation: hg-gross-pupille 1.4s ease-out .3s both; transform-box: fill-box; transform-origin: center; }
+@keyframes hg-gross-pupille { 0% { transform: scale(1); } 15% { transform: scale(1.18); } 100% { transform: scale(1.05); } }
+.huhn-gross.hg-guckt .hg-seite .pupillen { animation: none; }
+.huhn-gross.hg-rot .hg-vorn .pupillen { animation: hg-verlegen-v 2.4s ease-in-out .3s both; transform-box: view-box; }
+@keyframes hg-verlegen-v { 0%, 20% { transform: translate(0, 0); } 40%, 100% { transform: translate(-2.5px, 3.2px); } }
+/* „weg“: erst angucken, dann beleidigt zurück in die Seitenansicht, abgewandt */
+.huhn-gross.hg-weg svg { animation: none; }
+.huhn-gross.hg-weg .hg-vorn { animation: hg-vorn-her .2s cubic-bezier(.3,1.4,.5,1) .28s forwards, hg-seite-weg .16s ease-in 1.0s forwards; }
+.huhn-gross.hg-weg .hg-seite { animation: hg-seite-weg .16s ease-in .12s forwards, hg-abgewandt .2s ease-out 1.16s forwards; }
+@keyframes hg-abgewandt { from { transform: scaleX(-.08); opacity: 1; } to { transform: scaleX(-1); opacity: 1; } }
+@media (prefers-reduced-motion: reduce) { .hg-seite { display: none; } .hg-vorn { transform: none; animation: none; } }
+/* Noten/Herz: erst angucken, dann glücklich die Augen zukneifen */
+.huhn-gross.hg-herz .froh, .huhn-gross.hg-noten .froh { opacity: 0; animation: hg-an 0s linear .8s forwards; }
+.huhn-gross.hg-herz .pupillen, .huhn-gross.hg-noten .pupillen, .huhn-gross.hg-herz .huhn-augen > ellipse, .huhn-gross.hg-noten .huhn-augen > ellipse { display: inline !important; animation: hg-aus 0s linear .8s forwards !important; }
+@keyframes hg-an { to { opacity: 1; } }
+@keyframes hg-aus { to { opacity: 0; } }
+.huhn-gross.hg-herz .hg-flug, .huhn-gross.hg-noten .hg-flug { animation-delay: .85s; }
+.luft-marke { display: inline-block; margin: 0 0 8px; padding: 2px 10px; border-radius: 999px; font-size: .8rem; font-weight: 700; }
+.luft-aussen { background: color-mix(in srgb, #4E8A4A 18%, var(--bogen)); color: #2F5E2C; }
+.luft-weit { background: color-mix(in srgb, #2F5E8E 15%, var(--bogen)); color: #24496E; }
+.luft-voll { background: color-mix(in srgb, #C8462F 14%, var(--bogen)); color: #8E2F1E; }
+@media (prefers-color-scheme: dark) { :root:not([data-theme="light"]) .luft-aussen { color: #A8D8A2; } :root:not([data-theme="light"]) .luft-weit { color: #A9C8EA; } :root:not([data-theme="light"]) .luft-voll { color: #F2A894; } }
+:root[data-theme="dark"] .luft-aussen { color: #A8D8A2; } :root[data-theme="dark"] .luft-weit { color: #A9C8EA; } :root[data-theme="dark"] .luft-voll { color: #F2A894; }
+/* Film & Fernsehen */
+.tv-zeit { font-size: .82rem; font-weight: 700; letter-spacing: .02em; color: var(--tinte-leise, #5A5A4E); }
+.tv-genre { display: inline-block; padding: 1px 9px; border-radius: 999px; font-size: .78rem; font-weight: 700; background: color-mix(in srgb, #8E2F3C 14%, var(--bogen)); }
+/* Hühnchen: erst eine Weile seitlich (blinzeln, umgucken), dann ganz in Ruhe zum Betrachter drehen */
+.hg-seite { animation: hg-seite-weg .22s ease-in 1.05s forwards; }
+.hg-vorn { animation: hg-vorn-her .26s cubic-bezier(.3,1.3,.5,1) 1.25s forwards; }
+.huhn-gross .hg-seite .pupillen { animation: hg-umgucken 1s ease-in-out .15s both !important; }
+@keyframes hg-umgucken { 0% { transform: translate(0, 0); } 30% { transform: translate(2px, -1px); } 60% { transform: translate(-2px, .5px); } 100% { transform: translate(-1px, 0); } }
+.huhn-gross .hg-seite .lider { animation: hg-zwink .5s ease-in-out .7s 1 !important; }
+.huhn-gross .hg-vorn .pupillen { animation-delay: 1.3s; }
+.huhn-gross.hg-zwinkern .hg-vorn .lider { animation-delay: 1.75s; }
+.huhn-gross.hg-kamm .hg-vorn .huhn-kamm { animation-delay: 1.7s; }
+.huhn-gross.hg-nicken .hg-vorn .huhn-kopf { animation: hg-nick .4s ease-in-out 1.7s 4 alternate; }
+.huhn-gross.hg-herz .froh, .huhn-gross.hg-noten .froh { animation-delay: 1.9s; }
+.huhn-gross.hg-herz .pupillen, .huhn-gross.hg-noten .pupillen, .huhn-gross.hg-herz .huhn-augen > ellipse, .huhn-gross.hg-noten .huhn-augen > ellipse { animation-delay: 1.9s !important; }
+.huhn-gross.hg-rot .hg-rotkopf { animation-delay: 1.6s; } .huhn-gross.hg-rot .hg-striche { animation-delay: 1.8s; }
+.huhn-gross.hg-rot .hg-vorn .pupillen { animation-delay: 1.3s; }
+.huhn-gross .hg-blase { animation-delay: 1.5s; }
+.huhn-gross.hg-frage .hg-vorn .huhn-kopf { animation: hg-schief .5s ease-out 1.6s forwards; }
+.huhn-gross.hg-frage .hg-vorn .huhn-kamm { animation-delay: 1.8s; }
+.huhn-gross.hg-weg .hg-vorn { animation: hg-vorn-her .26s cubic-bezier(.3,1.3,.5,1) 1.25s forwards, hg-seite-weg .16s ease-in 2.2s forwards; }
+.huhn-gross.hg-weg .hg-seite { animation: hg-seite-weg .22s ease-in 1.05s forwards, hg-abgewandt .2s ease-out 2.36s forwards; }
+/* Wortmarke ruhiger: eine Farbe, kein Schwung, Großbuchstaben dürfen sich hervortun */
+.wm-text { background: none; -webkit-background-clip: border-box; background-clip: border-box; color: var(--moos); transform: none; font-size: 1.75em; padding: 0; line-height: 1.1; }
+.wm-text::after { content: none; display: none; }
+.wm-kap { font-size: 1.38em; line-height: .8; margin-right: -.02em; }
+.logo-knopf { width: 76px; height: 76px; }
+@media (max-width: 370px) { .wm-text { font-size: 1.45em; } .logo-knopf { width: 64px; height: 64px; } .logo-knopf svg { width: 60px; height: 60px; } }
+.wm-text { display: inline-block; white-space: nowrap; font-size: min(1.75em, 7.4vw); }
+.wortmarke { min-width: 0; }
+@media (max-width: 370px) { .wm-text { font-size: 6.6vw; } }
+.logo-knopf, .huhn-karte .huhn { touch-action: none; -webkit-touch-callout: none; -webkit-user-select: none; user-select: none; }
+.portrait-gross .winkarm { transform-origin: 80px 88px; }
+.portrait-gross .winkunter { transform-origin: 90px 110px; animation-name: unterarm-wink2; }
+@keyframes unterarm-wink2 { from { transform: rotate(-7deg); } to { transform: rotate(7deg); } }
+.portrait-gross .winkhand { transform-origin: 92px 71px; }
+@keyframes arm-hoch { 0% { opacity: 0; transform: translateY(26px); } 15% { opacity: 1; transform: translateY(0); } 85% { opacity: 1; transform: translateY(0); } 100% { opacity: 0; transform: translateY(26px); } }
+.portrait-gross .winkunter { transform-origin: 88px 110px; } .portrait-gross .winkhand { transform-origin: 89px 71px; }
+.wi-tee summary { cursor: pointer; list-style: none; } .wi-tee summary::-webkit-details-marker { display: none; }
+.idee-gedicht { margin: 10px 0; }
+.link-knopf { background: none; border: 0; padding: 0; color: var(--moos); font: inherit; font-weight: 700; text-decoration: underline; text-underline-offset: 3px; cursor: pointer; }
+/* Hühnchen von vorn: etwas mehr Ausdruck (Squash & Stretch, Augenbrauen, Pupillen-Plopp) */
+.hg-vorn svg { transform-origin: 50% 85%; animation: hg-plopp .5s cubic-bezier(.3,1.6,.5,1) 1.25s both; }
+@keyframes hg-plopp { 0% { transform: scale(1.1, .88); } 45% { transform: scale(.95, 1.07); } 100% { transform: scale(1, 1); } }
+.huhn-gross .hg-brauen path { transform-box: fill-box; transform-origin: center; }
+.huhn-gross .hg-vorn .hg-brauen { animation: hg-brauen-hoch 1.2s ease-out 1.35s both; }
+@keyframes hg-brauen-hoch { 0% { transform: translateY(0); } 20% { transform: translateY(-3.2px); } 70% { transform: translateY(-3.2px); } 100% { transform: translateY(-.8px); } }
+.huhn-gross .hg-vorn .pupillen { animation: hg-gross-pupille2 1.4s ease-out 1.3s both; }
+@keyframes hg-gross-pupille2 { 0% { transform: scale(.8); } 18% { transform: scale(1.28); } 60% { transform: scale(1.12); } 100% { transform: scale(1.06); } }
+.huhn-gross .hg-vorn .huhn-schnabel .unten { transform-box: fill-box; transform-origin: 50% 0; animation: hg-schnabel-auf .9s ease-in-out 1.45s both; }
+@keyframes hg-schnabel-auf { 0%, 100% { transform: scaleY(1); } 25%, 60% { transform: scaleY(1.7) translateY(.6px); } }
+.huhn-gross.hg-rot .hg-vorn .braue-l { animation: hg-braue-traurig-l .6s ease-out 1.6s both; } .huhn-gross.hg-rot .hg-vorn .braue-r { animation: hg-braue-traurig-r .6s ease-out 1.6s both; }
+@keyframes hg-braue-traurig-l { to { transform: rotate(-16deg) translateY(1px); } } @keyframes hg-braue-traurig-r { to { transform: rotate(16deg) translateY(1px); } }
+.huhn-gross.hg-frage .hg-vorn .braue-r { animation: hg-braue-frage .5s ease-out 1.6s both; }
+@keyframes hg-braue-frage { to { transform: translateY(-4px) rotate(-8deg); } }
+.huhn-gross.hg-weg .hg-vorn .braue-l { animation: hg-braue-boese-l .4s ease-out 1.7s both; } .huhn-gross.hg-weg .hg-vorn .braue-r { animation: hg-braue-boese-r .4s ease-out 1.7s both; }
+@keyframes hg-braue-boese-l { to { transform: rotate(18deg) translateY(1.5px); } } @keyframes hg-braue-boese-r { to { transform: rotate(-18deg) translateY(1.5px); } }
+.huhn-gross.hg-herz .hg-vorn svg, .huhn-gross.hg-noten .hg-vorn svg { animation: hg-plopp .5s cubic-bezier(.3,1.6,.5,1) 1.25s both, hg-wipp .5s ease-in-out 1.9s 3 alternate; }
+@keyframes hg-wipp { from { transform: rotate(-5deg); } to { transform: rotate(5deg); } }
+@media (prefers-reduced-motion: reduce) { .hg-vorn svg, .huhn-gross .hg-brauen, .huhn-gross .hg-vorn .pupillen { animation: none !important; } }
+/* Hühnchen cool & frech */
+.huhn-gross .hg-brille { transform-box: view-box; }
+.huhn-gross.hg-cool .hg-vorn .hg-brille { animation: hg-brille-runter .45s cubic-bezier(.3,1.5,.5,1) 1.7s both; }
+@keyframes hg-brille-runter { from { opacity: 1; transform: translateY(-22px); } to { opacity: 1; transform: translateY(0); } }
+.huhn-gross.hg-cool .hg-vorn .hg-brauen { animation: hg-brauen-hoch 1.2s ease-out 1.35s both, hg-aus 0s linear 1.9s forwards; }
+.huhn-gross.hg-cool .hg-vorn svg { animation: hg-plopp .5s cubic-bezier(.3,1.6,.5,1) 1.25s both, hg-cool-nick .5s ease-in-out 2.2s 2 alternate; }
+@keyframes hg-cool-nick { to { transform: rotate(-6deg) translateY(1px); } }
+.huhn-gross.hg-frech .hg-vorn .hg-lid-r { animation: hg-zwink-frech 1.1s ease-in-out 1.75s both; }
+@keyframes hg-zwink-frech { 0% { opacity: 0; } 15%, 70% { opacity: 1; } 100% { opacity: 0; } }
+.huhn-gross.hg-frech .hg-vorn .braue-l { animation: hg-braue-frage .4s ease-out 1.7s both; }
+.huhn-gross.hg-frech .hg-vorn svg { animation: hg-plopp .5s cubic-bezier(.3,1.6,.5,1) 1.25s both, hg-frech-kipp .35s ease-out 1.7s forwards; }
+@keyframes hg-frech-kipp { to { transform: rotate(9deg); } }
+.huhn-gross.hg-frech .hg-vorn .huhn-schnabel .unten { animation: hg-schnabel-auf .9s ease-in-out 1.45s both, hg-schnabel-grins .3s ease-in-out 1.9s 4 alternate; }
+@keyframes hg-schnabel-grins { to { transform: scaleY(1.9) translateY(.8px); } }
+/* Figuren: immer ein bisschen lebendig – blinzeln, und beim Sprechen bewegt sich der Mund */
+.portrait .augen { transform-box: fill-box; transform-origin: center; animation: fig-blinzeln 5.4s ease-in-out infinite; }
+.portrait.max .augen { animation-delay: 1.3s; } .portrait.jane .augen { animation-delay: 2.1s; } .portrait.micha .augen { animation-delay: .6s; } .portrait.karin .augen { animation-delay: 3s; }
+@keyframes fig-blinzeln { 0%, 93%, 100% { transform: scaleY(1); } 95.5% { transform: scaleY(.1); } }
+.portrait .mund { transform-box: fill-box; transform-origin: 50% 25%; }
+.spricht .portrait .mund { animation: fig-mund .15s ease-in-out infinite alternate; }
+@keyframes fig-mund { from { transform: scaleY(.55); } to { transform: scaleY(1.35); } }
+.spricht .huhn .huhn-schnabel .unten { transform-box: fill-box; transform-origin: 50% 0; animation: fig-schnabel .14s ease-in-out infinite alternate !important; }
+@keyframes fig-schnabel { from { transform: scaleY(1); } to { transform: scaleY(1.9) translateY(.5px); } }
+.portrait-gross .mund { animation: pg-laecheln 2.6s ease-in-out .2s infinite; }
+.fig-idle { animation: fig-wippen 3.2s ease-in-out infinite; transform-origin: 50% 100%; }
+@keyframes fig-wippen { 0%, 100% { transform: translateY(0) rotate(0); } 50% { transform: translateY(-2px) rotate(-1.2deg); } }
+.brief-marke .portrait, .max-karte > .portrait, .tel-kopf .portrait, .zettel-notiz .portrait { animation: fig-wippen 3.6s ease-in-out infinite; transform-origin: 50% 100%; }
+/* Ereignis-Karte */
+.ereignis { position: fixed; left: max(12px, env(safe-area-inset-left, 0px)); right: max(12px, env(safe-area-inset-right, 0px)); bottom: calc(86px + env(safe-area-inset-bottom, 0px)); z-index: 75; max-width: 520px; margin: 0 auto; background: var(--bogen); color: var(--tinte); border-radius: 20px; padding: 14px 14px 12px; box-shadow: 0 14px 40px rgba(0,0,0,.28); animation: er-rein .45s cubic-bezier(.3,1.4,.5,1) both; }
+.ereignis.weg { animation: er-raus .3s ease-in forwards; }
+@keyframes er-rein { from { transform: translateY(40px) scale(.94); opacity: 0; } to { transform: none; opacity: 1; } }
+@keyframes er-raus { to { transform: translateY(30px); opacity: 0; } }
+.ereignis-zu { position: absolute; right: 6px; top: 6px; width: 40px; height: 40px; border: 0; background: none; color: var(--tinte); opacity: .6; border-radius: 50%; cursor: pointer; }
+.ereignis-zu .icon { width: 20px; height: 20px; }
+.ereignis-kopf { display: flex; gap: 12px; align-items: flex-start; padding-right: 30px; }
+.er-figur { flex: none; width: 84px; height: 84px; animation: er-hops .6s cubic-bezier(.3,1.6,.5,1) .15s both, fig-wippen 3.2s ease-in-out .8s infinite; }
+@keyframes er-hops { 0% { transform: translateY(24px) scale(.7); } 60% { transform: translateY(-6px) scale(1.05); } 100% { transform: none; } }
+.er-figur.er-huhn .huhn { background: var(--mulde); border-radius: 50%; }
+.er-figur.er-tanzt { animation: er-tanz .32s ease-in-out infinite alternate; }
+@keyframes er-tanz { from { transform: rotate(-12deg) translateY(-4px); } to { transform: rotate(12deg) translateY(2px); } }
+.er-text { flex: 1; min-width: 0; }
+.er-name { font-weight: 800; font-size: .9rem; letter-spacing: .02em; opacity: .75; }
+.er-blase { margin: 4px 0 0; font-family: Fraunces, Georgia, serif; font-size: 1.12rem; line-height: 1.4; min-height: 3em; }
+.er-antworten { display: flex; flex-wrap: wrap; gap: 8px; margin-top: 10px; justify-content: flex-end; }
+.er-antworten .knopf { animation: einschieben .25s ease-out both; }
+.er-flug { position: fixed; z-index: 80; pointer-events: none; font-size: 20px; color: #C8462F; animation: er-flug 1.8s cubic-bezier(.2,.7,.3,1) forwards; }
+.er-noten { color: #2F7A4F; } .er-schnee { color: #8FB4D8; } .er-sonne { color: #E2A93B; font-size: 26px; }
+@keyframes er-flug { 0% { opacity: 0; transform: translate(0,0) scale(.5); } 15% { opacity: 1; } 100% { opacity: 0; transform: translate(var(--dx), var(--dy)) rotate(200deg) scale(1.1); } }
+@media (prefers-reduced-motion: reduce) { .portrait .augen, .fig-idle, .er-figur, .brief-marke .portrait, .max-karte > .portrait { animation: none !important; } }
+.huhn-front .hg-rotkopf, .huhn-front .hg-striche { opacity: 0; }
+/* Wortmarke: verbundene Schreibschrift */
+.wm-text { font-family: "Satisfy", "Dancing Script", cursive; font-size: min(1.95em, 8vw); letter-spacing: 0; }
+.wm-kap { font-size: 1.22em; margin-right: 0; }
+@media (max-width: 370px) { .wm-text { font-size: 7.2vw; } }
+.portrait.greta .augen { animation-delay: 1.8s; } .portrait.pauli .augen { animation-delay: 2.6s; }

@@ -645,17 +645,17 @@ D.buecher = [
 {
 "titel": "Meine Familie und anderes Getier",
 "autor": "Gerald Durrell",
-"text": "Sonnige Kindheit auf Korfu, Tiere, eine chaotische Familie. Einer der heitersten Naturbücher-Klassiker, die Kapitel sind kurz."
+"text": "Sonnige Kindheit auf Korfu, Tiere, eine chaotische Familie. Einer der heitersten Klassiker über Natur und Tiere, mit kurzen Kapiteln."
 },
 {
 "titel": "Der Hundertjährige, der aus dem Fenster stieg und verschwand",
 "autor": "Jonas Jonasson",
-"text": "Ein Hundertjähriger haut aus dem Altenheim ab. Absurd komisch, und das Alter ist hier Abenteuer statt Defizit."
+"text": "Ein Hundertjähriger steigt an seinem Geburtstag aus dem Fenster und erlebt ein Abenteuer nach dem anderen. Absurd komisch."
 },
 {
 "titel": "Verzauberter April",
 "autor": "Elizabeth von Arnim",
-"text": "Vier Frauen mieten ein Castello in Italien und blühen auf. Warm und ironisch; die Autorin ist gemeinfrei, es gibt also viele günstige Ausgaben."
+"text": "Vier Frauen mieten ein Castello in Italien und blühen auf. Warm und ironisch. Das Buch ist so alt, dass es viele günstige Ausgaben gibt."
 },
 {
 "titel": "Das Sommerbuch",
@@ -665,12 +665,12 @@ D.buecher = [
 {
 "titel": "Wanderungen durch die Mark Brandenburg (Auswahl, z. B. „Havelland“)",
 "autor": "Theodor Fontane",
-"text": "Die eigene Gegend mit Fontanes Augen, kapitelweise lesbar, mit Ausflugszielen in Fahrdistanz. Gemeinfrei, auch als Hörbuch."
+"text": "Die eigene Gegend mit Fontanes Augen, Kapitel für Kapitel, mit Ausflugszielen ganz in der Nähe. Gibt es auch als Hörbuch."
 },
 {
 "titel": "Das geheime Leben der Bäume",
 "autor": "Peter Wohlleben",
-"text": "Kurze Kapitel, staunenswerte Fakten; macht den Spandauer Forst zum Gesprächspartner."
+"text": "Kurze Kapitel voller erstaunlicher Fakten – danach sieht man den Spandauer Forst mit anderen Augen."
 },
 {
 "titel": "Ich bin dann mal weg",
@@ -705,7 +705,7 @@ D.wissen = [
 {
 "id": "W02",
 "titel": "Bewegung im Alter und bei Krebs: Ein internationales Expertengremium hat die Studienlage zu Bewegung bei und nach …",
-"text": "Ein internationales Expertengremium hat die Studienlage zu Bewegung bei und nach Krebs ausgewertet. Regelmäßige Bewegung lindert danach Angst, Niedergeschlagenheit und Erschöpfung und verbessert Lebensqualität und Körperfunktion. Bei Knochenbeteiligung wird das Programm angepasst; Bewegung ist dann nicht verboten, aber individuell abzustimmen.",
+"text": "Ein internationales Fachgremium hat sehr viele Studien ausgewertet: Regelmäßige Bewegung lindert Angst, Niedergeschlagenheit und Erschöpfung. Und sie macht den Alltag leichter.",
 "beleg": "stark",
 "quelle": "https://pubmed.ncbi.nlm.nih.gov/31626055/",
 "quelleName": "Campbell et al. 2019, Med Sci Sports Exerc"
@@ -737,7 +737,7 @@ D.wissen = [
 {
 "id": "W06",
 "titel": "Bewegung im Alter und bei Krebs: Der Krebsinformationsdienst rät: Bewegung ist bei und nach Krebs fast immer …",
-"text": "Der Krebsinformationsdienst rät: Bewegung ist bei und nach Krebs fast immer sinnvoll, Art und Maß richten sich aber nach Erkrankung und Therapie. Bei Knochenbefall, Stoma oder geschwächter Abwehr bespricht man das Programm mit dem Behandlungsteam. Das macht Bewegung nicht falsch, es macht sie passend.",
+"text": "Bewegung ist fast immer sinnvoll. Wie viel und welche Art, darf sich nach dem Tag richten: heute die große Runde, morgen Dehnen im Sitzen. Beides ist richtig.",
 "beleg": "mittel",
 "quelle": "https://www.krebsinformationsdienst.de/service/iblatt/iblatt-bewegung-bei-nach-krebs.pdf",
 "quelleName": "Krebsinformationsdienst, Infoblatt Bewegung"
@@ -745,7 +745,7 @@ D.wissen = [
 {
 "id": "W07",
 "titel": "Natur und Wohlbefinden: Bei knapp 20.000 Menschen in England berichteten diejenigen, die mindestens zwei …",
-"text": "Bei knapp 20.000 Menschen in England berichteten diejenigen, die mindestens zwei Stunden pro Woche in der Natur verbrachten, häufiger von guter Gesundheit und Wohlbefinden. Ob am Stück oder verteilt, war egal, und es galt auch für Ältere und chronisch Kranke.",
+"text": "Bei knapp 20.000 Menschen in England berichteten diejenigen, die mindestens zwei Stunden pro Woche in der Natur verbrachten, häufiger von guter Gesundheit und Wohlbefinden. Ob am Stück oder verteilt, war egal, und es galt auch für Ältere.",
 "beleg": "mittel",
 "quelle": "https://doi.org/10.1038/s41598-019-44097-3",
 "quelleName": "White et al. 2019, Scientific Reports"
@@ -753,7 +753,7 @@ D.wissen = [
 {
 "id": "W08",
 "titel": "Natur und Wohlbefinden: Waldbaden (japanisch *Shinrin-yoku*) ist ruhiges, absichtsloses Verweilen im Wald.",
-"text": "Waldbaden (japanisch *Shinrin-yoku*) ist ruhiges, absichtsloses Verweilen im Wald. Studien finden Hinweise auf weniger Stresshormone, niedrigeren Puls und bessere Stimmung, viele davon sind aber klein und untersuchten vor allem junge Gesunde. Waldbaden ist also schön und wohl wohltuend, eine Therapie ist es nicht.",
+"text": "Waldbaden (japanisch Shinrin-yoku) heißt: in Ruhe durch den Wald gehen oder dort sitzen, ohne Ziel. Studien finden Hinweise auf weniger Stress, ruhigeren Puls und bessere Stimmung. Die meisten Studien sind aber klein. Schön ist es trotzdem – ein Wundermittel ist es nicht.",
 "beleg": "mittel",
 "quelle": "https://www.ncbi.nlm.nih.gov/pmc/articles/PMC6886167/",
 "quelleName": "Wen et al. 2019, Übersichtsarbeit"
@@ -761,7 +761,7 @@ D.wissen = [
 {
 "id": "W09",
 "titel": "Natur und Wohlbefinden: Eine deutsche Übersichtsarbeit hält Erholung, Stressabbau, bessere Stimmung und …",
-"text": "Eine deutsche Übersichtsarbeit hält Erholung, Stressabbau, bessere Stimmung und besseren Schlaf durch Waldaufenthalte für gut belegt. Für die Heilung von Krankheiten fehle dagegen die Evidenz, und sie fordert bessere Studien. Diese Ehrlichkeit macht den Waldspaziergang nicht weniger wert.",
+"text": "Eine deutsche Übersichtsarbeit hält für gut belegt: Zeit im Wald hilft bei Erholung, Stimmung und Schlaf. Mehr verspricht sie nicht – und das reicht ja auch.",
 "beleg": "mittel",
 "quelle": "https://ihrs-en.ibe.med.uni-muenchen.de/health-resorts/forest-therapy/review-waldtherapie-final.pdf",
 "quelleName": "Schuh & Immich 2013, IBE München (PDF)"
@@ -777,7 +777,7 @@ D.wissen = [
 {
 "id": "W11",
 "titel": "Natur und Wohlbefinden: Menschen, die im Alltag Vögel sahen oder hörten, fühlten sich in einer …",
-"text": "Menschen, die im Alltag Vögel sahen oder hörten, fühlten sich in einer Smartphone-Studie messbar wohler, und der Effekt hielt bis zu acht Stunden an. Er zeigte sich auch bei Teilnehmenden mit Depression.",
+"text": "Menschen, die im Alltag Vögel sahen oder hörten, fühlten sich in einer Smartphone-Studie messbar wohler, und der Effekt hielt bis zu acht Stunden an.",
 "beleg": "mittel",
 "quelle": "https://www.kcl.ac.uk/news/feeling-chirpy-being-around-birds-is-linked-to-lasting-mental-health-benefits",
 "quelleName": "Hammoud et al. 2022, Sci Rep; Pressemitteilung King’s College"
@@ -793,7 +793,7 @@ D.wissen = [
 {
 "id": "W13",
 "titel": "Tanzen und Gehirn: In einer New Yorker Langzeitstudie mit über 75-Jährigen war Tanzen die einzige …",
-"text": "In einer New Yorker Langzeitstudie mit über 75-Jährigen war Tanzen die einzige körperliche Freizeitaktivität, die mit einem deutlich geringeren Demenzrisiko einherging. Das beweist keinen Schutz, denn vielleicht tanzen Gesündere einfach mehr. Es ist aber ein schöner Hinweis.",
+"text": "In einer New Yorker Langzeitstudie mit über 75-Jährigen blieben Menschen, die regelmäßig tanzten, geistig deutlich länger fit – mehr als bei jeder anderen Bewegung in der Studie. Ein Beweis ist das nicht, vielleicht tanzen Fitte einfach mehr. Ein schöner Hinweis ist es trotzdem.",
 "beleg": "mittel",
 "quelle": "https://doi.org/10.1056/NEJMoa022252",
 "quelleName": "Verghese et al. 2003, NEJM"
@@ -817,7 +817,7 @@ D.wissen = [
 {
 "id": "W16",
 "titel": "Tanzen und Gehirn: Ein WHO-Bericht hat über 900 Studien zu Kunst und Gesundheit gesichtet.",
-"text": "Ein WHO-Bericht hat über 900 Studien zu Kunst und Gesundheit gesichtet. Tanzen vereint drei wirksame Zutaten: Bewegung, Musik und andere Menschen. Wer einem Nachbarn Tanzen beibringt, bekommt alle drei, und als Lehrerin noch die Freude am Weitergeben dazu.",
+"text": "Ein WHO-Bericht hat über 900 Studien zu Kunst und Gesundheit gesichtet. Tanzen vereint drei gute Zutaten: Bewegung, Musik und andere Menschen. Als Tanzlehrerin bekommst du alle drei – und dazu die Freude am Weitergeben.",
 "beleg": "mittel",
 "quelle": "https://www.who.int/europe/publications/i/item/9789289054553",
 "quelleName": "Fancourt & Finn 2019, WHO Europa"
@@ -825,7 +825,7 @@ D.wissen = [
 {
 "id": "W17",
 "titel": "Lesen und Stress: Vielleicht kennst du den Satz „Sechs Minuten Lesen senken Stress um 68 %“.",
-"text": "Vielleicht kennst du den Satz „Sechs Minuten Lesen senken Stress um 68 %“. Er stammt aus einer Auftragsuntersuchung von 2009, die nie in einer Fachzeitschrift begutachtet wurde. Dass Lesen viele Menschen beruhigt, glauben wir gern; die genaue Zahl solltest du vergessen.",
+"text": "Vielleicht kennst du den Satz „Sechs Minuten Lesen senken Stress um 68 %“. Er stammt aus einer Auftragsuntersuchung von 2009, die nie in einer Fachzeitschrift begutachtet wurde. Dass Lesen viele Menschen beruhigt, glauben wir gern – die genaue Zahl ist aber nicht belegt.",
 "beleg": "schwach",
 "quelle": "https://blogs.ncl.ac.uk/medlit/?p=170",
 "quelleName": "Zusammenfassung der Behauptung (Newcastle University Blog)"
@@ -865,7 +865,7 @@ D.wissen = [
 {
 "id": "W22",
 "titel": "Soziale Kontakte und Gesundheit: Laut einer WHO-Kommission (2025) ist etwa jeder sechste Mensch weltweit einsam, und …",
-"text": "Laut einer WHO-Kommission (2025) ist etwa jeder sechste Mensch weltweit einsam, und soziale Verbundenheit geht mit besserer Gesundheit einher. Ein Anruf, eine Karte oder ein Tee im Haus sind keine Kleinigkeit.",
+"text": "Laut einer WHO-Kommission (2025) geht der Kontakt zu anderen Menschen mit besserer Gesundheit einher. Telefonieren, Karten schreiben und Besuch sind also Gesundheit, die Spaß macht.",
 "beleg": "stark",
 "quelle": "https://www.who.int/news/item/30-06-2025-social-connection-linked-to-improved-heath-and-reduced-risk-of-early-death",
 "quelleName": "WHO, Juni 2025"
@@ -905,7 +905,7 @@ D.wissen = [
 {
 "id": "W27",
 "titel": "Schlaf: Bei anhaltenden Schlafproblemen gilt auch im Alter eine Verhaltenstherapie für …",
-"text": "Bei anhaltenden Schlafproblemen gilt auch im Alter eine Verhaltenstherapie für Schlaf (KVT-I) als erste Wahl, noch vor Schlafmitteln. Hausärztinnen können dazu beraten, und es gibt geprüfte Programme.",
+"text": "Wenn der Schlaf länger nicht kommt, helfen feste Abendgewohnheiten und ein paar einfache Schlafregeln oft mehr als Schlaftabletten. Dafür gibt es auch geprüfte Programme.",
 "beleg": "stark",
 "quelle": "https://www.ncbi.nlm.nih.gov/pmc/articles/PMC10909422/",
 "quelleName": "Übersichtsarbeit 2024 (PMC)"
@@ -913,7 +913,7 @@ D.wissen = [
 {
 "id": "W28",
 "titel": "Schlaf: Schlaf und Schmerz hängen zusammen: Eine schlechte Nacht kann die …",
-"text": "Schlaf und Schmerz hängen zusammen: Eine schlechte Nacht kann die Schmerzempfindlichkeit am nächsten Tag erhöhen, wahrscheinlich sogar stärker als umgekehrt. Gute Abendroutinen sind deshalb auch Schmerzpflege.",
+"text": "Eine schlechte Nacht macht den nächsten Tag empfindlicher, eine gute Nacht macht vieles leichter. Feste Abendgewohnheiten lohnen sich also doppelt.",
 "beleg": "mittel",
 "quelle": "https://doi.org/10.1016/j.jpain.2013.08.007",
 "quelleName": "Finan, Goodin & Smith 2013, J Pain"
@@ -929,7 +929,7 @@ D.wissen = [
 {
 "id": "W30",
 "titel": "Schmerz und Aufmerksamkeit: Aufmerksamkeit und Gefühle verändern messbar, wie das Gehirn Schmerz verarbeitet.",
-"text": "Aufmerksamkeit und Gefühle verändern messbar, wie das Gehirn Schmerz verarbeitet. Wenn dich etwas fesselt, kommt tatsächlich weniger Schmerzsignal an. Das ist keine Einbildung, sondern Neurobiologie, und eine Heilung ist es auch nicht.",
+"text": "Aufmerksamkeit und Gefühle verändern messbar, was im Kopf ankommt. Wenn dich etwas fesselt, rückt Unangenehmes tatsächlich in den Hintergrund. Das ist keine Einbildung, das lässt sich im Gehirn messen.",
 "beleg": "stark",
 "quelle": "https://doi.org/10.1038/nrn3516",
 "quelleName": "Bushnell, Čeko & Low 2013, Nat Rev Neurosci"
@@ -937,7 +937,7 @@ D.wissen = [
 {
 "id": "W31",
 "titel": "Schmerz und Aufmerksamkeit: Musik kann chronische Schmerzen und die begleitende Niedergeschlagenheit etwas …",
-"text": "Musik kann chronische Schmerzen und die begleitende Niedergeschlagenheit etwas lindern, so eine Meta-Analyse. Am besten wirkt offenbar selbst gewählte Musik.",
+"text": "Musik kann Wohlbefinden und Stimmung spürbar verbessern, so eine Auswertung mehrerer Studien. Am besten wirkt Musik, die man selbst aussucht.",
 "beleg": "mittel",
 "quelle": "https://remix.berklee.edu/mhi-citations/623",
 "quelleName": "Garza-Villarreal et al. 2017, Pain Physician (Eintrag)"
@@ -945,7 +945,7 @@ D.wissen = [
 {
 "id": "W32",
 "titel": "Schmerz und Aufmerksamkeit: Ablenkung wirkt am besten, wenn sie dich wirklich einnimmt.",
-"text": "Ablenkung wirkt am besten, wenn sie dich wirklich einnimmt. Eine spannende Geschichte, ein Gespräch oder ein Lied, bei dem du mitsingst, binden mehr Aufmerksamkeit als nebenbei laufender Lärm. Das „Statt Daddeln“-Menü ist deshalb auch ein Schmerz-Werkzeug.",
+"text": "Ablenkung wirkt am besten, wenn sie dich wirklich packt: eine spannende Geschichte, ein Gespräch, ein Lied zum Mitsingen. Nebenbei laufender Lärm schafft das nicht. Ideen dafür findest du unter „Ablenkung?“.",
 "beleg": "mittel",
 "quelle": "https://doi.org/10.1038/nrn3516",
 "quelleName": "Bushnell et al. 2013"
@@ -969,7 +969,7 @@ D.wissen = [
 {
 "id": "W35",
 "titel": "Musik: Laut einer Cochrane-Übersicht mit über 80 Studien können Musikangebote bei Krebs …",
-"text": "Laut einer Cochrane-Übersicht mit über 80 Studien können Musikangebote bei Krebs Angst, Schmerz und Erschöpfung lindern und die Lebensqualität verbessern. Die Qualität der Belege ist niedrig bis mittel, die Richtung aber einheitlich.",
+"text": "Eine große Übersicht mit über 80 Studien fand: Musik kann Angst und Erschöpfung lindern und die Lebensqualität verbessern. Die Belege sind nicht perfekt, zeigen aber alle in dieselbe Richtung.",
 "beleg": "mittel",
 "quelle": "https://www.cochrane.org/evidence/CD006911",
 "quelleName": "Bradt et al. 2021, Cochrane"
@@ -993,7 +993,7 @@ D.wissen = [
 {
 "id": "W38",
 "titel": "Dankbarkeit: Ehrlich: Dankbarkeitsübungen wirken gegen Niedergeschlagenheit und Angst nur wenig, …",
-"text": "Ehrlich: Dankbarkeitsübungen wirken gegen Niedergeschlagenheit und Angst nur wenig, wie eine Meta-Analyse zeigt. Als kleines Ritual für schöne Momente taugen sie trotzdem, nur eben nicht als Wundermittel.",
+"text": "Ehrlich: Dankbarkeits-Übungen machen nur ein bisschen glücklicher, als oft behauptet wird. Als kleines Ritual für schöne Momente taugen sie trotzdem.",
 "beleg": "mittel",
 "quelle": "https://ideas.repec.org/a/spr/jhappi/v22y2021i1d10.1007_s10902-020-00236-6.html",
 "quelleName": "Cregg & Cheavens 2021, J Happiness Stud"
@@ -1649,12 +1649,12 @@ D.lebensbuch = [
 },
 {
 "id": "L14",
-"frage": "Wann in deinem Leben hast du dich am lebendigsten gefühlt? *(Chochinov)*",
+"frage": "Welcher Tag in deinem Leben war einfach großartig? *(Chochinov)*",
 "mit": "zusammen"
 },
 {
 "id": "L15",
-"frage": "Welche Rollen waren dir im Leben besonders wichtig, etwa Freundin, Kollegin, Patentante, Tanzlehrerin? *(Chochinov)*",
+"frage": "Welcher Spitzname hat dich am längsten begleitet – und wer hat ihn erfunden? *(Chochinov)*",
 "mit": "zusammen"
 },
 {
@@ -1674,7 +1674,7 @@ D.lebensbuch = [
 },
 {
 "id": "L19",
-"frage": "Was hilft dir an schweren Tagen, was andere vielleicht noch nicht wissen?",
+"frage": "Was hebt dir zuverlässig die Laune?",
 "mit": "zusammen"
 },
 {
@@ -1714,7 +1714,7 @@ D.lebensbuch = [
 },
 {
 "id": "L27",
-"frage": "Wofür bist du diese Woche dankbar?",
+"frage": "Was war diese Woche richtig gut?",
 "mit": "allein"
 },
 {
