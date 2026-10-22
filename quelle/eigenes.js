@@ -6,10 +6,10 @@
 const EIGEN_BEREICHE = [
   { feld: "bewegung", name: "Bewegung", bild: "weg", icon: "schuh", bsp: "z. B. Treppe statt Aufzug" },
   { feld: "menschen", name: "Mit anderen", bild: "fenster", icon: "tassen", bsp: "z. B. Kaffeeklatsch" },
-  { feld: "geist", name: "Lesen & Genuss", bild: "eiche", icon: "buch", bsp: "z. B. Kreuzworträtsel" },
-  { feld: "schaffen", name: "Hände & Haus", bild: "wiese", icon: "pinsel", bsp: "z. B. Balkon umgetopft" },
+  { feld: "geist", name: "Lesen, Musik, Kultur", bild: "eiche", icon: "buch", bsp: "z. B. Kreuzworträtsel" },
+  { feld: "schaffen", name: "Selbst gemacht", bild: "wiese", icon: "pinsel", bsp: "z. B. Balkon umgetopft" },
   { feld: "sorge", name: "Gut für mich", bild: "quelle", icon: "decke", bsp: "z. B. Fußbad" },
-  { feld: "mut", name: "Neues & Mut", bild: "mut", icon: "funke", bsp: "z. B. Neues Café ausprobiert" }
+  { feld: "mut", name: "Draußen & Neues", bild: "mut", icon: "funke", bsp: "z. B. Neues Café ausprobiert" }
 ];
 const EIGEN_ICONS = ["stern", "blume", "note", "pinsel", "tasse", "feder", "schuh", "buch", "kopfhoerer", "sonne", "kamera", "topf", "kuchen", "blatt", "karten", "raetsel"];
 
@@ -36,7 +36,7 @@ function eigenesInhalt() {
     <label class="feld">Wozu gehört das?</label><div class="chips">${EIGEN_BEREICHE.map(x => chip(E2.feld === x.feld, x.name, `data-act="eig-setz" data-f="feld" data-v="${x.feld}"`)).join("")}</div>
     <p class="klein" style="margin-top:6px">${b ? `Zählt wie andere Dinge aus „${esc(b.name)}“ und wächst im Bild ${({ weg: "am Weg", fenster: "an den Fenstern", eiche: "an der Leseeiche", wiese: "auf der Wiese", quelle: "an der Quelle", mut: "bei den Glühwürmchen" })[b.bild]}.` : "Danach richtet sich, wie es zählt und wo es im Bild wächst."}</p>
     <label class="feld">Mit Minuten?</label><div class="chips">${chip(E2.minuten, "Ja, wie lange", `data-act="eig-setz" data-f="minuten" data-v="1"`)}${chip(!E2.minuten, "Nein, einfach abhaken", `data-act="eig-setz" data-f="minuten" data-v="0"`)}</div>
-    <label class="feld">Zeichen</label><div class="icon-wahl">${EIGEN_ICONS.map(i => `<button class="knopf zweit" data-act="eig-setz" data-f="icon" data-v="${i}" aria-pressed="${(E2.icon || (b && b.icon)) === i}" aria-label="Zeichen ${i}">${ic(i)}</button>`).join("")}</div>`;
+    <label class="feld">Symbol</label><div class="icon-wahl">${EIGEN_ICONS.map(i => `<button class="knopf zweit" data-act="eig-setz" data-f="icon" data-v="${i}" aria-pressed="${(E2.icon || (b && b.icon)) === i}" aria-label="Symbol ${i}">${ic(i)}</button>`).join("")}</div>`;
 }
 function eigenAktion(a, d) {
   switch (a) {

@@ -27,6 +27,7 @@ function wunschInhalt() {
 document.addEventListener("input", ev => { if (ev.target.dataset && ev.target.dataset.wunsch) WUNSCH = ev.target.value; });
 function wunschAktion(a, d) {
   if (a === "wunsch-auf") { wunschSheet(); return; }
+  if (a === "wunsch-huhn") { if (!/Hühnchen wünscht sich/.test(WUNSCH)) WUNSCH = "Hühnchen wünscht sich: Kuchen. Viel Kuchen.\n" + WUNSCH; wunschSheet(); return; } // Hühnchens Pointe steht wirklich im Feld
   if (a === "wunsch-anr") { const t = WUNSCH_ANREGUNGEN[Number(d.i)][1]; WUNSCH = (WUNSCH.trim() ? WUNSCH.trim() + "\n" : "") + t; sheetInhalt(wunschInhalt()); const ta = $("#wunsch-text"); if (ta) { ta.focus(); const p = ta.value.indexOf("…"); if (p >= 0) ta.setSelectionRange(p, p + 1); } return; }
   if (a === "wunsch-senden") {
     const t = (WUNSCH || "").trim(); if (!t) { toast("Schreib erst ein, zwei Sätze."); $("#wunsch-text")?.focus(); return; }

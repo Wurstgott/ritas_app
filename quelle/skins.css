@@ -1,0 +1,221 @@
+
+/* ============================================================
+   Kleiderschrank, Kramladen, Taler-Plakette, Bild-Spielereien (skins.js / scene.js)
+   ============================================================ */
+/* Mit Hut wippt der Kopf um denselben Punkt wie ohne (fester Drehpunkt statt Bounding-Box) */
+.huhn.mit-skin .huhn-kopf { transform-box: view-box; transform-origin: 61px 48px; }
+.huhn-front.mit-skin .huhn-kopf { transform-origin: 64px 48px; }
+.skin-flamme { transform-box: fill-box; transform-origin: 50% 100%; animation: sk-flacker 1.3s ease-in-out infinite alternate; }
+.skin-flamme:nth-of-type(3n) { animation-duration: 1.7s; }
+@keyframes sk-flacker { 0% { transform: scale(1, 1) rotate(-3deg); } 60% { transform: scale(.92, 1.12) rotate(2deg); } 100% { transform: scale(1.04, .94) rotate(-1deg); } }
+.skin-cape { transform-box: fill-box; transform-origin: 95% 5%; animation: sk-cape 2.4s ease-in-out infinite; }
+@keyframes sk-cape { 0%, 100% { transform: rotate(0deg) skewX(0deg); } 50% { transform: rotate(3deg) skewX(-3deg); } }
+.skin-feder { transform-box: fill-box; transform-origin: 50% 100%; animation: sk-feder 2.2s ease-in-out infinite; }
+@keyframes sk-feder { 0%, 100% { transform: rotate(-4deg); } 50% { transform: rotate(5deg); } }
+:root[data-motion="ruhig"] .skin-flamme, :root[data-motion="ruhig"] .skin-cape, :root[data-motion="ruhig"] .skin-feder { animation: none; }
+@media (prefers-reduced-motion: reduce) { .skin-flamme, .skin-cape, .skin-feder { animation: none; } }
+
+/* ---------- Taler-Plakette in der Kopfzeile ---------- */
+header.kopf { position: relative; }
+.taler-plakette { position: absolute; z-index: 3; min-width: 52px; height: 44px; padding: 0; border: 0; background: none; display: grid; place-items: center; cursor: pointer; -webkit-tap-highlight-color: transparent; }
+.taler-plakette .tp-pille { display: inline-flex; align-items: center; gap: 3px; height: 26px; padding: 0 9px 0 3px; border-radius: 13px; background: var(--bogen); color: var(--tinte); font: 800 15px/1 Nunito, system-ui, sans-serif; box-shadow: 0 1px 0 rgba(28,38,32,.25), 0 2px 6px rgba(28,38,32,.18), inset 0 0 0 1.5px rgba(184,128,30,.55); }
+.taler-plakette .muenze { width: 21px; height: 21px; flex: none; }
+.taler-plakette:focus-visible .tp-pille { outline: 3px solid var(--fokus); outline-offset: 2px; }
+.taler-plakette.tp-hops .tp-pille { animation: tp-hops .5s cubic-bezier(.3,1.7,.5,1); }
+@keyframes tp-hops { 0% { transform: scale(1); } 40% { transform: scale(1.18); } 100% { transform: scale(1); } }
+.taler-flug { position: fixed; z-index: 70; width: 22px; height: 22px; pointer-events: none; }
+.taler-flug .muenze { width: 22px; height: 22px; filter: drop-shadow(0 2px 2px rgba(0,0,0,.25)); }
+.taler-plus { position: fixed; z-index: 70; pointer-events: none; display: flex; align-items: center; gap: 4px; transform: translate(-50%, -50%); font: 800 16px Nunito, system-ui, sans-serif; color: #8A5A12; background: #FFF6DC; border-radius: 14px; padding: 3px 9px 3px 4px; box-shadow: 0 3px 10px rgba(0,0,0,.18); animation: tp-plus 1.6s ease-out forwards; }
+.taler-plus .muenze { width: 20px; height: 20px; }
+@keyframes tp-plus { 0% { opacity: 0; transform: translate(-50%, -30%); } 20% { opacity: 1; } 100% { opacity: 0; transform: translate(-50%, -190%); } }
+.muenze { vertical-align: middle; }
+
+/* ---------- Kleiderschrank-Karte (Zuhause) ---------- */
+.ks-karte { position: relative; display: flex; flex-direction: column; align-items: stretch; gap: 8px; width: 100%; text-align: left; padding: 12px 14px; border: 0; border-radius: 16px; cursor: pointer; color: var(--tinte); font: inherit;
+  background: linear-gradient(180deg, rgba(255,255,255,.35), rgba(255,255,255,0)), var(--bogen); box-shadow: var(--schatten-2), var(--saum), inset 0 0 0 2px rgba(184,128,30,.28); }
+.ks-karte-figs { display: flex; align-items: flex-end; flex: none; }
+.ks-karte-figs .portrait { border-radius: 50%; box-shadow: 0 1px 0 rgba(28,38,32,.25); }
+.ks-karte-figs .huhn { margin-left: -12px; }
+.ks-karte-text { display: flex; flex-direction: column; gap: 3px; min-width: 0; }
+.ks-titel { font-family: Fraunces, Georgia, serif; font-weight: 700; font-size: 1.12rem; display: flex; align-items: center; gap: 8px; color: var(--moos); }
+.ks-titel .pfeil { margin-left: auto; width: 22px; height: 22px; }
+.ks-karte-zeile { display: flex; align-items: center; gap: 12px; }
+.ks-titel .icon { width: 22px; height: 22px; }
+.ks-naechst { display: flex; align-items: flex-start; gap: 6px; font-size: .86rem; line-height: 1.35; color: var(--ocker); font-weight: 700; }
+.ks-naechst .muenze { width: 18px; height: 18px; flex: none; margin-top: 1px; }
+.ks-marke { display: inline-block; font: 800 .7rem/1 Nunito, system-ui, sans-serif; letter-spacing: .04em; text-transform: uppercase; padding: 4px 7px; border-radius: 8px; background: #C9563A; color: #FFF8EC; }
+.ks-marke.saison { background: #3F7A6A; }
+.ks-marke.traegt { background: var(--moos); color: var(--auf-moos); }
+
+/* ---------- Kleiderschrank-Blatt ---------- */
+.ks-buehne { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; margin: 2px 0 10px; }
+.ks-buehne.klein-buehne { display: flex; justify-content: center; align-items: flex-end; gap: 16px; margin-top: 14px; }
+.ks-buehne.klein-buehne .portrait { border-radius: 50%; }
+.ks-fig { position: relative; display: flex; flex-direction: column; align-items: center; gap: 2px; padding: 14px 6px 10px; border: 0; border-radius: 16px; background: var(--mulde); color: var(--tinte); font: inherit; cursor: pointer; overflow: visible; }
+.ks-fig.an { background: var(--bogen); box-shadow: var(--schatten-1), inset 0 0 0 3px var(--moos); }
+.ks-fig .portrait { border-radius: 50%; box-shadow: 0 2px 0 rgba(28,38,32,.2); }
+.ks-fig .huhn { margin-top: -6px; }
+.ks-fig-name { font-weight: 800; margin-top: 4px; }
+.ks-fig .klein { text-align: center; line-height: 1.25; }
+.ks-fig.hops > svg { animation: ks-hops .6s cubic-bezier(.3,1.6,.5,1); }
+@keyframes ks-hops { 0% { transform: translateY(0) rotate(0); } 35% { transform: translateY(-10px) rotate(-4deg); } 70% { transform: translateY(0) rotate(3deg); } 100% { transform: none; } }
+.ks-kasse { display: flex; align-items: center; gap: 10px; padding: 10px 14px; border-radius: 14px; background: var(--mulde); }
+.ks-kasse > .muenze { width: 34px; height: 34px; flex: none; }
+.ks-fach { margin: 18px 2px 8px; font-size: 1.05rem; }
+.ks-raster { display: grid; grid-template-columns: repeat(auto-fill, minmax(min(100%, 138px), 1fr)); gap: 10px; }
+.ks-teil { position: relative; display: flex; flex-direction: column; align-items: center; gap: 4px; min-height: 48px; padding: 10px 8px 12px; border: 0; border-radius: 14px; background: var(--bogen); color: var(--tinte); font: inherit; cursor: pointer; box-shadow: var(--schatten-1), var(--saum); text-align: center; }
+.ks-teil.gewaehlt { box-shadow: var(--schatten-1), inset 0 0 0 3px var(--licht); }
+.ks-teil.traegt { background: linear-gradient(180deg, rgba(91,138,71,.14), rgba(91,138,71,0)), var(--bogen); }
+.ks-teil-bild { display: grid; place-items: center; height: 76px; }
+.ks-teil-bild .portrait { border-radius: 50%; }
+.ks-teil .ks-marke { position: absolute; top: 6px; right: 6px; }
+.ks-teil-name { font-weight: 800; font-size: .92rem; line-height: 1.2; }
+.ks-hat { display: inline-flex; align-items: center; gap: 4px; font-weight: 700; font-size: .84rem; color: var(--moos); }
+.ks-hat .icon { width: 18px; height: 18px; }
+.ks-geschenk { font-size: .8rem; color: var(--tinte-2); font-style: italic; line-height: 1.25; }
+/* Preisschild mit Loch und Münze */
+.preis-schild { position: relative; display: inline-flex; align-items: center; gap: 3px; padding: 3px 10px 3px 14px; border-radius: 4px 8px 8px 4px; background: #F6E7BF; color: #5A3C0A; font: 800 .92rem/1.1 Nunito, system-ui, sans-serif; clip-path: polygon(8px 0, 100% 0, 100% 100%, 8px 100%, 0 50%); }
+.preis-schild::before { content: ""; position: absolute; left: 7px; top: 50%; width: 4px; height: 4px; margin-top: -2px; border-radius: 50%; background: var(--bogen); }
+.preis-schild .muenze { width: 16px; height: 16px; }
+.preis-schild:not(.geht) { opacity: .78; }
+.ks-fuss { display: flex; flex-direction: column; gap: 10px; }
+.ks-fuss-text { display: flex; flex-direction: column; gap: 2px; }
+.ks-fuss .knopf .muenze { width: 22px; height: 22px; margin-right: 4px; }
+.ks-fuss-tipp { margin: 0; text-align: center; }
+.ks-reihen { display: flex; flex-direction: column; gap: 8px; }
+.ks-reihe { padding: 10px 12px; border-radius: 12px; background: var(--mulde); }
+.ks-reihe.voll { background: linear-gradient(90deg, rgba(232,178,62,.28), rgba(232,178,62,.08)); }
+.ks-reihe-name { display: flex; align-items: center; gap: 6px; font-weight: 800; margin-bottom: 6px; }
+.ks-reihe-name .icon { width: 18px; height: 18px; color: var(--moos); }
+.ks-reihe-teile { display: flex; flex-wrap: wrap; gap: 6px; }
+.ks-punkt { display: inline-flex; align-items: center; gap: 4px; padding: 3px 9px; border-radius: 10px; font-size: .8rem; background: var(--bogen); color: var(--tinte-2); box-shadow: inset 0 0 0 1.5px var(--rand); }
+.ks-punkt.hat { color: var(--moos); font-weight: 700; box-shadow: inset 0 0 0 2px var(--moos); }
+.ks-punkt .icon { width: 14px; height: 14px; }
+.ks-punkt i { font-style: normal; opacity: .75; }
+
+/* ---------- Kramladen als Laden ---------- */
+.laden-front { position: relative; margin: 0 0 12px; padding: 28px 14px 12px; border-radius: 16px; background: var(--mulde); overflow: hidden; }
+.laden-front .markise { position: absolute; left: 0; right: 0; top: 0; height: 20px; background: repeating-linear-gradient(90deg, #B5532F 0 22px, #F3E6CF 22px 44px); }
+.laden-front .markise::after { content: ""; position: absolute; left: 0; right: 0; bottom: -7px; height: 8px; background: radial-gradient(circle at 11px 0, #B5532F 10px, transparent 10.5px) 0 0 / 44px 8px repeat-x, radial-gradient(circle at 33px 0, #F3E6CF 10px, transparent 10.5px) 0 0 / 44px 8px repeat-x; }
+.laden-kasse { display: flex; align-items: center; gap: 12px; }
+.laden-kasse .muenze.gross { width: 46px; height: 46px; flex: none; }
+.laden-naechst { display: flex; gap: 6px; align-items: flex-start; margin: 10px 0 0; padding: 8px 10px; border-radius: 10px; background: var(--bogen); font-weight: 700; color: var(--ocker); font-size: .92rem; line-height: 1.35; }
+.laden-naechst .icon { width: 18px; height: 18px; flex: none; margin-top: 2px; }
+.laden-chips { margin: 4px -4px 6px; padding: 2px 4px 6px; flex-wrap: nowrap; overflow-x: auto; scrollbar-width: none; }
+.laden-chips .chip { flex: none; }
+.laden-abt { margin-top: 16px; scroll-margin-top: 70px; }
+.abt-schild { display: inline-flex; align-items: center; gap: 8px; margin: 0 0 10px; padding: 6px 14px 6px 10px; border-radius: 10px; background: var(--moos); color: var(--auf-moos); font-size: 1rem; box-shadow: 0 2px 0 rgba(0,0,0,.18); }
+.abt-schild .icon { width: 20px; height: 20px; color: var(--auf-moos); fill: currentColor; }
+.laden-schrank { position: relative; display: flex; align-items: center; gap: 12px; width: 100%; padding: 12px 12px 12px 14px; border: 0; border-radius: 16px; background: var(--bogen); color: var(--tinte); font: inherit; text-align: left; cursor: pointer; box-shadow: var(--schatten-2), inset 0 0 0 2px rgba(184,128,30,.3); }
+.laden-schrank .pfeil { width: 22px; height: 22px; flex: none; color: var(--moos); }
+.regal { display: flex; flex-direction: column; gap: 10px; padding-bottom: 10px; border-bottom: 6px solid rgba(122,90,58,.35); border-radius: 0 0 4px 4px; }
+.ware { display: flex; gap: 12px; padding: 12px 14px; border-radius: 14px; background: var(--bogen); box-shadow: var(--schatten-1), var(--saum); }
+.ware.gekauft { background: linear-gradient(180deg, rgba(91,138,71,.10), rgba(91,138,71,0)), var(--bogen); }
+.ware-icon { flex: none; width: 46px; height: 46px; border-radius: 50%; display: grid; place-items: center; background: var(--mulde); color: var(--moos); }
+.ware-icon .icon { width: 26px; height: 26px; }
+.ware-text { display: flex; flex-direction: column; gap: 3px; min-width: 0; flex: 1; }
+.ware-kauf { margin-top: 6px; display: flex; flex-wrap: wrap; align-items: center; gap: 6px; }
+.preis-knopf { gap: 5px; background: #F6E7BF; color: #5A3C0A; box-shadow: 0 2px 0 rgba(90,60,10,.25); }
+.preis-knopf .muenze { width: 20px; height: 20px; }
+.preis-knopf:disabled { background: var(--mulde); color: var(--tinte-2); box-shadow: none; }
+
+/* ---------- Unter dem Bild: Funkeln, Wetter ---------- */
+.bild-unter { display: flex; flex-direction: column; gap: 8px; margin-top: -6px; }
+.bildspiel-zeile { margin: 0; display: flex; align-items: center; gap: 8px; color: var(--ocker); font-weight: 700; }
+.bildspiel-zeile.leer { display: none; }
+.funke-mini { flex: none; width: 14px; height: 14px; background: #F2C36B; clip-path: polygon(50% 0, 60% 40%, 100% 50%, 60% 60%, 50% 100%, 40% 60%, 0 50%, 40% 40%); animation: funke-mini 2.4s ease-in-out infinite; }
+@keyframes funke-mini { 0%, 100% { transform: scale(.8) rotate(0); } 50% { transform: scale(1.15) rotate(20deg); } }
+@media (prefers-reduced-motion: reduce) { .funke-mini { animation: none; } }
+.bild-wetter-knopf { position: relative; display: flex; align-items: center; gap: 8px; min-height: 48px; padding: 6px 12px; border: 0; border-radius: 12px; background: var(--mulde); color: var(--tinte); font: inherit; font-size: .92rem; text-align: left; cursor: pointer; }
+.bild-wetter-knopf .icon { width: 22px; height: 22px; color: var(--moos); flex: none; }
+.bild-wetter-knopf > span:first-of-type { flex: 1; }
+.bild-wetter-knopf .klein { text-decoration: underline; text-underline-offset: 3px; }
+.buehne canvas.bild-fx { position: absolute; inset: 0; pointer-events: none; }
+.bild-blase { position: absolute; z-index: 2; transform: translate(-50%, -100%); max-width: min(220px, 74%); width: max-content; padding: 7px 12px; border-radius: 14px; background: var(--bogen, #FBF8F1); color: var(--tinte); font: 700 14px/1.3 Nunito, system-ui, sans-serif; box-shadow: 0 4px 14px rgba(0,0,0,.22); pointer-events: none; animation: bb-ein .3s cubic-bezier(.3,1.5,.5,1); text-align: center; }
+.bild-blase::after { content: ""; position: absolute; left: calc(50% + var(--pfeil, 0px)); bottom: -7px; width: 14px; height: 14px; margin-left: -7px; background: inherit; transform: rotate(45deg); border-radius: 2px; }
+.bild-blase.unten { transform: translate(-50%, 0); }
+.bild-blase.unten::after { bottom: auto; top: -7px; }
+.bild-blase .wer { display: block; font-size: 12px; color: var(--ziegel); text-transform: uppercase; letter-spacing: .05em; }
+.bild-blase .bb-taler { display: block; margin-top: 3px; font-size: 13px; color: #8A5A12; }
+.bild-blase.weg { opacity: 0; transition: opacity .35s; }
+@keyframes bb-ein { from { opacity: 0; transform: translate(-50%, -80%) scale(.85); } }
+.bild-blase.unten { animation-name: bb-ein-u; } @keyframes bb-ein-u { from { opacity: 0; transform: translate(-50%, 10%) scale(.85); } }
+
+/* ---------- Halte-Hinweis: kleiner Finger, der sanft drückt ---------- */
+.halte-finger { position: absolute; z-index: 4; width: 30px; height: 38px; pointer-events: none; color: var(--licht); filter: drop-shadow(0 2px 2px rgba(0,0,0,.25)); animation: hf-druck 2.6s ease-in-out infinite; }
+.halte-finger svg { width: 100%; height: 100%; overflow: visible; }
+.halte-finger .hf-ring { transform-box: fill-box; transform-origin: center; animation: hf-ring 2.6s ease-out infinite; }
+.halte-finger.hf-rita { left: -8px; bottom: -10px; }
+.halte-finger.hf-huhn { left: 44px; bottom: 34px; }
+.halte-finger.hf-lupe { left: 54%; top: 56%; animation: hf-zieh 3.6s ease-in-out infinite; }
+@keyframes hf-druck { 0%, 100% { transform: translate(0, 0) scale(1); } 30%, 70% { transform: translate(-2px, -3px) scale(.92); } }
+@keyframes hf-ring { 0%, 25% { opacity: 0; transform: scale(.4); } 45% { opacity: .9; } 100% { opacity: 0; transform: scale(1.9); } }
+@keyframes hf-zieh { 0%, 15% { transform: translate(0, 0) scale(1); } 25% { transform: translate(0, 0) scale(.92); } 70% { transform: translate(-60px, -18px) scale(.92); } 85%, 100% { transform: translate(-60px, -18px) scale(1); opacity: 0; } }
+@media (prefers-reduced-motion: reduce) { .halte-finger, .halte-finger .hf-ring { animation: none; } }
+:root[data-motion="ruhig"] .halte-finger, :root[data-motion="ruhig"] .halte-finger .hf-ring { animation: none; }
+
+/* ---------- Figuren-Memory ---------- */
+.mem-tisch { display: grid; grid-template-columns: repeat(3, 1fr); gap: 10px; }
+.mem-tisch.p16 { grid-template-columns: repeat(4, 1fr); gap: 8px; }
+.mem-karte { position: relative; aspect-ratio: 3 / 3.6; min-height: 48px; padding: 0; border: 0; background: none; cursor: pointer; perspective: 600px; }
+.mem-innen { position: absolute; inset: 0; transition: transform .45s cubic-bezier(.3,.7,.3,1); transform-style: preserve-3d; }
+.mem-karte.auf .mem-innen { transform: rotateY(180deg); }
+.mem-rueck, .mem-vorn { position: absolute; inset: 0; border-radius: 12px; backface-visibility: hidden; -webkit-backface-visibility: hidden; display: grid; place-items: center; box-shadow: var(--schatten-1); }
+.mem-rueck { background: radial-gradient(circle at 50% 50%, rgba(255,255,255,.18) 0 18%, transparent 19%) 0 0 / 22px 22px, linear-gradient(135deg, #2D6249, #1F4A34); box-shadow: var(--schatten-1), inset 0 0 0 4px #E8DCC0; }
+.mem-vorn { background: var(--bogen); transform: rotateY(180deg); box-shadow: var(--schatten-1), inset 0 0 0 2px rgba(184,128,30,.35); }
+.mem-vorn svg { width: 80% !important; height: auto !important; max-height: 88%; }
+.mem-vorn .portrait { border-radius: 50%; }
+.mem-karte.weg .mem-vorn { box-shadow: inset 0 0 0 3px var(--moos); }
+.mem-status { text-align: center; margin: 12px 0; }
+@media (prefers-reduced-motion: reduce) { .mem-innen { transition: none; } }
+.huhn-karte { position: relative; }
+
+/* ===== Runde 2 (Prüfkommission) ===== */
+/* K-F-01: Anprobe bleibt oben sichtbar */
+.sheet[data-id="schrank"] .ks-buehne { position: sticky; top: -6px; z-index: 3; margin: -6px -18px 8px; padding: 8px 18px 8px; background: var(--bogen); box-shadow: 0 6px 8px -6px rgba(0,0,0,.25); }
+.sheet[data-id="schrank"] .ks-fig { padding: 6px 6px 6px; flex-direction: row; gap: 8px; justify-content: flex-start; text-align: left; }
+.sheet[data-id="schrank"] .ks-fig > svg { width: 76px !important; height: 76px !important; flex: none; }
+.sheet[data-id="schrank"] .ks-fig .huhn { margin-top: 0; }
+.sheet[data-id="schrank"] .ks-fig-text { display: flex; flex-direction: column; min-width: 0; }
+.sheet[data-id="schrank"] .ks-fig .klein { text-align: left; }
+.ks-fuss-text .klein { display: -webkit-box; -webkit-line-clamp: 2; -webkit-box-orient: vertical; overflow: hidden; }
+/* K-D-02: zwei Türen unter dem Bild */
+.tueren-zwei { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; }
+.laden-tuer { position: relative; display: flex; flex-direction: column; align-items: center; gap: 2px; min-height: 150px; padding: 12px 8px; border: 0; border-radius: 22px 22px 12px 12px; background: var(--bogen); color: var(--tinte); font: inherit; text-align: center; cursor: pointer; box-shadow: var(--schatten-2), var(--saum), inset 0 0 0 2px rgba(184,128,30,.28); }
+.lt-bild { display: flex; align-items: flex-end; justify-content: center; height: 66px; margin-bottom: 4px; }
+.lt-bild .portrait { border-radius: 50%; }
+.lt-bild .huhn { margin-left: -10px; }
+.laden-front-svg { width: 92px; height: 62px; }
+.lt-titel { font-family: Fraunces, Georgia, serif; font-weight: 700; font-size: 1.02rem; color: var(--moos); line-height: 1.2; }
+.lt-titel .icon { display: none; }
+.lt-titel .ks-marke { vertical-align: middle; }
+.lt-unter { font-size: .8rem; color: var(--tinte-2); line-height: 1.3; }
+.tueren-naechst { margin: 10px 2px 0; }
+/* K-D-02: Kramladen als Regal */
+.abt-schild { position: relative; background: linear-gradient(180deg, #B07A44, #8A5A2B); color: #FFF6E4; border-radius: 6px; padding: 7px 18px 7px 14px; box-shadow: inset 0 1px 0 rgba(255,255,255,.25), 0 2px 0 rgba(0,0,0,.25); text-shadow: 0 1px 0 rgba(0,0,0,.25); }
+.abt-schild::before, .abt-schild::after { content: ""; position: absolute; top: 50%; width: 5px; height: 5px; margin-top: -2.5px; border-radius: 50%; background: #5A3A1A; box-shadow: inset 0 1px 0 rgba(255,255,255,.3); }
+.abt-schild::before { left: 5px; } .abt-schild::after { right: 6px; }
+.abt-schild .icon { color: #FFF6E4; }
+.regal { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; padding: 0 2px 8px; border-bottom: 0; flex-direction: initial; }
+.regal-brett { height: 11px; margin: 0 -6px; border-radius: 3px; background: linear-gradient(180deg, #C08A54, #8A5A2B); box-shadow: 0 5px 7px rgba(0,0,0,.18); }
+.ware-kachel { position: relative; display: flex; flex-direction: column; align-items: center; gap: 6px; min-height: 48px; padding: 10px 8px 12px; border: 0; border-radius: 14px; background: var(--bogen); color: var(--tinte); font: inherit; text-align: center; cursor: pointer; box-shadow: var(--schatten-1), var(--saum), inset 0 0 0 1.5px rgba(122,90,58,.18); }
+.ware-kachel.hat { background: linear-gradient(180deg, rgba(91,138,71,.12), rgba(91,138,71,0)), var(--bogen); }
+.ware-kachel.breit { grid-column: 1 / -1; flex-direction: column; }
+.ware-bild { display: grid; place-items: center; width: 76px; height: 76px; border-radius: 12px; background: var(--mulde); overflow: hidden; }
+.ware-bild .ware-svg { width: 62px; height: 62px; }
+.schrank-bild { width: auto; padding: 0 12px; display: flex; align-items: flex-end; }
+.schrank-bild .portrait { border-radius: 50%; }
+.schrank-bild .huhn { margin-left: -8px; }
+.ware-name { font-weight: 800; font-size: .92rem; line-height: 1.2; }
+.ware-gross { display: grid; place-items: center; margin: 4px auto 12px; width: 140px; height: 140px; border-radius: 18px; background: var(--mulde); }
+.ware-gross .ware-svg { width: 120px; height: 120px; }
+.laden-chips-rahmen { position: relative; }
+.laden-chips-rahmen::after { content: ""; position: absolute; right: -18px; top: 0; bottom: 6px; width: 44px; background: linear-gradient(90deg, transparent, var(--bogen) 70%); pointer-events: none; }
+/* K-D-24: Karins Briefmarke als echte Schwedenflagge, „SVERIGE“ auf weißem Streifen; Linien passend zur Schrift */
+.bv-marke { color: #2F5E8E !important; padding-bottom: 3px !important; background-image: linear-gradient(#F2C230, #F2C230), linear-gradient(#F2C230, #F2C230), linear-gradient(#FBF8F1, #FBF8F1) !important; background-size: 100% 8px, 8px 50px, 100% 15px !important; background-position: 0 21px, 14px 0, 0 100% !important; }
+.bv-papier { background-image: repeating-linear-gradient(transparent 0 calc(1.62rem - 1px), rgba(47,94,142,.16) calc(1.62rem - 1px) 1.62rem) !important; background-position: 0 12px !important; }
+.sheet[data-id="schrank"] .ks-buehne { grid-template-columns: minmax(0, 1fr) minmax(0, 1fr); }
+.sheet[data-id="schrank"] .ks-fig { min-width: 0; }
+.sheet[data-id="schrank"] .ks-fig > svg { width: 64px !important; height: 64px !important; }
+.sheet[data-id="schrank"] .ks-fig-name { margin-top: 0; }
+.sheet[data-id="schrank"] .ks-fig .klein { overflow-wrap: normal; word-break: normal; hyphens: auto; }

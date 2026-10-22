@@ -3,7 +3,7 @@
   const ohneTanzPlan = x => x.t !== "tanzplanen" && x.id !== "SD124";
   if (D.stattDaddeln) D.stattDaddeln = D.stattDaddeln.filter(ohneTanzPlan).map(x => x.id === "SD24" ? { ...x, text: x.text.replace(" oder dem Tanzschüler", " oder der Nachbarin") } : x);
   if (D.missionen) D.missionen = D.missionen.filter(m => m.id !== "M04" && m.id !== "M30" && m.t !== "tanzplanen");
-  if (D.wissen) { D.wissen = D.wissen.filter(w => !["W03", "W06", "W14", "W15"].includes(w.id));
+  if (D.wissen) { D.wissen = D.wissen.filter(w => !["W03", "W06", "W14", "W15", "W19"].includes(w.id));
     D.wissen.forEach(w => { if (w.text) w.text = w.text.replace(/ ?[–(,]? ?etwa einem Nachbarn Tanzen beibringt ?[–),]?/g, "").replace(/einem Nachbarn Tanz[a-zäöü ]*beibringen/g, "anderen helfen"); }); }
   (D.monate || []).forEach(m => (m.impulse || []).forEach(i => { if (i.drinnen) i.drinnen = i.drinnen.replace(" und eine Figur für die Tanzstunde „stehlen“", ""); }));
   if (D.timerVorlagen) D.timerVorlagen = D.timerVorlagen.filter(v => v.id !== "tanzplanen");
@@ -18,7 +18,7 @@
   const m = (D.missionen || []).find(x => x.id === "M31"); if (!m) return;
   const band = () => { try { return (D.hp?.baende || []).find(b => b.nr === S.hp.band); } catch (e) { return null; } };
   Object.defineProperty(m, "titel", { get() { const b = band(); return b ? `Harry Potter, Band ${b.nr}` : "Harry Potter, der nächste Band"; } });
-  Object.defineProperty(m, "text", { get() { const b = band(); return b ? `Du bist bei Band ${b.nr}, „${b.titel.replace("Harry Potter und ", "")}“: Kapitel für Kapitel, ${b.kapitel} insgesamt. Ein Kapitel pro Abend reicht.` : "Kapitel für Kapitel durch den nächsten Band."; } });
+  Object.defineProperty(m, "text", { get() { const b = band(); return b ? `Du bist bei Band ${b.nr}, „${b.titel.replace("Harry Potter und d", "D")}“: Kapitel für Kapitel, ${b.kapitel} insgesamt. Ein Kapitel pro Abend reicht.` : "Kapitel für Kapitel durch den nächsten Band."; } });
 })();
 
 /* Angebots-IDs stabil aus dem Namen */

@@ -680,7 +680,7 @@ D.buecher = [
 {
 "titel": "z. B. „Sommer, jetzt!“",
 "autor": "Dora Heldt",
-"text": "Heitere Unterhaltung mit älteren Hauptfiguren, Nordsee-Gefühl. Ausgaben in dtv-Großdruck existieren (ISBN 978-3-423-25424-3; die Reihe 978-3-423-25xxx ist dtv-Großdruck,  für diesen Titel nicht einzeln bestätigt)."
+"text": "Heitere Unterhaltung mit Nordsee-Gefühl und Figuren mit Lebenserfahrung. Ausgaben in dtv-Großdruck existieren (ISBN 978-3-423-25424-3; die Reihe 978-3-423-25xxx ist dtv-Großdruck,  für diesen Titel nicht einzeln bestätigt)."
 },
 {
 "titel": "Drei Männer im Schnee",
@@ -1444,7 +1444,7 @@ D.monate = [
 "drinnen": "Ein Lied über Linden summen („Am Brunnen vor dem Tore“)."
 },
 {
-"text": "Such Heidelbeeren im Kiefernwald. Waldheidelbeeren wachsen auf saurem Boden. Nur gewaschen essen (Immunsuppression).",
+"text": "Such Heidelbeeren im Kiefernwald. Waldheidelbeeren wachsen auf saurem Boden.",
 "drinnen": "Heidelbeer-Pfannkuchen-Rezept."
 },
 {
@@ -1704,7 +1704,7 @@ D.lebensbuch = [
 },
 {
 "id": "L25",
-"frage": "Was hast du nach deinem 70. Geburtstag noch neu gelernt?",
+"frage": "Was hast du in den letzten Jahren ganz neu gelernt?",
 "mit": "zusammen"
 },
 {

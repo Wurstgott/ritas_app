@@ -21,7 +21,7 @@ D.ruhe = {
     "Ich muss nicht die ganze Zukunft bewältigen. Nur den nächsten Moment.",
     "Das ist unangenehm, aber es geht vorbei. Ich bleibe sitzen, bis es leiser wird.",
     "Ein Atemzug nach dem anderen.",
-    "Ich darf anhalten. Ich darf mir helfen lassen. Ich muss niemandem etwas beweisen.",
+    "Ich darf stehen bleiben. Ich darf mir helfen lassen. Ich muss niemandem etwas beweisen.",
     "Stehaufmännchen kippen auch mal. Und stehen wieder auf.",
     "Mein Kopf macht gerade Theater. Ich muss nicht mitspielen."
   ],
@@ -51,10 +51,10 @@ function ruheUnterwegsListe() { const R = ruheP(); return [...D.ruhe.unterwegs.f
 function ruheSheet() { sheet({ titel: "Mein Notfallplan", inhalt: ruheInhalt(), id: "ruhe" }); }
 function ruheInhalt() {
   const R = ruheP(), hilft = ruheHilftListe();
-  return `<p>${A("Wenn es eng wird – zu Hause oder unterwegs –, steht hier, was dann hilft. Geübt wird an ruhigen Tagen, dann sitzt es im Ernstfall.", "Wenn es eng wird – zu Hause oder unterwegs –, steht hier, was dann hilft. Geübt wird an ruhigen Tagen, dann sitzt es im Ernstfall.")}</p>
+  return `<p>${A("Wenn es eng wird, zu Hause oder unterwegs: Hier steht, was dir dann hilft. Am besten ab und zu an einem ruhigen Tag durchgehen – dann sitzt es, wenn du es brauchst.", "Wenn es eng wird, zu Hause oder unterwegs: Hier steht, was Ihnen dann hilft. Am besten ab und zu an einem ruhigen Tag durchgehen – dann sitzt es, wenn Sie es brauchen.")}</p>
     <button class="knopf haupt voll" data-act="ruhe-jetzt">${ic("atem")} Jetzt Schritt für Schritt</button>
     <h3 style="margin-top:20px">Üben</h3><div class="liste">
-      ${zeileBtn("atem", "Atmen üben", "2 Minuten, länger aus als ein", `data-act="ruhe-atmen"`, "k-ruhe")}
+      ${zeileBtn("atem", "Atmen üben", "2 Minuten: länger aus- als einatmen", `data-act="ruhe-atmen"`, "k-ruhe")}
       ${zeileBtn("feder", "Probelauf", "Alle Schritte einmal in Ruhe durchgehen", `data-act="ruhe-probe"`, "k-ruhe")}
     </div>${R.geuebt ? `<p class="klein" style="margin-top:6px">Schon ${R.geuebt}-mal geübt.</p>` : ""}
     <h3 style="margin-top:20px">${A("Dein Plan", "Ihr Plan")}</h3>
@@ -105,7 +105,7 @@ function ruheSchrittHTML() {
   else if (i === 5) { const hilft = ruheHilftListe(); h = `<h2>Was jetzt guttut</h2>
       ${(R.leute || []).length ? `<div class="liste">${R.leute.map(p => p.nr ? `<a class="liste-zeile" href="tel:${esc(p.nr.replace(/[^\d+]/g, ""))}">${ic("telefon")}<span class="text"><span class="titel">${esc(p.name)} anrufen</span><br><span class="unter zahl">${esc(p.nr)}</span></span></a>` : `<div class="liste-zeile" style="cursor:default">${ic("telefon")}<span class="text"><span class="titel">${esc(p.name)}</span></span></div>`).join("")}</div><p class="klein" style="margin-top:8px">Erklären muss man nichts. Zum Beispiel: „Hast du kurz Zeit? Erzähl mir irgendwas, ich brauch grad eine Stimme.“</p>` : (RUHE.modus === "probe" ? `<button class="knopf zweit voll" data-act="ruhe-bearbeiten">${ic("telefon")} Jemanden zum Anrufen eintragen</button>` : "")}
       ${hilft.length ? `<ul class="ruhe-fragen">${hilft.map(t => `<li>${esc(t)}</li>`).join("")}</ul>` : `<p>Ein Glas Wasser, frische Luft, ein ruhiger Platz.</p>`}`; }
-  else h = `<h2>Später</h2><p>Unterwegs gilt: Weiter geht es erst, wenn ich mich wieder sicher und klar fühle. Wenn nicht, hole ich mir jemanden dazu oder lasse mich abholen. Das ist kein Aufgeben, das ist klug.</p><p>Wenn es ruhiger ist, kann ich mich fragen: Was weiß ich gerade wirklich? Gibt es einen nächsten kleinen Schritt? Und wenn nicht: Die Frage kann warten.</p>${gross("Geschafft. Wenn ein Schritt geholfen hat, reicht das völlig.")}`;
+  else h = `<h2>Später</h2><p>Unterwegs gilt: Weiter geht’s, wenn ich mich wieder sicher fühle. Sonst hole ich mir jemanden dazu oder lasse mich abholen.</p><p>Wenn es ruhiger ist, kann ich mich fragen: Was weiß ich gerade wirklich? Gibt es einen nächsten kleinen Schritt? Und wenn nicht: Die Frage kann warten.</p>${gross("Geschafft. Wenn ein Schritt geholfen hat, reicht das völlig.")}`;
   return punkte + h + (i === 5 || i === 0 ? notfallKlein() : "");
 }
 function ruheFussHTML() {

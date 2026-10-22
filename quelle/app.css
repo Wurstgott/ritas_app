@@ -1029,3 +1029,132 @@ button.gruss-himmel svg { width: 46px; height: 50px; overflow: visible; }
 html, body { touch-action: manipulation; -webkit-text-size-adjust: 100%; }
 .portrait, .huhn, .figur-bild, #buehne-gross, canvas, svg, .tel-leiste, .tel-kontakt, .er-figur, .logo-knopf, .huhn-karte { -webkit-touch-callout: none; -webkit-user-select: none; user-select: none; }
 #buehne-gross, .huhn-karte, .logo-knopf { -webkit-tap-highlight-color: transparent; }
+
+/* ===== Code-Umsetzung (Review): Layout, Lesbarkeit, neue Bausteine ===== */
+/* QA-05: große Schrift auf schmalen Handys – nichts ragt heraus */
+.tel-wahl { grid-template-columns: repeat(auto-fit, minmax(min(100%, 8.5rem), 1fr)); }
+.tuer-gross .titel { font-size: clamp(1.1rem, 6vw, 1.4rem); hyphens: auto; overflow-wrap: normal; }
+.sheet-kopf h2, .sheet .sheet-kopf h2 { overflow-wrap: normal; word-break: normal; hyphens: auto; }
+nav.tabs span { font-size: clamp(.7rem, 3.4vw, .85rem); }
+.schalter-zeile { min-width: 0; max-width: 100%; }
+.schalter-zeile > span:first-child { min-width: 0; overflow-wrap: break-word; hyphens: auto; }
+/* UX-07: ruhiger Zeilenabstand in Listenzeilen */
+.liste-zeile .text, .tf-kurz > span { line-height: 1.3; }
+/* UX-08: Ideen kurz anteasern – höchstens zwei Zeilen */
+.kurz-liste .liste-zeile .unter { display: -webkit-box; -webkit-line-clamp: 2; -webkit-box-orient: vertical; overflow: hidden; }
+/* UX-09: Kontrast der Türen */
+.tuer-gross.drinnen { background: linear-gradient(160deg, #B4612A, #8E4322); }
+.tuer-gross.draussen { background: linear-gradient(160deg, #3D7339, #24502F); }
+.tuer-gross .unter { opacity: 1; font-size: .92rem; }
+/* UX-10: Tagebuch-Umschalter in eigener Zeile, gut zu treffen */
+.tb-karte .chips.tb-modus { margin: 8px 0 4px; }
+.tb-karte .chips .chip { min-height: 48px; padding: 6px 16px; }
+/* UX-22: „Sehr groß“ – Hühnchen kleiner, damit die Antworten mit auf den Schirm passen */
+html[data-size="3"] .huhn-karte svg { width: 56px !important; height: 56px !important; }
+/* FUN-22: Sprechblase über dem Kopf, nicht auf dem Kamm */
+.huhn-gross .hg-blase { top: -46px; }
+/* FUN-13: Hühnchen tanzt nach einer Bingo-Reihe */
+.huhn.bingo-tanzt { animation: er-tanz .32s ease-in-out infinite alternate; transform-origin: 50% 100%; transform-box: fill-box; }
+/* FUN-15: Figuren im Telefon und bei Karin bewegen beim Sprechen den Mund */
+.tel-figur { display: inline-flex; flex: none; transform-origin: 50% 100%; }
+/* FUN-02: Besuchs-Sprechblase wächst, Zeilen bleiben stehen */
+.er-blase { max-height: 42vh; overflow-y: auto; min-height: 1.6em; }
+.er-blase .er-zeile { margin: 0 0 6px; }
+.er-blase .er-zeile:last-child { margin-bottom: 0; }
+.er-blase .er-du { font-family: Nunito, system-ui, sans-serif; font-size: .9rem; font-style: italic; opacity: .72; text-align: right; }
+/* FUN-20: Wörterheft */
+.bv-woerter { margin: 6px 0 0; padding-left: 22px; }
+.bv-woerter li { margin-bottom: 4px; }
+/* UX-06: Notfallplan-Leiste auch im Ablenkungs-Blatt */
+.sheet .notfall-leiste { margin: 0 0 14px; }
+/* BRIEF 7: Einrichtung – Brief breiter, Hinweis unter dem Namensfeld nie abgeschnitten */
+.sheet[data-id="onboard"] .max-karte > .portrait { width: 44px !important; height: 44px !important; }
+.sheet[data-id="onboard"] .max-karte { gap: 8px; }
+.sheet[data-id="onboard"] .sheet-inhalt { padding-bottom: 32px; }
+.onb-hinweis { margin: -2px 0 8px; line-height: 1.35; }
+/* Kopfzeile entschlackt: Wetter als kleine Plakette in der Datumszeile, Zahnrad schlicht */
+.gruss-heute h1 { padding-right: 0; }
+.gruss-zeile { display: flex; align-items: center; flex-wrap: wrap; gap: 4px 10px; }
+button.gruss-himmel.wetter-chip { position: static; display: inline-flex; align-items: center; gap: 4px; width: auto; height: 32px; min-height: 32px; padding: 0 10px 0 4px; border-radius: 999px; background: var(--mulde); color: var(--tinte); animation: none; }
+button.gruss-himmel.wetter-chip svg { width: 24px; height: 26px; }
+.wetter-chip .gruss-temp { position: static; background: none; box-shadow: none; padding: 0; font: 800 14px/1 Nunito, system-ui, sans-serif; color: var(--tinte); }
+.wetter-chip::before { content: ""; position: absolute; inset: -8px -2px; } /* Tippfläche ≥ 44 px */
+.wetter-chip { position: relative !important; }
+#knopf-einst.nur-icon svg { width: 34px; height: 34px; padding: 2px; background: none; box-shadow: none; border-radius: 0; }
+#knopf-einst.nur-icon { color: var(--tinte-2, var(--moos)); }
+.sheet[data-id="onboard"] .max-karte { flex-direction: column; align-items: stretch; }
+.sheet[data-id="onboard"] .max-karte > .portrait { width: 52px !important; height: 52px !important; }
+.sheet[data-id="onboard"] .max-karte > .bogen { flex: none !important; }
+button.gruss-himmel.wetter-chip { height: 44px; min-height: 44px; padding: 0 12px 0 6px; }
+.wetter-chip::before { content: none; }
+.er-blase .er-zeile { hyphens: auto; -webkit-hyphens: auto; }
+
+/* ===== Kommission (Code): Besuchskarte – Kopfzeile mit Figur, Text über die volle Breite (K-D-03) ===== */
+.ereignis-kopf { display: grid; grid-template-columns: 60px 1fr; grid-template-areas: "fig name" "text text"; gap: 4px 12px; align-items: center; padding-right: 36px; }
+.ereignis-kopf .er-text { display: contents; }
+.ereignis-kopf .er-figur { grid-area: fig; width: 60px; height: 60px; }
+.ereignis-kopf .er-figur svg { width: 60px !important; height: 60px !important; }
+.ereignis-kopf .er-name { grid-area: name; font-size: 1rem; opacity: .85; }
+.ereignis-kopf .er-blase { grid-area: text; margin: 6px -36px 0 0; padding-top: 10px; max-height: 38vh; -webkit-mask-image: linear-gradient(to bottom, transparent 0, #000 12px); mask-image: linear-gradient(to bottom, transparent 0, #000 12px); cursor: pointer; }
+.er-blase .er-du { font-family: Fraunces, Georgia, serif; font-style: normal; font-size: 1rem; opacity: 1; text-align: left; margin: 2px 0 8px auto; width: fit-content; max-width: 80%; padding: 6px 12px; border-radius: 16px; border-bottom-right-radius: 4px; background: color-mix(in srgb, var(--moos) 18%, var(--bogen)); }
+/* K-D-22/23, K-F-19: Telefon – schlanke Leiste, Auswahl zweispaltig, alle Köpfe im Kreis */
+.tel-wahl { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+.tel-kontakt { min-width: 0; padding: 12px 6px; }
+.tel-kontakt .titel, .tel-kontakt .unter { min-width: 0; overflow-wrap: anywhere; text-align: center; }
+.tel-rund { width: 60px; height: 60px; border-radius: 50%; background: var(--mulde); display: grid; place-items: center; overflow: hidden; }
+.tel-rund svg { width: 56px !important; height: 56px !important; }
+.tel-leiste .titel { white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+.wetter-chip.ohne svg { color: var(--tinte-2); }
+/* K-D-07/K-F-02: Einrichtung – Namensfeld direkt unter dem kurzen Brief */
+.onb-hinweis { margin: 6px 0 0; }
+.onb-mehr { margin-top: 16px; }
+.onb-mehr summary { min-height: 44px; display: flex; align-items: center; font-weight: 700; color: var(--moos); cursor: pointer; }
+.onb-mehr p { margin: 4px 0 0; }
+.onb1 { display: flex; flex-direction: column; }
+/* niedrige Bildschirme: Namensfeld vor den Brief, damit es nie hinter „Weiter“ liegt */
+@media (max-height: 760px) {
+  .onb1 .onb1-name { order: -1; margin-bottom: 14px; }
+  .onb1 .onb1-name .feld { margin-top: 0 !important; }
+  .sheet[data-id="onboard"] .max-karte > .portrait { width: 40px !important; height: 40px !important; }
+}
+.onb-mehr summary::before { content: "▸"; margin-right: 8px; transition: transform .2s; } .onb-mehr[open] summary::before { transform: rotate(90deg); }
+/* K-D-20: Daumen beschriftet, höchstens zwei Aktionen im Toast */
+.toast .knopf.daumen.mit-text { width: auto; border-radius: 999px; padding: 0 14px 0 10px; display: inline-flex; gap: 6px; align-items: center; font-weight: 800; }
+/* K-D-21: Tür-Symbol klein in der Ecke, nicht hinter dem Text; keine Trennstriche */
+.tuer-gross .tg-bild { top: auto; right: 10px; bottom: 10px; opacity: .14; }
+.tuer-gross .tg-bild .icon { width: 48px; height: 48px; }
+.tuer-gross .unter { hyphens: manual; padding-right: 40px; }
+/* K-D-26: Tagebuch-Kachel mit eigener Akzentfarbe (gedecktes Rotbraun) */
+.kachel[data-t="tagebuch"], .abend-chip-tagebuch { --k: #9A5B44; }
+.kachel[data-t="tagebuch"] .icon { color: #9A5B44; }
+@media (prefers-color-scheme: dark) { :root:not([data-theme="light"]) .kachel[data-t="tagebuch"] { --k: #D49A82; } :root:not([data-theme="light"]) .kachel[data-t="tagebuch"] .icon { color: #D49A82; } }
+:root[data-theme="dark"] .kachel[data-t="tagebuch"] { --k: #D49A82; } :root[data-theme="dark"] .kachel[data-t="tagebuch"] .icon { color: #D49A82; }
+/* K-D-27: Porträt in der Kopfzeile im Dunkelmodus gedämpft */
+@media (prefers-color-scheme: dark) { :root:not([data-theme="light"]) #logo svg { filter: brightness(.85); } :root:not([data-theme="light"]) #logo { box-shadow: 0 0 0 2px rgba(0,0,0,.35); border-radius: 50%; } }
+:root[data-theme="dark"] #logo svg { filter: brightness(.85); } :root[data-theme="dark"] #logo { box-shadow: 0 0 0 2px rgba(0,0,0,.35); border-radius: 50%; }
+/* K-F-03: „Sehr groß“ und schmale Handys */
+.sheet .sheet-kopf { display: grid; grid-template-columns: minmax(0, 1fr) auto; gap: 12px; align-items: center; }
+.sheet .sheet-kopf h2 { min-width: 0; overflow-wrap: anywhere; hyphens: auto; }
+.sheet .sheet-kopf > .knopf { flex-shrink: 0; justify-self: end; }
+.tuer-gross .titel { font-size: clamp(1rem, 5.4vw, 1.4rem); overflow-wrap: anywhere; }
+html[data-size="3"] .tuer-gross .titel { font-size: clamp(1rem, 5vw, 1.3rem); }
+nav.tabs button { min-width: 0; }
+nav.tabs span { max-width: 100%; overflow: hidden; text-overflow: clip; font-size: clamp(.62rem, 3.2vw, .85rem); letter-spacing: -.01em; }
+html[data-size="3"] nav.tabs span { font-size: clamp(.6rem, 3vw, .8rem); }
+.ware, .ware-text, .ware > * { min-width: 0; }
+.ware-text { overflow-wrap: anywhere; }
+/* K-F-06: Bingo-Spalten bleiben im Blatt */
+.bingo { grid-template-columns: repeat(3, minmax(0, 1fr)); }
+.bingo-feld { min-width: 0; overflow-wrap: anywhere; hyphens: auto; }
+html[data-size="3"] .bingo-feld { font-size: .75rem; }
+/* K-F-07: Themen-Chips */
+.ideen-themen .chip { gap: 6px; }
+.ideen-themen .chip .icon { width: 18px; height: 18px; }
+.ideen-themen .chip .klein { opacity: .65; font-weight: 600; }
+#knopf-einst.nur-icon { overflow: hidden; border-radius: 14px; } /* Tipp-Welle bleibt im Knopf */
+.tel-leiste .titel { white-space: normal; overflow: visible; }
+.tel-leiste .tel-zusatz { font-weight: 600; opacity: .7; }
+#knopf-einst.nur-icon { overflow: visible; }
+#knopf-einst .welle { display: none; }
+.sheet .sheet-kopf h2 { overflow-wrap: break-word; }
+html[data-size="3"] .sheet .sheet-kopf h2 { font-size: clamp(1rem, 5.6vw, 1.25rem); }

@@ -154,16 +154,15 @@ D.winter = {
 
   /* ---------- Schutz im Alltag ---------- */
   schutz: [
-    { titel: "FFP2 richtig aufsetzen", text: "Hände waschen, Maske nur an den Bändern anfassen, über Nase und Kinn legen, Bänder hinter die Ohren. Dann den Nasenbügel mit beiden Zeigefingern von der Mitte nach außen an die Nase drücken – nicht mit einem Finger zukneifen." },
-    { titel: "Der Dichtsitz-Check", text: "Einmal tief einatmen: Die Maske sollte sich leicht ansaugen. Dann kräftig ausatmen: Spürst du Luft an den Seiten oder beschlägt die Brille, sitzt sie noch nicht dicht. Bügel nachformen, Bänder anders legen – oder ein anderes Modell probieren. Masken gibt es in Größen." },
-    { titel: "Masken im Wochenwechsel", text: "Sieben Masken mit Mo bis So beschriften, jede nach dem Tragen an einem Haken oder in einer offenen Papiertüte trocknen lassen und erst nach einer Woche wieder nehmen. Durchfeuchtete, verschmutzte oder ausgeleierte Masken gleich in den Müll." },
     { titel: "Einkaufen zu ruhigen Zeiten", text: "Früh morgens kurz nach Öffnung oder werktags um die Mittagszeit ist es in vielen Supermärkten am leersten; Samstag und der Feierabend sind am vollsten. Mit Einkaufszettel geht es doppelt so schnell." },
     { titel: "Liefern lassen oder abholen", text: "Viele Supermärkte und die Apotheke liefern oder packen vor (Click & Collect). Bestellen am Handy, abholen an der Tür oder Packstation – Max richtet das gern einmal mit dir ein." },
     { titel: "Besuch mit offenem Fenster", text: "Wenn jemand da ist: zwischendurch alle 20 bis 30 Minuten kurz querlüften. Eine CO2-Ampel zeigt es dir ohne Rechnen – grün ist gut, ab gelb (etwa 1000 ppm) Fenster auf. Sieht aus wie ein kleines Spielzeug und ist erstaunlich überzeugend für Gäste." },
-    { titel: "Hände waschen nach dem Heimkommen", text: "Jacke aus, Hände waschen, dann erst Kaffee. 20 bis 30 Sekunden mit Seife, also etwa zweimal „Happy Birthday“ summen. Für unterwegs ein kleines Fläschchen Desinfektion in die Jackentasche." },
     { titel: "Schnelltests vorrätig", text: "Ein paar Antigen-Schnelltests im Schrank, bei Zimmertemperatur und nicht in der Sonne oder im kalten Auto. Ablaufdatum (die kleine Sanduhr) ab und zu checken. Für Besuch: Test am selben Tag, kurz vorher – und Tests gern auch verschenken, das macht das Fragen leichter." },
-    { titel: "Im Bus der gute Platz", text: "Nahe der Tür, wo bei jedem Halt frische Luft reinkommt, oder am Fenster. Wenn es voll wird: Maske auf, eine Bahn später nehmen ist auch eine Entscheidung." },
-    { titel: "Draußen ist das neue Drinnen", text: "Mit warmer Jacke, Sitzkissen und Thermoskanne ist eine Bank im Winter eine prima Verabredung. Unter freiem Himmel verteilt sich die Luft ganz von selbst." }
+    { titel: "Im Bus der gute Platz", text: "Nahe der Tür, wo bei jedem Halt frische Luft reinkommt, oder am Fenster. Wenn es voll wird: einfach die nächste nehmen." },
+    { titel: "Die Bank als Verabredung", text: "Mit warmer Jacke, Sitzkissen und Thermoskanne ist eine Bank im Winter eine prima Verabredung. Unter freiem Himmel verteilt sich die Luft ganz von selbst." },
+    { titel: "Kino am Nachmittag", text: "Unter der Woche um drei ist im Kino oft kaum jemand. Freie Platzwahl, eine Reihe ganz für dich – und wenn du rauskommst, ist es noch hell." },
+    { titel: "Museum zur stillen Stunde", text: "Dienstag bis Donnerstag am Vormittag sind viele Museen fast leer. Mit einem Zeitfenster-Ticket kommen außerdem nicht alle auf einmal." },
+    { titel: "Konzert vom Sofa", text: "ARTE Concert zeigt ganze Konzerte zum Nachschauen, von Klassik bis Pop. Kostenlos, bester Platz, und an der Garderobe drängelt keiner." }
   ],
 
   /* ---------- Besuch: Bitte um einen Test ---------- */
@@ -183,8 +182,8 @@ D.winter = {
     { titel: "Spandauer Forst mit Ziel", text: "Ein Spaziergang ist besser mit Ziel: zum Wildgehege, den Kuhlake-Uferweg entlang, zum Moor am Teufelsbruch oder bis zur nächsten Bank mit Aussicht. Unterwegs Vögel zählen oder Spuren im Schnee raten." },
     { titel: "Zitadellen-Runde", text: "Einmal außen um die Zitadelle über den Wassergraben schauen, die Enten begrüßen, Fotos machen. Danach einen Tee aus der Thermoskanne auf der Bank am Wasser." },
     { titel: "Havelufer-Spaziergang", text: "An der Havel entlang ist die Luft weit und das Licht im Winter oft wunderschön. Wer zuerst einen Graureiher entdeckt, bekommt den letzten Keks." },
-    { titel: "Glühpunsch am Fenster im Hof", text: "Nachbarin unten im Hof, du am offenen Fenster – oder umgekehrt. Beide mit einem Becher alkoholfreiem Punsch, Lichterkette dran, fertig ist der kleinste Weihnachtsmarkt Spandaus." },
-    { titel: "Gartentor-Kaffee", text: "Kurz vorbeikommen, nicht reinkommen: Ein Becher Tee am Gartentor oder auf dem Balkon, zehn Minuten Schwatz, warme Hände am Becher. Klein, aber es zählt." },
+    { titel: "Glühpunsch am Fenster im Hof", text: "Nachbarin unten im Hof, du am offenen Fenster – oder umgekehrt. Beide mit einem Becher alkoholfreiem Punsch, Lichterkette dran – der kleinste Weihnachtsmarkt Spandaus." },
+    { titel: "Gartentor-Kaffee", text: "Kurz vorbeikommen, nicht reinkommen: Ein Becher Tee am Gartentor oder auf dem Balkon, zehn Minuten Schwatz, warme Hände am Becher." },
     { titel: "Spaziergang mit Telefon", text: "Wenn Treffen gerade nicht klappt: Beide gehen gleichzeitig los, jede in ihrem Viertel, und telefonieren dabei. Man erzählt sich, was man sieht – das ist erstaunlich gesellig." }
   ]
 };
@@ -216,9 +215,6 @@ D.stattDaddeln.push(
   {"id":"SD419","titel":"Hygrometer-Rundgang","text":"Trag das Hygrometer einmal durch die Wohnung und schreib für jedes Zimmer Temperatur und Luftfeuchte auf. Welches Zimmer ist das trockenste, welches das kühlste?","min":10,"tf":"ABC","kat":"Gut geschützt","haltung":"im Stehen","t":"ordnung"},
   {"id":"SD420","titel":"Mein Lüftungsplan","text":"Schreib dir einen Lüftungsplan an den Kühlschrank: morgens, mittags, nachmittags und abends je 5 bis 10 Minuten Fenster ganz auf. Hak eine Woche lang ab.","min":10,"tf":"ABC","kat":"Gut geschützt","haltung":"im Sitzen","t":"papier",
    "schritte":["Vier Zeiten festlegen, etwa nach dem Aufstehen, vor dem Mittag, nachmittags, vor dem Schlafen.","Heizung beim Lüften zudrehen, Fenster ganz auf – nicht kippen.","Wecker im Handy stellen oder Zettel ans Fenster.","Nach einer Woche aufs Hygrometer schauen: Hat sich was getan?"]},
-  {"id":"SD421","titel":"Dichtsitz-Check vor dem Spiegel","text":"Setz eine FFP2-Maske vor dem Spiegel auf, form den Nasenbügel mit beiden Zeigefingern und mach den Atemtest: ansaugen beim Einatmen, keine Luft an den Seiten beim Ausatmen.","min":5,"tf":"ABC","kat":"Gut geschützt","haltung":"im Stehen","t":"gelernt"},
-  {"id":"SD422","titel":"Die Masken-Wochenbox","text":"Bastel aus einem Schuhkarton oder sieben Papiertüten eine Masken-Wochenbox mit Mo bis So. Jede Maske darf eine Woche verschnaufen, bevor sie wieder dran ist.","min":20,"tf":"ABC","kat":"Gut geschützt","haltung":"im Sitzen","t":"handarbeit"},
-  {"id":"SD423","titel":"Masken-Modelle testen","text":"Probier zwei oder drei verschiedene FFP2-Modelle aus und notier, welche am dichtesten sitzt und welche die Brille nicht beschlagen lässt. Die Siegerin kaufst du nach.","min":15,"tf":"ABC","kat":"Gut geschützt","haltung":"im Stehen","t":"erstesmal"},
   {"id":"SD424","titel":"Test-Vorrat checken","text":"Zähl deine Schnelltests, schau auf die kleine Sanduhr fürs Ablaufdatum und schreib auf, was nachgekauft werden muss. Die ältesten nach vorn.","min":5,"tf":"ABC","kat":"Gut geschützt","haltung":"im Sitzen","t":"versorgung"},
   {"id":"SD425","titel":"Die ruhigste Supermarkt-Stunde","text":"Finde heraus, wann dein Supermarkt am leersten ist: Bei Google Maps steht unter dem Laden „Stoßzeiten“, oder frag an der Kasse. Notier deine Lieblingszeit.","min":10,"tf":"ABC","kat":"Gut geschützt","haltung":"im Sitzen, im Liegen","t":"gelernt"},
   {"id":"SD426","titel":"Einmal liefern lassen","text":"Bestell einen Einkauf oder etwas aus der Apotheke zum ersten Mal per Lieferung oder Click & Collect. Wenn es hakt: Max anrufen und zusammen durchklicken.","min":20,"tf":"ABC","kat":"Gut geschützt","haltung":"im Sitzen","t":"erstesmal"},
@@ -230,5 +226,7 @@ D.stattDaddeln.push(
   {"id":"SD431","titel":"CO2-Ampel im Selbstversuch","text":"Stell eine CO2-Ampel ins Wohnzimmer und beobachte, wie schnell sie bei geschlossenem Fenster gelb wird – und wie schnell sie nach dem Lüften wieder grün ist.","min":15,"tf":"ABC","kat":"Gut geschützt","haltung":"im Sitzen","t":"gelernt"},
   {"id":"SD432","titel":"Schnelltests als Geschenk","text":"Pack zwei Schnelltests in einen Umschlag mit einem netten Zettel – „Für unseren nächsten Kaffee“ – und gib ihn jemandem mit, der dich bald besucht.","min":10,"tf":"ABC","kat":"Gut geschützt","haltung":"im Sitzen","t":"brief"},
   {"id":"SD433","titel":"Der Heimkomm-Platz","text":"Richte am Eingang einen Heimkomm-Platz ein: Haken für die Jacke, Schale für Schlüssel und Maske, Handcreme neben dem Waschbecken. Ankommen in drei Handgriffen.","min":15,"tf":"AB","kat":"Gut geschützt","haltung":"im Stehen","t":"ordnung"},
+  {"id":"SD435","titel":"Kino zur Kaffeezeit","text":"Such dir im Programm des Kinos in der Altstadt eine Nachmittagsvorstellung unter der Woche heraus. Um drei sitzt man da oft mit einer Handvoll Leuten im Saal und hat freie Platzwahl.","min":10,"tf":"ABC","kat":"Gut geschützt","haltung":"im Sitzen","t":"kultur"},
+  {"id":"SD436","titel":"Ein Konzert vom Sofa","text":"Such dir bei ARTE Concert ein ganzes Konzert aus, Klassik, Jazz oder Pop, und schau es groß auf dem Fernseher oder Tablet. Logenplatz ohne Schlange an der Garderobe.","min":30,"tf":"ABCD","kat":"Gut geschützt","haltung":"im Sitzen, im Liegen","t":"musik","links":[{"text":"ARTE Concert öffnen","url":"https://www.arte.tv/de/arte-concert/"}]},
   {"id":"SD434","titel":"Schal-Atmen im Frost","text":"Geh eine kurze Runde in die Kälte, den Schal locker über Mund und Nase, und atme ruhig durch die Nase. Spür nach: Wie fühlt sich die Luft nach ein paar Minuten an?","min":15,"tf":"AB","kat":"Gut geschützt","haltung":"unterwegs","t":"gehen"}
 );

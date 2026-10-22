@@ -200,7 +200,7 @@ D.eier = {
 },
 "max-erster-april": {
 "wer": "max",
-"text": "Wichtige Mitteilung: Die App kann ab heute Kuchen backen. … 1. April. Christiane kann’s aber wirklich.",
+"text": "Wichtige Mitteilung: Die App kann ab heute Kuchen backen. … 1. April. Jane kann’s aber wirklich.",
 "form": "brief",
 "selten": 1
 },
@@ -213,7 +213,7 @@ D.eier = {
 "max-nikolaus": {
 "wer": "max",
 "text": "Nikolaus! Stiefel rausgestellt? Ich hab Hühnchen gebeten nachzuschauen. Es kommt nicht vom Regal runter.",
-"form": "zettel",
+"form": "brief",
 "selten": 1
 },
 "huhn-muetze": {

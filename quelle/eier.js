@@ -1,5 +1,5 @@
 /* ============================================================
-   Kleine Überraschungen: Max, Hühnchen und Christiane melden sich
+   Kleine Überraschungen: Max, Hühnchen und Jane melden sich
    ab und zu – an bestimmten Tagen, nach bestimmten Dingen, zufällig.
    Regeln: höchstens 1 Tages-Ereignis, dazu höchstens 2 nach Antippen/Abhaken;
    nicht am ersten Tag; an Sparflamme-Tagen nur die leisen; abschaltbar.
@@ -22,7 +22,7 @@ function eiErlaubt(id, art) {
   if (art === "extra" && S.eierTag.extra >= 2) return false;
   return eiWuerfel(id) < (e.selten ?? 1);
 }
-const EI_WER = { huhn: "Hühnchen", max: "Max", christiane: "Christiane", micha: "Micha" };
+const EI_WER = { huhn: "Hühnchen", max: "Max", christiane: "Jane", micha: "Micha" };
 function eiZeigen(id, art) {
   const e = D.eier[id]; eiZustand()[id] = heute();
   if (art === "tag") S.eierTag.tages++; else S.eierTag.extra++;
@@ -31,7 +31,12 @@ function eiZeigen(id, art) {
   else if (e.form === "brief") S.extraPost = { tag: heute(), wer: e.wer, text: e.text };
   else if (e.form === "zettel" || e.form === "bild") S.zettel = { tag: heute(), wer: e.wer, text: e.text };
   speichern();
-  if (e.form === "toast") setTimeout(() => toast(`${EI_WER[e.wer]}: „${e.text}“`, { dauer: 7000 }), art === "extra" ? 1800 : 600);
+  if (e.form === "toast") {
+    // nach einem Eintrag erst, wenn die Rückmeldung weg ist – nicht alles auf einmal
+    const bis = Date.now() + 30000;
+    const zeig = () => { if (art === "extra" && $(".toast") && Date.now() < bis) { setTimeout(zeig, 700); return; } toast(`${EI_WER[e.wer]}: „${e.text}“`, { dauer: 7000 }); };
+    setTimeout(zeig, art === "extra" ? 1800 : 600);
+  }
   return true;
 }
 function eiVersuch(ids, art) { for (const id of ids) if (eiErlaubt(id, art)) return eiZeigen(id, art); return false; }
@@ -50,7 +55,7 @@ function eierTag() {
   if (m === 4 && t === 1) kandidaten.push("max-erster-april");
   if (m === 9 && t === 1) kandidaten.push("max-gleis");
   if (m === 7 && t === 31) kandidaten.push("huhn-harry-geburtstag");
-  if (m === 12 && t === 6 && h < 13) kandidaten.push("max-nikolaus");
+  if (m === 12 && t === 6) kandidaten.push("max-nikolaus");
   if (heute() === osterSonntag(j)) kandidaten.push("huhn-ostern");
   if (m === 12 && t <= 26) kandidaten.push("huhn-muetze");
   if (zuletzt >= 14) kandidaten.push("huhn-lange-weg"); else if (zuletzt >= 7) kandidaten.push("max-wieder-da");
@@ -66,6 +71,7 @@ function eierTag() {
   eiVersuch(kandidaten, "tag");
   S.zuletztOffen = heute(); speichern();
 }
+function letzterSonntag(y, monat) { const d = new Date(y, monat, 0, 12); return d.getDate() - d.getDay(); } // Tag im Monat (1–12)
 function osterSonntag(y) { const a = y % 19, b = Math.floor(y / 100), c = y % 100, d = Math.floor(b / 4), e = b % 4, f = Math.floor((b + 8) / 25), g = Math.floor((b - f + 1) / 3), h = (19 * a + b - d - g + 15) % 30, i = Math.floor(c / 4), k = c % 4, l = (32 + 2 * e + 2 * i - h - k) % 7, m = Math.floor((a + 11 * h + 22 * l) / 451), mo = Math.floor((h + l - 7 * m + 114) / 31), da = ((h + l - 7 * m + 114) % 31) + 1; return tagVon(new Date(y, mo - 1, da, 12)); }
 
 /* Nach einem Eintrag */

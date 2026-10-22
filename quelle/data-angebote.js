@@ -6,7 +6,7 @@ const neu = [
 "kategorie": "Tanz & Musik",
 "wann": "freitags 14:45–17:45 (Einlass 13:45): 23./30.10., 13./20./27.11., 11.12.2026; ab 8.1.2027 wieder jeden Freitag",
 "wo": "Seniorenklub Hakenfelde, Helen-Keller-Weg 10, 13587 Berlin",
-"text": "Live-Musik, Kaffee und Kuchen und ein voller Saal. Vielleicht ist auch ein Schritt für deinen Tanzschüler dabei.",
+"text": "Live-Musik, Kaffee und Kuchen. Am Nachmittag ist es meist ruhiger – vielleicht ist auch ein Schritt für deinen Tanzschüler dabei.",
 "kosten": "3,10 €",
 "wc": null,
 "tel": "030 335 50 20",

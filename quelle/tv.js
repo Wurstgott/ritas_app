@@ -14,7 +14,7 @@ function tvAufraeumen() {
 }
 function tvLaden() {
   if (!/github\.io$/.test(location.hostname)) return;
-  fetch("tv.json", { cache: "no-store" }).then(r => r.ok ? r.json() : null).then(T => { if (T && T.stand && Array.isArray(T.mediathek) && (!S.tvRepo || S.tvRepo.stand !== T.stand)) { S.tvRepo = T; speichern(); } }).catch(() => { });
+  fetch("tv.json", { cache: "no-store" }).then(r => r.ok ? r.json() : null).then(T => { if (T && typeof T.stand === "string" && Array.isArray(T.mediathek) && (!S.tvRepo || S.tvRepo.stand !== T.stand)) { const ok = x => x && typeof x === "object" && typeof x.titel === "string" && ["text", "sender", "datum", "zeit", "link", "genre", "bis", "art", "laenge"].every(k => x[k] == null || typeof x[k] === "string"); T.mediathek = T.mediathek.filter(ok); T.fernsehen = (Array.isArray(T.fernsehen) ? T.fernsehen : []).filter(ok); S.tvRepo = T; speichern(); } }).catch(() => { });
 }
 function tvKurzDatum(t) { const h = heute(); return t === h ? "Heute" : t === tagPlus(h, 1) ? "Morgen" : datumLang(t).replace(/ \d{4}$/, ""); }
 function tvKarte(x, art) {
@@ -22,7 +22,7 @@ function tvKarte(x, art) {
   const kopf = art === "tv" ? `<span class="tv-zeit">${esc(tvKurzDatum(x.datum))} · ${esc(x.zeit || "")} · ${esc(x.sender || "")}</span>` : `<span class="tv-zeit">${esc(x.sender || "")} · ${esc([x.art, x.laenge].filter(Boolean).join(", "))}</span>`;
   return `<div class="bogen tv-karte">${kopf}<h3 style="font-size:1.05rem;margin:4px 0 6px">${esc(x.titel)}</h3>${x.genre ? `<span class="tv-genre">${esc(x.genre)}</span>` : ""}<p style="margin:6px 0 8px">${esc(x.text || "")}</p>
     ${art !== "tv" && x.bis ? `<p class="klein" style="margin:0 0 6px">In der Mediathek bis ${esc(datumLang(x.bis).replace(/^[^,]*, /, ""))}</p>` : ""}
-    <div class="zeile" style="gap:8px;flex-wrap:wrap">${gemerkt ? `<button class="knopf klein leise" data-act="tv-weg" data-id="${id}">${ic("haken")} Gemerkt</button>` : `<button class="knopf klein zweit" data-act="tv-merk" data-id="${id}" data-art="${art}">${ic("plus")} Merken</button>`}${x.link ? `<a class="knopf klein leise" style="min-height:44px" href="${esc(x.link)}" target="_blank" rel="noopener">${art === "tv" ? "Zur Sendung" : "Ansehen"} ↗</a>` : ""}</div></div>`;
+    <div class="zeile" style="gap:8px;flex-wrap:wrap">${gemerkt ? `<button class="knopf klein leise" data-act="tv-weg" data-id="${id}">${ic("haken")} Gemerkt</button>` : `<button class="knopf klein zweit" data-act="tv-merk" data-id="${id}" data-art="${art}">${ic("plus")} Merken</button>`}${sicher(x.link) ? `<a class="knopf klein leise" style="min-height:44px" href="${sicher(x.link)}" target="_blank" rel="noopener">${art === "tv" ? "Zur Sendung" : "Ansehen"} ↗</a>` : ""}</div></div>`;
 }
 function tvInhalt() {
   tvAufraeumen();
@@ -40,10 +40,10 @@ function tvInhalt() {
   } else {
     html += S.tvMerk.length ? S.tvMerk.slice().sort((a, b) => (a.datum || "9") < (b.datum || "9") ? -1 : 1).map(m => tvKarte(m, m.datum ? "tv" : "mt")).join("") + `<p class="klein">Sendungen verschwinden nach ihrem Termin von selbst von der Liste.</p>` : `<p>Noch nichts gemerkt. Mit „Merken“ landet ein Tipp hier – und am Tag selbst erinnert die App auf „Heute“ daran.</p>`;
   }
-  html += `<p class="klein" style="margin-top:14px">Stand: ${esc(T.stand ? datumLang(T.stand).replace(/^[^,]*, /, "") : "–")}. Max’ Helfer sucht jeden Sonntag neue Tipps heraus.</p>`;
+  html += `<p class="klein" style="margin-top:14px">Stand: ${esc(T.stand ? datumLang(T.stand).replace(/^[^,]*, /, "") : "–")}. Jeden Sonntag kommen neue Tipps dazu.</p>`;
   return html;
 }
-function tvSheet() { sheet({ titel: "Film & Fernsehen", id: "tv", inhalt: tvInhalt() }); }
+function tvSheet() { sheet({ titel: "Film & Fernsehen", id: "tv", inhalt: tvInhalt(), onclose: () => setTimeout(() => { if (!SHEETS.length) render({ halteScroll: true, ohneAnim: true }); }, 250) }); }
 function tvHeuteHTML() {
   tvAufraeumen(); const h = heute(), heuteTv = (S.tvMerk || []).filter(m => m.datum === h);
   if (!heuteTv.length) return "";

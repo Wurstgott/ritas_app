@@ -7,17 +7,19 @@
    Teile mit Klassen, damit CSS sie bewegen kann (Kopf wippt, Augen blinzeln, Schnabel spricht, Flügel winkt). */
 function huhnSVG(opt = {}) {
   const nurKopf = opt.kopf, stimmung = opt.stimmung || "", gr = opt.gr || 80;
-  const vb = nurKopf ? "40 6 56 52" : "0 0 100 100";
-  return `<svg class="huhn ${stimmung}" viewBox="${vb}" style="width:${gr}px;height:${gr}px" aria-hidden="true">
-  ${nurKopf ? "" : `<ellipse cx="50" cy="95" rx="26" ry="3.2" fill="rgba(20,28,24,.16)"/><rect x="26" y="83" width="46" height="10" rx="5" fill="#5B8A47"/>
+  /* Kleiderschrank (skins.js): opt.skin = undefined → was Hühnchen gerade trägt, false/null → nichts, "id" → Anprobe */
+  const L = typeof skinSchichten === "function" ? skinSchichten("huhn", nurKopf ? "kopf" : "seite", opt.skin) : null;
+  const vb = nurKopf ? (L && L.vb || "40 6 56 52") : "0 0 100 100";
+  return `<svg class="huhn ${stimmung}${L ? " mit-skin" : ""}" viewBox="${vb}" style="width:${gr}px;height:${gr}px${L && L.hoch && !nurKopf ? ";overflow:visible" : ""}" aria-hidden="true">
+  ${nurKopf ? "" : `<ellipse cx="50" cy="95" rx="26" ry="3.2" fill="rgba(20,28,24,.16)"/><rect x="26" y="83" width="46" height="10" rx="5" fill="#5B8A47"/>${L ? L.hinten : ""}
   <g class="huhn-koerper">
     <path d="M30 60 Q16 50 19 34 Q26 44 38 50Z" fill="#C9913C"/>
     <path d="M26 66 Q24 46 44 44 Q62 42 72 56 Q80 70 68 80 Q56 88 42 86 Q28 84 26 66Z" fill="#E4B24F"/>
     <path class="huhn-fluegel" d="M34 62 Q46 52 60 60 Q58 73 46 75 Q35 73 34 62Z" fill="#CC913C"/>
-  </g>`}
+  </g>${L ? L.koerper : ""}`}
   <g class="huhn-kopf">
     <path d="M48 46 Q42 22 60 18 Q78 15 79 32 Q80 47 66 51 Q54 53 48 46Z" fill="#E4B24F"/>
-    <g class="huhn-kamm" fill="#D9473A"><circle cx="56" cy="16" r="5"/><circle cx="63" cy="12.5" r="5.6"/><circle cx="70" cy="15.5" r="4.6"/></g>
+    <g class="huhn-kamm" fill="#D9473A"${L && L.ohneKamm ? ' style="display:none"' : ""}><circle cx="56" cy="16" r="5"/><circle cx="63" cy="12.5" r="5.6"/><circle cx="70" cy="15.5" r="4.6"/></g>
     <path d="M73 45 Q78 51 73 56 Q68 52 69.5 46Z" fill="#D9473A"/>
     <ellipse cx="59" cy="42" rx="3.6" ry="2.3" fill="#EE8E78" opacity=".55"/>
     <g class="huhn-augen">
@@ -27,15 +29,19 @@ function huhnSVG(opt = {}) {
       <g class="lider" fill="#E4B24F" opacity="0"><ellipse cx="65" cy="31" rx="9.2" ry="10.2"/></g>
     </g>
     <g class="huhn-schnabel"><path class="unten" d="M76 39 L88 41 L76 45Z" fill="#D9921C"/><path class="oben" d="M76 30 Q86 31 93 36 Q86 39 76 40Z" fill="#F4B92A"/></g>
+    ${L ? `<g class="skin-kopf">${L.kopf}</g>` : ""}
   </g>
 </svg>`;
 }
 
-/* Porträt Rita (Logo): blond mit Silbertouch, Bob, fröhliches Lachen, kleine Creolen. Kein Hut. */
-function ritaSVG(gr = 40) {
-  return `<svg class="portrait rita" viewBox="0 0 100 100" style="width:${gr}px;height:${gr}px" aria-hidden="true">
+/* Porträt Rita (Logo): blond mit Silbertouch, Bob, fröhliches Lachen, kleine Creolen. Die Grundfigur bleibt ohne Hut –
+   Hüte, Brillen und Kostüme kommen nur als Zusatz aus dem Kleiderschrank (skins.js), opt.skin wie bei huhnSVG. */
+function ritaSVG(gr = 40, opt = {}) {
+  const L = typeof skinSchichten === "function" ? skinSchichten("rita", "rita", opt.skin) : null;
+  const kid = "rk" + (ritaSVG.n = (ritaSVG.n || 0) + 1); // Körper und Zusätze bleiben im runden Rahmen
+  return `<svg class="portrait rita${L ? " mit-skin" : ""}" viewBox="0 0 100 100" style="width:${gr}px;height:${gr}px" aria-hidden="true"><defs><clipPath id="${kid}"><circle cx="50" cy="50" r="49.2"/></clipPath></defs><g clip-path="url(#${kid})">
   <circle cx="50" cy="50" r="48" fill="#F3E3C0"/>
-  <path d="M14 100 Q16 78 50 76 Q84 78 86 100Z" fill="#22304A"/>
+  <path d="M14 100 Q16 78 50 76 Q84 78 86 100Z" fill="#22304A"/>${L ? L.hinten : ""}
   <path d="M42 70 L58 70 L57 80 Q50 84 43 80Z" fill="#EBBC9C"/>
   <path d="M22 56 Q17 20 50 15 Q83 20 78 56 Q78 68 71 72 L66 71 Q70 42 50 37 Q30 42 34 71 L29 72 Q22 68 22 56Z" fill="#AFA184"/>
   <path d="M50 28.5 C61.5 28.5 68.3 37.5 68.3 48.5 C68.3 61 64 72 50 75.4 C36 72 31.7 61 31.7 48.5 C31.7 37.5 38.5 28.5 50 28.5Z" fill="#F0C9AA"/>
@@ -50,7 +56,7 @@ function ritaSVG(gr = 40) {
   <g class="mund"><path d="M43 62.6 Q50 69.1 57 62.6 Q50 64.3 43 62.6Z" fill="#9A3A2E"/><path d="M44.3 63 Q50 64.8 55.7 63 L55 64.2 Q50 65.6 45 64.2Z" fill="#FFFDF5"/></g>
   <ellipse cx="38.5" cy="56.5" rx="3.4" ry="2.1" fill="#E98B6E" opacity=".4"/><ellipse cx="61.5" cy="56.5" rx="3.4" ry="2.1" fill="#E98B6E" opacity=".4"/>
   <circle cx="31" cy="60" r="2.8" fill="none" stroke="#C9C3B6" stroke-width="1.3"/><circle cx="69" cy="60" r="2.8" fill="none" stroke="#C9C3B6" stroke-width="1.3"/>
-  <g class="brille" opacity="0"><rect x="37.5" y="44" width="11.5" height="7.5" rx="3" fill="#1C2620"/><rect x="51" y="44" width="11.5" height="7.5" rx="3" fill="#1C2620"/><path d="M49 46.5 Q50 45.5 51 46.5 M37.5 46 L32 44.5 M62.5 46 L68 44.5" stroke="#1C2620" stroke-width="1.2" fill="none"/><path d="M39.5 45.5 L42 45.5" stroke="#fff" stroke-width=".9" opacity=".6"/></g>
+  <g class="brille" opacity="0"><rect x="37.5" y="44" width="11.5" height="7.5" rx="3" fill="#1C2620"/><rect x="51" y="44" width="11.5" height="7.5" rx="3" fill="#1C2620"/><path d="M49 46.5 Q50 45.5 51 46.5 M37.5 46 L32 44.5 M62.5 46 L68 44.5" stroke="#1C2620" stroke-width="1.2" fill="none"/><path d="M39.5 45.5 L42 45.5" stroke="#fff" stroke-width=".9" opacity=".6"/></g>${L ? `<g class="skin-vorn">${L.vorn}</g>` : ""}</g>
 </svg>`;
 }
 
@@ -74,11 +80,12 @@ function maxSVG(gr = 64) {
 }
 
 /* Hühnchen von vorn (nur Kopf) – für das „Kopf zum Betrachter drehen“ */
-function huhnFrontSVG(gr = 150) {
-  return `<svg class="huhn huhn-front" viewBox="40 6 56 52" style="width:${gr}px;height:${gr}px" aria-hidden="true">
+function huhnFrontSVG(gr = 150, opt = {}) {
+  const L = typeof skinSchichten === "function" ? skinSchichten("huhn", "front", opt.skin) : null;
+  return `<svg class="huhn huhn-front${L ? " mit-skin" : ""}" viewBox="${L && L.vb || "40 6 56 52"}" style="width:${gr}px;height:${gr}px" aria-hidden="true">
   <g class="huhn-kopf">
     <path class="hg-kopfform" d="M68 17 C79 17 86 25 86 35 C86 45 78 52 68 52 C58 52 50 45 50 35 C50 25 57 17 68 17Z" fill="#E4B24F"/>
-    <g class="huhn-kamm" fill="#D9473A"><circle cx="62.5" cy="16" r="4.6"/><circle cx="68" cy="12.6" r="5.4"/><circle cx="73.5" cy="16" r="4.6"/></g>
+    <g class="huhn-kamm" fill="#D9473A"${L && L.ohneKamm ? ' style="display:none"' : ""}><circle cx="62.5" cy="16" r="4.6"/><circle cx="68" cy="12.6" r="5.4"/><circle cx="73.5" cy="16" r="4.6"/></g>
     <path class="hg-rotkopf" d="M68 17 C79 17 86 25 86 35 C86 45 78 52 68 52 C58 52 50 45 50 35 C50 25 57 17 68 17Z" fill="#E2584A"/>
     <ellipse cx="56.5" cy="41" rx="3.6" ry="2.3" fill="#EE8E78" opacity=".55"/><ellipse cx="79.5" cy="41" rx="3.6" ry="2.3" fill="#EE8E78" opacity=".55"/>
     <g class="hg-striche" stroke="#B8382C" stroke-width="1.3" stroke-linecap="round"><path d="M54 39 L53 42.5"/><path d="M57 39 L56 42.5"/><path d="M80 39 L79 42.5"/><path d="M83 39 L82 42.5"/></g>
@@ -93,6 +100,7 @@ function huhnFrontSVG(gr = 150) {
     <g class="hg-brauen" stroke="#8A5A1E" stroke-width="1.9" stroke-linecap="round" fill="none"><path class="braue-l" d="M56.5 21.8 Q61 19.6 65 21.4"/><path class="braue-r" d="M71 21.4 Q75 19.6 79.5 21.8"/></g>
     <path d="M66 46.5 Q68 53 70 46.5 Q68 47.6 66 46.5Z" fill="#D9473A"/>
     <g class="huhn-schnabel"><path class="unten" d="M65.6 41.6 L70.4 41.6 L68 46Z" fill="#D9921C"/><path class="oben" d="M63.6 37.8 Q68 36.2 72.4 37.8 L68 43.6Z" fill="#F4B92A"/></g>
+    ${L ? `<g class="skin-kopf">${L.kopf}</g>` : ""}
   </g>
 </svg>`;
 }

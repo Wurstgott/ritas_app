@@ -8,7 +8,7 @@ d = pathlib.Path(__file__).parent
 stamp = datetime.datetime.now().strftime("%Y-%m-%d %H:%M")
 
 shell = (d / "app.html").read_text()
-css = (d / "fonts.css").read_text() + (d / "app.css").read_text()
+css = (d / "fonts.css").read_text() + (d / "app.css").read_text() + ((d / "skins.css").read_text() if (d / "skins.css").exists() else "")
 data = "\n".join((d / f).read_text() for f in ["data.js","data-orte.js","data-inhalte.js","data-laden.js","data-korrektur.js","data-sprache.js","data-lektorat.js","data-ablenkung.js", "data-winter.js","data-angebote.js","data-eier.js","data-eier2.js","data-anrufe.js", "data-anrufe2.js", "data-brevvan.js", "data-ereignisse2.js", "data-feinschliff.js"] if (d / f).exists())
 _tj = d / "tv.json"
 if _tj.exists():
@@ -19,7 +19,39 @@ if _aj.exists():
     import json as _json
     _a = _json.loads(_aj.read_text())
     data += "\n/* Angebote aus angebote.json */\n(function(){var A=" + _json.dumps(_a, ensure_ascii=False) + ";D.angeboteStand=A.stand;if(A.kategorien)D.angeboteKat=A.kategorien;D.angebote=A.angebote.map(function(x){return Object.assign({},x,{id:'an-'+angebotId(x.name)})});})();\n"
-app = "\n".join((d / f).read_text() for f in ["core.js","figuren.js","scene.js","views.js","ruheplan.js","eigenes.js","eier.js","extras.js","telefon.js", "brevvan.js", "buecher.js", "tv.js", "winter.js", "ereignisse.js", "wunsch.js", "wetter.js","game.js","main.js"]).replace("__BUILD__", stamp)
+app = "\n".join((d / f).read_text() for f in ["core.js","skins.js","figuren.js","scene.js","views.js","ruheplan.js","eigenes.js","eier.js","extras.js","telefon.js", "brevvan.js", "buecher.js", "tv.js", "winter.js", "ereignisse.js", "wunsch.js", "wetter.js","game.js","main.js"]).replace("__BUILD__", stamp)
+# --- Schriften verkleinern (QA-17): Kaushan Script fällt weg (von Satisfy verdrängt),
+#     alle übrigen werden auf die Zeichen reduziert, die in der App vorkommen (+ Latin-1/Ext-A, Typo-Zeichen, Pfeile).
+def _fonts_klein(css_all, text):
+    import base64, io
+    try:
+        from fontTools import subset as _ss
+        from fontTools.ttLib import TTFont
+    except Exception:
+        return css_all
+    zeichen = {ord(c) for c in text if ord(c) >= 32}
+    zeichen |= set(range(0x20, 0x7F)) | set(range(0xA0, 0x180)) | set(range(0x2010, 0x2028)) | {0x20AC, 0x2122, 0x2190, 0x2191, 0x2192, 0x2193, 0x2197, 0x2713, 0x2731, 0x2665, 0x266A, 0x266B}
+    def neu(m):
+        block = m.group(0)
+        if "Kaushan" in block: return ""
+        u = re.search(r"url\(data:font/woff;base64,([A-Za-z0-9+/=]+)\)", block)
+        if not u: return block
+        try:
+            f = TTFont(io.BytesIO(base64.b64decode(u.group(1))))
+            opt = _ss.Options(); opt.flavor = "woff"; opt.notdef_outline = True
+            sub = _ss.Subsetter(opt); sub.populate(unicodes=zeichen); sub.subset(f)
+            out = io.BytesIO(); f.flavor = "woff"; f.save(out)
+            return block.replace(u.group(1), base64.b64encode(out.getvalue()).decode())
+        except Exception as e:
+            print("Schrift nicht verkleinert:", e); return block
+    return re.sub(r"@font-face\s*\{.*?\}", neu, css_all, flags=re.S)
+_fonts = (d / "fonts.css").read_text()
+css = _fonts_klein(_fonts, shell + css[len(_fonts):] + data + app) + css[len(_fonts):]
+# --- Typografie-Wache (UX-15): gerade Apostrophe in Texten melden (nur Hinweis, bricht nichts ab)
+for _f in sorted(d.glob("*.js")):
+    for _i, _z in enumerate(_f.read_text().splitlines(), 1):
+        for _m in re.finditer(r"[A-Za-zÄÖÜäöüß]'s\b", _z):
+            print(f"Hinweis Typografie: {_f.name}:{_i}: gerader Apostroph „{_z[max(0,_m.start()-12):_m.end()+6]}“ – besser ’")
 body = shell.replace("/*CSS*/", css).replace("/*DATA*/", data).replace("/*APP*/", app)
 
 HEAD_COMMON = """<meta charset="utf-8">

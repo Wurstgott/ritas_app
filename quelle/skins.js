@@ -1,0 +1,760 @@
+/* ============================================================
+   Kleiderschrank: Outfits für Rita und Hühnchen (Taler), Kramladen als Laden,
+   Taler-Plakette, Sammelreihen, Fest-Geschenke, Halte-Hinweise, Figuren-Memory.
+   Die Figuren selbst (figuren.js) bleiben unverändert – Skins sind Zusätze,
+   die figuren.js über skinSchichten() an festen Stellen einsetzt.
+   ============================================================ */
+
+/* ---------- Mini-Zeichensprache: dieselben Formen für SVG und Canvas ---------- */
+const SP = (d, f, o) => ["p", d, f, o || {}];                       // Pfad
+const SL = (d, farbe, w, o) => ["p", d, null, { s: farbe, w, ...(o || {}) }]; // Linie
+const SC = (cx, cy, r, f, o) => ["c", cx, cy, r, f, o || {}];          // Kreis
+const SE = (cx, cy, rx, ry, f, o) => ["e", cx, cy, rx, ry, f, o || {}]; // Ellipse (o.rot in Grad)
+function skAttr(f, o) {
+  let a = ` fill="${f || "none"}"`;
+  if (o.s) a += ` stroke="${o.s}" stroke-width="${o.w || 1}" stroke-linecap="round" stroke-linejoin="round"`;
+  if (o.op != null) a += ` opacity="${o.op}"`;
+  if (o.cls) a += ` class="${o.cls}"`;
+  return a;
+}
+function skinSVG(ls) {
+  return (ls || []).map(l => l[0] === "p" ? `<path d="${l[1]}"${skAttr(l[2], l[3])}/>`
+    : l[0] === "c" ? `<circle cx="${l[1]}" cy="${l[2]}" r="${l[3]}"${skAttr(l[4], l[5])}/>`
+    : `<ellipse cx="${l[1]}" cy="${l[2]}" rx="${l[3]}" ry="${l[4]}"${l[6].rot ? ` transform="rotate(${l[6].rot} ${l[1]} ${l[2]})"` : ""}${skAttr(l[5], l[6])}/>`).join("");
+}
+const SK_PFAD = new Map();
+function skinCanvas(ctx, ls) {
+  for (const l of ls || []) {
+    const o = l[l.length - 1], f = l[0] === "p" ? l[2] : l[0] === "c" ? l[4] : l[5];
+    let p;
+    if (l[0] === "p") { p = SK_PFAD.get(l[1]); if (!p) { p = new Path2D(l[1]); SK_PFAD.set(l[1], p); } }
+    else { p = new Path2D(); if (l[0] === "c") p.arc(l[1], l[2], l[3], 0, Math.PI * 2); else p.ellipse(l[1], l[2], l[3], l[4], (o.rot || 0) * Math.PI / 180, 0, Math.PI * 2); }
+    ctx.save(); if (o.op != null) ctx.globalAlpha *= o.op;
+    if (f) { ctx.fillStyle = f; ctx.fill(p); }
+    if (o.s) { ctx.strokeStyle = o.s; ctx.lineWidth = o.w || 1; ctx.lineCap = "round"; ctx.lineJoin = "round"; ctx.stroke(p); }
+    ctx.restore();
+  }
+}
+/* kleine Blüte aus Kreisen */
+const skBluete = (x, y, r, farbe, mitte = "#F2C33A", n = 5) => { const a = []; for (let i = 0; i < n; i++) { const w = i / n * Math.PI * 2 - Math.PI / 2; a.push(SC(+(x + Math.cos(w) * r * .95).toFixed(2), +(y + Math.sin(w) * r * .95).toFixed(2), +(r * .62).toFixed(2), farbe)); } a.push(SC(x, y, +(r * .5).toFixed(2), mitte)); return a; };
+const skPerlen = (pts, r) => pts.flatMap(([x, y]) => [SC(x, y, r, "#F6F1E4"), SC(x - r * .35, y - r * .35, r * .35, "#FFFFFF", { op: .9 })]);
+const skFlamme = (x, y, s = 1) => [SP(`M${x} ${y - 6 * s} Q${x + 2.6 * s} ${y - 2.6 * s} ${x + 1.8 * s} ${y - .6 * s} Q${x} ${y + 1.2 * s} ${x - 1.8 * s} ${y - .6 * s} Q${x - 2.6 * s} ${y - 2.6 * s} ${x} ${y - 6 * s}Z`, "#F6B93B", { cls: "skin-flamme" }), SE(x, y - 1.6 * s, .9 * s, 1.6 * s, "#FFF1B8", { cls: "skin-flamme" })];
+const skKerze = (x, yo, h, w = 3.4) => [SP(`M${x - w / 2} ${yo} h${w} v${h} h${-w}Z`, "#FBF6EA"), SP(`M${x + w / 2 - 1} ${yo} h1 v${h} h-1Z`, "#E6DCC4"), ...skFlamme(x, yo - .4, 1)];
+
+/* ---------- Die Teile ----------
+   fach: kopf (Hüte & Kränze) · augen (Brillen) · hals (Schals & Schmuck) · ganz (Kostüme)
+   Rita: r.hinten (hinter dem Haar) / r.vorn · Hühnchen von der Seite (auch Kopfbild & Bild): s.hinten / s.koerper / s.kopf · von vorn: f.kopf
+   Koordinaten: Rita 0–100 (Augen y 47,6, Haaransatz y 15–28), Hühnchen seitlich 0–100 (Kopf x 48–80, Auge 65/31), vorn Mitte x 68, Augen y 31. */
+const SKIN_FAECHER = [
+  { id: "kopf", name: "Hüte & Kränze" }, { id: "augen", name: "Brillen" }, { id: "hals", name: "Schals & Schmuck" }, { id: "ganz", name: "Kostüme" }
+];
+const SKIN_REIHEN = [
+  { id: "schweden", name: "Schwedische Reihe", ids: ["r-lucia", "r-midsommar", "r-strick", "h-wikinger"], bonus: 30, satz: "Alles komplett für Schweden. Karin wäre stolz. Glaub ich." },
+  { id: "krimi", name: "Krimi-Reihe", ids: ["r-kommissarin", "h-detektiv", "h-sonnenbrille", "r-katzenauge"], bonus: 30, satz: "Die Ermittlungsgruppe ist vollständig. Der Fall kann kommen." },
+  { id: "welt", name: "Hühnchens Weltreise", ids: ["h-chullo", "h-pirat", "h-astronaut", "h-taucher"], bonus: 30, satz: "Peru, Meer, Weltall – und alles von der Fensterbank aus." },
+  { id: "sommer", name: "Sommerfrische", ids: ["r-sonnenhut", "r-sonnenbrille", "r-perlen", "h-schleife"], bonus: 20, satz: "Fertig für die Sommerfrische. Fehlt nur noch der Sommer." },
+  { id: "winter", name: "Winterfein", ids: ["r-bommel", "r-zauberschal", "r-ohrenwaermer", "h-schal"], bonus: 25, satz: "Warm eingepackt von oben bis unten. So kann der Winter kommen." },
+  { id: "buehne", name: "Bühne frei", ids: ["h-cape", "h-hexe", "h-zylinder", "r-helm", "r-barett"], bonus: 30, satz: "Einmal alles für die große Bühne. Hühnchen verbeugt sich schon." }
+];
+const D_SKINS = [
+  /* ===== Rita ===== */
+  { id: "r-sonnenbrille", fuer: "rita", fach: "augen", name: "Sonnenbrille", preis: 40, text: "Dunkel, rund, ein bisschen Hollywood. Für den Balkon und für große Auftritte im Hofladen.",
+    r: { vorn: [SP("M37.4 44.4 Q37.4 43.4 38.6 43.4 H48 Q49.2 43.4 49 44.8 L48.4 49.2 Q48 51.8 45 51.8 H41.2 Q38.2 51.8 37.8 49.2Z M62.6 44.4 Q62.6 43.4 61.4 43.4 H52 Q50.8 43.4 51 44.8 L51.6 49.2 Q52 51.8 55 51.8 H58.8 Q61.8 51.8 62.2 49.2Z", "#1E262C"),
+      SL("M49 45.4 Q50 44.4 51 45.4", "#1E262C", 1.3), SL("M37.6 45.2 L34 44.4 M62.4 45.2 L66 44.4", "#1E262C", 1.2),
+      SL("M37.6 44.2 H48.6 M51.4 44.2 H62.4", "#C9A24A", .7), SL("M39.8 45.4 L43.2 45 M53.2 45.4 L56.6 45", "#FFFFFF", .9, { op: .65 })] } },
+  { id: "r-katzenauge", fuer: "rita", fach: "augen", name: "Katzenaugen-Brille", preis: 60, reihe: "krimi", text: "Rot, mit Schwung nach oben wie in den Sechzigern. Damit sieht man jeden Fehler im Kreuzworträtsel.",
+    r: { vorn: [SP("M36 44 Q42 42.2 48.6 43.6 Q49 48.8 46.4 51.2 Q42.4 52.6 39.2 50.6 Q36.6 48.4 36 44Z M64 44 Q58 42.2 51.4 43.6 Q51 48.8 53.6 51.2 Q57.6 52.6 60.8 50.6 Q63.4 48.4 64 44Z", "rgba(255,255,255,.18)", { s: "#C0282A", w: 1.7 }),
+      SP("M36.4 44.6 L33.2 40.8 L39.4 43.2Z M63.6 44.6 L66.8 40.8 L60.6 43.2Z", "#C0282A"), SL("M48.6 44.8 Q50 43.6 51.4 44.8", "#C0282A", 1.4),
+      SC(34.4, 41.8, .7, "#FFF6DC"), SC(65.6, 41.8, .7, "#FFF6DC")] } },
+  { id: "r-perlen", fuer: "rita", fach: "hals", name: "Perlen wie früher in der Bank", preis: 70, reihe: "sommer", text: "Eine Perlenkette und Perlenohrringe. Elegant wie am ersten Arbeitstag – nur entspannter.",
+    r: { vorn: [...skPerlen([[41.2, 77], [43.2, 79.6], [45.5, 81.5], [47.8, 82.6], [50.2, 83], [52.6, 82.6], [54.9, 81.5], [57.1, 79.6], [59, 77]], 1.55), SC(31, 60.4, 3.3, "#F6F1E4"), SC(30, 59.3, 1, "#FFFFFF", { op: .9 }), SC(69, 60.4, 3.3, "#F6F1E4"), SC(68, 59.3, 1, "#FFFFFF", { op: .9 })] } },
+  { id: "r-zauberschal", fuer: "rita", fach: "hals", name: "Zauberschal", preis: 60, reihe: "winter", text: "Rot und gold geringelt, lang genug für zweimal rum. Ob er zaubern kann, weiß keiner so genau.",
+    r: { vorn: [SP("M36.5 73.6 Q50 82.6 63.5 73.6 L65 80 Q50 89.6 35 80Z", "#8E2430"),
+      SP("M39.5 75.6 L42.6 77.2 L42.2 84 L38.6 82.6Z M46.4 78.6 L49.6 79.2 L49.6 86 L46 85.6Z M53.4 78.8 L56.6 78 L57.4 84.8 L53.8 85.6Z M60.2 76 L63 74.6 L64 80.8 L60.8 82.6Z", "#E2B13C"),
+      SP("M38.6 80.6 L33 100 L41.4 100.5 L44.4 82.6Z", "#8E2430"), SP("M36.6 87.4 L42.8 89.2 L42 92 L35.8 90.2Z M34.6 94 L41.2 95.6 L40.6 98.6 L33.8 97Z", "#E2B13C")] } },
+  { id: "r-sonnenhut", fuer: "rita", fach: "kopf", name: "Sonnenhut", preis: 100, reihe: "sommer", saison: [5, 6, 7, 8], text: "Breite Strohkrempe, rotes Band, eine Margerite. Für den Balkon und die Fahrt zum Hofladen.",
+    r: { vorn: [SE(50, 29, 33, 4.6, "rgba(70,50,20,.18)"), SE(50, 25.6, 40.5, 8.8, "#E7C77C"), SP("M9.6 26.4 Q50 40.4 90.4 26.4 Q50 35.8 9.6 26.4Z", "#C9A456"),
+      SP("M31.6 25.2 Q30.6 8.6 50 7.6 Q69.4 8.6 68.4 25.2 Q50 28.4 31.6 25.2Z", "#F0D48F"), SL("M35.2 13.6 Q50 11.2 64.8 13.6 M33.2 17.6 Q50 15.4 66.8 17.6", "#D2B06A", .6),
+      SP("M32.1 20.4 Q50 23.8 67.9 20.4 L68.4 25.2 Q50 28.4 31.6 25.2Z", "#C9563A"), ...skBluete(35.4, 23.2, 2.7, "#FBF8EE")] } },
+  { id: "r-bommel", fuer: "rita", fach: "kopf", name: "Bommelmütze", preis: 80, reihe: "winter", saison: [11, 12, 1, 2], text: "Rot gestrickt, mit weißem Bommel. Für Tage, an denen der Forst nach Schnee riecht.",
+    r: { vorn: [SP("M26.6 31 Q25.4 9.6 50 8.4 Q74.6 9.6 73.4 31Z", "#C8463B"),
+      SL("M36 29 Q34.8 19 39.4 11.6 M43.4 29 Q42.8 18 45.2 9.4 M50 29 L50 8.8 M56.6 29 Q57.2 18 54.8 9.4 M64 29 Q65.2 19 60.6 11.6", "#A9382F", .9, { op: .7 }),
+      ...[32, 38, 44, 50, 56, 62, 68].map((x, i) => SC(x, i % 2 ? 19.2 : 20.4, .95, "#F7F1E6")),
+      SP("M25.2 26.2 Q50 21.6 74.8 26.2 L75.4 34 Q50 29.4 24.6 34Z", "#EFE7D6"), SL("M30 25.6 L29.6 32.4 M36 24.4 L35.8 31.2 M42 23.6 L42 30.4 M48 23.2 L48 30 M54 23.2 L54 30 M60 23.6 L60.2 30.4 M66 24.4 L66.4 31.2 M71 25.4 L71.4 32.2", "#D6CCB8", 1),
+      SC(50, 7.2, 6.4, "#F7F2E8"), SC(47.6, 5.2, 2, "#FFFFFF"), SC(53.4, 8.6, 1.6, "#E6DED0")] } },
+  { id: "r-barett", fuer: "rita", fach: "kopf", name: "Malerin", preis: 90, reihe: "buehne", text: "Ein rotes Barett, ein Pinsel hinterm Ohr und ein paar Farbkleckse. Fehlt nur noch die Staffelei.",
+    r: { vorn: [SE(46, 20, 23.5, 8.6, "#B83A2E", { rot: -10 }), SP("M24 24.6 Q46 30.6 68.6 19.4", null, { s: "#8E2A22", w: 2.6 }), SL("M44.6 11.8 L43.6 8.2", "#8E2A22", 1.8),
+      SE(40, 16.6, 8, 2.4, "#CF4A3C", { rot: -14, op: .8 }),
+      SL("M63.6 41 L76 24.6", "#8A5A2B", 1.7), SP("M73.6 27.6 L75.8 24.8 L77.4 26 L75.2 28.8Z", "#B8B8B0"), SP("M75.6 25 Q78.4 20.8 80 19.8 Q80.4 21.8 77.2 26.2Z", "#3E7FB8"),
+      SC(28, 91, 2.6, "#3E7FB8"), SC(33.4, 95.4, 1.9, "#E8C23A"), SC(71.4, 92.4, 2.3, "#5BA35A"), SC(25.4, 96.6, 1.4, "#E8C23A"), SC(61.6, 57.6, .9, "#3E7FB8", { op: .8 })] } },
+  { id: "r-helm", fuer: "rita", fach: "kopf", name: "Roller-Helm mit Blitz", preis: 120, reihe: "buehne", text: "Für die nächste Runde mit dem Voi-Roller. Der Blitz ist rein dekorativ. Behauptet Hühnchen.",
+    r: { vorn: [SP("M25.6 32.6 Q23.8 8.6 50 6.8 Q76.2 8.6 74.4 32.6 Q50 27.4 25.6 32.6Z", "#2F8F8A"), SP("M27 22 Q30 11.6 42 8.4 Q32 13 29.6 23Z", "#46ABA5", { op: .8 }),
+      SL("M38.6 11.6 Q40.4 18 39.4 25.8 M61.4 11.6 Q59.6 18 60.6 25.8", "#1E5E5A", 2.2), SP("M53.6 11 L47.4 19.6 L51.6 19.6 L46.6 28.6 L56.6 17.4 L52.2 17.4 L56.6 11Z", "#F2C33A"),
+      SP("M27.4 30.4 Q50 25.2 72.6 30.4 L73.4 34 Q50 29 26.6 34Z", "#1E4E4A"), SL("M27.8 34 L30.4 54 M72.2 34 L69.6 54", "#1E2A2A", 1)] } },
+  { id: "r-lucia", fuer: "rita", fach: "kopf", name: "Lucia-Kranz", preis: 120, reihe: "schweden", saison: [12], text: "Preiselbeerkranz mit fünf Kerzen, wie am 13. Dezember in Schweden. Die Flammen flackern ganz leise.",
+    r: { vorn: [SL("M23.6 25 Q50 15.6 76.4 25", "#3F6B3A", 3.6), ...skKerze(34.6, 14.4, 9), ...skKerze(42.2, 11.6, 11), ...skKerze(50, 10.4, 12), ...skKerze(57.8, 11.6, 11), ...skKerze(65.4, 14.4, 9),
+      SP("M23 24.6 Q50 34.6 77 24.6 Q50 29 23 24.6Z", "#3F6B3A"), ...[[25.6, 24.6], [30.4, 28], [37, 30.2], [44, 31], [51, 31.2], [58, 30.8], [64.8, 29.8], [70.6, 27.6], [74.6, 24.4], [33, 31.4], [67, 31.2]].map(([x, y], i) => SE(x, y, 3.6, 1.8, i % 2 ? "#4F8A45" : "#5D9A50", { rot: i % 2 ? 24 : -20 })),
+      ...[[28.6, 26.6], [40.4, 30], [47.4, 31.4], [54.6, 31.2], [61.4, 30.2], [72.2, 26.4], [35, 32.6], [65, 32.4]].map(([x, y]) => SC(x, y, 1.2, "#C8363A"))] } },
+  { id: "r-midsommar", fuer: "rita", fach: "kopf", name: "Midsommar-Kranz", preis: 100, reihe: "schweden", saison: [6], text: "Ein Blumenkranz wie zum Mittsommerfest, mit Bändern hinten. Tanzen darf man drinnen.",
+    r: { hinten: [SL("M72 30 Q81 50 77 72", "#6E8BD0", 2.4), SL("M74.6 29 Q85 46 83 68", "#F2D27A", 2.4)],
+      vorn: [SL("M22.6 23.6 Q50 33 77.4 23.6", "#4E7F45", 2.8), ...[[27, 25.4], [35, 28.6], [43, 30.4], [57, 30.4], [65, 28.6], [73, 25.4]].map(([x, y], i) => SE(x, y, 2.8, 1.3, "#5D9A50", { rot: i < 3 ? 18 : -18 })),
+      ...skBluete(23.6, 23.2, 2.9, "#FBF8EE"), ...skBluete(31, 27.2, 2.9, "#C7B6E6", "#F2E3A0"), ...skBluete(39.4, 29.6, 3.1, "#F2D27A", "#E09A3A"), ...skBluete(50, 30.6, 3.4, "#FBF8EE"),
+      ...skBluete(60.6, 29.6, 3.1, "#E9A0B8", "#F2E3A0"), ...skBluete(69, 27.2, 2.9, "#C7B6E6", "#F2E3A0"), ...skBluete(76.4, 23.2, 2.9, "#F2D27A", "#E09A3A")] } },
+  { id: "r-ohrenwaermer", fuer: "rita", fach: "kopf", name: "Ohrenwärmer", preis: 70, reihe: "winter", ab: "2026-12", saison: [12, 1, 2], text: "Flauschig, flieder, mit Bügel übers Haar. Hält warm und sieht aus wie zwei kleine Wolken.",
+    r: { vorn: [SL("M28 52 Q24 14 50 12 Q76 14 72 52", "#7E5A92", 3.4), SL("M29 46 Q27 19 50 16.8", "#9C7AAE", 1, { op: .8 }),
+      ...[[29, 56.4, 7.6], [71, 56.4, 7.6]].flatMap(([x, y, r]) => [SC(x, y, r, "#E7DCEF"), SC(x - 4.6, y - 4.4, 3, "#F1EAF6"), SC(x + 4.4, y - 4.4, 3, "#F1EAF6"), SC(x - 5.4, y + 2.6, 3, "#E0D3EA"), SC(x + 5.4, y + 2.6, 3, "#E0D3EA"), SC(x, y + 5.6, 3, "#E0D3EA"), SC(x - 1.4, y - 1.6, 2.2, "#FFFFFF", { op: .7 })])] } },
+  { id: "r-konfetti", fuer: "rita", fach: "augen", name: "Konfetti-Brille", preis: 60, ab: "2027-02", saison: [2], text: "Zwei pinke Sterne als Brille, dazu Konfetti. Für Fasching. Oder für einen Dienstag, der’s nötig hat.",
+    r: { vorn: [SP("M43 40.4 L44.8 44.4 L49.2 44.6 L45.8 47.4 L47 51.6 L43 49.2 L39 51.6 L40.2 47.4 L36.8 44.6 L41.2 44.4Z M57 40.4 L58.8 44.4 L63.2 44.6 L59.8 47.4 L61 51.6 L57 49.2 L53 51.6 L54.2 47.4 L50.8 44.6 L55.2 44.4Z", "rgba(255,255,255,.2)", { s: "#E0558A", w: 1.8 }),
+      SL("M48.8 46.4 Q50 45.4 51.2 46.4", "#E0558A", 1.3), SL("M36.8 45 L31.6 43.8 M63.2 45 L68.4 43.8", "#E0558A", 1.1),
+      ...[[22, 30, "#3E7FB8"], [78, 34, "#F2C33A"], [26, 78, "#5BA35A"], [80, 74, "#E0558A"], [16, 54, "#F2C33A"], [84, 54, "#3E7FB8"]].map(([x, y, c], i) => SP(`M${x} ${y} l2.4 ${i % 2 ? -1 : 1} l.6 1.8 l-2.4 ${i % 2 ? 1 : -1}Z`, c))] } },
+  { id: "r-blumen", fuer: "rita", fach: "kopf", name: "Blumen im Haar", preis: 70, ab: "2027-04", saison: [4, 5], text: "Drei Blüten und zwei Blätter, seitlich ins Haar gesteckt. Frühling zum Mitnehmen.",
+    r: { vorn: [SE(31.4, 30.4, 4.6, 2, "#5D9A50", { rot: -40 }), SE(38.4, 22, 4.2, 1.8, "#4F8A45", { rot: 30 }), ...skBluete(30.6, 24, 4, "#E9A0B8", "#F2E3A0"), ...skBluete(37.4, 27.6, 3, "#FBF8EE"), ...skBluete(26.6, 31.6, 2.6, "#C7B6E6", "#F2E3A0")] } },
+  { id: "r-strick", fuer: "rita", fach: "ganz", name: "Schwedenpulli", preis: 150, reihe: "schweden", text: "Dunkelblau mit weißer Bordüre und Rollkragen. Darin liest sich ein Schwedenkrimi gleich doppelt so spannend.",
+    r: { vorn: [SP("M12.6 100 Q14.6 77.6 50 75.2 Q85.4 77.6 87.4 100Z", "#2E4E8E"),
+      SP("M14.2 88.6 Q50 83 85.8 88.6 L86.4 96 Q50 90.4 13.6 96Z", "#26427A"),
+      ...[18, 25, 32, 39, 46, 53, 60, 67, 74, 81].map((x, i) => SP(`M${x} ${92.2 - Math.sin((x - 14) / 72 * Math.PI) * 4.6} l2.4 -2.8 l2.4 2.8 l-2.4 2.8Z`, "#F3EDE0")),
+      ...[21.5, 35.5, 49.5, 63.5, 77.5].map(x => SC(x, 85.8 - Math.sin((x - 14) / 72 * Math.PI) * 4, .8, "#F3EDE0")),
+      SP("M39.4 73.4 Q50 78.6 60.6 73.4 L61.8 80.4 Q50 86.6 38.2 80.4Z", "#3A5C9E"), SL("M41 76 L40.6 81 M44.6 77.4 L44.4 82.6 M48.4 78 L48.4 83.4 M52 78 L52 83.4 M55.6 77.4 L55.8 82.6 M59.2 76 L59.6 81", "#2E4E8E", .9)] } },
+  { id: "r-kommissarin", fuer: "rita", fach: "ganz", name: "Kommissarin", preis: 220, reihe: "krimi", text: "Trenchcoat mit hochgestelltem Kragen, Hut und Notizblock. Der Fall ist so gut wie gelöst.",
+    r: { vorn: [SP("M11.6 100 Q13.4 79 39.6 75.4 L50 88.6 L60.4 75.4 Q86.6 79 88.4 100Z", "#C8AE7E"),
+      SP("M39.6 75.4 L34.4 69.8 L32.6 79.4 L44.2 88.8 L50 88.6Z", "#B39663"), SP("M60.4 75.4 L65.6 69.8 L67.4 79.4 L55.8 88.8 L50 88.6Z", "#B39663"),
+      SP("M24 92 Q50 96 76 92 L76 95.6 Q50 99.6 24 95.6Z", "#A88A58"), SC(44.6, 93.2, 1.2, "#6B4E2E"), SC(55.4, 93.2, 1.2, "#6B4E2E"),
+      SP("M70.4 84.6 L80.6 83.4 L82 96 L71.8 97.2Z", "#FBF6EA"), SL("M72.6 87.4 L79.6 86.6 M72.9 90 L79.9 89.2 M73.2 92.6 L80.2 91.8", "#9AA3B0", .7),
+      SE(50, 24.4, 31, 5.6, "#4A3A2E"), SP("M32 23.6 Q31 9.4 50 8.6 Q69 9.4 68 23.6 Q50 26.2 32 23.6Z", "#5E4A3A"),
+      SL("M43.6 10.4 Q50 14.2 56.4 10.4", "#4A3A2E", 1.3), SP("M32.3 19.4 Q50 22.4 67.7 19.4 L68 23.6 Q50 26.2 32 23.6Z", "#2E241C")] } },
+  { id: "r-forscherin", fuer: "rita", fach: "ganz", name: "Forscherin", preis: 200, ab: "2027-07", text: "Hellgrüner Tropenhut und ein Fernglas um den Hals. Für die Kraniche über dem Forst – und ganz unauffällig für den Nachbarn.",
+    r: { vorn: [SE(50, 24.6, 35, 6.6, "#A9B58A"), SP("M10 24.6 Q50 36 90 24.6 Q50 32 10 24.6Z", "#8E9A6E"), SP("M30.4 24 Q29.4 6.6 50 6 Q70.6 6.6 69.6 24 Q50 27 30.4 24Z", "#BCC89C"),
+      SP("M30.8 19.4 Q50 22.6 69.2 19.4 L69.6 24 Q50 27 30.4 24Z", "#6E5A3A"), SL("M38 12 Q50 9.8 62 12", "#A9B58A", .8),
+      SL("M41 76 Q46 86 45.4 90 M59 76 Q54 86 54.6 90", "#4A3A2E", 1.1), SP("M40.4 88.6 H48.6 V98.6 H40.4Z M51.4 88.6 H59.6 V98.6 H51.4Z", "#2E3238"), SP("M48.6 91 H51.4 V95 H48.6Z", "#4A4E56"),
+      SC(44.5, 97.4, 2.6, "#7FA7B5"), SC(55.5, 97.4, 2.6, "#7FA7B5")] } },
+  { id: "r-krone", fuer: "rita", fach: "kopf", name: "Geburtstagskrone", geschenk: "geburtstag", text: "Hühnchen hat sie poliert. Am Geburtstag setzt sie sich von selbst auf – danach gehört sie dir für immer.",
+    r: { vorn: [SP("M31 25.4 L28.6 8.6 L38 16.6 L44 5.8 L50 14.6 L56 5.8 L62 16.6 L71.4 8.6 L69 25.4 Q50 22.4 31 25.4Z", "#E8B83A"), SP("M33 22.6 L31.6 12.6 L37.6 18 Z M67 22.6 L68.4 12.6 L62.4 18Z", "#F6D77A", { op: .7 }),
+      SP("M31 25.4 Q50 22.4 69 25.4 L69.4 29 Q50 26 30.6 29Z", "#D49A22"), SC(40, 26, 1.6, "#C8363A"), SC(50, 24.8, 1.9, "#3E7FB8"), SC(60, 26, 1.6, "#C8363A"),
+      ...[[28.6, 8.6], [44, 5.8], [56, 5.8], [71.4, 8.6]].map(([x, y]) => SC(x, y, 1.4, "#F6D77A"))] } },
+
+  /* ===== Hühnchen ===== */
+  { id: "h-schleife", fuer: "huhn", fach: "kopf", name: "Große Schleife", preis: 30, reihe: "sommer", geschenk: "start", text: "Pink mit Punkten, hinten am Kopf. Hühnchen sagt, sie sei „gar nicht so wichtig“. Guckt aber dauernd in den Spiegel.",
+    s: { kopf: [SP("M49 20 L39.6 13.6 Q36.6 20.4 40 26.6Z", "#E0558A"), SP("M49 20 L56.4 14.6 Q59.6 20 56.8 25.6Z", "#E0558A"), SP("M47.6 22 L44.4 30 L47.4 29.2 L49.4 22.6Z", "#C7437A"),
+      SC(41, 17, .9, "#FFF"), SC(40.8, 23, .9, "#FFF"), SC(54.8, 18, .8, "#FFF"), SC(55.6, 22.6, .8, "#FFF"), SC(49, 20, 2.8, "#C7437A")] },
+    f: { kopf: [SP("M80 19 L72.6 13.4 Q70.4 19 73 24.4Z", "#E0558A"), SP("M80 19 L87.4 13 Q90.4 19 87.4 24.8Z", "#E0558A"), SC(74, 16.6, .8, "#FFF"), SC(86.6, 17, .8, "#FFF"), SC(86.8, 22, .8, "#FFF"), SC(80, 19, 2.6, "#C7437A")] } },
+  { id: "h-sonnenbrille", fuer: "huhn", fach: "augen", name: "Undercover-Brille", preis: 40, reihe: "krimi", text: "Hühnchen ist jetzt inkognito. Dass es trotzdem jeder erkennt, findet es unerklärlich.",
+    s: { kopf: [SL("M56 27.6 L47.6 26.4", "#1C2620", 1.6), SP("M56 25.6 H73.4 Q75 25.6 74.6 27.6 L73.2 35 Q72.6 37.8 69.4 37.8 H60 Q57 37.8 56.4 35 L55 27.6 Q54.8 25.6 56 25.6Z", "#1C2620"),
+      SL("M74.4 28.4 L76.6 29", "#1C2620", 1.4), SL("M58.4 28.6 L62.4 28.6", "#FFFFFF", 1.2, { op: .7 })] },
+    f: { kopf: [SP("M53.5 26.5 H66 Q66.6 26.5 66.4 27.2 L65 34.5 Q64.5 36.6 62 36.6 H57.6 Q55 36.6 54.4 34.4 L53 27.4 Q52.9 26.5 53.5 26.5Z M70 26.5 H82.5 Q83.1 26.5 83 27.4 L81.6 34.4 Q81 36.6 78.4 36.6 H74 Q71.5 36.6 71 34.5 L69.6 27.2 Q69.4 26.5 70 26.5Z", "#1C2620"), SL("M66 28.4 H70", "#1C2620", 1.6), SL("M55.6 28.6 L58.6 28.6 M72.2 28.6 L75.2 28.6", "#FFFFFF", 1.1, { op: .7 })] } },
+  { id: "h-chullo", fuer: "huhn", fach: "kopf", name: "Chullo aus Peru", preis: 90, reihe: "welt", deckt: "kamm", text: "Die bunte Strickmütze mit Ohrenklappen. Hühnchen: „Endlich mal was Vernünftiges auf dem Kopf.“",
+    s: { kopf: [SP("M48 23 Q46.6 32.6 50.8 37.6 Q55.2 33 55 23.6Z", "#C8363A"), SL("M49 27 L51.6 29.4 L54 27 M49.4 31 L51.6 33.4 L53.8 31", "#F2C33A", 1),
+      SL("M50.8 37.6 L50.8 46", "#F2C33A", 1.1), SC(50.8, 47.6, 2.4, "#2FA6A0"),
+      SP("M46.8 25 Q45.6 5.8 63 4.6 Q80.4 5.8 79.8 25 Q63 20.6 46.8 25Z", "#C8363A"), SL("M48.2 16.4 L51.2 13.4 L54.2 16.4 L57.2 13.4 L60.2 16.4 L63.2 13.4 L66.2 16.4 L69.2 13.4 L72.2 16.4 L75.2 13.4 L78.2 16.4", "#F2C33A", 1.5),
+      SP("M47.2 19.6 Q63 15.6 79.4 19.6 L79.8 25 Q63 20.6 46.8 25Z", "#2FA6A0"), ...[51, 56, 61, 66, 71, 76].map(x => SC(x, 21.8 - Math.sin((x - 47) / 32 * Math.PI) * 1.8, .9, "#FBF6EA")),
+      SL("M63 4.6 L63 1.6", "#F2C33A", 1.2), SC(63, 1, 2.2, "#F2C33A")] },
+    f: { kopf: [SP("M50.4 24 Q48.6 34 52.6 39.6 Q57 34.4 56.6 25Z M85.6 24 Q87.4 34 83.4 39.6 Q79 34.4 79.4 25Z", "#C8363A"), SL("M52.6 39.6 L52.6 47 M83.4 39.6 L83.4 47", "#F2C33A", 1.1), SC(52.6, 48.6, 2.4, "#2FA6A0"), SC(83.4, 48.6, 2.4, "#2FA6A0"),
+      SP("M49.6 26 Q49.4 6 68 4.8 Q86.6 6 86.4 26 Q68 21.6 49.6 26Z", "#C8363A"), SL("M51.4 16.6 L54.4 13.6 L57.4 16.6 L60.4 13.6 L63.4 16.6 L66.4 13.6 L69.4 16.6 L72.4 13.6 L75.4 16.6 L78.4 13.6 L81.4 16.6 L84.4 13.6", "#F2C33A", 1.5),
+      SP("M50 20.4 Q68 16.2 86 20.4 L86.4 26 Q68 21.6 49.6 26Z", "#2FA6A0"), ...[54, 60, 66, 72, 78, 83].map(x => SC(x, 22.4 - Math.sin((x - 50) / 36 * Math.PI) * 1.8, .9, "#FBF6EA")), SL("M68 4.8 L68 1.8", "#F2C33A", 1.2), SC(68, 1.2, 2.2, "#F2C33A")] },
+    vbKopf: "38 -2 60 60", vbFront: "38 -2 60 60" },
+  { id: "h-koch", fuer: "huhn", fach: "kopf", name: "Chefkoch", preis: 100, deckt: "kamm", text: "Hohe Kochmütze, rotes Halstuch, Holzlöffel. Hühnchen kocht nicht, es probiert nur.",
+    s: { koerper: [SL("M41.6 66.4 L30.6 50.6", "#A0703F", 2.2), SE(29.4, 48.4, 3, 4.4, "#B07A44", { rot: -34 }), SP("M53.4 47.4 Q63 53.4 72.4 47 L71.4 52.6 Q63 57.8 55 52.8Z", "#D9473A"), SP("M60.4 53.4 L63.4 61.6 L66.8 53.4Z", "#C23A2E"), SC(63.4, 53.4, 2, "#C23A2E")],
+      kopf: [SP("M50.4 19.4 Q44 13.4 47.6 7.4 Q49.8 1.2 56 2.6 Q60 -3.4 66.4 -.4 Q72.4 -3.4 75.6 3 Q81.6 7.4 77 19.4 Q63 15.6 50.4 19.4Z", "#FBFAF6"), SL("M55 4.8 Q56.6 10 55.6 15.6 M66 1.8 Q66.8 9 66 15 M74 5.4 Q73 11 72.4 16.4", "#E2DED4", 1.1),
+        SP("M50 19 Q63 15.2 77.4 19 L77 24.4 Q63 20.4 50.6 24.4Z", "#F1EDE4"), SL("M51 21.6 Q63 18 76.8 21.6", "#E2DED4", .8)] },
+    f: { kopf: [SP("M55 20.4 Q48.6 14.4 52.2 8.4 Q54.4 2.2 60.6 3.6 Q64.6 -2.4 71 .6 Q77 -2.4 80.2 4 Q86.2 8.4 81.6 20.4 Q68 16.6 55 20.4Z", "#FBFAF6"), SL("M59.6 5.8 Q61.2 11 60.2 16.6 M70.6 2.8 Q71.4 10 70.6 16 M78.6 6.4 Q77.6 12 77 17.4", "#E2DED4", 1.1),
+      SP("M54.6 20 Q68 16.2 82 20 L81.6 25.4 Q68 21.4 55.2 25.4Z", "#F1EDE4"), SP("M56 50.6 Q68 56.4 80 50.6 L78.6 55.6 Q68 60 57.4 55.6Z", "#D9473A")] },
+    hoch: 6, vbKopf: "38 -4 62 62", vbFront: "38 -4 62 62" },
+  { id: "h-wikinger", fuer: "huhn", fach: "kopf", name: "Wikinger", preis: 180, reihe: "schweden", deckt: "kamm", text: "Helm mit Hörnern und ein geflochtener Zopf. Hühnchen ruft jetzt öfter „Skål!“ – auch beim Tee.",
+    s: { kopf: [SE(48.2, 29.2, 2.8, 3.6, "#E8C66A"), SE(47, 34.8, 2.7, 3.5, "#E2BC5C"), SE(46.4, 40.4, 2.5, 3.3, "#E8C66A"), SC(46.6, 44.4, 1.3, "#C8363A"),
+      SP("M53.4 15.6 Q45.6 11.6 43.6 .4 Q41 10.6 49.6 19.6Z", "#EFE6D2"), SP("M72.6 15.6 Q80.4 11.6 82.4 .4 Q85 10.6 76.4 19.6Z", "#EFE6D2"), SL("M45.6 6.6 L47.6 7.4 M80.4 6.6 L78.4 7.4", "#C9BEA4", 1),
+      SP("M47.6 24.4 Q46.6 7.6 63 6.6 Q79.4 7.6 78.6 24.4 Q63 20.6 47.6 24.4Z", "#8E959A"), SP("M51 12 Q56 8.6 62 8.2 Q54 11.4 52.2 17Z", "#B4BABE", { op: .8 }),
+      SP("M47.4 20.6 Q63 16.8 78.8 20.6 L78.6 25 Q63 21.2 47.6 25Z", "#6E747A"), ...[[51, 22.4], [57, 21.4], [63, 21.1], [69, 21.4], [75, 22.4]].map(([x, y]) => SC(x, y, .95, "#D4D8DB")),
+      SP("M76.4 22 L77.8 31 L79.8 30.6 L78.6 22Z", "#6E747A")] },
+    f: { kopf: [SE(51.4, 30, 2.8, 3.6, "#E8C66A"), SE(50.6, 35.6, 2.7, 3.5, "#E2BC5C"), SE(50.6, 41.2, 2.5, 3.3, "#E8C66A"), SC(50.8, 45.2, 1.3, "#C8363A"),
+      SE(84.6, 30, 2.8, 3.6, "#E8C66A"), SE(85.4, 35.6, 2.7, 3.5, "#E2BC5C"), SE(85.4, 41.2, 2.5, 3.3, "#E8C66A"), SC(85.2, 45.2, 1.3, "#C8363A"),
+      SP("M53.6 16.6 Q44.6 12.6 42.4 1.4 Q39.4 12 49.6 21.6Z", "#EFE6D2"), SP("M82.4 16.6 Q91.4 12.6 93.6 1.4 Q96.6 12 86.4 21.6Z", "#EFE6D2"),
+      SP("M50.6 25.4 Q49.6 7.8 68 6.8 Q86.4 7.8 85.4 25.4 Q68 21.6 50.6 25.4Z", "#8E959A"), SP("M54.6 12.4 Q60 8.8 66 8.4 Q58 11.8 56 17.4Z", "#B4BABE", { op: .8 }),
+      SP("M50.4 21.6 Q68 17.8 85.6 21.6 L85.4 26 Q68 22.2 50.6 26Z", "#6E747A"), ...[54, 61, 68, 75, 82].map(x => SC(x, 23.6 - Math.sin((x - 50) / 36 * Math.PI) * 1.4, .95, "#D4D8DB")), SP("M66.9 22.6 L67.1 33.4 L68.9 33.4 L69.1 22.6Z", "#6E747A")] },
+    vbKopf: "38 -2 60 60", vbFront: "38 -2 60 60" },
+  { id: "h-hexe", fuer: "huhn", fach: "kopf", name: "Hexenhut", preis: 110, reihe: "buehne", saison: [10], deckt: "kamm", text: "Spitz, lila, mit kleinem Kürbis. Ab dem 31. Oktober zaubert Hühnchen. Behauptet es jedenfalls.",
+    s: { kopf: [SE(63, 20.6, 20.6, 4.4, "#3E2A60", { rot: -5 }), SP("M51.4 19.6 Q57.6 6.6 61.6 -.6 Q57 -4.6 49.8 -5.6 Q59.6 -9.6 66.4 -2 Q70.4 7.6 75 19.4 Q63 22.4 51.4 19.6Z", "#5A3E86"),
+      SP("M53 15.8 Q63 18.2 73.6 15.6 L74.8 19 Q63 21.8 51.8 19.2Z", "#5B8A47"), SC(70.6, 16.8, 2.6, "#E8902E"), SL("M70.6 14.2 L71.2 12.8", "#5B8A47", 1), SL("M69.4 16.4 L69.6 18.4 M71.8 16.4 L71.6 18.4", "#C46E1A", .6),
+      SC(60.4, 6, .9, "#F2D27A"), SC(64.6, 11.6, .7, "#F2D27A"), SC(57.6, 12.6, .6, "#F2D27A")] },
+    f: { kopf: [SE(68, 21, 22, 4.6, "#3E2A60"), SP("M56.2 20 Q62.6 6.6 66.6 -.6 Q62 -4.6 54.8 -5.6 Q64.6 -9.6 71.4 -2 Q75.4 7.6 80 19.8 Q68 22.8 56.2 20Z", "#5A3E86"),
+      SP("M57.8 16.2 Q68 18.6 78.6 16 L79.8 19.4 Q68 22.2 56.6 19.6Z", "#5B8A47"), SC(75.6, 17.2, 2.6, "#E8902E"), SL("M75.6 14.6 L76.2 13.2", "#5B8A47", 1), SC(65.4, 6.4, .9, "#F2D27A"), SC(69.6, 12, .7, "#F2D27A")] },
+    hoch: 10, vbKopf: "34 -10 68 68", vbFront: "34 -10 68 68" },
+  { id: "h-detektiv", fuer: "huhn", fach: "ganz", name: "Detektiv", preis: 220, reihe: "krimi", deckt: "kamm", text: "Karierte Mütze und Lupe. Hühnchen ermittelt. Hauptverdächtiger: der Hofladen.",
+    s: { koerper: [SL("M41.2 69 L48 76", "#6B4A30", 2.8), SC(36, 63.6, 6.6, "rgba(214,236,244,.55)", { s: "#6B4A30", w: 1.9 }), SL("M32.4 60.6 Q34 59.4 35.6 59.6", "#FFFFFF", 1, { op: .8 })],
+      kopf: [SP("M49.4 22 Q42 20.6 39.6 24 Q45 25.8 50.2 24.6Z", "#7A5C3A"), SP("M76.6 22 Q84 20.8 86.4 24 Q81 25.8 75.8 24.6Z", "#7A5C3A"),
+        SP("M47 24.6 Q46 8 63 7 Q80 8 79 24.6 Q63 20.4 47 24.6Z", "#8B6B45"),
+        SL("M53 10.6 Q51.4 17 52 23 M58 8.4 Q57 15 57.6 21.6 M63 7.4 L63 21 M68 8.4 Q69 15 68.4 21.6 M73 10.6 Q74.6 17 74 23", "#6A4E2E", .7, { op: .75 }),
+        SL("M48 15.4 Q63 11 78 15.4 M47.4 20.2 Q63 16 78.6 20.2", "#6A4E2E", .7, { op: .75 }), SL("M50.6 11.6 Q63 8.4 75.4 11.6", "#C9A27A", .6, { op: .7 }),
+        SP("M61.4 7.4 L57.4 4.6 L58.2 8.8Z M64.6 7.4 L68.6 4.6 L67.8 8.8Z", "#6A4E2E"), SC(63, 7.2, 1.2, "#6A4E2E")] },
+    f: { kopf: [SP("M49.6 26 Q49.6 8 68 7 Q86.4 8 86.4 26 Q68 21.6 49.6 26Z", "#8B6B45"),
+      SL("M56 10.6 Q54.4 18 55 24 M62 8.2 Q61 15 61.6 22.4 M68 7.4 L68 22 M74 8.2 Q75 15 74.4 22.4 M80 10.6 Q81.6 18 81 24", "#6A4E2E", .7, { op: .75 }), SL("M51 15.6 Q68 11 85 15.6 M50.4 20.8 Q68 16.4 85.6 20.8", "#6A4E2E", .7, { op: .75 }),
+      SP("M55 24 Q68 31.4 81 24 Q68 27.6 55 24Z", "#7A5C3A"), SP("M66.4 7.4 L62.4 4.6 L63.2 8.8Z M69.6 7.4 L73.6 4.6 L72.8 8.8Z", "#6A4E2E"), SC(68, 7.2, 1.2, "#6A4E2E"),
+      SL("M81.6 38.4 L88.6 46.8", "#6B4A30", 2.8), SC(75, 31, 9.4, "rgba(214,236,244,.4)", { s: "#6B4A30", w: 1.9 }), SC(74.2, 32.2, 5.6, "#1C2620"), SC(76.4, 29.4, 2, "#FFFFFF")] } },
+  { id: "h-pirat", fuer: "huhn", fach: "ganz", name: "Pirat", preis: 240, reihe: "welt", deckt: "kamm", text: "Dreispitz mit Keks-Wappen, Augenklappe, gestreiftes Halstuch und eine eigene Flagge. Arrr. Bitte.",
+    s: { koerper: [SL("M28 84 L28 61", "#6B4A30", 1.4), SP("M28 61.4 L41 64.4 L28 68.6Z", "#1C2620"), SC(32.4, 64.8, 1.3, "#F3EDE0"),
+        SP("M53.4 47.4 Q63 53.4 72.4 47 L71.4 52.6 Q63 57.8 55 52.8Z", "#D9473A"), SL("M55.6 49.4 Q63 54 71 49.4 M56 51.8 Q63 56.2 70.6 51.8", "#FBF6EA", .9), SP("M61 53.6 L63.4 61 L66.2 53.6Z", "#D9473A")],
+      kopf: [SL("M50 24.4 Q61 21 79.6 26.6", "#1C2620", 1.4), SP("M47 21.4 Q47 9 63 8 Q79 9 79 21.4Z", "#2A2A30"), SP("M41 22.6 Q43.6 13.2 50.2 15 Q63 19.4 75.8 15 Q82.4 13.2 85 22.6 Q63 26.6 41 22.6Z", "#1E1E24"),
+        SL("M41.6 22 Q63 26 84.4 22", "#D9A93A", 1.1), SL("M58.4 10.4 L67.6 18.4 M67.6 10.4 L58.4 18.4", "#F3EDE0", 1.2), SC(63, 14.4, 3.3, "#E0B070"), SC(62, 13.6, .5, "#8A5A2B"), SC(64.2, 15.2, .5, "#8A5A2B"), SC(63.6, 13, .45, "#8A5A2B")] },
+    f: { kopf: [SL("M54.6 27 L50.4 24.4 M67.4 28 Q76 22.4 85.6 25", "#1C2620", 1.4), SE(61, 31, 7, 7.8, "#1C2620"), SL("M58.6 27.6 Q61 26.6 63.4 27.6", "#3A4048", 1),
+      SP("M51.4 22.4 Q51.4 9 68 8 Q84.6 9 84.6 22.4Z", "#2A2A30"), SP("M45 23.6 Q47.4 13 54 15 Q68 19.6 82 15 Q88.6 13 91 23.6 Q68 27.6 45 23.6Z", "#1E1E24"), SL("M45.6 23 Q68 27 90.4 23", "#D9A93A", 1.1),
+      SL("M63.4 10.4 L72.6 18.4 M72.6 10.4 L63.4 18.4", "#F3EDE0", 1.2), SC(68, 14.4, 3.3, "#E0B070"), SC(67, 13.6, .5, "#8A5A2B"), SC(69.2, 15.2, .5, "#8A5A2B"),
+      SP("M56 50.6 Q68 56.4 80 50.6 L78.6 55.6 Q68 60 57.4 55.6Z", "#D9473A"), SL("M57.6 52.6 Q68 57.6 78.6 52.6", "#FBF6EA", .9)],
+      }, vbKopf: "36 2 62 60", vbFront: "40 2 56 56" },
+  { id: "h-astronaut", fuer: "huhn", fach: "ganz", name: "Raumfahrt-Huhn", naechst: "das Raumfahrt-Kostüm", preis: 250, reihe: "welt", text: "Helmkugel, Antenne, Abzeichen mit Stern. Kleiner Schritt für ein Huhn, großer Schritt für die Hühnheit.",
+    s: { koerper: [SP("M43.6 52 Q63 61 83 49.6 L83.4 55 Q63 66.6 43.6 57.6Z", "#E8ECEF"), SL("M44 54.6 Q63 63.4 83 52.2", "#B9C2CA", .8), SC(57.4, 66, 4.4, "#3E5F9E"),
+        SP("M57.4 62.8 L58.3 65 L60.6 65.1 L58.8 66.6 L59.4 68.8 L57.4 67.6 L55.4 68.8 L56 66.6 L54.2 65.1 L56.5 65Z", "#F2D27A")],
+      kopf: [SL("M70 7.4 L74.4 -1", "#8E959A", 1.3), SC(74.8, -1.8, 1.8, "#D9473A"),
+        SE(66, 32, 26.4, 25.6, "rgba(220,236,246,.2)", { s: "#C9D2DA", w: 2.4 }), SL("M45 25.6 Q49.6 13.4 61.4 9.6", "#FFFFFF", 2.2, { op: .75 }), SL("M48.2 34 Q48 30.4 49.4 27.6", "#FFFFFF", 1.4, { op: .5 })] },
+    f: { kopf: [SL("M72 9.6 L76.4 1.4", "#8E959A", 1.3), SC(76.8, .6, 1.8, "#D9473A"), SC(68, 33, 24.4, "rgba(220,236,246,.2)", { s: "#C9D2DA", w: 2.4 }),
+      SL("M47.6 26.6 Q52 14.4 63.4 10.8", "#FFFFFF", 2.2, { op: .75 }), SP("M50 52 Q68 59 86 52 L85.2 57.6 Q68 64 50.8 57.6Z", "#E8ECEF")] },
+    hoch: 6, vbKopf: "38 -4 62 62", vbFront: "38 -4 62 62" },
+  { id: "h-cape", fuer: "huhn", fach: "hals", name: "Super-Huhn", naechst: "das Super-Cape", preis: 130, reihe: "buehne", text: "Rotes Cape, gelbes Blitz-Abzeichen. Hühnchen rettet heute … den Keks.",
+    s: { hinten: [SP("M60.6 46.6 Q40 43.4 21 55.6 Q11.6 72.4 21.6 88.6 Q29 80 37.6 84.4 Q33.6 70 45.6 58.6 Q53.6 52.4 62 50.6Z", "#D9473A", { cls: "skin-cape" }), SP("M58 47.6 Q42 46 27 55 Q36 50.6 46 51.6Z", "#B8382C", { op: .7 })],
+      koerper: [SP("M62.2 57.4 L70.6 57.4 L70.6 63.4 Q66.4 67.6 62.2 63.4Z", "#F2C33A"), SP("M67.4 58.2 L64.6 61.8 L66.6 61.8 L64.8 65.4 L68.8 60.8 L66.8 60.8 L68.6 58.2Z", "#D9473A"), SC(60.4, 49.4, 1.9, "#F2C33A")] },
+    f: { kopf: [SP("M50.4 48.6 Q49.4 39.6 52.4 33.6 L56.4 51.6Z M85.6 48.6 Q86.6 39.6 83.6 33.6 L79.6 51.6Z", "#D9473A"), SC(68, 52.4, 2, "#F2C33A")] } },
+  { id: "h-taucher", fuer: "huhn", fach: "augen", name: "Taucherbrille & Schnorchel", preis: 70, reihe: "welt", saison: [6, 7, 8], text: "Gelbe Taucherbrille, blauer Schnorchel. Für den Weiher im Bild. Und die Badewanne.",
+    s: { kopf: [SL("M77.4 41.4 Q70 46.4 59.6 44.6 Q52.4 43 51.6 32.4 L51.6 5.6", "#2F6FA8", 2.8), SP("M50 1.8 H53.4 V6.4 H50Z", "#E8902E"),
+      SL("M54.6 28.4 Q50 26.4 47.4 27.2", "#2F6FA8", 2.4), SE(65, 31, 10.6, 11.6, "rgba(150,210,230,.3)", { s: "#F2C33A", w: 2.6 }), SL("M58.6 25.6 Q61 23.6 64 23.4", "#FFFFFF", 1.2, { op: .7 })] },
+    f: { kopf: [SL("M80.4 41.6 Q86.4 38.6 87.2 30.4 L87.2 3.4", "#2F6FA8", 2.8), SP("M85.6 -.4 H89 V4.2 H85.6Z", "#E8902E"),
+      SE(61, 31, 7.8, 8.8, "rgba(150,210,230,.3)", { s: "#F2C33A", w: 2.4 }), SE(75, 31, 7.8, 8.8, "rgba(150,210,230,.3)", { s: "#F2C33A", w: 2.4 }), SL("M66.6 29.6 Q68 28.4 69.4 29.6", "#F2C33A", 2), SL("M53.4 30 L50.4 29", "#2F6FA8", 2.2)] },
+    hoch: 4, vbKopf: "38 -2 60 60", vbFront: "38 -4 62 62" },
+  { id: "h-zylinder", fuer: "huhn", fach: "kopf", name: "Zauberhuhn", naechst: "den Zauberhut", preis: 140, reihe: "buehne", ab: "2026-11", deckt: "kamm", text: "Zylinder und Zauberstab. Mal kommt ein Kaninchen raus, mal ein Ei. Vorher weiß das keiner, Hühnchen auch nicht.",
+    s: { koerper: [SL("M43.6 64 L28.6 54", "#1E1E24", 2.4), SL("M30.8 55.4 L28.6 54", "#FBF6EA", 2.4), SC(26.4, 50.6, .9, "#F2D27A"), SC(23.6, 54.4, .7, "#F2D27A"), SC(27.4, 47, .6, "#F2D27A")],
+      kopf: [SE(63.4, 19.6, 17.6, 3.6, "#1E1E24", { rot: -4 }), SP("M52.6 19.4 L53.6 -1.6 Q63.4 -3.8 73.2 -1.6 L74.2 19Z", "#2A2A30"), SE(63.4, -1.8, 9.8, 2, "#3A3A42"),
+        SP("M52.9 13.6 L73.9 13.4 L74.1 18.4 L52.7 18.6Z", "#8E2A5A"), SL("M55.6 1.6 L55.8 11", "#4A4A54", 1.2, { op: .8 })] },
+    f: { kopf: [SE(68, 20.2, 18.6, 3.8, "#1E1E24"), SP("M57 20 L58 -1 Q68 -3.2 78 -1 L79 20Z", "#2A2A30"), SE(68, -1.2, 10, 2, "#3A3A42"), SP("M57.3 14.2 L78.7 14.2 L78.9 19.2 L57.1 19.2Z", "#8E2A5A"), SL("M60 2.2 L60.2 11.6", "#4A4A54", 1.2, { op: .8 })] },
+    hoch: 8, vbKopf: "36 -6 64 64", vbFront: "36 -6 64 64" },
+  { id: "h-schal", fuer: "huhn", fach: "hals", name: "Ringelschal", preis: 50, reihe: "winter", ab: "2027-01", saison: [12, 1, 2], text: "Grün-weiß geringelt, viel zu lang. Hühnchen tritt nur ganz selten drauf.",
+    s: { koerper: [SP("M51.6 45.4 Q63 54.4 74.4 45.6 L74.4 51.6 Q63 60.4 51.6 51.6Z", "#3F8F5A"), SL("M55.4 48.6 L55 54.2 M60.2 51 L60 56.8 M65.4 51.4 L65.6 57 M70.4 49.2 L70.8 54.6", "#F3EDE0", 2),
+      SP("M55.6 52.6 Q51 66 50.4 79.6 L56.4 80 Q57 66 60.2 54Z", "#3F8F5A"), SL("M54.6 57.4 L59 58.2 M53.2 63 L57.8 63.6 M52 68.6 L56.8 69 M51.2 74.2 L56.4 74.6", "#F3EDE0", 2), SL("M50.8 80 L50.4 82.4 M52.8 80.2 L52.6 82.6 M54.8 80.2 L54.8 82.6 M56.4 80.2 L56.6 82.4", "#3F8F5A", .9)] },
+    f: { kopf: [SP("M51.6 48.6 Q68 57.2 84.4 48.6 L84.4 55 Q68 63.6 51.6 55Z", "#3F8F5A"), SL("M56 51 L55.6 57 M62 53.4 L61.8 59.6 M68 54.6 L68 60.8 M74 53.4 L74.2 59.6 M80 51 L80.4 57", "#F3EDE0", 2)] } },
+  { id: "h-osterohren", fuer: "huhn", fach: "kopf", name: "Hasenohren", preis: 60, ab: "2027-03", saison: [3, 4], geschenk: "ostern", es: "die Ohren", text: "Ein Haarreif mit Hasenohren. Hühnchen findet: Wer Eier legt, darf auch Hase sein.",
+    s: { kopf: [SP("M64.6 16.4 Q72 -5.6 78.4 -2.8 Q81.6 1.2 70.2 18.2Z", "#F4F0EA"), SP("M66.8 13.6 Q72.6 -1.4 76.4 -.6 Q77.6 2 70.4 14.6Z", "#F2B8C8"),
+      SL("M50 22.4 Q63 13.6 78.4 20.2", "#E5869E", 2.2), SP("M55.6 17.4 Q49.6 -6.2 56.6 -8.2 Q62.8 -6.4 61 16.4Z", "#F4F0EA"), SP("M57 14.4 Q53 -2.2 57.2 -4.4 Q60.4 -2.4 59.6 14.4Z", "#F2B8C8")] },
+    f: { kopf: [SL("M51 26 Q68 13.6 85 26", "#E5869E", 2.2), SP("M60 17.6 Q53.6 -6 60.6 -8 Q66.8 -6.2 65 16.8Z", "#F4F0EA"), SP("M61.4 14.6 Q57.4 -2 61.6 -4.2 Q64.8 -2.2 64 14.6Z", "#F2B8C8"),
+      SP("M71 16.8 Q71.4 -6.2 77.6 -6.6 Q83.6 -4.2 76.2 17.6Z", "#F4F0EA"), SP("M72.6 14.6 Q73.4 -2.4 77 -2.6 Q80.4 -.8 75 14.6Z", "#F2B8C8")] },
+    hoch: 10, vbKopf: "34 -10 68 68", vbFront: "34 -10 68 68" },
+  { id: "h-ritter", fuer: "huhn", fach: "ganz", name: "Ritter von der Zitadelle", preis: 260, ab: "2027-05", deckt: "kamm", text: "Silberhelm mit hochgeklapptem Visier, rotem Federbusch und Schild. Die Spandauer Zitadelle hat einen neuen Wächter.",
+    s: { koerper: [SP("M34.6 57.6 L49.4 57.6 L49.4 67.6 Q42 76.4 34.6 67.6Z", "#C8363A"), SP("M37.4 70 V63 H39 V61.4 H40.8 V63 H43.2 V61.4 H45 V63 H46.6 V70 Q42 73 37.4 70Z", "#FBF8F1"), SP("M41 70.6 V67.4 Q42 66 43 67.4 V70.6Z", "#C8363A")],
+      kopf: [SP("M62 8.6 Q56 -1.6 44 -2.4 Q49.6 1.6 46 6.6 Q52 4.4 55.6 8.4 Q50 8 47.4 12.6 Q55 10.6 59 11Z", "#C8363A", { cls: "skin-feder" }), SP("M60.4 7.4 Q54 1.4 47 .6 Q53 3.6 56.6 8Z", "#E25A4C", { op: .8 }), SP("M47.8 22 L46.2 37.6 Q50 39.6 54.6 37 L55 23Z", "#8E959A"),
+        SP("M47.6 24.6 Q46.6 7.6 63 6.6 Q79.4 7.6 78.6 24.6 Q63 20.8 47.6 24.6Z", "#A9B0B6"), SP("M51 12 Q56 8.6 62 8.2 Q54 11.4 52.2 17Z", "#D0D5D9", { op: .8 }),
+        SP("M64.6 9 L79.6 11.4 L80.4 17.4 L65.4 15Z", "#7A8288"), SL("M67 12.6 L78.6 14.4", "#2E3238", 1.4), SL("M47.6 24.4 Q63 20.6 78.6 24.4", "#7A8288", 1.4), ...[52, 58, 64, 70, 75].map(x => SC(x, 23.2 - Math.sin((x - 47) / 32 * Math.PI) * 1.4, .8, "#D4D8DB"))] },
+    f: { kopf: [SP("M66 9 Q63 -1 68.6 -6 Q72.4 -.6 70.6 9Z", "#C8363A", { cls: "skin-feder" }), SP("M67.4 8 Q66 1 68.6 -2.6 Q70.4 1.6 69.4 8Z", "#E25A4C", { op: .8 }), SP("M50.8 23 L50 40 L55.4 38.4 L56 24.6Z M85.2 23 L86 40 L80.6 38.4 L80 24.6Z", "#8E959A"),
+      SP("M50.6 25.4 Q49.6 7.8 68 6.8 Q86.4 7.8 85.4 25.4 Q68 21.6 50.6 25.4Z", "#A9B0B6"), SP("M54.6 12.4 Q60 8.8 66 8.4 Q58 11.8 56 17.4Z", "#D0D5D9", { op: .8 }),
+      SP("M55 9.6 H81 V15.6 H55Z", "#7A8288"), SL("M58 12.6 H78", "#2E3238", 1.4), SL("M50.6 25.2 Q68 21.4 85.4 25.2", "#7A8288", 1.4)] },
+    hoch: 8, vbKopf: "36 -8 66 66", vbFront: "36 -8 66 66" },
+  { id: "h-strohhut", fuer: "huhn", fach: "kopf", name: "Strohhut", preis: 80, ab: "2027-06", saison: [6, 7, 8], deckt: "kamm", text: "Breite Krempe, rotes Band. Hühnchen macht Sommerfrische – im Schatten der eigenen Krempe.",
+    s: { kopf: [SE(63.4, 18.6, 25.4, 5, "#E7C77C", { rot: -4 }), SP("M38.6 19.4 Q63 30.4 88.4 17.6 Q63 25 38.6 19.4Z", "#C9A456"), SP("M51.4 18.4 Q51 5.6 63.4 5 Q75.8 5.6 75.4 18 Q63.4 20.6 51.4 18.4Z", "#F0D48F"),
+      SP("M51.6 14.6 Q63.4 17 75.6 14.2 L75.4 18 Q63.4 20.6 51.4 18.4Z", "#C9563A"), ...skBluete(55, 15.6, 2.2, "#FBF8EE")] },
+    f: { kopf: [SE(68, 19.4, 27, 5.4, "#E7C77C"), SP("M41.2 19.8 Q68 31 94.8 19.8 Q68 26.6 41.2 19.8Z", "#C9A456"), SP("M55.6 19 Q55.2 5.6 68 5 Q80.8 5.6 80.4 19 Q68 21.6 55.6 19Z", "#F0D48F"),
+      SP("M55.8 15.2 Q68 17.6 80.2 15.2 L80.4 19 Q68 21.6 55.6 19Z", "#C9563A"), ...skBluete(59.4, 16.4, 2.2, "#FBF8EE")] },
+    vbKopf: "36 -2 62 62", vbFront: "36 -2 62 62" },
+  { id: "h-party", fuer: "huhn", fach: "kopf", name: "Partyhütchen", preis: 50, ab: "2027-08", text: "Spitzes Hütchen mit Bommel und Gummiband. Hühnchen behauptet, es hätte heute Geburtstag. Das behauptet es jeden Tag.",
+    s: { kopf: [SP("M55.6 17.6 L61.4 -6 L69.4 16.4Z", "#3E7FB8"), SL("M57 12 L68 10.6 M58.6 5.6 L66.2 4.8", "#F2D27A", 1.8), SC(61.4, -6.6, 2.6, "#E0558A")] },
+    f: { kopf: [SP("M61.6 16 L68 -7 L74.4 16Z", "#3E7FB8"), SL("M63 10.4 L73 10.4 M64.8 4 L71.2 4", "#F2D27A", 1.8), SC(68, -7.6, 2.6, "#E0558A")] },
+    hoch: 10, vbKopf: "34 -10 68 68", vbFront: "34 -10 68 68" },
+  { id: "h-weihnacht", fuer: "huhn", fach: "kopf", geschenk: "advent", name: "Weihnachtsmütze", es: "die Mütze", deckt: "kamm", text: "Im Advent setzt Hühnchen sie von selbst auf. „Die Mütze war nicht meine Idee.“ Trägt sie trotzdem bis Silvester.",
+    s: { kopf: [SP("M48 22 Q50 5.6 64 4.6 Q74.6 4.6 80.4 11.6 Q84.6 16.6 86.6 24 Q80.4 16 76.4 15 Q78 19.6 78 22 Q63 18.6 48 22Z", "#C8363A"), SP("M52 12 Q56 6.6 63 6 Q56 9 54.6 15Z", "#E05A4C", { op: .7 }),
+      SP("M46.4 20.8 Q63 16.4 79.6 20.8 L79.8 26.2 Q63 21.6 46.2 26.2Z", "#F4EFE4"), SC(86.6, 24, 3.6, "#F4EFE4"), SC(85.4, 22.6, 1.2, "#FFFFFF")] },
+    f: { kopf: [SP("M51 23 Q52 6.6 68 5.6 Q80 5.6 86 13.6 Q90 18.6 91 26 Q86 18 82 17 Q83 21 83 23 Q68 19.6 51 23Z", "#C8363A"), SP("M49.4 21.8 Q68 17.4 86.6 21.8 L86.8 27.2 Q68 22.6 49.2 27.2Z", "#F4EFE4"), SC(91, 26, 3.6, "#F4EFE4")] },
+    vbKopf: "38 0 60 60", vbFront: "38 0 60 60" },
+  { id: "h-lucia", fuer: "huhn", fach: "kopf", geschenk: "lucia", name: "Lucia-Kranz", es: "den Kranz", text: "Am 13. Dezember trägt Hühnchen einen kleinen Kranz mit Kerzen. „Ich bin die einzige Lucia mit eingebautem Feuer.“",
+    s: { kopf: [...skKerze(56.6, 6.4, 8, 2.8), ...skKerze(63, 3.6, 10, 2.8), ...skKerze(69.4, 6.4, 8, 2.8), SE(63, 16.6, 13.4, 3.8, "#3F6B3A"), ...[[52, 16.4], [57.6, 19.2], [63, 20], [68.4, 19.2], [74, 16.4]].map(([x, y], i) => SE(x, y, 2.6, 1.3, i % 2 ? "#4F8A45" : "#5D9A50", { rot: i < 2 ? 18 : -18 })), SC(55, 18.6, 1, "#C8363A"), SC(65.6, 20, 1, "#C8363A"), SC(71.6, 18.2, 1, "#C8363A")] },
+    f: { kopf: [...skKerze(61.6, 7.4, 8, 2.8), ...skKerze(68, 4.6, 10, 2.8), ...skKerze(74.4, 7.4, 8, 2.8), SE(68, 17.6, 13.4, 3.8, "#3F6B3A"), SC(60, 19.6, 1, "#C8363A"), SC(70.6, 21, 1, "#C8363A"), SC(76.6, 19.2, 1, "#C8363A")] },
+    hoch: 4, vbKopf: "38 -4 62 62", vbFront: "38 -4 62 62" },
+  { id: "h-bingo", fuer: "huhn", fach: "kopf", geschenk: "bingo", name: "Bingo-Kranz", text: "Für eine ganze volle Bingo-Karte: ein Kranz aus Blättern und einer Eichel. Verdient, nicht gekauft.",
+    s: { kopf: [SL("M46.6 21.4 Q63 26.4 80 19.4", "#7A5A3A", 1.6), ...[[48.4, 21.6, "#C98A3E", 30], [54.2, 23.6, "#5D9A50", -10], [60, 24.6, "#D4A445", 20], [65.8, 24.4, "#A55A2E", -20], [71.4, 23, "#5D9A50", 14], [77, 20.6, "#C98A3E", -26], [57, 22, "#A55A2E", 40], [68.6, 21.8, "#D4A445", -40]].map(([x, y, c, r]) => SE(x, y, 4.8, 2.5, c, { rot: r })),
+      SE(72.6, 25.4, 2.2, 2.7, "#A0703F"), SP("M70.2 24.2 Q72.6 22 75 24.2Z", "#6B4A30"), SL("M72.6 22.4 L73.2 21", "#6B4A30", .9)] },
+    f: { kopf: [SL("M49.6 19 Q68 27.6 86.4 19", "#7A5A3A", 1.6), ...[[51.4, 19.6, "#C98A3E", 30], [57.4, 22.6, "#5D9A50", 12], [63, 24.2, "#D4A445", 4], [73, 24.2, "#A55A2E", -4], [78.6, 22.6, "#5D9A50", -12], [84.6, 19.6, "#C98A3E", -30]].map(([x, y, c, r]) => SE(x, y, 4.8, 2.5, c, { rot: r })),
+      SE(68, 23.6, 2.2, 2.6, "#A0703F"), SP("M65.6 22.4 Q68 20.2 70.4 22.4Z", "#6B4A30")] } }
+];
+const SKIN_MAP = Object.fromEntries(D_SKINS.map(s => [s.id, s]));
+/* Was Hühnchen in bestimmten Kostümen zu Bild-Spielereien sagt */
+const SKIN_REAKTION = {
+  "h-pirat": { kraniche: "Vögel voraus! Kurs halten!", katze: "Eine Schiffskatze! Die heuern wir an." },
+  "h-detektiv": { nachbar: "Verdächtig freundlich, der Mann.", eichhoernchen: "Die Nuss ist weg. Ich hab da einen Verdacht." },
+  "h-astronaut": { kraniche: "Das sind keine Ufos. Hab ich geprüft.", laterne: "Bodenkontrolle an Laterne: Licht ist an." },
+  "h-koch": { eichhoernchen: "Nüsse roh? Na gut. Jeder, wie er mag.", igel: "Apfel ohne Zimt. Na ja, er ist ja kein Feinschmecker." },
+  "h-wikinger": { kraniche: "Skål, ihr Vögel!", schneemann: "Den nehmen wir mit auf die nächste Fahrt." },
+  "h-hexe": { laterne: "Das war Zauberei. Und ein bisschen der Schalter." },
+  "h-taucher": { blumen: "Ich bin vorbereitet, falls zu viel Wasser kommt." },
+  "h-zylinder": { seifenblasen: "Zack, weg. Ich sag ja: Zauberei." }
+};
+
+/* ============================================================
+   Zustand, Regeln, Feste
+   ============================================================ */
+const SK_WETTER = ["echt", "sonne", "wolken", "regen", "schnee", "nebel"];
+const SK_GUTSCHEINE = { "g-karte-halle": 300, "g-klatsch-telefon": 500, "g-halloren": 600, "g-tschuess-revanche": 700, "g-handy-besuch": 800, "g-spaziergang": 900 };
+const skObj = v => v && typeof v === "object" && !Array.isArray(v) ? v : {};
+function skinsMigrieren() {
+  const k = skObj(S.skins), str = v => typeof v === "string" && v ? v : null;
+  S.skins = { besitz: skObj(k.besitz), rita: str(k.rita), huhn: str(k.huhn), auto: k.auto !== false, ziel: str(k.ziel), geschenkt: skObj(k.geschenkt), reihen: skObj(k.reihen),
+    festAus: skObj(k.festAus), intro: typeof k.intro === "string" ? k.intro : "", neuGesehen: typeof k.neuGesehen === "string" ? k.neuGesehen : "", geprueft: typeof k.geprueft === "string" ? k.geprueft : "",
+    erstattet: Number.isFinite(k.erstattet) ? k.erstattet : 0, erstattetGemeldet: !!k.erstattetGemeldet };
+  for (const id in S.skins.besitz) if (!SKIN_MAP[id]) delete S.skins.besitz[id];
+  for (const f of ["rita", "huhn"]) if (S.skins[f] && (!SKIN_MAP[S.skins[f]] || SKIN_MAP[S.skins[f]].fuer !== f)) S.skins[f] = null;
+  if (S.skins.ziel && !SKIN_MAP[S.skins.ziel] && !(D.laden || []).some(x => x.id === S.skins.ziel)) S.skins.ziel = null;
+  const b = skObj(S.bildspiel); S.bildspiel = { tag: typeof b.tag === "string" ? b.tag : "", erledigt: skObj(b.erledigt), zustand: skObj(b.zustand), schneemann: typeof b.schneemann === "string" ? b.schneemann : "", ...(Array.isArray(b.wahl) && b.wahl.every(x => typeof x === "string") ? { wahl: b.wahl } : {}) };
+  if (!SK_WETTER.includes(S.bildWetter)) S.bildWetter = "echt";
+  if (!Number.isFinite(S.talerRest)) S.talerRest = 0;
+  if (Array.isArray(S.eintraege)) S.eintraege.forEach(e => { if (e && Number.isFinite(e.taler) && e.taler % 1) e.taler = Math.round(e.taler); });
+  if (Number.isFinite(S.taler) && Math.abs(S.taler - Math.round(S.taler)) > 1e-6) { const g = Math.floor(S.taler + 1e-9); S.talerRest = Math.min(1, S.talerRest + S.taler - g); S.taler = g; }
+  else if (Number.isFinite(S.taler)) S.taler = Math.round(S.taler);
+  const h = skObj(S.halte); S.halte = { rita: typeof h.rita === "string" ? h.rita : "", huhn: typeof h.huhn === "string" ? h.huhn : "", lupe: typeof h.lupe === "string" ? h.lupe : "" };
+  const m = skObj(S.memory); S.memory = { tag: typeof m.tag === "string" ? m.tag : "", spiele: Number.isFinite(m.spiele) ? m.spiele : 0, paare: m.paare === 8 ? 8 : 6 };
+  // FUN-21: Gutscheine „Echtes von Max“ gibt es nicht mehr – schon gekaufte werden als Taler zurückgezahlt (einmalig)
+  if (S.gekauft && typeof S.gekauft === "object") for (const id in SK_GUTSCHEINE) if (S.gekauft[id]) {
+    delete S.gekauft[id]; S.taler = (Number(S.taler) || 0) + SK_GUTSCHEINE[id]; S.talerAusgegeben = Math.max(0, (S.talerAusgegeben || 0) - SK_GUTSCHEINE[id]); S.skins.erstattet += SK_GUTSCHEINE[id]; S.skins.erstattetGemeldet = false; }
+}
+/* K-F-09: Taler nur ganzzahlig buchen; Bruchteile sammeln sich in S.talerRest */
+function talerGanz(roh) { const r = (Number(S.talerRest) || 0) + (Number(roh) || 0), g = Math.floor(r + 1e-9); S.talerRest = Math.max(0, Math.round((r - g) * 1000) / 1000); return g; }
+function skMonat(d = jetzt()) { return `${d.getFullYear()}-${String(d.getMonth() + 1).padStart(2, "0")}`; }
+const skinDa = s => !s.ab || skMonat() >= s.ab;
+const skinHat = id => !!(S.skins && S.skins.besitz[id]);
+const skinKaufbar = s => !!s.preis && skinDa(s) && !skinHat(s.id);
+function skOstern(y) { const a = y % 19, b = Math.floor(y / 100), c = y % 100, d = Math.floor(b / 4), e = b % 4, f = Math.floor((b + 8) / 25), g = Math.floor((b - f + 1) / 3), h = (19 * a + b - d - g + 15) % 30, i = Math.floor(c / 4), k = c % 4, l = (32 + 2 * e + 2 * i - h - k) % 7, m = Math.floor((a + 11 * h + 22 * l) / 451), mo = Math.floor((h + l - 7 * m + 114) / 31), t = ((h + l - 7 * m + 114) % 31) + 1; return new Date(y, mo - 1, t, 12); }
+function skAdvent(y) { const d = new Date(y, 11, 24, 12); return tagVon(new Date(y, 11, 24 - d.getDay() - 21, 12)); }
+/* Welche Feste sind heute? (für Kleiderschrank und Bild) */
+function festHeute(d = jetzt()) {
+  const y = d.getFullYear(), m = d.getMonth() + 1, t = d.getDate(), tag = tagVon(d), md = `${String(m).padStart(2, "0")}-${String(t).padStart(2, "0")}`;
+  const o = skOstern(y), od = Math.round((tagDatum(tag) - tagDatum(tagVon(o))) / 864e5);
+  const mitt = (() => { for (let x = 19; x <= 25; x++) { const dd = new Date(y, 5, x, 12); if (dd.getDay() === 5) return x; } return 0; })();
+  return { advent: tag >= skAdvent(y) && m === 12 && t <= 23, weihnachten: m === 12 && t >= 24 && t <= 26, lucia: m === 12 && t === 13, silvester: m === 12 && t === 31, neujahr: m === 1 && t === 1,
+    ostern: od >= -1 && od <= 1, ostersonntag: od === 0, halloween: m === 10 && t === 31, midsommar: m === 6 && (t === mitt || t === mitt + 1),
+    geburtstag: !!S.geburtstag && S.geburtstag === md, winterzeit: (tag >= skAdvent(y) && m === 12) };
+}
+function festSkin(fig) {
+  const f = festHeute();
+  if (fig === "rita") return f.geburtstag ? "r-krone" : null;
+  if (f.lucia) return "h-lucia";
+  if (f.winterzeit) return "h-weihnacht";
+  if (f.ostern) return "h-osterohren";
+  return null;
+}
+function notfallOffen() { try { return SHEETS.some(x => /^ruhe/.test(x.id || "")); } catch (e) { return false; } }
+/* Welcher Skin ist gerade an? Eine Stelle für alle Regeln (Notfallplan, Sparflamme, Fest-Geschenke). */
+function skinEffektiv(fig) {
+  if (!S || !S.skins || notfallOffen()) return null;
+  let id = S.skins[fig];
+  if (!id && S.skins.auto && S.skins.festAus[fig] !== heute()) { const f = festSkin(fig); if (f && skinHat(f)) id = f; }
+  const s = id && SKIN_MAP[id]; if (!s || s.fuer !== fig) return null;
+  if (fig === "rita" && s.fach === "ganz" && S.tf && S.tf[heute()] === "D") return null;
+  return id;
+}
+/* Fragmente für figuren.js. wahl: undefined = was gerade an ist, false/null = nichts, "id" = Anprobe */
+function skinSchichten(fig, ansicht, wahl) {
+  let id; try { id = wahl === undefined ? skinEffektiv(fig) : wahl; } catch (e) { id = null; }
+  const s = id && SKIN_MAP[id]; if (!s || s.fuer !== fig) return null;
+  if (fig === "rita") return { id, hinten: skinSVG(s.r.hinten), vorn: skinSVG(s.r.vorn) };
+  if (ansicht === "front") return s.f ? { id, kopf: skinSVG(s.f.kopf), ohneKamm: s.deckt === "kamm", vb: s.vbFront } : null;
+  const k = ansicht === "kopf";
+  return { id, hinten: k ? "" : skinSVG(s.s.hinten), koerper: k ? "" : skinSVG(s.s.koerper), kopf: skinSVG(s.s.kopf), ohneKamm: s.deckt === "kamm", vb: k ? s.vbKopf : null, hoch: s.hoch || 0 };
+}
+/* Für das Canvas-Hühnchen (scene.js): Schichten im 100er-System */
+function skinCanvasSchichten(wahl) { const id = wahl === undefined ? skinEffektiv("huhn") : wahl; const s = id && SKIN_MAP[id]; return s && s.fuer === "huhn" ? s : null; }
+
+/* Geschenke (Feste, Bingo) – einmal am Tag geprüft */
+function geschenkePruefen() {
+  if (!S.skins || S.skins.geprueft === heute() || !S.onboard) return;
+  S.skins.geprueft = heute();
+  const neu = [];
+  const gib = id => { if (!skinHat(id) && SKIN_MAP[id]) { S.skins.besitz[id] = heute(); S.skins.geschenkt[id] = heute(); neu.push(SKIN_MAP[id]); } };
+  for (const fig of ["rita", "huhn"]) { const f = festSkin(fig); if (f) gib(f); }
+  if (Object.values(skObj(S.bingo)).some(b => b && b.voll)) gib("h-bingo");
+  if (neu.length) { speichern(); setTimeout(() => toast(neu.map(s => s.id === "r-krone" ? (skinEffektiv("rita") === "r-krone" ? "Alles Gute! Hühnchen hat dir die Geburtstagskrone aufgesetzt." : "Alles Gute! Eine Geburtstagskrone liegt im Kleiderschrank für dich bereit.") : s.id === "h-bingo" ? "Für die volle Bingo-Karte: Ein Bingo-Kranz für Hühnchen liegt im Kleiderschrank." : `Geschenkt: ${s.name}. ${skinEffektiv(s.fuer) === s.id ? (s.fuer === "rita" ? "Hühnchen hat es dir gleich aufgesetzt." : "Hühnchen trägt es schon.") : "Liegt im Kleiderschrank bereit."}`).join("\n"), { knopf: { act: "sk-schrank", text: "Ansehen" } }), 1400); }
+}
+
+/* ---------- Als Nächstes ---------- */
+function skWaren() {
+  return [...D_SKINS.filter(s => skinKaufbar(s) && !(s.geschenk === "start" && !(S.skins && S.skins.intro))).map(s => ({ id: s.id, name: s.naechst || s.name, fuer: s.fuer, preis: s.preis, skin: true })),
+    ...(D.laden || []).filter(x => !x.gutschein && x.preis && !(S.gekauft || {})[x.id]).map(x => ({ id: x.id, name: x.name, preis: x.preis }))];
+}
+function alsNaechstes() {
+  const t = talerStand(), w = skWaren();
+  const z = S.skins && S.skins.ziel && w.find(x => x.id === S.skins.ziel);
+  if (z) return { ...z, fehlt: Math.max(0, z.preis - t), ziel: true };
+  const skins = w.filter(x => x.skin), pool = skins.length ? skins : w;
+  const geht = pool.filter(x => x.preis <= t).sort((a, b) => b.preis - a.preis)[0];
+  if (geht) return { ...geht, fehlt: 0 };
+  const bald = (skins.length ? skins : w).filter(x => x.preis > t).sort((a, b) => a.preis - b.preis)[0];
+  return bald ? { ...bald, fehlt: bald.preis - t } : null;
+}
+const skWarenName = n => n.skin ? `${n.name}${n.fuer === "huhn" ? " für Hühnchen" : ""}` : n.name;
+function naechstesText() {
+  const n = alsNaechstes();
+  if (!n) return "Du hast schon alles. Max räumt bald Neues ein.";
+  return n.fehlt ? `${n.ziel ? "Dein Ziel" : "Als Nächstes"}: ${skWarenName(n)} – noch ${n.fehlt} Taler.` : `Reicht schon für: ${skWarenName(n)} (${n.preis} Taler).`;
+}
+
+/* ---------- Münze, Icons ---------- */
+const MUENZE = (k = "muenze") => `<svg class="${k}" viewBox="0 0 24 24" aria-hidden="true"><circle cx="12" cy="12.6" r="10" fill="#B9801E"/><circle cx="12" cy="11.4" r="10" fill="#E8B23E"/><circle cx="12" cy="11.4" r="7.2" fill="none" stroke="#C48C24" stroke-width="1.4"/><path d="M8.4 8.2h7.2v2h-2.6v5.6h-2V10.2H8.4Z" fill="#8A5A12"/><path d="M6.4 7.4a7 7 0 0 1 4-3" stroke="#FFF3C8" stroke-width="1.3" fill="none" stroke-linecap="round" opacity=".8"/></svg>`;
+Object.assign(IC, {
+  laden: "M3.2 3.5h17.6l1.7 5.6c0 1.6-1.3 2.9-2.9 2.9-1.1 0-2.1-.6-2.5-1.6-.5 1-1.5 1.6-2.6 1.6S12.4 11.4 12 10.4c-.4 1-1.4 1.6-2.5 1.6S7.3 11.4 6.9 10.4C6.4 11.4 5.4 12 4.3 12 2.7 12 1.5 10.7 1.5 9.1L3.2 3.5ZM4 13.6c.1 0 .2 0 .3 0 1 0 1.9-.3 2.6-.8.7.5 1.6.8 2.6.8s1.8-.3 2.5-.8c.7.5 1.6.8 2.5.8s1.9-.3 2.6-.8c.7.5 1.6.8 2.6.8h.3V21h-6v-5h-4v5H4v-7.4Z",
+  buegel: "M12 3a3 3 0 0 1 3 3c0 1.2-.7 2.2-1.8 2.7v1.4l8.3 6.1c.8.6.4 1.8-.6 1.8H3.1c-1 0-1.4-1.2-.6-1.8l8.3-6.1V7.6h1.2a1.2 1.2 0 1 0-1.2-1.2H9A3 3 0 0 1 12 3Z",
+  muenze: "M12 2a10 10 0 1 1 0 20 10 10 0 0 1 0-20Zm-3.6 6.2v2h2.6v5.6h2v-5.6h2.6v-2H8.4Z",
+  wolke: "M6.5 19a4.5 4.5 0 0 1-.6-9 6 6 0 0 1 11.4 1.6A3.7 3.7 0 0 1 17.5 19h-11Z",
+  mond: "M14.6 2.6a9.6 9.6 0 1 0 6.8 15.6A8.4 8.4 0 0 1 14.6 2.6Z"
+});
+
+/* ============================================================
+   Taler-Plakette in der Kopfzeile (mit Münzflug und Hochzählen)
+   ============================================================ */
+const PLAK = { n: null, quelle: null, zaehl: 0 };
+function plaketteEl() {
+  let el = document.getElementById("taler-plakette"); if (el) return el;
+  const kopf = document.querySelector("header.kopf"); if (!kopf) return null;
+  el = document.createElement("button"); el.id = "taler-plakette"; el.className = "taler-plakette"; el.dataset.act = "sk-taler";
+  el.innerHTML = `<span class="tp-pille">${MUENZE()}<span class="tp-zahl zahl"></span></span>`;
+  kopf.appendChild(el); plakettePlatzieren(); return el;
+}
+function plaketteMalen(n, zwang) { if (PLAK.laeuft && !zwang) return; const el = plaketteEl(); if (!el) return; el.querySelector(".tp-zahl").textContent = n; el.setAttribute("aria-label", `${n} Taler – zum Kramladen`); }
+function plakettePlatzieren() {
+  const el = document.getElementById("taler-plakette"), lg = document.getElementById("logo"), kopf = document.querySelector("header.kopf"); if (!el || !lg || !kopf) return;
+  const r = lg.getBoundingClientRect(), k = kopf.getBoundingClientRect(); if (!r.width) return;
+  el.style.left = Math.round(r.right - k.left - 20) + "px"; el.style.top = Math.round(r.bottom - k.top - 30) + "px";
+}
+function talerPruefen() {
+  if (!S || typeof talerStand !== "function") return;
+  const n = talerStand();
+  if (PLAK.n == null || !document.getElementById("taler-plakette")) { PLAK.n = n; plaketteMalen(n, true); return; }
+  if (n === PLAK.n) return;
+  const alt = PLAK.n; PLAK.n = n;
+  if (n > alt && !REDUCED()) talerFlug(alt, n); else zaehle(alt, n, 350);
+}
+function zaehle(von, bis, ms) {
+  const el = plaketteEl(); if (!el) return; cancelAnimationFrame(PLAK.zaehl);
+  const t0 = performance.now(), z = el.querySelector(".tp-zahl");
+  PLAK.laeuft = true;
+  const f = now => { const k = clamp((now - t0) / ms, 0, 1); z.textContent = Math.round(von + (bis - von) * (1 - Math.pow(1 - k, 2))); if (k < 1) PLAK.zaehl = requestAnimationFrame(f); else { PLAK.laeuft = false; plaketteMalen(PLAK.n != null ? PLAK.n : bis, true); } };
+  PLAK.zaehl = requestAnimationFrame(f);
+  if (bis > von) { el.classList.remove("tp-hops"); void el.offsetWidth; el.classList.add("tp-hops"); }
+}
+function talerFlug(von, bis, start) {
+  const el = plaketteEl(); if (!el) return;
+  const ziel = el.querySelector(".muenze").getBoundingClientRect();
+  const q = start || (PLAK.quelle && performance.now() - PLAK.quelle.t < 5000 ? PLAK.quelle : { x: innerWidth / 2, y: innerHeight * .6 });
+  const n = Math.min(bis - von, 5), sichtbar = ziel.bottom > 4 && ziel.top < innerHeight;
+  if (PLAK.leise) { PLAK.leise = false; if (!sichtbar) { plaketteMalen(bis, true); return; } }
+  if (!sichtbar) { // Kopfzeile weggescrollt: kleine „+N“-Münze an Ort und Stelle
+    const p = document.createElement("div"); p.className = "taler-plus"; p.innerHTML = `${MUENZE()}<span>+${bis - von}</span>`; p.style.left = q.x + "px"; p.style.top = q.y + "px"; document.body.appendChild(p); setTimeout(() => p.remove(), 1600); plaketteMalen(bis, true); return; }
+  PLAK.laeuft = true; plaketteMalen(von, true); PLAK.laeuft = true;
+  for (let i = 0; i < n; i++) {
+    const m = document.createElement("div"); m.className = "taler-flug"; m.innerHTML = MUENZE(); m.style.left = (q.x - 11) + "px"; m.style.top = (q.y - 11) + "px"; document.body.appendChild(m);
+    const dx = ziel.left - q.x + 2, dy = ziel.top - q.y + 2, mx = dx * .4 + (i - n / 2) * 18, my = Math.min(dy, 0) - 70 - i * 6;
+    const a = m.animate([{ transform: "translate(0,0) scale(.6)", opacity: 0 }, { transform: `translate(${mx}px,${my}px) scale(1.1)`, opacity: 1, offset: .45 }, { transform: `translate(${dx}px,${dy}px) scale(.8)`, opacity: 1 }], { duration: 760 + i * 90, delay: i * 90, easing: "cubic-bezier(.4,0,.3,1)", fill: "forwards" });
+    a.onfinish = () => { m.remove(); if (i === n - 1) zaehle(von, bis, 520); };
+  }
+  if (S.ton) try { ton("erfolg"); } catch (e) { }
+}
+{ const s0 = speichern; speichern = function () { s0(); try { talerPruefen(); } catch (e) { } }; }
+document.addEventListener("pointerdown", ev => { PLAK.quelle = { x: ev.clientX, y: ev.clientY, t: performance.now() }; }, true);
+addEventListener("resize", () => setTimeout(plakettePlatzieren, 60));
+
+/* ============================================================
+   Logo und Figuren aktualisieren
+   ============================================================ */
+let SK_LOGO = "?";
+function figurenAktualisieren(erzwingen) {
+  const lg = document.getElementById("logo"); if (!lg) return;
+  const id = skinEffektiv("rita") || "";
+  if (erzwingen || id !== SK_LOGO || !lg.firstChild) { SK_LOGO = id; const f = lg.querySelector(".halte-finger"); lg.innerHTML = ritaSVG(72); if (f) lg.appendChild(f); }
+}
+function skRender() { try { render({ halteScroll: true, ohneAnim: true }); } catch (e) { } figurenAktualisieren(); }
+
+/* ============================================================
+   Kleiderschrank
+   ============================================================ */
+const KS = { fig: "rita", sel: null, probe: {}, rueck: null };
+const skOutfit = fig => { const id = skinEffektiv(fig); return id ? SKIN_MAP[id].name : "wie immer"; };
+const skProbe = fig => KS.probe[fig] !== undefined ? KS.probe[fig] : skinEffektiv(fig);
+const skNeu = s => s.ab && s.ab === skMonat() && !skinHat(s.id);
+const skSaison = s => s.saison && s.saison.includes(jetzt().getMonth() + 1);
+const GESCHENK_WANN = { start: "zum Start", advent: "im Advent", lucia: "am 13. Dezember", geburtstag: "an deinem Geburtstag", bingo: "für eine volle Bingo-Karte", ostern: "zu Ostern" };
+function figurMini(fig, id, gr) {
+  if (fig === "rita") return ritaSVG(gr, { skin: id });
+  const s = id && SKIN_MAP[id], kopf = !s || s.fach === "kopf" || s.fach === "augen";
+  return huhnSVG({ gr, kopf, skin: id || null });
+}
+function kleiderschrankKarte() {
+  const neu = D_SKINS.some(s => skNeu(s));
+  return `<section class="abschnitt"><button class="ks-karte" data-act="sk-schrank" aria-label="Kleiderschrank öffnen">
+    <span class="ks-titel">${ic("buegel")} Kleiderschrank${neu ? ` <span class="ks-marke">Neu</span>` : ""}${ic("pfeil", "pfeil")}</span>
+    <span class="ks-karte-zeile"><span class="ks-karte-figs" aria-hidden="true">${ritaSVG(56)}${huhnSVG({ gr: 62 })}</span>
+    <span class="ks-karte-text"><span class="klein">${esc(S.name || "Rita")}: ${esc(skOutfit("rita"))}<br>Hühnchen: ${esc(skOutfit("huhn"))}</span>
+    <span class="ks-naechst">${MUENZE()}<span>${esc(naechstesText())}</span></span></span></span></button></section>`;
+}
+function zweiTueren() {
+  const neu = D_SKINS.some(s => skNeu(s));
+  return `<section class="abschnitt"><div class="tueren-zwei">
+    <button class="laden-tuer" data-act="sk-schrank"><span class="lt-bild" aria-hidden="true">${ritaSVG(50)}${huhnSVG({ gr: 54 })}</span><span class="lt-titel">${ic("buegel")} Kleiderschrank${neu ? ` <span class="ks-marke">Neu</span>` : ""}</span><span class="lt-unter">Hüte, Brillen, Kostüme</span></button>
+    <button class="laden-tuer" data-act="laden"><span class="lt-bild" aria-hidden="true">${LADEN_FRONT}</span><span class="lt-titel">${ic("laden")} Kramladen</span><span class="lt-unter">Fürs Bild, Spiele, Klänge</span></button>
+  </div><p class="ks-naechst tueren-naechst">${MUENZE()}<span>${esc(naechstesText())}</span></p></section>`;
+}
+function kleiderschrankSheet(fig) {
+  if (fig) KS.fig = fig; KS.sel = null; KS.probe = {};
+  if (S.skins) { S.skins.neuGesehen = skMonat(); speichern(); }
+  sheet({ titel: "Kleiderschrank", id: "schrank", inhalt: ksInhalt(), fuss: ksFuss(), onclose: () => { KS.probe = {}; KS.sel = null; } });
+}
+function ksInhalt() {
+  const t = talerStand(), f = KS.fig;
+  let h = `<div class="ks-buehne">${["rita", "huhn"].map(x => { const id = skProbe(x); return `<button class="ks-fig${x === f ? " an" : ""}" data-act="sk-fig" data-v="${x}" aria-pressed="${x === f}">${x === "rita" ? ritaSVG(112, { skin: id || null }) : huhnSVG({ gr: 118, skin: id || null })}<span class="ks-fig-text"><span class="ks-fig-name">${x === "rita" ? esc(S.name || "Rita") : "Hühnchen"}</span><span class="klein">${id ? esc(SKIN_MAP[id].name) : "wie immer"}${KS.probe[x] !== undefined && KS.probe[x] !== skinEffektiv(x) ? " · zur Probe" : ""}</span></span></button>`; }).join("")}</div>`;
+  h += `<div class="ks-kasse">${MUENZE()}<span><span class="zahl" style="font-weight:700">${t} Taler</span><br><span class="klein">${esc(naechstesText())}</span></span></div>`;
+  for (const fa of SKIN_FAECHER) {
+    const teile = D_SKINS.filter(s => s.fuer === f && s.fach === fa.id && (skinDa(s) || skinHat(s.id)));
+    if (!teile.length) continue;
+    h += `<h3 class="ks-fach">${esc(fa.name)}</h3><div class="ks-raster">${teile.map(s => ksKachel(s, t)).join("")}</div>`;
+  }
+  h += `<h3 class="ks-fach">Sammelreihen</h3><p class="klein" style="margin-top:0">Wer eine Reihe komplett hat, bekommt von Max einen kleinen Taler-Bonus obendrauf.</p><div class="ks-reihen">${SKIN_REIHEN.map(r => `<div class="ks-reihe${S.skins.reihen[r.id] ? " voll" : ""}"><span class="ks-reihe-name">${esc(r.name)}${S.skins.reihen[r.id] ? ` ${ic("haken")}` : ` <span class="klein">+${r.bonus} Taler</span>`}</span><span class="ks-reihe-teile">${r.ids.map(id => { const s = SKIN_MAP[id]; return `<span class="ks-punkt${skinHat(id) ? " hat" : ""}" title="${esc(s.name)}">${skinHat(id) ? ic("haken") : ""}<span>${esc(s.name)}${skinDa(s) ? "" : ` <i>(ab ${MONAT[Number(s.ab.slice(5)) - 1]})</i>`}</span></span>`; }).join("")}</span></div>`).join("")}</div>`;
+  h += `<div class="liste" style="margin-top:16px">${schalter(!!S.skins.auto, "Hühnchen zieht sich zu Festen selbst an", `data-act="sk-auto"`, "Im Advent, an Lucia, zu Ostern – und an deinem Geburtstag. Was du selbst aussuchst, geht vor.")}</div>`;
+  h += `<p style="text-align:center;margin:14px 0 4px"><button class="knopf klein leise" data-act="sk-alleaus">Beide wieder wie immer</button></p>`;
+  return h;
+}
+function ksKachel(s, t) {
+  const hat = skinHat(s.id), traegt = skinEffektiv(s.fuer) === s.id, sel = KS.sel === s.id;
+  const marke = traegt ? `<span class="ks-marke traegt">${s.fuer === "rita" ? "Trägst du" : "Trägt es"}</span>` : skNeu(s) ? `<span class="ks-marke">Neu</span>` : (!hat && skSaison(s)) ? `<span class="ks-marke saison">Passt gerade</span>` : "";
+  const preis = hat ? `<span class="ks-hat">${ic("haken")} Gehört dir</span>` : s.preis ? `<span class="preis-schild${t >= s.preis ? " geht" : ""}">${MUENZE()}${s.preis}</span>` : `<span class="ks-geschenk">Geschenk ${esc(GESCHENK_WANN[s.geschenk] || "")}</span>`;
+  return `<button class="ks-teil${sel ? " gewaehlt" : ""}${traegt ? " traegt" : ""}" data-act="sk-probe" data-id="${s.id}" aria-pressed="${sel}"><span class="ks-teil-bild" aria-hidden="true">${figurMini(s.fuer, s.id, 70)}</span>${marke}<span class="ks-teil-name">${esc(s.name)}</span>${preis}</button>`;
+}
+function ksFuss() {
+  const s = KS.sel && SKIN_MAP[KS.sel];
+  if (!s) return `<p class="klein ks-fuss-tipp">Tipp ein Teil an – dann ${KS.fig === "rita" ? A("probierst du es an", "probieren Sie es an") : "probiert Hühnchen es an"}. Anprobieren kostet nichts.</p>`;
+  const t = talerStand(), hat = skinHat(s.id), traegt = skinEffektiv(s.fuer) === s.id, wer = s.fuer === "rita" ? A("dir", "Ihnen") : "Hühnchen";
+  let k = "";
+  if (hat) k = traegt ? `<button class="knopf zweit voll" data-act="sk-aus" data-v="${s.fuer}">Ausziehen</button>` : `<button class="knopf haupt voll" data-act="sk-an" data-id="${s.id}">Anziehen</button>`;
+  else if (!s.preis) k = `<p class="klein" style="margin:0">Das gibt’s nicht zu kaufen – es kommt ${esc(GESCHENK_WANN[s.geschenk] || "als Geschenk")}.</p>`;
+  else if (t >= s.preis) k = `<button class="knopf haupt voll" data-act="sk-kaufen" data-id="${s.id}">${MUENZE()} Für ${s.preis} Taler kaufen</button>`;
+  else k = `<div class="stapel"><button class="knopf rand voll" disabled>${MUENZE()} ${s.preis} Taler · noch ${s.preis - t}</button>${S.skins.ziel === s.id ? `<button class="knopf leise voll" data-act="sk-ziel" data-id="">${ic("haken")} Ist dein Ziel – nicht mehr merken</button>` : `<button class="knopf zweit voll" data-act="sk-ziel" data-id="${s.id}">${ic("stern")} Als Ziel merken</button>`}</div>`;
+  return `<div class="ks-fuss"><div class="ks-fuss-text"><span style="font-weight:700">${esc(s.name)}</span><span class="klein">${esc(s.text)}</span></div>${k}</div>`;
+}
+function ksNeu(wackel) {
+  const sh = aktuellesSheet(); if (!sh || sh.dataset.id !== "schrank") return;
+  sheetInhalt(ksInhalt()); sheetFuss(ksFuss());
+  if (wackel && !REDUCED()) { const el = sh.querySelector(`.ks-fig[data-v="${wackel}"]`); if (el) { el.classList.remove("hops"); void el.offsetWidth; el.classList.add("hops"); } }
+}
+function reiheVoll() {
+  for (const r of SKIN_REIHEN) if (!S.skins.reihen[r.id] && r.ids.every(skinHat)) { S.skins.reihen[r.id] = heute(); S.taler += r.bonus; return r; }
+  return null;
+}
+function skinKaufen(id) {
+  const s = SKIN_MAP[id]; if (!s || !skinKaufbar(s) || talerStand() < s.preis) return;
+  const vorher = S.skins[s.fuer], zielVorher = S.skins.ziel;
+  S.taler -= s.preis; S.talerAusgegeben = (S.talerAusgegeben || 0) + s.preis; S.skins.besitz[id] = heute(); S.skins[s.fuer] = id; if (S.skins.ziel === id) S.skins.ziel = null;
+  const r = reiheVoll();
+  KS.rueck = { id, fuer: s.fuer, vorher, zielVorher, reihe: r && r.id, bonus: r ? r.bonus : 0 }; KS.probe = {};
+  speichern(); haptik("erfolg"); try { ton("erfolg"); } catch (e) { }
+  figurenAktualisieren(); ksNeu(s.fuer);
+  toast(`Gehört dir: ${s.name}. ${s.fuer === "rita" ? A("Steht dir!", "Steht Ihnen!") : "Hühnchen trägt es sofort."}${r ? `\n${r.name} komplett – ${r.bonus} Taler Bonus von Max!` : ""}`, { erfolg: true, knopf: { act: "sk-rueck", text: "Rückgängig" } });
+  setTimeout(() => skRender(), 30);
+}
+function skinRueck() {
+  const k = KS.rueck; KS.rueck = null; if (!k || !skinHat(k.id)) return;
+  const s = SKIN_MAP[k.id]; delete S.skins.besitz[k.id]; S.taler += s.preis; S.talerAusgegeben = Math.max(0, (S.talerAusgegeben || 0) - s.preis);
+  S.skins[k.fuer] = k.vorher; S.skins.ziel = k.zielVorher; if (k.reihe) { delete S.skins.reihen[k.reihe]; S.taler -= k.bonus; }
+  speichern(); figurenAktualisieren(); ksNeu(); skRender(); toast("Rückgängig gemacht. Die Taler sind wieder da.");
+}
+
+/* ============================================================
+   Kramladen als Laden mit Abteilungen
+   ============================================================ */
+const LADEN_ABT = { "Wald & Garten": { id: "bild", name: "Fürs Bild", icon: "blume" }, "Spiel": { id: "spiele", name: "Spiele & Extras", icon: "karten" }, "Klänge": { id: "hoeren", name: "Zum Hören", icon: "glocke" }, "Zum Lesen": { id: "lesen", name: "Zum Lesen", icon: "buch" }, "Ausflüge": { id: "ausflug", name: "Für Ausflüge", icon: "rucksack" } };
+if (typeof D !== "undefined" && Array.isArray(D.laden) && !D.laden.some(x => x.id === "memory")) D.laden.splice(Math.max(0, D.laden.findIndex(x => x.id === "rueckenmotiv")) + 1, 0, { id: "memory", gruppe: "Spiel", name: "Figuren-Memory", preis: 70, text: "Rita, Max, Jane, Hühnchen und die anderen als Kartenpaare. Aufdecken, merken, finden – ohne Zeitdruck. Einmal am Tag gibt’s 3 Taler fürs Durchspielen.", icon: "karten" });
+/* Kleine Vorschaubilder für die Waren (64er Raster, Papier-Stil) */
+const WB = {
+  patience: `<g transform="rotate(-12 24 34)"><rect x="12" y="16" width="24" height="34" rx="3" fill="#FBF8F1" stroke="#C9C3B6"/><path d="M24 26c-4 4-6 6-6 8.4a3 3 0 0 0 5 2.2l-1 4h4l-1-4a3 3 0 0 0 5-2.2c0-2.4-2-4.4-6-8.4Z" fill="#1C2620"/></g><g transform="rotate(10 40 32)"><rect x="28" y="14" width="24" height="34" rx="3" fill="#FBF8F1" stroke="#C9C3B6"/><path d="M40 38c-6-4-8-7-8-9.4a4 4 0 0 1 8-1 4 4 0 0 1 8 1c0 2.4-2 5.4-8 9.4Z" fill="#C8363A"/></g>`,
+  rueckenmotiv: `<g transform="rotate(-6 32 32)"><rect x="18" y="10" width="28" height="42" rx="3" fill="#2D6249" stroke="#E8DCC0" stroke-width="2"/><ellipse cx="32" cy="32" rx="6.5" ry="9.5" fill="#A0703F"/><path d="M26 28h12M25.6 32h12.8M26 36h12M29 24l6 16M35 24l-6 16" stroke="#6B4A30" stroke-width="1"/><path d="M32 22.4v-4" stroke="#6B4A30" stroke-width="1.6"/></g>`,
+  memory: `<g transform="rotate(-8 22 32)"><rect x="10" y="14" width="24" height="34" rx="3" fill="#2D6249" stroke="#E8DCC0" stroke-width="2"/><g fill="#FBF8F1" opacity=".3"><circle cx="16" cy="20" r="1.4"/><circle cx="28" cy="20" r="1.4"/><circle cx="22" cy="31" r="1.4"/><circle cx="16" cy="42" r="1.4"/><circle cx="28" cy="42" r="1.4"/></g></g><g transform="rotate(8 42 32)"><rect x="30" y="14" width="24" height="34" rx="3" fill="#FBF8F1" stroke="#C9C3B6"/><circle cx="42" cy="31" r="9" fill="#F3E3C0"/><path d="M34.6 33 Q33.6 22 42 21 Q50.4 22 49.4 33 Q48 27 42 26.6 Q36 27 34.6 33Z" fill="#AFA184"/><circle cx="42" cy="31.4" r="5.4" fill="#F0C9AA"/><path d="M33.6 40 Q42 34.6 50.4 40Z" fill="#22304A"/><path d="M40 33.4 Q42 35 44 33.4" stroke="#9A3A2E" stroke-width=".9" fill="none"/></g>`,
+  rotkehlchen: `<path d="M4 44h56v3H4zM4 52h56v3H4z" fill="#C9B89A"/><path d="M10 38v22M24 38v22M38 38v22M52 38v22" stroke="#B5A486" stroke-width="4"/><ellipse cx="32" cy="34" rx="10" ry="8" fill="#7A6248"/><circle cx="40" cy="27" r="6" fill="#7A6248"/><ellipse cx="37" cy="33" rx="6" ry="5.6" fill="#D9603C"/><path d="M45 27l5 1.4-5 1.2Z" fill="#3A2E22"/><circle cx="41.6" cy="26" r="1.1" fill="#1C2620"/><path d="M22 36l-8 3 9 1Z" fill="#6A5240"/>`,
+  traenke: `<ellipse cx="32" cy="44" rx="22" ry="7" fill="#A8A296"/><ellipse cx="32" cy="42" rx="18" ry="4.4" fill="#8FB8C8"/><path d="M26 50h12l-2 8h-8Z" fill="#9A948A"/><ellipse cx="22" cy="31" rx="6" ry="4.6" fill="#8A6A4A"/><circle cx="27" cy="27" r="3.6" fill="#8A6A4A"/><path d="M30 27l3.4 1-3.4 1Z" fill="#3A2E22"/><path d="M17 31l-6 1.6 6 1.4Z" fill="#7A5A3A"/><ellipse cx="24" cy="33" rx="3" ry="2" fill="#E6D8BC"/>`,
+  igelhaus: `<path d="M8 50 Q10 22 32 18 Q54 22 56 50Z" fill="#8C6A3E"/><path d="M14 34 Q22 26 30 28M34 24 Q44 24 50 32M12 44 Q22 38 32 40M36 38 Q46 36 54 44" stroke="#6B4A2A" stroke-width="2" fill="none"/><g fill="#C98A3E"><ellipse cx="20" cy="26" rx="5" ry="2.4" transform="rotate(-30 20 26)"/><ellipse cx="44" cy="22" rx="5" ry="2.4" transform="rotate(20 44 22)"/><ellipse cx="50" cy="40" rx="5" ry="2.4" transform="rotate(50 50 40)"/></g><ellipse cx="32" cy="46" rx="10" ry="7" fill="#2A221A"/><path d="M26 48 Q32 40 38 48Z" fill="#C9A27E"/><circle cx="32" cy="46.4" r="1.4" fill="#1C1A16"/><circle cx="29.6" cy="44.6" r=".9" fill="#1C1A16"/><circle cx="34.4" cy="44.6" r=".9" fill="#1C1A16"/>`,
+  rosenbogen: `<path d="M12 58V30a20 20 0 0 1 40 0v28h-6V30a14 14 0 0 0-28 0v28Z" fill="#6E5A40"/><g fill="#C9563A"><circle cx="14" cy="38" r="3.4"/><circle cx="17" cy="24" r="3.4"/><circle cx="26" cy="14" r="3.4"/><circle cx="38" cy="14" r="3.4"/><circle cx="47" cy="24" r="3.4"/><circle cx="50" cy="38" r="3.4"/><circle cx="14" cy="50" r="3"/><circle cx="50" cy="50" r="3"/></g><g fill="#5F8A4E"><ellipse cx="20" cy="30" rx="3" ry="1.6"/><ellipse cx="32" cy="12" rx="3" ry="1.6"/><ellipse cx="44" cy="30" rx="3" ry="1.6"/><ellipse cx="12" cy="44" rx="3" ry="1.6"/><ellipse cx="52" cy="44" rx="3" ry="1.6"/></g><path d="M18 58h28" stroke="#E3D2AE" stroke-width="5"/>`,
+  haengematte: `<rect x="6" y="6" width="7" height="54" fill="#6B4A32"/><rect x="51" y="6" width="7" height="54" fill="#6B4A32"/><path d="M12 22 Q32 50 52 22" stroke="#5A4A3A" stroke-width="1.6" fill="none"/><path d="M14 26 Q32 56 50 26 Q32 44 14 26Z" fill="#D9603C"/><path d="M18 32 Q32 48 46 32M22 38 Q32 48 42 38" stroke="#F4E2C4" stroke-width="2.2" fill="none"/><path d="M12 22 L16 27M52 22 L48 27" stroke="#5A4A3A" stroke-width="1.4"/><ellipse cx="10" cy="8" rx="9" ry="5" fill="#3E5E46"/><ellipse cx="54" cy="8" rx="9" ry="5" fill="#3E5E46"/>`,
+  sternbilder: `<rect x="0" y="0" width="64" height="64" fill="#24345A"/><path d="M10 20 L18 22 L26 21 L33 25 L35 33 L45 34 L46 26" stroke="rgba(255,246,220,.5)" stroke-width="1" fill="none"/><g fill="#FFF6DC"><circle cx="10" cy="20" r="2"/><circle cx="18" cy="22" r="2"/><circle cx="26" cy="21" r="2"/><circle cx="33" cy="25" r="2"/><circle cx="35" cy="33" r="2"/><circle cx="45" cy="34" r="2"/><circle cx="46" cy="26" r="2"/><circle cx="54" cy="10" r="1"/><circle cx="14" cy="48" r="1"/><circle cx="40" cy="50" r="1"/><circle cx="56" cy="46" r="1"/></g>`,
+  klangschale: `<path d="M12 34h40a20 16 0 0 1-40 0Z" fill="#C9A24A"/><ellipse cx="32" cy="34" rx="20" ry="4" fill="#E8C66A"/><path d="M22 50h20" stroke="#8A6A2A" stroke-width="3"/><path d="M10 20 Q6 14 10 8M54 20 Q58 14 54 8M16 22 Q13 17 16 12M48 22 Q51 17 48 12" stroke="#7A8A9A" stroke-width="2" fill="none" stroke-linecap="round"/>`,
+  spieluhr: `<rect x="12" y="30" width="36" height="22" rx="3" fill="#A0703F"/><path d="M10 30h40v-5a4 4 0 0 0-4-4H14a4 4 0 0 0-4 4Z" fill="#8A5A2B"/><path d="M48 40h6v-6" stroke="#6B4A30" stroke-width="2.4" fill="none"/><circle cx="54" cy="33" r="2.4" fill="#E2A93B"/><path d="M18 36h24" stroke="#E2C27A" stroke-width="1.4"/><g fill="#3E7FB8"><path d="M20 18v-10l8-2v10"/><circle cx="18" cy="18" r="2.6"/><circle cx="26" cy="16" r="2.6"/></g><path d="M20 8l8-2" stroke="#3E7FB8" stroke-width="2"/>`,
+  regen: `<rect x="10" y="10" width="44" height="44" rx="3" fill="#B7CAD4"/><path d="M32 10v44M10 32h44" stroke="#E8E2D2" stroke-width="3"/><rect x="10" y="10" width="44" height="44" rx="3" fill="none" stroke="#C8BCA2" stroke-width="3"/><g stroke="#4F7F9E" stroke-width="1.6" stroke-linecap="round"><path d="M16 14l-2 6M24 20l-2 6M40 14l-2 6M48 22l-2 6M18 36l-2 6M28 40l-2 6M44 38l-2 6M50 46l-2 6"/></g>`,
+  waldmorgen: `<rect x="0" y="0" width="64" height="64" fill="#EAD9B0"/><circle cx="44" cy="22" r="9" fill="#F2B65E"/><path d="M0 52 Q32 44 64 52V64H0Z" fill="#A7BF7A"/><path d="M12 54V30M24 56V24M52 56V32" stroke="#6B4A3A" stroke-width="3"/><g fill="#3E5E46"><ellipse cx="12" cy="26" rx="8" ry="4"/><ellipse cx="24" cy="20" rx="9" ry="4.4"/><ellipse cx="52" cy="28" rx="8" ry="4"/></g><path d="M34 34 q3 -3 6 0 q3 -3 6 0" stroke="#3A3028" stroke-width="1.6" fill="none"/>`,
+  takt: `<path d="M22 56 L28 10 h8 L42 56Z" fill="#A0703F"/><path d="M26 50 L30 16 h4 L38 50Z" fill="#E6D3A8"/><path d="M32 46 L40 18" stroke="#3A3028" stroke-width="2"/><rect x="36" y="24" width="6" height="5" rx="1" fill="#C8363A" transform="rotate(20 39 26)"/><rect x="18" y="54" width="28" height="4" rx="1" fill="#6B4A30"/>`,
+  gedichte1: `<path d="M10 14 Q22 10 32 16 Q42 10 54 14V52 Q42 48 32 54 Q22 48 10 52Z" fill="#FBF8F1" stroke="#C9C3B6"/><path d="M32 16v38" stroke="#C9C3B6"/><g stroke="#9AA3B0" stroke-width="1"><path d="M15 24h12M15 29h10M15 34h12M37 24h12M37 29h10M37 34h12"/></g><path d="M38 44 Q46 30 52 40 Q46 40 38 44Z" fill="#5D9A50"/><circle cx="20" cy="43" r="3" fill="#D9603C"/>`,
+  gedichte2: `<path d="M10 14 Q22 10 32 16 Q42 10 54 14V52 Q42 48 32 54 Q22 48 10 52Z" fill="#FBF8F1" stroke="#C9C3B6"/><path d="M32 16v38" stroke="#C9C3B6"/><g stroke="#9AA3B0" stroke-width="1"><path d="M15 24h12M15 29h10M15 34h12M37 24h12M37 29h10M37 34h12"/></g><path d="M50 42 Q40 44 36 54" stroke="#463873" stroke-width="1.4" fill="none"/><path d="M50 42 Q46 32 54 26 Q56 36 50 42Z" fill="#463873"/>`,
+  rezepte1: `<path d="M12 30h40v14a8 8 0 0 1-8 8H20a8 8 0 0 1-8-8Z" fill="#B5532F"/><rect x="8" y="27" width="48" height="5" rx="2" fill="#8E3A22"/><rect x="26" y="22" width="12" height="5" rx="2" fill="#8E3A22"/><path d="M22 18 q-3 -5 0 -10M32 16 q-3 -5 0 -10M42 18 q-3 -5 0 -10" stroke="#9AA3B0" stroke-width="2" fill="none" stroke-linecap="round"/>`,
+  rezepte2: `<path d="M8 46 L30 20 L56 46Z" fill="#D9A45A"/><path d="M8 46h48v8H8Z" fill="#C48A44"/><path d="M8 46 L30 20 L56 46" stroke="#F4EDD6" stroke-width="3" fill="none"/><path d="M8 50h48" stroke="#F4EDD6" stroke-width="2"/><circle cx="24" cy="34" r="3" fill="#C8363A"/><circle cx="34" cy="30" r="3" fill="#C8363A"/><circle cx="40" cy="38" r="3" fill="#C8363A"/>`,
+  briefe: `<rect x="8" y="18" width="48" height="32" rx="3" fill="#F6EBD6" stroke="#C9B89A"/><path d="M8 20 L32 38 L56 20" stroke="#C9B89A" stroke-width="2" fill="none"/><path d="M32 44c-5-3.4-7-5.6-7-7.6a3.4 3.4 0 0 1 7-1 3.4 3.4 0 0 1 7 1c0 2-2 4.2-7 7.6Z" fill="#C8363A"/>`,
+  fragen: `<path d="M8 14h40a4 4 0 0 1 4 4v20a4 4 0 0 1-4 4H24l-10 9v-9H8a4 4 0 0 1-4-4V18a4 4 0 0 1 4-4Z" fill="#FBF8F1" stroke="#C9C3B6"/><path d="M24 23a5 5 0 1 1 7 4.6c-1.4.7-2 1.6-2 3V32" stroke="#2F5E8E" stroke-width="3" fill="none" stroke-linecap="round"/><circle cx="29" cy="37" r="1.8" fill="#2F5E8E"/><path d="M50 40 l6 -2 l1 8 l-6 1Z" fill="#3A4048"/>`,
+  tanzkarten: `<rect x="14" y="8" width="36" height="48" rx="3" fill="#FBF8F1" stroke="#C9C3B6"/><g fill="#7D5BA6"><ellipse cx="26" cy="44" rx="4" ry="6"/><ellipse cx="38" cy="34" rx="4" ry="6"/><ellipse cx="26" cy="24" rx="4" ry="6"/><ellipse cx="38" cy="16" rx="3" ry="4"/></g><path d="M28 40 Q34 38 36 38" stroke="#C9C3B6" stroke-dasharray="2 2" fill="none"/>`,
+  orte2: `<path d="M6 16 L22 10 L42 16 L58 10 V50 L42 56 L22 50 L6 56Z" fill="#E6DAB4"/><path d="M22 10V50M42 16V56" stroke="#C9B89A"/><path d="M10 40 Q22 30 30 36 Q40 44 54 30" stroke="#5D9A50" stroke-width="2" fill="none" stroke-dasharray="3 3"/><path d="M44 30a6 6 0 1 1 12 0c0 5-6 11-6 11s-6-6-6-11Z" fill="#C8363A"/><circle cx="50" cy="30" r="2.2" fill="#FBF8F1"/>`
+};
+function wareBild(x, gr = 64) { const b = WB[x.id]; return `<svg class="ware-svg" viewBox="0 0 64 64" width="${gr}" height="${gr}" aria-hidden="true">${b || `<g transform="translate(14 14) scale(1.5)" fill="#2D6249"><path d="${IC[x.icon] || IC.stern}"/></g>`}</svg>`; }
+const LADEN_FRONT = `<svg class="laden-front-svg" viewBox="0 0 96 64" aria-hidden="true"><rect x="10" y="20" width="76" height="42" fill="#E8DCC0"/><rect x="10" y="20" width="76" height="42" fill="none" stroke="#B5A486" stroke-width="2"/><path d="M6 10h84l-4 12H10Z" fill="#B5532F"/><path d="M18 10l-3 12M30 10l-2 12M42 10l-1 12M54 10l1 12M66 10l2 12M78 10l3 12" stroke="#F3E6CF" stroke-width="5"/><path d="M10 22 q4 5 8 0 q4 5 8 0 q4 5 8 0 q4 5 8 0 q4 5 8 0 q4 5 8 0 q4 5 8 0 q4 5 8 0 q4 5 8 0 q4 5 4 0" fill="#B5532F"/><rect x="16" y="32" width="34" height="22" rx="2" fill="#BFD3DC"/><rect x="58" y="30" width="20" height="32" rx="2" fill="#6B4A30"/><circle cx="74" cy="47" r="1.4" fill="#E2A93B"/><g><circle cx="24" cy="48" r="4" fill="#C8363A"/><rect x="31" y="42" width="7" height="10" fill="#3E7FB8"/><path d="M40 52 l4-10 l4 10Z" fill="#E2A93B"/></g></svg>`;
+function kramladenInhalt() {
+  const t = talerStand();
+  const abt = []; for (const x of D.laden || []) { if (x.gutschein || SK_GUTSCHEINE[x.id]) continue; const a = LADEN_ABT[x.gruppe] || { id: "x" + hash32(x.gruppe), name: x.gruppe, icon: "stern" }; let e = abt.find(y => y.id === a.id); if (!e) { e = { ...a, waren: [] }; abt.push(e); } e.waren.push(x); }
+  let h = `<div class="laden-front"><div class="markise" aria-hidden="true"></div><div class="laden-kasse">${MUENZE("muenze gross")}<span><span class="zahl" style="font-weight:700;font-size:1.25em">${t} Taler</span><br><span class="klein">Kommen von allem, was du einträgst – und ein paar fürs Spielen im Bild. Sie verfallen nie.</span></span></div><p class="laden-naechst">${ic("stern")}<span>${esc(naechstesText())}</span></p></div>`;
+  h += `<div class="laden-chips-rahmen"><div class="chips laden-chips">${[{ id: "schrank", name: "Kleiderschrank" }, ...abt].map(a => `<button class="chip" data-act="sk-abt" data-v="${a.id}">${esc(a.name)}</button>`).join("")}</div></div>`;
+  const neu = D_SKINS.some(skNeu);
+  h += `<section class="laden-abt" id="abt-schrank"><h3 class="abt-schild">${ic("buegel")} Kleiderschrank</h3><div class="regal"><button class="ware-kachel breit" data-act="sk-schrank"><span class="ware-bild schrank-bild" aria-hidden="true">${ritaSVG(58)}${huhnSVG({ gr: 62 })}</span><span class="ware-name">Hüte, Brillen, Kostüme${neu ? ` <span class="ks-marke">Neu</span>` : ""}</span><span class="klein">Für dich und für Hühnchen – Anprobieren kostet nichts.</span></button></div><div class="regal-brett" aria-hidden="true"></div></section>`;
+  for (const a of abt) {
+    h += `<section class="laden-abt" id="abt-${a.id}"><h3 class="abt-schild">${ic(a.icon)} ${esc(a.name)}</h3><div class="regal">${a.waren.map(x => {
+      const hat = (S.gekauft || {})[x.id];
+      return `<button class="ware-kachel${hat ? " hat" : ""}" data-act="sk-ware" data-id="${x.id}"><span class="ware-bild">${wareBild(x, 60)}</span><span class="ware-name">${esc(x.name)}</span>${hat ? `<span class="ks-hat">${ic("haken")} Gehört dir</span>` : `<span class="preis-schild${t >= x.preis ? " geht" : ""}">${MUENZE()}${x.preis}</span>`}</button>`;
+    }).join("")}</div><div class="regal-brett" aria-hidden="true"></div></section>`;
+  }
+  return h;
+}
+function wareSheet(id) {
+  const x = (D.laden || []).find(y => y.id === id); if (!x) return;
+  const t = talerStand(), hat = (S.gekauft || {})[x.id];
+  const oeffnen = x.id === "memory" ? `<button class="knopf haupt voll" data-act="sk-memory">Spielen</button>` : (typeof ladenOeffnen === "function" ? ladenOeffnen(x.id).replace(/knopf klein leise/g, "knopf haupt voll") : "");
+  const fuss = hat ? (oeffnen ? `<div class="stapel">${oeffnen}</div>` : `<p class="klein" style="margin:0;text-align:center">${ic("haken")} Gehört dir – ${/Wald & Garten/.test(x.gruppe) ? "schau mal ins Bild." : "ist freigeschaltet."}</p>`)
+    : t >= x.preis ? `<button class="knopf haupt voll" data-act="kaufen-ja" data-id="${x.id}">${MUENZE()} ${x.preis} Taler · Kaufen</button>`
+    : `<div class="stapel"><button class="knopf rand voll" disabled>${MUENZE()} ${x.preis} Taler · noch ${Math.ceil(x.preis - t)}</button>${S.skins.ziel === x.id ? `<button class="knopf leise voll" data-act="sk-ziel" data-id="">${ic("haken")} Ist dein Ziel – nicht mehr merken</button>` : `<button class="knopf zweit voll" data-act="sk-ziel" data-id="${x.id}">${ic("stern")} Als Ziel merken</button>`}</div>`;
+  const sh = sheet({ titel: x.name, id: "ware", inhalt: `<div class="ware-gross">${wareBild(x, 120)}</div><p>${esc(x.text)}</p>`, fuss }); if (sh) sh.dataset.ware = x.id;
+}
+
+/* ============================================================
+   Wetter im Bild (Auswahl)
+   ============================================================ */
+const SK_WETTER_NAME = { echt: "Wie draußen", sonne: "Sonne", wolken: "Wolken", regen: "Regen", schnee: "Schnee", nebel: "Nebel" };
+function bildWetterKnopf() {
+  let w = { art: "sonne", unbekannt: true }; try { w = bildWetter(); } catch (e) { }
+  let nachts = false; try { nachts = spielKontext().nacht > .5; } catch (e) { }
+  const art = w.art, icon = w.unbekannt && S.bildWetter === "echt" ? "lichtung" : art === "sonne" ? (nachts ? "mond" : "sonne") : { wolken: "wolke", regen: "regen", schnee: "stern", nebel: "wolke" }[art] || "sonne";
+  const wort = { sonne: "klar", wolken: "bewölkt", regen: "Regen", schnee: "Schnee", nebel: "Nebel" }[art] || "";
+  const was = S.bildWetter === "echt" ? `wie draußen${!w.unbekannt && wort ? ` (${wort})` : ""}` : esc(SK_WETTER_NAME[S.bildWetter]);
+  return `<button class="bild-wetter-knopf" data-act="sk-wetter">${ic(icon)}<span>Wetter im Bild: <span style="font-weight:700">${was}</span></span><span class="klein">ändern</span></button>`;
+}
+function bildWetterInhalt() {
+  return `<p>Das Bild zeigt sonst das Wetter wie draußen am Spandauer Forst. ${A("Du kannst", "Sie können")} es auch selbst bestimmen – zum Beispiel Schnee, wenn ${A("dir", "Ihnen")} danach ist.</p><div class="chips">${SK_WETTER.map(w => chip(S.bildWetter === w, SK_WETTER_NAME[w], `data-act="sk-wetter-setz" data-v="${w}"`)).join("")}</div><p class="klein" style="margin-top:12px">Bei Schnee im Bild kann man manchmal einen Schneemann bauen.</p>`;
+}
+
+/* ============================================================
+   Figuren-Memory
+   ============================================================ */
+const MEM = { karten: [], offen: [], gefunden: [], zuege: 0, sperre: false };
+const MEM_FIG = { rita: g => ritaSVG(g, { skin: false }), huhn: g => huhnSVG({ gr: g, kopf: true, skin: false }), max: g => maxSVG(g), jane: g => janeSVG(g), micha: g => michaSVG(g), greta: g => gretaSVG(g), pauli: g => pauliSVG(g), karin: g => karinKopfSVG(g) };
+const MEM_NAME = { rita: S && S.name || "Rita", huhn: "Hühnchen", max: "Max", jane: "Jane", micha: "Micha", greta: "Greta", pauli: "Pauli", karin: "Karin" };
+function memNeu(paare) {
+  paare = paare === 8 ? 8 : 6; S.memory.paare = paare; speichern();
+  const wer = Object.keys(MEM_FIG).sort(() => Math.random() - .5).slice(0, paare);
+  MEM.karten = [...wer, ...wer].map(w => ({ w })).sort(() => Math.random() - .5); MEM.offen = []; MEM.gefunden = []; MEM.zuege = 0; MEM.sperre = false;
+}
+function memorySheet() { memNeu(S.memory.paare); sheet({ titel: "Figuren-Memory", id: "memory", inhalt: memInhalt() }); }
+function memInhalt() {
+  const fertig = MEM.gefunden.length === MEM.karten.length;
+  return `<div class="chips" style="margin-bottom:10px">${chip(S.memory.paare === 6, "6 Paare", `data-act="sk-mem-neu" data-v="6"`)}${chip(S.memory.paare === 8, "8 Paare", `data-act="sk-mem-neu" data-v="8"`)}</div>
+  <div class="mem-tisch p${MEM.karten.length}">${MEM.karten.map((k, i) => { const auf = MEM.offen.includes(i) || MEM.gefunden.includes(i); return `<button class="mem-karte${auf ? " auf" : ""}${MEM.gefunden.includes(i) ? " weg" : ""}" data-act="sk-mem" data-i="${i}" aria-label="${auf ? esc(MEM_NAME[k.w]) : "Karte " + (i + 1)}"><span class="mem-innen"><span class="mem-rueck" aria-hidden="true"></span><span class="mem-vorn" aria-hidden="true">${MEM_FIG[k.w](58)}</span></span></button>`; }).join("")}</div>
+  <p class="klein mem-status" aria-live="polite">${fertig ? `Alle gefunden, in ${MEM.zuege} Zügen. ${MEM.belohnt ? "3 Taler fürs Durchspielen sind gebucht." : ""}` : `Zwei Karten aufdecken. Gleiche Gesichter bleiben liegen.`}</p>
+  ${fertig ? `<button class="knopf haupt voll" data-act="sk-mem-neu" data-v="${S.memory.paare}">Nochmal mischen</button>` : ""}`;
+}
+function memKarte(i) {
+  if (MEM.sperre || MEM.offen.includes(i) || MEM.gefunden.includes(i)) return;
+  MEM.offen.push(i); haptik("auswahl");
+  if (MEM.offen.length === 2) {
+    MEM.zuege++; const [a, b] = MEM.offen;
+    if (MEM.karten[a].w === MEM.karten[b].w) { MEM.gefunden.push(a, b); MEM.offen = []; haptik("erfolg");
+      if (MEM.gefunden.length === MEM.karten.length) { MEM.belohnt = false; if (S.memory.tag !== heute()) { S.memory.tag = heute(); S.taler += 3; MEM.belohnt = true; } S.memory.spiele++; speichern(); try { ton("erfolg"); } catch (e) { } }
+    } else { MEM.sperre = true; setTimeout(() => { MEM.offen = []; MEM.sperre = false; memZeigen(); }, 1100); }
+  }
+  memZeigen();
+}
+function memZeigen() { const sh = aktuellesSheet(); if (sh && sh.dataset.id === "memory") sheetInhalt(memInhalt()); }
+
+/* ============================================================
+   Halte-Hinweise (BRIEF 8): in den ersten Wochen gelegentlich, bis Rita es einmal benutzt hat
+   ============================================================ */
+const HALTE_TAGE = [1, 2, 3, 5, 7, 10, 13, 17, 21, 26, 30];
+function halteHeute() {
+  if (!S.onboard || !S.halte || !S.start) return null;
+  const d = Math.round((tagDatum(heute()) - tagDatum(S.start)) / 864e5); if (!HALTE_TAGE.includes(d)) return null;
+  const offen = ["huhn", "rita", "lupe"].filter(k => !S.halte[k]); return offen.length ? offen[d % offen.length] : null;
+}
+const FINGER = `<svg viewBox="0 0 32 40" aria-hidden="true"><circle class="hf-ring" cx="12" cy="9" r="8" fill="none" stroke="currentColor" stroke-width="2"/><path d="M10 9.5a2 2 0 0 1 4 0v9.2l1.2-.2a2 2 0 0 1 2.3 1.4l.1-.1a2 2 0 0 1 2.9 1.2 2 2 0 0 1 2.9 1.4l.6 5.6c.4 3.6-2 7-5.6 7.6l-2.4.3c-2.4.3-4.8-.7-6.1-2.7l-4.8-7.3a1.9 1.9 0 0 1 2.8-2.5l2.1 1.8V9.5Z" fill="#FBF8F1" stroke="#1C2620" stroke-width="1.6" stroke-linejoin="round"/></svg>`;
+function halteDekorieren() {
+  $$(".halte-finger").forEach(x => x.remove());
+  const art = halteHeute(); if (!art || SHEETS.length) return;
+  const setz = (el, k) => { if (!el || el.querySelector(".halte-finger")) return; const f = document.createElement("span"); f.className = "halte-finger hf-" + k; f.innerHTML = FINGER; el.appendChild(f); };
+  if (art === "rita") setz(document.getElementById("logo"), "rita");
+  if (art === "huhn") { const k = document.querySelector(".huhn-karte[data-act=huhn-tap]") || document.querySelector(".huhn-karte"); if (k) { setz(k.querySelector(".huhn") ? k : null, "huhn"); if (S.huhn && (!S.huhnSagt || S.huhnSagt.tag !== heute() || !/Finger/.test(S.huhnSagt.text || "")) && k.dataset.act === "huhn-tap" && !(S.huhnSagt && S.huhnSagt.tag === heute() && S.huhnSagt.halte)) { S.huhnSagt = { tag: heute(), text: "Halt mal deinen Finger auf mich. Nicht tippen – halten. Ich zeig dir was.", halte: true }; speichern(); const b = k.querySelector(".sprechblase"); if (b) b.innerHTML = `<span class="wer">Hühnchen</span>${esc(S.huhnSagt.text)}`; } } }
+  if (art === "lupe") setz(document.getElementById("buehne-gross"), "lupe");
+}
+function halteGemerkt(k) { if (S.halte && !S.halte[k]) { S.halte[k] = heute(); speichern(); $$(".halte-finger.hf-" + k).forEach(x => x.remove()); } }
+{ let tR = 0, tH = 0;
+  document.addEventListener("pointerdown", ev => {
+    if (ev.target.closest && ev.target.closest("#logo")) { clearTimeout(tR); tR = setTimeout(() => halteGemerkt("rita"), 420); }
+    if (ev.target.closest && ev.target.closest(".huhn-karte")) { clearTimeout(tH); tH = setTimeout(() => halteGemerkt("huhn"), 440); }
+  });
+  const weg = () => { clearTimeout(tR); clearTimeout(tH); };
+  document.addEventListener("pointerup", weg); document.addEventListener("pointercancel", weg);
+}
+
+/* ============================================================
+   Einstieg: Max-Zettel beim ersten Besuch in „Zuhause“ (50 Taler + Schleife)
+   ============================================================ */
+function skinsEinstieg() {
+  if (!S.onboard || !S.skins || S.skins.intro || SHEETS.length || TAB !== "lichtung" || heute() === S.start) return; // nicht am Einrichtungstag: eine Neuigkeit nach der anderen
+  S.skins.intro = heute(); S.taler += 50; S.skins.besitz["h-schleife"] = heute(); S.skins.geschenkt["h-schleife"] = heute(); if (!S.skins.huhn) S.skins.huhn = "h-schleife";
+  const erst = S.skins.erstattet && !S.skins.erstattetGemeldet; if (erst) S.skins.erstattetGemeldet = true;
+  speichern(); skRender();
+  sheet({ titel: "Neu: der Kleiderschrank", id: "schrank-neu", inhalt: `${maxZettel(`<p>Liebe ${esc(S.name || "Rita")},</p><p>für deine Taler gibt’s jetzt Hüte, Brillen und Kostüme – für dich und für Hühnchen. Anprobieren kostet nichts. Und im Bild funkelt’s manchmal: Tipp drauf, dann passiert was.</p><p style="margin:0">50 Taler Startgeld hab ich dir schon hingelegt. Hühnchen hat sich die Schleife geschnappt.${erst ? ` Die Gutscheine hab ich aus dem Laden genommen – deine ${S.skins.erstattet} Taler dafür sind wieder bei dir.` : ""}</p>`)}<div class="ks-buehne klein-buehne" aria-hidden="true">${ritaSVG(90)}${huhnSVG({ gr: 96, stimmung: "freut" })}</div>`,
+    fuss: `<div class="stapel"><button class="knopf haupt voll" data-act="sk-schrank">${ic("buegel")} Kleiderschrank ansehen</button><button class="knopf leise" data-act="sheet-zu">Später</button></div>` });
+}
+function erstattungMelden() {
+  if (!S.skins || !S.skins.erstattet || S.skins.erstattetGemeldet || !S.skins.intro) return;
+  S.skins.erstattetGemeldet = true; speichern(); setTimeout(() => toast(`Max hat den Laden umgeräumt – deine ${S.skins.erstattet} Taler für die Gutscheine sind wieder da.`), 900);
+}
+
+/* ============================================================
+   Einhängen: Zuhause-Zusatz, Klicks, Beobachter
+   ============================================================ */
+function zuhauseZusatz() {
+  let h = `<section class="abschnitt bild-unter">${typeof bildSpielZeile === "function" ? bildSpielZeile() : ""}${bildWetterKnopf()}</section>`;
+  h += zweiTueren();
+  if ((S.gekauft || {}).memory) h += `<section class="abschnitt"><div class="liste">${zeileBtn("karten", "Figuren-Memory", "Paare finden, ohne Zeitdruck", `data-act="sk-memory"`, "k-geist")}</div></section>`;
+  return h;
+}
+function skAktion(a, d, el) {
+  switch (a) {
+    case "sk-taler": alleSheetsZu(); ladenSheet(); break;
+    case "sk-schrank": { const offen = aktuellesSheet(); if (offen && offen.dataset.id === "schrank") break;
+      if (offen && offen.dataset.id === "laden") { kleiderschrankSheet(); break; } // aus dem Kramladen: darüberlegen, „Schließen“ führt zurück in den Laden
+      if (offen) { alleSheetsZu(); setTimeout(() => kleiderschrankSheet(), 240); } else kleiderschrankSheet(); break; }
+    case "sk-fig": KS.fig = d.v; KS.sel = null; ksNeu(d.v); break;
+    case "sk-probe": { const s = SKIN_MAP[d.id]; if (!s) break; KS.fig = s.fuer; if (KS.sel === s.id) { KS.sel = null; delete KS.probe[s.fuer]; } else { KS.sel = s.id; KS.probe[s.fuer] = s.id; } haptik("auswahl"); ksNeu(s.fuer); break; }
+    case "sk-kaufen": skinKaufen(d.id); break;
+    case "sk-rueck": { const t = el.closest(".toast"); if (t) t.remove(); skinRueck(); break; }
+    case "sk-an": { const s = SKIN_MAP[d.id]; if (!s || !skinHat(s.id)) break; S.skins[s.fuer] = s.id; delete KS.probe[s.fuer]; speichern(); haptik("erfolg"); figurenAktualisieren(); ksNeu(s.fuer); skRender(); break; }
+    case "sk-aus": { const f = d.v; S.skins[f] = null; if (festSkin(f)) S.skins.festAus[f] = heute(); KS.probe[f] = null; speichern(); figurenAktualisieren(); ksNeu(f); skRender(); break; }
+    case "sk-alleaus": for (const f of ["rita", "huhn"]) { S.skins[f] = null; if (festSkin(f)) S.skins.festAus[f] = heute(); } KS.probe = {}; KS.sel = null; speichern(); figurenAktualisieren(); ksNeu("huhn"); skRender(); break;
+    case "sk-ziel": S.skins.ziel = d.id || null; speichern(); ksNeu(); { const sh = aktuellesSheet(); if (sh && sh.dataset.id === "ware") { const wid = d.id || (el.closest(".sheet") && el.closest(".sheet").dataset.ware); sheetZu(); if (wid) setTimeout(() => wareSheet(wid), 240); } } if (d.id) toast(`Gemerkt. Die Plakette oben zeigt jetzt, wie viel noch fehlt.`); break;
+    case "sk-auto": S.skins.auto = !S.skins.auto; speichern(); figurenAktualisieren(); ksNeu(); skRender(); break;
+    case "sk-abt": { const z = document.getElementById("abt-" + d.v); if (z) z.scrollIntoView({ behavior: REDUCED() ? "auto" : "smooth", block: "start" }); break; }
+    case "sk-wetter": sheet({ titel: "Wetter im Bild", id: "bildwetter", inhalt: bildWetterInhalt() }); break;
+    case "sk-wetter-setz": S.bildWetter = SK_WETTER.includes(d.v) ? d.v : "echt"; speichern(); sheetInhalt(bildWetterInhalt()); skRender(); haptik("auswahl"); break;
+    case "sk-ware": wareSheet(d.id); break;
+    case "sk-memory": alleSheetsZu(); memorySheet(); break;
+    case "sk-mem": memKarte(Number(d.i)); break;
+    case "sk-mem-neu": memNeu(Number(d.v)); memZeigen(); break;
+  }
+}
+document.addEventListener("click", ev => {
+  const el = ev.target.closest && ev.target.closest("[data-act^='sk-']"); if (!el || el.disabled) return;
+  try { skAktion(el.dataset.act, el.dataset, el); } catch (e) { console.warn(e); }
+});
+/* Nach jedem Rendern: Plakette, Logo, Hinweise, Einstieg */
+function skinsDekorieren() {
+  try {
+    geschenkePruefen(); plaketteEl(); if (PLAK.n == null) { PLAK.n = talerStand(); } plaketteMalen(PLAK.n); plakettePlatzieren();
+    figurenAktualisieren(); halteDekorieren(); erstattungMelden();
+    if (TAB === "lichtung") setTimeout(skinsEinstieg, 700);
+  } catch (e) { console.warn(e); }
+}
+(function skinsBeobachten() {
+  if (typeof document === "undefined" || typeof MutationObserver === "undefined") return;
+  let raf = 0;
+  const los = () => { cancelAnimationFrame(raf); raf = requestAnimationFrame(skinsDekorieren); };
+  const start = () => {
+    const m = document.getElementById("main"), e = document.getElementById("ebene");
+    if (m) new MutationObserver(los).observe(m, { childList: true });
+    if (e) new MutationObserver(() => { cancelAnimationFrame(raf); raf = requestAnimationFrame(() => { figurenAktualisieren(); if (SHEETS.length) $$(".halte-finger").forEach(x => x.remove()); else halteDekorieren(); }); }).observe(e, { childList: true });
+    los(); // das erste Rendern passiert schon vor DOMContentLoaded
+  };
+  if (document.readyState === "loading") document.addEventListener("DOMContentLoaded", start); else start();
+})();

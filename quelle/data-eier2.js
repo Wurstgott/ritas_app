@@ -65,7 +65,7 @@ D.eier2 = [
   text: "Johanni: Ab heute ist die Rhabarberzeit offiziell vorbei. Ich hab vorher schnell noch einen Kuchen gerettet." },
 { id: "e2-erntedank", wer: "christiane", form: "brief", selten: 0.7, wann: {typ:"datum", md:"10-05"},
   text: "Erntedank! Wenn ich aufzähle, wofür ich dankbar bin, kommst du sehr weit oben. Gleich nach meinem Ofen. Nein, natürlich vor dem Ofen." },
-{ id: "e2-zeitumstellung", wer: "huhn", form: "toast", selten: 0.3, wann: {typ:"monat", m:10},
+{ id: "e2-zeitumstellung", wer: "huhn", form: "toast", selten: 0.3, wann: {typ:"monat", m:10, vorUmstellung: true},
   text: "Diesen Monat wird wieder an der Uhr gedreht. Ich stell mich nicht um, ich bin aus Ton." },
 { id: "e2-martinstag", wer: "huhn", form: "sprechblase", selten: 0.8, wann: {typ:"datum", md:"11-11"},
   text: "Martinstag. Ich bin heute sehr froh, dass ich keine Gans bin." },
@@ -104,7 +104,7 @@ D.eier2 = [
 { id: "e2-form-c-huhn", wer: "huhn", form: "toast", selten: 0.4, wann: {typ:"tagesform", v:"C"},
   text: "Halbe Kraft reicht völlig. Ich steh seit Jahren auf halber Kraft und seh trotzdem gut aus." },
 { id: "e2-form-c-max", wer: "max", form: "zettel", selten: 0.4, wann: {typ:"tagesform", v:"C"},
-  text: "Nur ein kleiner Gruß zwischendurch. Ganz ohne Aufgabe, ganz ohne Tschüss-Spiel." },
+  text: "Nur ein kleiner Gruß zwischendurch. Ganz ohne Aufgabe, ganz ohne Tschüss-Duell." },
 { id: "e2-form-d-huhn", wer: "huhn", form: "sprechblase", selten: 0.5, wann: {typ:"tagesform", v:"D"},
   text: "Ich bin da. Heute einfach nur da." },
 { id: "e2-form-d-christiane", wer: "christiane", form: "zettel", selten: 0.5, wann: {typ:"tagesform", v:"D"},
@@ -128,7 +128,7 @@ D.eier2 = [
 { id: "e2-zufall-christiane-teig", wer: "christiane", form: "toast", selten: 0.12, wann: {typ:"zufall"},
   text: "Ich hab heute wieder zu viel Teig gemacht. Das passiert mir nur, wenn ich an Besuch denke." },
 { id: "e2-zufall-micha-gruss", wer: "micha", form: "zettel", selten: 0.05, wann: {typ:"zufall"},
-  text: "Schönen Gruß aus der Binger. Christiane sagt, ich soll mehr schreiben, aber der Kuchen ist gerade angeschnitten." },
+  text: "Schönen Gruß aus der Binger. Jane sagt, ich soll mehr schreiben, aber der Kuchen ist gerade angeschnitten." },
 { id: "e2-zufall-micha-kurz", wer: "micha", form: "toast", selten: 0.05, wann: {typ:"zufall"},
   text: "Gruß von Micha. Mehr steht hier nicht, das reicht ja auch." }
 ];
@@ -151,7 +151,7 @@ D.bingo = {
   ]
 };
 
-/* Sonntagsrätsel von Christiane */
+/* Sonntagsrätsel von Jane */
 D.raetsel = [
   { frage: "Woanders heißt er Berliner oder Krapfen. Wie sagt man in Berlin selbst dazu?", antwort: "Pfannkuchen", tipp: "Zu Silvester ist manchmal einer mit Senf dabei. Ich war’s nicht." },
   { frage: "Hamburg sagt Frikadelle, Bayern sagt Fleischpflanzerl. Was sagt Berlin?", antwort: "Bulette", tipp: "Klingt ein bisschen französisch, schmeckt sehr berlinisch." },
@@ -196,8 +196,8 @@ D.gutscheine = [
   { id: "g-halloren", name: "Mitbringsel aus Halle", preis: 600,
     text: "Beim nächsten Besuch bringt Max eine Schachtel Halloren-Kugeln mit. Hühnchen bekommt keine.",
     nachricht: "Lieber Max, ich löse meinen Halloren-Gutschein ein! Bring sie beim nächsten Besuch mit. Ich zähl nach, ob unterwegs welche verschwunden sind." },
-  { id: "g-tschuess-revanche", name: "Tschüss-Spiel-Revanche", preis: 700,
-    text: "Eine offizielle Revanche im Tschüss-Spiel. Max verspricht, diesmal nicht zuerst aufzulegen. Angeblich.",
+  { id: "g-tschuess-revanche", name: "Tschüss-Duell-Revanche", preis: 700,
+    text: "Eine offizielle Revanche im Tschüss-Duell. Max verspricht, diesmal nicht zuerst aufzulegen. Angeblich.",
     nachricht: "Lieber Max, ich fordere hiermit meine Tschüss-Revanche ein! Ruf an, wenn du dich traust. Ich hab geübt." },
   { id: "g-handy-besuch", name: "Max richtet’s ein", preis: 800,
     text: "Beim nächsten Besuch richtet Max etwas an deinem Handy ein, in Ruhe und so oft erklärt, wie du magst.",

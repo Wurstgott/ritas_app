@@ -10,9 +10,9 @@ const D = {};
 D.felder = {
   bewegung: { name: "Bewegung", gewicht: 1.0, k: "k-bewegung", maxMin: 90 },
   menschen: { name: "Menschen", gewicht: 1.0, k: "k-menschen" },
-  mut:      { name: "Neues & Mut", gewicht: 1.0, k: "k-mut" },
-  geist:    { name: "Lesen & Genuss", gewicht: 0.8, k: "k-geist" },
-  schaffen: { name: "Hände & Haus", gewicht: 0.8, k: "k-schaffen" },
+  mut:      { name: "Draußen & Neues", gewicht: 1.0, k: "k-mut" },
+  geist:    { name: "Lesen, Musik, Kultur", gewicht: 0.8, k: "k-geist" },
+  schaffen: { name: "Selbst gemacht", gewicht: 0.8, k: "k-schaffen" },
   sorge:    { name: "Gut für mich", gewicht: 0.6, k: "k-ruhe", maxMin: 90 }
 };
 
@@ -33,7 +33,7 @@ D.tagesformen = [
   { id: "A", name: "Voller Schwung", text: "Ich hab was vor", icon: "sonne" },
   { id: "B", name: "Halbe Kraft", text: "Was Kleines geht, nicht zu weit", icon: "tasse" },
   { id: "C", name: "Gemütlich", text: "Heute eher drinnen und in Ruhe", icon: "lampe" },
-  { id: "D", name: "Sparflamme", text: "Nur das Nötigste, und das reicht", icon: "waerme" }
+  { id: "D", name: "Sparflamme", text: "Nur das Nötigste, und das reicht", icon: "flamme" }
 ];
 
 /* ---------- Tätigkeiten ----------
@@ -73,7 +73,7 @@ D.taetigkeiten = [
   { id: "nachbar", name: "Gespräch im Haus", kurz: "Im Haus", art: "person", std: 15, feld: "menschen", bild: "fenster", tf: "ABC", icon: "haus",
     info: ["Ein Schwatz im Haus – so bleibt man auf dem Laufenden."] },
   { id: "brief", muehOpt: true, name: "Brief, Karte oder lange Nachricht", kurz: "Geschrieben", art: "person", std: 20, feld: "menschen", bild: "fenster", tf: "BC", icon: "brief",
-    info: ["Geschriebene Worte kann man aufheben und noch einmal lesen."] },
+    info: ["Geschrieben und eingetragen."] },
   { id: "gemeinschaft", mutOpt: true, muehOpt: true, name: "Mit dabei gewesen (Kaffeerunde, Fest, Kurs)", kurz: "Dabei gewesen", art: "min", std: 60, feld: "menschen", bild: "fenster", tf: "AB", icon: "tassen",
     info: ["Gemeinsam etwas erleben, ohne viel planen zu müssen."] },
   { id: "geholfen", name: "Jemandem geholfen", kurz: "Geholfen", art: "person", std: 30, feld: "menschen", bild: "fenster", tf: "ABC", icon: "hand",
@@ -81,7 +81,7 @@ D.taetigkeiten = [
   { id: "hilfe", name: "Hilfe angenommen", kurz: "Hilfe angenommen", art: "fest", w: 15, feld: "sorge", bild: "quelle", tf: "BCD", icon: "hand",
     info: ["Zu zweit geht’s schneller. Und der andere freut sich, dass er randurfte."] },
   // Lesen & Genuss
-  { id: "lesen", draussenOpt: true, name: "Gelesen", kurz: "Lesen", art: "min", std: 20, feld: "geist", bild: "eiche", tf: "ABC", icon: "buch",
+  { id: "lesen", draussenOpt: true, name: "Gelesen", kurz: "Gelesen", art: "min", std: 20, feld: "geist", bild: "eiche", tf: "ABC", icon: "buch",
     info: ["Gelesen. Lesezeichen rein, morgen geht’s spannend weiter.", "Seite gemerkt?"] },
   { id: "hoerbuch", draussenOpt: true, name: "Hörbuch oder Hörspiel", kurz: "Hörbuch", art: "min", std: 30, feld: "geist", bild: "eiche", tf: "BCD", icon: "kopfhoerer",
     info: ["Hören geht auch mit geschlossenen Augen – und zählt wie Lesen."] },
@@ -98,7 +98,7 @@ D.taetigkeiten = [
   { id: "erinnern", name: "Erinnerungen aufgeschrieben oder erzählt", kurz: "Erinnert", art: "min", std: 20, feld: "geist", neben: "menschen", bild: "eiche", tf: "BC", icon: "feder",
     info: ["Erinnerungen erzählen ist wie Fotos anschauen, nur wärmer."] },
   { id: "musik", draussenOpt: true, name: "Musik gehört, die mir guttut", kurz: "Musik", art: "min", std: 20, feld: "geist", bild: "tanz", tf: "ABCD", icon: "note",
-    info: ["Ein gutes Lied hebt den ganzen Tag."] },
+    info: ["Musik eingetragen – Hühnchen summt schon falsch mit."] },
   { id: "singen", name: "Gesungen oder mitgesummt", kurz: "Gesungen", art: "klein", feld: "geist", bild: "tanz", tf: "ABC", icon: "note",
     info: ["Mitgesungen! Schief oder schön – zählt beides."] },
   { id: "kultur", mutOpt: true, name: "Konzert, Theater oder Kino", kurz: "Kultur", art: "min", std: 120, feld: "geist", neben: "mut", bild: "tanz", tf: "A", icon: "maske",
@@ -111,11 +111,11 @@ D.taetigkeiten = [
     info: ["Wer genau hinschaut, findet im Forst jeden Tag etwas Neues."] },
   // Hände & Haus
   { id: "kochen", mutOpt: true, muehOpt: true, name: "Mir etwas Gutes gekocht", kurz: "Gekocht", art: "min", std: 30, feld: "schaffen", bild: "wiese", tf: "BC", icon: "topf",
-    info: ["Selbst gekocht schmeckt es doppelt."] },
+    info: ["Selbst gekocht. Hühnchen hat am Duft mitgegessen."] },
   { id: "handarbeit", mutOpt: true, name: "Gemalt, gebastelt oder Handarbeit", kurz: "Kreativ", art: "min", std: 30, feld: "schaffen", bild: "wiese", tf: "BC", icon: "pinsel",
     info: ["Selbst gemacht – und kein anderer hat so eins."] },
   { id: "pflanzen", name: "Pflanzen versorgt (Balkon, Zimmer)", kurz: "Pflanzen", art: "klein", feld: "schaffen", bild: "wiese", tf: "ABC", icon: "blume",
-    info: ["Etwas wächst, weil du dich kümmerst."] },
+    info: ["Gegossen. Im Bild sieht der Balkon das auch."] },
   { id: "ordnung", muehOpt: true, name: "Eine kleine Ecke aufgeräumt", kurz: "Aufgeräumt", art: "min", std: 15, feld: "schaffen", bild: "wiese", tf: "BC", icon: "kiste",
     info: ["Eine Schublade, ein Fach – kleine Ordnung, sichtbarer Unterschied."] },
   { id: "papier", muehOpt: true, name: "Papierkram erledigt", kurz: "Papierkram", art: "klein", feld: "schaffen", bild: "wiese", tf: "BC", icon: "brief",
@@ -125,7 +125,7 @@ D.taetigkeiten = [
   { id: "zimmer", name: "Es mir in meinem Zimmer schön gemacht", kurz: "Gemütlich", art: "min", std: 30, feld: "sorge", bild: "quelle", tf: "BCD", icon: "lampe",
     info: ["Schön gemacht. Jetzt sieht’s noch mehr nach dir aus."] },
   // Für mich sorgen
-  { id: "ruhe", name: "Bewusst ausgeruht (Couch, Bett, Sessel)", kurz: "Ausgeruht", art: "min", std: 30, feld: "sorge", bild: "quelle", tf: "BCD", icon: "decke",
+  { id: "ruhe", name: "Bewusst ausgeruht (Couch, Bett, Sessel)", kurz: "Ausgeruht", art: "min", std: 30, feld: "sorge", bild: "quelle", tf: "BCD", icon: "bett",
     info: ["Pause gemacht. Darf auf die Liste – mit Haken."] },
   { id: "arzt", name: "Arzttag überstanden", kurz: "Arzttag", art: "fest", w: 20, feld: "sorge", bild: "quelle", tf: "ABCD", icon: "kreuz", stern: true,
     info: ["Ein Arzttag ist ein Arbeitstag. Gut, dass er hinter dir liegt."] },
@@ -170,9 +170,9 @@ D.gruppen = [
    Jede Person hat ihr eigenes Fenster im Haus. Kein Zählen, kein „lange nicht gemeldet“. */
 D.menschenStart = [
   { id: "max", name: "Max", rolle: "Patensohn", farbe: "#C98A1B" },
-  { id: "christiane", name: "Christiane", rolle: "Freundin", farbe: "#B5532F" },
+  { id: "christiane", name: "Jane", rolle: "beste Freundin", farbe: "#B5532F" },
   { id: "daniel", name: "Daniel und Familie", rolle: "Sohn, in Schweden", farbe: "#3F6E8C" },
-  { id: "micha", name: "Micha", rolle: "Christianes Mann", farbe: "#4A6B3A" },
+  { id: "micha", name: "Micha", rolle: "Janes Mann", farbe: "#4A6B3A" },
   { id: "nachbarin", name: "Nachbarin", rolle: "im Haus", farbe: "#6B4A7A" }
 ];
 
@@ -204,7 +204,7 @@ D.stufen = [
   { w: 18500, name: "Der Pavillon", el: "pavillon",
     text: "Neben dem Tanzboden steht ein kleiner Pavillon. Darunter ist Platz für Musik und für Gäste." },
   { w: 26000, name: "Das Fest", el: "fest",
-    text: "Lichter zwischen den Häusern und ein langer Tisch mit Kuchen. Max, Christiane und die Nachbarn sitzen mit dran." }
+    text: "Lichter zwischen den Häusern und ein langer Tisch mit Kuchen. Max, Jane und die Nachbarn sitzen mit dran." }
 ];
 
 /* ---------- Mut-Leiter (Ausflüge) ---------- */
@@ -288,10 +288,10 @@ D.laden = [
   { id: "haengematte", gruppe: "Wald & Garten", name: "Hängematte", preis: 150, text: "Für dein Bild: eine Hängematte zwischen zwei Kiefern.", icon: "decke" },
   { id: "sternbilder", gruppe: "Wald & Garten", name: "Sternbilder", preis: 250, text: "In deinem Bild leuchten nachts Großer Wagen, Kassiopeia und Orion am Himmel.", icon: "stern" },
 
-  { id: "klangschale", gruppe: "Klänge", name: "Timer-Gong: Klangschale", preis: 40, text: "Ein weicher Klang, wenn der Ruhe-Timer endet.", icon: "glocke" },
-  { id: "spieluhr", gruppe: "Klänge", name: "Timer-Gong: Spieluhr", preis: 40, text: "Drei helle Töne, wenn der Ruhe-Timer endet.", icon: "glocke" },
-  { id: "regen", gruppe: "Klänge", name: "Hintergrundklang „Regen am Fenster“", preis: 80, text: "Leises Regenrauschen, solange der Ruhe-Timer läuft.", icon: "regen" },
-  { id: "waldmorgen", gruppe: "Klänge", name: "Hintergrundklang „Waldmorgen“", preis: 80, text: "Wind in den Kiefern und ab und zu ein Vogel – leise, solange der Ruhe-Timer läuft.", icon: "blatt" },
+  { id: "klangschale", gruppe: "Klänge", name: "Timer-Gong: Klangschale", preis: 40, text: "Ein weicher Klang, wenn der Timer endet.", icon: "glocke" },
+  { id: "spieluhr", gruppe: "Klänge", name: "Timer-Gong: Spieluhr", preis: 40, text: "Drei helle Töne, wenn der Timer endet.", icon: "glocke" },
+  { id: "regen", gruppe: "Klänge", name: "Hintergrundklang „Regen am Fenster“", preis: 80, text: "Leises Regenrauschen, solange der Timer läuft.", icon: "regen" },
+  { id: "waldmorgen", gruppe: "Klänge", name: "Hintergrundklang „Waldmorgen“", preis: 80, text: "Wind in den Kiefern und ab und zu ein Vogel – leise, solange der Timer läuft.", icon: "blatt" },
   { id: "takt", gruppe: "Klänge", name: "Tanz-Taktgeber", preis: 120, text: "Klickt den Takt für deine Tanzstunde: Walzer, Langsamer Walzer, Foxtrott, Cha-Cha. Das Tempo stellst du selbst ein.", icon: "note" },
 
   { id: "gedichte1", gruppe: "Zum Lesen", name: "Gedichte: Jahreszeiten", preis: 40, text: "Vier kurze Gedichte zu den Jahreszeiten, von Mörike, Heine und Morgenstern.", icon: "feder" },

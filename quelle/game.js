@@ -93,21 +93,23 @@ function spielTagPruefen() {
 }
 function spielInfoText() {
   spielTagPruefen(); const sp = S.spiel;
-  if (sp.frei) return "Ohne Spielmarken";
-  if (sp.restSek > 0) return `Noch ${Math.ceil(sp.restSek / 60)} Min. in der laufenden Marke`;
+  if (sp.frei) return "Ohne Zeitgrenze";
+  if (sp.restSek > 0) return `Noch ${Math.ceil(sp.restSek / 60)} Min. in dieser Runde`;
   const frei = sp.geschenkt + sp.marken;
-  return `${sp.genutzt} von ${sp.limit} Marken heute${frei ? ` · ${frei} bereit` : ""}`;
+  return `${sp.genutzt} von ${sp.limit} Runden heute${frei ? ` · noch ${frei} frei` : ""}`;
 }
 function spielStarten() {
   spielTagPruefen(); const sp = S.spiel;
   const tfH = S.tf[heute()];
+  // Nachspielzeit läuft noch (Fenster zwischendurch geschlossen): Runde ohne neue Marke fertig legen
+  if (sp.laufend && !sp.laufend.fertig && (sp.nachspiel || 0) > 0 && sp.restSek <= 0) return spielOeffnen();
   if (sp.frei || sp.restSek > 0 || tfH === "C" || tfH === "D") { if (!sp.frei && sp.restSek <= 0) sp.restSek = 600; return spielOeffnen(); }
   if (sp.genutzt >= sp.limit) {
-    sheet({ titel: "Waldpatience", inhalt: `<p>Die Spielmarken für heute sind aufgebraucht.</p><p class="klein">In den Einstellungen ${A("kannst du", "können Sie")} mehr erlauben. An leisen Tagen und Durchhalte-Tagen ist das Spiel ohnehin frei.</p>`, fuss: `<div class="stapel"><button class="knopf haupt voll" data-act="hilft">Andere Ablenkung</button><button class="knopf zweit voll" data-act="go" data-go="einstellungen">Einstellungen</button></div>` });
+    sheet({ titel: "Waldpatience", inhalt: `<p>Für heute sind alle Runden gespielt.</p><p class="klein">In den Einstellungen ${A("kannst du", "können Sie")} mehr erlauben. An Tagen mit „Ruhig angehen“ oder „Sparflamme“ ist das Spiel ohnehin frei.</p>`, fuss: `<div class="stapel"><button class="knopf haupt voll" data-act="hilft">Andere Ablenkung</button><button class="knopf zweit voll" data-act="go" data-go="einstellungen">Einstellungen</button></div>` });
     return;
   }
   const t = talerStand();
-  const html = `<p>Eine Runde Patience dauert <span style="font-weight:700">10 Minuten</span>. Ist die Zeit um, ${A("darfst du", "dürfen Sie")} die Karten noch in Ruhe fertig legen. So bleibt das Spiel ein Vergnügen und frisst nicht den Tag.</p>
+  const html = `<p>Eine Runde Patience dauert <span style="font-weight:700">10 Minuten</span>. Ist die Zeit um, ${A("darfst du", "dürfen Sie")} die Karten noch in Ruhe fertig legen.</p>
     <div class="bogen mulde"><p style="margin:0">Heute schon gespielt: ${sp.genutzt}-mal von ${sp.limit}.${sp.geschenkt ? ` ${sp.geschenkt === 1 ? "Eine Runde ist" : sp.geschenkt + " Runden sind"} heute geschenkt.` : ""}${sp.marken ? ` ${sp.marken === 1 ? "Eine bezahlte Runde liegt" : sp.marken + " bezahlte Runden liegen"} bereit.` : ""}</p></div>`;
   const knopf = sp.geschenkt || sp.marken ? `<button class="knopf haupt voll" data-act="marke-nutzen">${ic("karten")} Jetzt spielen</button>`
     : `<button class="knopf haupt voll" data-act="marke-kaufen" ${t >= 10 ? "" : "disabled"}>${ic("karten")} ${t >= 10 ? "Für 10 Taler spielen" : `Noch ${10 - t} Taler sammeln`}</button><p class="klein">Eine Runde kostet 10 Taler (du hast ${t}). Taler gibt’s für alles, was du einträgst – zum Beispiel einen Spaziergang oder ein Kapitel.</p>`;
@@ -123,18 +125,18 @@ function markeEinloesen(kaufen) {
 function spielOeffnen() {
   if (!S.spiel.laufend || S.spiel.laufend.fertig) G = neuesSpiel(hash32(S.seed + ":" + Date.now()));
   else { G = S.spiel.laufend; G.hist = G.hist || []; }
-  gewaehlt = null; nachspiel = 0;
+  gewaehlt = null; nachspiel = S.spiel.laufend && S.spiel.restSek <= 0 ? (S.spiel.nachspiel || 0) : 0;
   sheet({ titel: "Waldpatience", inhalt: `<div id="spiel"></div>`, voll: true, id: "spiel", onclose: spielPausieren });
   spielRender();
   clearInterval(spielIv);
   spielIv = setInterval(spielUhr, 1000);
 }
-function spielPausieren() { clearInterval(spielIv); if (G) { S.spiel.laufend = G.fertig ? null : { ...G, hist: G.hist.slice(-40) }; speichern(); } }
+function spielPausieren() { clearInterval(spielIv); if (G) { S.spiel.laufend = G.fertig ? null : { ...G, hist: G.hist.slice(-40) }; S.spiel.nachspiel = G.fertig ? 0 : nachspiel; speichern(); } }
 function spielUhr() {
   if (document.hidden || S.spiel.frei) return;
   const sp = S.spiel;
   if (sp.restSek > 0) { sp.restSek--; if (sp.restSek % 15 === 0) speichern(); if (sp.restSek === 0) { nachspiel = 300; spielRender(); } }
-  else if (nachspiel > 0) { nachspiel--; if (nachspiel === 0) { spielPausieren(); spielEnde(true); } }
+  else if (nachspiel > 0) { nachspiel--; S.spiel.nachspiel = nachspiel; if (nachspiel % 15 === 0) speichern(); if (nachspiel === 0) { spielPausieren(); spielEnde(true); } }
 }
 function spielEnde(zeitUm) {
   clearInterval(spielIv);
@@ -145,7 +147,7 @@ function spielEnde(zeitUm) {
   const html = `<div class="buehne klein" style="margin-bottom:14px"><canvas id="bild-spielende"></canvas></div>
     <p>${G && G.fertig ? "Gelegt. Alle Karten liegen auf ihren Plätzen." : zeitUm ? "Die Karten bleiben liegen, bis du wiederkommst." : "Die Runde ist gemerkt."}</p>
     <h3>Und jetzt vielleicht</h3><div class="liste">${v.map(x => zeileBtn(katIcon(x.kat), x.titel, x.text, `data-act="idee" data-id="${x.id}"`, "k-geist")).join("")}</div>
-    ${S.spiel.frei || S.spiel.restSek > 0 ? `<button class="knopf leise" data-act="spiel-nochmal">Noch eine Runde</button>` : S.spiel.genutzt < S.spiel.limit ? `<button class="knopf leise" data-act="spiel">Noch eine Marke</button><p class="klein">Heute ${S.spiel.genutzt} von ${S.spiel.limit} Marken.</p>` : ""}`;
+    ${S.spiel.frei || S.spiel.restSek > 0 ? `<button class="knopf leise" data-act="spiel-nochmal">Noch eine Runde</button>` : S.spiel.genutzt < S.spiel.limit ? `<button class="knopf leise" data-act="spiel">Noch eine Runde</button><p class="klein">Heute ${S.spiel.genutzt} von ${S.spiel.limit} Runden.</p>` : ""}`;
   if (aktuellesSheet()?.dataset.id === "spiel") sheetZu();
   setTimeout(() => { sheet({ titel: "Waldpatience", inhalt: html, id: "spielende" }); const c = $("#bild-spielende"); if (c) zeichneSzene(c, {}); }, 260);
 }
@@ -182,7 +184,7 @@ function spielRender() {
       <button class="knopf klein zweit" data-act="g-tipp">Tipp</button>
       ${alleOffen() && !G.fertig ? `<button class="knopf klein haupt" data-act="g-auto">Fertig legen</button>` : ""}
       <button class="knopf klein leise" data-act="g-neu">Neu geben</button>
-    </div><p class="klein">${zeit ? zeit + " · " : ""}Karte antippen: Sie wandert an einen passenden Platz. Passt sie mehrfach, erst antippen, dann die Säule.</p>
+    </div><p class="klein">${zeit ? zeit + " · " : ""}Karte antippen: Sie wandert an einen passenden Platz. Passt sie mehrfach, erst antippen, dann den Stapel.</p>
     <button class="knopf zweit voll" data-act="g-aufhoeren">Für jetzt aufhören</button>`;
   el.innerHTML = h;
   armHaptics();
