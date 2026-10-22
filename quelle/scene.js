@@ -1079,7 +1079,7 @@ function vEichKletter(g, n) {
     g.strokeStyle = "rgba(0,0,0,.3)"; g.lineWidth = 2; for (let i = 0; i < 7; i++) { g.beginPath(); g.moveTo(34 + i * 8, 52); g.lineTo(38 + i * 7, 82); g.stroke(); }
     vP(g, p => { ellipse(p, 60, 70, 15, 10); }, "#8E4A24", 0); vP(g, p => { p.moveTo(46, 72); p.quadraticCurveTo(52, 52, 74, 62); p.quadraticCurveTo(64, 70, 50, 76); p.closePath(); }, "#A8562A", 0);
     g.strokeStyle = "#1C2620"; g.lineWidth = 1.4; g.beginPath(); g.arc(66, 70, 2, 0, Math.PI); g.stroke();
-    g.fillStyle = "rgba(255,246,220,.85)"; g.font = "bold 13px Nunito, sans-serif"; g.fillText("z", 80, 52); g.font = "bold 10px Nunito, sans-serif"; g.fillText("z", 88, 42); return; }
+    g.fillStyle = "rgba(255,246,220,.85)"; g.font = "bold 13px 'Familjen Grotesk', sans-serif"; g.fillText("z", 80, 52); g.font = "bold 10px 'Familjen Grotesk', sans-serif"; g.fillText("z", 88, 42); return; }
   vHimmel(g, false); vP(g, p => { rr(p, 58, -10, 34, 140, 6); }, "#5B3B2A", 2);
   for (let i = 0; i < 6; i++) { g.strokeStyle = "rgba(0,0,0,.18)"; g.lineWidth = 2; g.beginPath(); g.moveTo(62, 8 + i * 20); g.lineTo(86, 14 + i * 20); g.stroke(); }
   g.save(); g.translate(64, 66); g.rotate(-.1);
@@ -1513,7 +1513,7 @@ const SPIEL_ANIM = {
     const ix = x + 16 * k - 12 * k * ein(t, .25, .55), op = ein(t, .2, .35);
     g.save(); g.globalAlpha = op; g.translate(ix, y + 10 * k); g.scale(k * 1.3, k * 1.3); g.fillStyle = "#5A4632"; g.beginPath(); for (let i = 0; i <= 12; i++) { const a = Math.PI + i / 12 * Math.PI, R0 = i % 2 ? 7 : 9; g.lineTo(Math.cos(a) * R0 * 1.2, Math.sin(a) * R0 * .8); } g.fill();
     g.fillStyle = "#C9A27E"; g.beginPath(); g.moveTo(-8, -2); g.lineTo(-14, 0); g.lineTo(-8, 1); g.fill(); g.fillStyle = "#1C1A16"; g.beginPath(); g.arc(-14, 0, .9, 0, TAU); g.fill(); g.restore();
-    if (t > .55) { g.save(); g.globalAlpha = Math.sin(ein(t, .55, 1) * Math.PI); g.fillStyle = "#FBF8F1"; g.font = `700 ${Math.round(10 * k)}px Nunito, sans-serif`; g.fillText("mampf", x - 30 * k, y - 8 * k - ein(t, .55, 1) * 8 * k); g.restore(); }
+    if (t > .55) { g.save(); g.globalAlpha = Math.sin(ein(t, .55, 1) * Math.PI); g.fillStyle = "#FBF8F1"; g.font = `700 ${Math.round(10 * k)}px 'Familjen Grotesk', sans-serif`; g.fillText("mampf", x - 30 * k, y - 8 * k - ein(t, .55, 1) * 8 * k); g.restore(); }
   },
   laterne(g, t, [x, y], k) {
     const an = t < .1 || (t > .16 && t < .22) || t > .3; if (an) { const gr = g.createRadialGradient(x, y + 4 * k, 0, x, y + 4 * k, 34 * k); gr.addColorStop(0, "rgba(255,230,160,.8)"); gr.addColorStop(1, "rgba(255,230,160,0)"); g.fillStyle = gr; g.beginPath(); g.arc(x, y + 4 * k, 34 * k, 0, TAU); g.fill(); }
@@ -1577,7 +1577,7 @@ function vSpecht(g) {
   vP(g, p => { ellipse(p, 38, 62, 9, 17, .2); poly(p, [[34, 76], [30, 92], [38, 80]], null); kreis(p, 40, 44, 8); }, "#1C1C20", 2);
   vP(g, p => { ellipse(p, 36, 64, 5, 11, .2); ellipse(p, 36, 42, 4.6, 3.4); }, "#F1EDE4", 0); vP(g, p => ellipse(p, 38, 36.6, 4.4, 2.6), "#C8363A", 0); vP(g, p => ellipse(p, 36, 76, 3.6, 3), "#C8363A", 0);
   vP(g, p => poly(p, [[46, 44], [58, 46], [46, 47.6]], null), "#3A3A3A", 0); g.fillStyle = "#fff"; g.beginPath(); g.arc(43, 42, 1.5, 0, TAU); g.fill(); g.fillStyle = "#1C1C20"; g.beginPath(); g.arc(43.3, 42, .8, 0, TAU); g.fill();
-  g.fillStyle = "#4A3022"; for (const [x, y] of [[66, 40], [70, 38], [62, 43]]) { g.beginPath(); g.arc(x, y, 1.2, 0, TAU); g.fill(); } g.fillStyle = "#1C2620"; g.font = "bold 11px Nunito, sans-serif"; g.fillText("tock", 82, 30);
+  g.fillStyle = "#4A3022"; for (const [x, y] of [[66, 40], [70, 38], [62, 43]]) { g.beginPath(); g.arc(x, y, 1.2, 0, TAU); g.fill(); } g.fillStyle = "#1C2620"; g.font = "bold 11px 'Familjen Grotesk', sans-serif"; g.fillText("tock", 82, 30);
 }
 function vKaffee(g) {
   vHimmel(g, false); vP(g, p => rr(p, -4, 74, 128, 50, 0), "#B7A48A", 2); vP(g, p => rr(p, -4, 70, 128, 6, 0), "#6F6A62", 1);
@@ -1600,7 +1600,7 @@ function vPaket(g) {
   vP(g, p => { poly(p, [[60, 104], [62, 76], [76, 76], [78, 104], [72, 104], [69, 86], [66, 104]], null); }, "#2E3A5A", 2);
   vP(g, p => { poly(p, [[58, 78], [56, 50], [62, 44], [76, 44], [82, 50], [80, 78]], null); }, "#E2B13C", 2); vP(g, p => { kreis(p, 69, 36, 8); }, "#E6B593", 1); vP(g, p => { rr(p, 61, 26, 16, 6, 3); rr(p, 59, 30, 20, 2, 1); }, "#2E3A5A", 0);
   vP(g, p => rr(p, 46, 56, 24, 20, 2), "#B8875A", 2); vP(g, p => rr(p, 46, 63, 24, 3, 0), "#E6D3A8", 0); g.fillStyle = "#1C2620"; g.beginPath(); g.arc(66, 35, 1, 0, TAU); g.fill();
-  g.fillStyle = "#1C2620"; g.font = "bold 14px Nunito, sans-serif"; g.fillText("?", 84, 30);
+  g.fillStyle = "#1C2620"; g.font = "bold 14px 'Familjen Grotesk', sans-serif"; g.fillText("?", 84, 30);
 }
 function vKuchen(g) {
   vHaus(g); vFensterLicht(g, 18, 18, 84, 78, "#FFF0C8", "#F2D28A"); vP(g, p => { rr(p, 16, 14, 88, 6, 0); rr(p, 16, 94, 88, 7, 0); rr(p, 58, 18, 4, 78, 0); }, "#C8BCA2", 1);

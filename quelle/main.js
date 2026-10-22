@@ -189,6 +189,8 @@ function aktion(a, d, el, ev) {
   switch (a) {
     /* Allgemein */
     case "sheet-zu": sheetZu(); break;
+    /* Schaufenster-Fächer (Ideen): eigenes Kennzeichen, damit die Seite die Aktionen der Blätter nicht doppelt trägt */
+    case "fenster": { const z = d.ziel || ""; if (z.startsWith("tab:")) wechsleTab(z.slice(4)); else if (z) aktion(z, {}, el, ev); break; }
     case "toast-zu": $$(".toast").forEach(t => t.remove()); break;
     case "toast-daumen": { const t = el.closest(".toast"), r = el.getBoundingClientRect(); S.daumen = (S.daumen || 0) + 1; speichern(); haptik("erfolg");
       const n = 1 + (Math.random() < .25 ? 2 : 0); for (let i = 0; i < n; i++) { const f = document.createElement("div"); f.className = "daumen-flug"; f.innerHTML = DAUMEN_SVG; f.style.left = (r.left + r.width / 2 - 20 + (i - (n - 1) / 2) * 34) + "px"; f.style.top = (r.top - 10) + "px"; f.style.animationDelay = i * 90 + "ms"; document.body.appendChild(f); setTimeout(() => f.remove(), 1500); }
@@ -359,7 +361,7 @@ function aktion(a, d, el, ev) {
     /* Lesebegleiter */
     case "kapitel": alleSheetsZu(); setTimeout(() => { eintragenSheet("lesen"); E.hpKap = 1; sheetInhalt(eintragenInhalt()); }, 240); break;
     case "lesebegleiter": lesebegleiterSheet(); break;
-    case "band": S.hp.band = Number(d.nr); S.hp.kapitel = 0; speichern(); sheetZu(); setTimeout(lesebegleiterSheet, 240); render({ halteScroll: true, ohneAnim: true }); break;
+    case "band": if (typeof hpBandFrage === "function" && d.ok !== "1" && Number(d.nr) !== S.hp.band) { hpBandFrage(Number(d.nr)); break; } if (d.ok === "1") sheetZu(); S.hp.band = Number(d.nr); S.hp.kapitel = 0; speichern(); sheetZu(); setTimeout(lesebegleiterSheet, 240); render({ halteScroll: true, ohneAnim: true }); break;
     case "band-fertig": { const b = D.hp.baende.find(x => x.nr === Number(d.nr)); const r = eintragSpeichern({ t: "buchfertig", tag: heute(), titel: b.titel, notiz: "abgehakt" }); if (S.hp.band === b.nr) { const n = D.hp.baende.find(x => x.nr === b.nr + 1 && !S.eintraege.some(e => e.t === "buchfertig" && e.titel === x.titel)); if (n) { S.hp.band = n.nr; S.hp.kapitel = 0; } } speichern(); nachEintrag(r, `Eingetragen: „${b.titel}“ ausgelesen.`); break; }
     case "kap": { const fertig = hpKapitel(Number(d.d), false); sheetZu(); setTimeout(lesebegleiterSheet, 240);
       if (fertig) { window._bandFertig = fertig.nr; setTimeout(() => toast(`${fertig.titel.replace("Harry Potter und d", "D")} ausgelesen?`, { knopf: { text: "Ins Regal stellen", act: "band-fertig-toast" }, dauer: 12000 }), 420); } break; }
@@ -419,7 +421,7 @@ function aktion(a, d, el, ev) {
     case "ang-luft": S.angLuft = !!el.checked; speichern(); sheetInhalt(angeboteInhalt()); break;
     case "angebot-kat": ANG_KAT = d.v; haptik("auswahl"); sheetInhalt(angeboteInhalt()); aktuellesSheet().querySelector(".sheet-inhalt").scrollTop = 0; break;
     case "angebot-liste": { const x = D.angebote.find(y => y.id === d.id); if (!x) break; S.liste = S.liste || []; const text = angebotKurz(x); if (!S.liste.some(y => !y.erledigt && (y.angebot === x.id || y.text === text))) S.liste.push({ id: "l" + Date.now().toString(36), text, angebot: x.id }); speichern(); haptik("auswahl"); toast(`Steht auf ${A("deiner", "Ihrer")} Liste.`, { erfolg: true, dauer: 4000 }); el.outerHTML = `<p class="klein" style="margin:6px 0 0">${ic("haken")} Steht auf ${A("deiner", "Ihrer")} Liste.</p>`; render({ halteScroll: true, ohneAnim: true }); break; }
-    default: if (a && a.startsWith("ruhe-") && typeof ruheAktion === "function") ruheAktion(a, d, el); else if (a && (a.startsWith("eigen") || a.startsWith("eig-"))) eigenAktion(a, d); else if (a === "bingo" || a === "bingo-drinnen") bingoAktion(a, d); else if (a === "bingo-auf") bingoSheet(); else if (a === "raetsel") raetselAktion(d); else if (a === "gutschein") gutscheinSheet(d.id); else if (a && a.startsWith("tel-")) telAktion(a, d); else if (a && a.startsWith("tb-")) tbAktion(a, d); else if (a && a.startsWith("bv-")) bvAktion(a, d, el); else if (a && (a.startsWith("buch-") || a.startsWith("bn-"))) buchAktion(a, d); else if (a && a.startsWith("tv-")) tvAktion(a, d); else if (a && a.startsWith("wi-")) winterAktion(a, d); else if (a && a.startsWith("wunsch-")) wunschAktion(a, d); else if (a && a.startsWith("av-") && typeof avAktion === "function") avAktion(a, d, el);
+    default: if (a && a.startsWith("ruhe-") && typeof ruheAktion === "function") ruheAktion(a, d, el); else if (a && (a.startsWith("eigen") || a.startsWith("eig-"))) eigenAktion(a, d); else if (a === "bingo" || a === "bingo-drinnen") bingoAktion(a, d); else if (a === "bingo-auf") bingoSheet(); else if (a === "raetsel") raetselAktion(d); else if (a === "gutschein") gutscheinSheet(d.id); else if (a && a.startsWith("tel-")) telAktion(a, d); else if (a && a.startsWith("tb-")) tbAktion(a, d); else if (a && a.startsWith("bv-")) bvAktion(a, d, el); else if (a && (a.startsWith("buch-") || a.startsWith("bn-"))) buchAktion(a, d); else if (a && a.startsWith("tv-")) tvAktion(a, d); else if (a && a.startsWith("wi-")) winterAktion(a, d); else if (a && a.startsWith("wunsch-")) wunschAktion(a, d); else if (a && a.startsWith("av-") && typeof avAktion === "function") avAktion(a, d, el); else if (a && a.startsWith("hp-") && typeof hpAktion === "function") hpAktion(a, d, el);
   }
 }
 

@@ -3,12 +3,13 @@
    Gespräche aus D.anrufe; noch nicht geführte kommen zuerst.
    Bei Max endet jedes Gespräch im Tschüss-Duell.
    ============================================================ */
-const TEL_WER = { huhn: "Hühnchen", max: "Max", jane: "Christiane", greta: "Greta", pauli: "Pauli", micha: "Micha" };
+const TEL_WER = { huhn: "Hühnchen", max: "Max", jane: "Christiane", greta: "Greta", pauli: "Pauli", micha: "Micha", elsbeth: "Elsbeth" };
 const TEL_REIHE = ["huhn", "max", "jane", "greta", "pauli", "micha"];
 let TEL = null;
 
 function telBild(wer, gr) {
   if (wer === "huhn") return huhnSVG({ gr, kopf: true, stimmung: "spricht" });
+  if (wer === "elsbeth" && typeof elsbethSVG === "function") return elsbethSVG(gr); // Akte Feuerkelch (hp.js)
   if (wer === "max") return maxSVG(gr);
   return ({ jane: janeSVG, greta: gretaSVG, pauli: pauliSVG, micha: michaSVG }[wer] || janeSVG)(gr);
 }
@@ -20,7 +21,7 @@ function telAuswahlSheet() {
 ` });
 }
 function telStarten(wer) {
-  const alle = (D.anrufe || []).filter(a => a.wer === wer); if (!alle.length) return;
+  const alle = (wer === "elsbeth" ? (typeof hpAnrufe === "function" ? hpAnrufe() : []) : (D.anrufe || []).filter(a => a.wer === wer)).filter(a => !a.ab || typeof hpFrei !== "function" || wer === "elsbeth" || hpFrei(a.ab)); if (!alle.length) return; // Harry-Potter-Texte erst ab ihrem Kapitel
   const gef = S.anrufeGefuehrt || {}; const neu = alle.filter(a => !gef[a.id]);
   const pool = neu.length ? neu : alle;
   const g = pool[Math.floor(Math.random() * pool.length)];

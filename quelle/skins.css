@@ -18,14 +18,14 @@
 /* ---------- Taler-Plakette in der Kopfzeile ---------- */
 header.kopf { position: relative; }
 .taler-plakette { position: absolute; z-index: 3; min-width: 52px; height: 44px; padding: 0; border: 0; background: none; display: grid; place-items: center; cursor: pointer; -webkit-tap-highlight-color: transparent; }
-.taler-plakette .tp-pille { display: inline-flex; align-items: center; gap: 3px; height: 26px; padding: 0 9px 0 3px; border-radius: 13px; background: var(--bogen); color: var(--tinte); font: 800 15px/1 Nunito, system-ui, sans-serif; box-shadow: 0 1px 0 rgba(28,38,32,.25), 0 2px 6px rgba(28,38,32,.18), inset 0 0 0 1.5px rgba(184,128,30,.55); }
+.taler-plakette .tp-pille { display: inline-flex; align-items: center; gap: 3px; height: 26px; padding: 0 9px 0 3px; border-radius: 13px; background: var(--bogen); color: var(--tinte); font: 800 15px/1 var(--f-text); box-shadow: 0 1px 0 rgba(28,38,32,.25), 0 2px 6px rgba(28,38,32,.18), inset 0 0 0 1.5px rgba(184,128,30,.55); }
 .taler-plakette .muenze { width: 21px; height: 21px; flex: none; }
 .taler-plakette:focus-visible .tp-pille { outline: 3px solid var(--fokus); outline-offset: 2px; }
 .taler-plakette.tp-hops .tp-pille { animation: tp-hops .5s cubic-bezier(.3,1.7,.5,1); }
 @keyframes tp-hops { 0% { transform: scale(1); } 40% { transform: scale(1.18); } 100% { transform: scale(1); } }
 .taler-flug { position: fixed; z-index: 70; width: 22px; height: 22px; pointer-events: none; }
 .taler-flug .muenze { width: 22px; height: 22px; filter: drop-shadow(0 2px 2px rgba(0,0,0,.25)); }
-.taler-plus { position: fixed; z-index: 70; pointer-events: none; display: flex; align-items: center; gap: 4px; transform: translate(-50%, -50%); font: 800 16px Nunito, system-ui, sans-serif; color: #8A5A12; background: #FFF6DC; border-radius: 14px; padding: 3px 9px 3px 4px; box-shadow: 0 3px 10px rgba(0,0,0,.18); animation: tp-plus 1.6s ease-out forwards; }
+.taler-plus { position: fixed; z-index: 70; pointer-events: none; display: flex; align-items: center; gap: 4px; transform: translate(-50%, -50%); font: 800 16px var(--f-text); color: #8A5A12; background: #FFF6DC; border-radius: 14px; padding: 3px 9px 3px 4px; box-shadow: 0 3px 10px rgba(0,0,0,.18); animation: tp-plus 1.6s ease-out forwards; }
 .taler-plus .muenze { width: 20px; height: 20px; }
 @keyframes tp-plus { 0% { opacity: 0; transform: translate(-50%, -30%); } 20% { opacity: 1; } 100% { opacity: 0; transform: translate(-50%, -190%); } }
 .muenze { vertical-align: middle; }
@@ -37,13 +37,13 @@ header.kopf { position: relative; }
 .ks-karte-figs .portrait { border-radius: 50%; box-shadow: 0 1px 0 rgba(28,38,32,.25); }
 .ks-karte-figs .huhn { margin-left: -12px; }
 .ks-karte-text { display: flex; flex-direction: column; gap: 3px; min-width: 0; }
-.ks-titel { font-family: Fraunces, Georgia, serif; font-weight: 700; font-size: 1.12rem; display: flex; align-items: center; gap: 8px; color: var(--moos); }
+.ks-titel { font-family: var(--f-schild); font-weight: 700; font-size: 1.12rem; display: flex; align-items: center; gap: 8px; color: var(--moos); }
 .ks-titel .pfeil { margin-left: auto; width: 22px; height: 22px; }
 .ks-karte-zeile { display: flex; align-items: center; gap: 12px; }
 .ks-titel .icon { width: 22px; height: 22px; }
 .ks-naechst { display: flex; align-items: flex-start; gap: 6px; font-size: .86rem; line-height: 1.35; color: var(--ocker); font-weight: 700; }
 .ks-naechst .muenze { width: 18px; height: 18px; flex: none; margin-top: 1px; }
-.ks-marke { display: inline-block; font: 800 .7rem/1 Nunito, system-ui, sans-serif; letter-spacing: .04em; text-transform: uppercase; padding: 4px 7px; border-radius: 8px; background: #C9563A; color: #FFF8EC; }
+.ks-marke { display: inline-block; font: 800 .7rem/1 var(--f-text); letter-spacing: .04em; text-transform: uppercase; padding: 4px 7px; border-radius: 8px; background: #C9563A; color: #FFF8EC; }
 .ks-marke.saison { background: #3F7A6A; }
 .ks-marke.traegt { background: var(--moos); color: var(--auf-moos); }
 
@@ -74,7 +74,7 @@ header.kopf { position: relative; }
 .ks-hat .icon { width: 18px; height: 18px; }
 .ks-geschenk { font-size: .8rem; color: var(--tinte-2); font-style: italic; line-height: 1.25; }
 /* Preisschild mit Loch und Münze */
-.preis-schild { position: relative; display: inline-flex; align-items: center; gap: 3px; padding: 3px 10px 3px 14px; border-radius: 4px 8px 8px 4px; background: #F6E7BF; color: #5A3C0A; font: 800 .92rem/1.1 Nunito, system-ui, sans-serif; clip-path: polygon(8px 0, 100% 0, 100% 100%, 8px 100%, 0 50%); }
+.preis-schild { position: relative; display: inline-flex; align-items: center; gap: 3px; padding: 3px 10px 3px 14px; border-radius: 4px 8px 8px 4px; background: #F6E7BF; color: #5A3C0A; font: 800 .92rem/1.1 var(--f-text); clip-path: polygon(8px 0, 100% 0, 100% 100%, 8px 100%, 0 50%); }
 .preis-schild::before { content: ""; position: absolute; left: 7px; top: 50%; width: 4px; height: 4px; margin-top: -2px; border-radius: 50%; background: var(--bogen); }
 .preis-schild .muenze { width: 16px; height: 16px; }
 .preis-schild:not(.geht) { opacity: .78; }
@@ -131,7 +131,7 @@ header.kopf { position: relative; }
 .bild-wetter-knopf > span:first-of-type { flex: 1; }
 .bild-wetter-knopf .klein { text-decoration: underline; text-underline-offset: 3px; }
 .buehne canvas.bild-fx { position: absolute; inset: 0; pointer-events: none; }
-.bild-blase { position: absolute; z-index: 2; transform: translate(-50%, -100%); max-width: min(220px, 74%); width: max-content; padding: 7px 12px; border-radius: 14px; background: var(--bogen, #FBF8F1); color: var(--tinte); font: 700 14px/1.3 Nunito, system-ui, sans-serif; box-shadow: 0 4px 14px rgba(0,0,0,.22); pointer-events: none; animation: bb-ein .3s cubic-bezier(.3,1.5,.5,1); text-align: center; }
+.bild-blase { position: absolute; z-index: 2; transform: translate(-50%, -100%); max-width: min(220px, 74%); width: max-content; padding: 7px 12px; border-radius: 14px; background: var(--bogen, #FBF8F1); color: var(--tinte); font: 700 14px/1.3 var(--f-text); box-shadow: 0 4px 14px rgba(0,0,0,.22); pointer-events: none; animation: bb-ein .3s cubic-bezier(.3,1.5,.5,1); text-align: center; }
 .bild-blase::after { content: ""; position: absolute; left: calc(50% + var(--pfeil, 0px)); bottom: -7px; width: 14px; height: 14px; margin-left: -7px; background: inherit; transform: rotate(45deg); border-radius: 2px; }
 .bild-blase.unten { transform: translate(-50%, 0); }
 .bild-blase.unten::after { bottom: auto; top: -7px; }
@@ -186,7 +186,7 @@ header.kopf { position: relative; }
 .lt-bild .portrait { border-radius: 50%; }
 .lt-bild .huhn { margin-left: -10px; }
 .laden-front-svg { width: 92px; height: 62px; }
-.lt-titel { font-family: Fraunces, Georgia, serif; font-weight: 700; font-size: 1.02rem; color: var(--moos); line-height: 1.2; }
+.lt-titel { font-family: var(--f-schild); font-weight: 700; font-size: 1.02rem; color: var(--moos); line-height: 1.2; }
 .lt-titel .icon { display: none; }
 .lt-titel .ks-marke { vertical-align: middle; }
 .lt-unter { font-size: .8rem; color: var(--tinte-2); line-height: 1.3; }
@@ -228,7 +228,7 @@ header.kopf { position: relative; }
 .sheet[data-id="schrank"] .ks-fig > svg { width: 56px !important; height: 56px !important; }
 .sheet[data-id="schrank"] .ks-fig-name { font-size: .98rem; }
 .sheet[data-id="schrank"] .ks-fig .klein { font-size: .8rem; line-height: 1.2; }
-.ks-probe-marke { align-self: flex-start; margin-top: 3px; padding: 2px 7px; border-radius: 8px; background: var(--licht, #F2C36B); color: #3A2A08; font: 800 .68rem/1.2 Nunito, system-ui, sans-serif; letter-spacing: .03em; text-transform: uppercase; }
+.ks-probe-marke { align-self: flex-start; margin-top: 3px; padding: 2px 7px; border-radius: 8px; background: var(--licht, #F2C36B); color: #3A2A08; font: 800 .68rem/1.2 var(--f-text); letter-spacing: .03em; text-transform: uppercase; }
 /* Beschreibung im Fuß nicht mehr kürzen – die Pointe steht am Ende */
 .ks-fuss-text .klein { display: block; -webkit-line-clamp: unset; overflow: visible; }
 .sk-fortschritt { padding: 2px 2px 0; }
@@ -261,7 +261,7 @@ header.kopf { position: relative; }
 .halle-ab { color: var(--tinte-2); font-style: italic; }
 .halle-verlauf { display: flex; gap: 6px; align-items: flex-start; color: var(--moos); font-weight: 700; }
 .halle-verlauf .icon { width: 16px; height: 16px; flex: none; margin-top: 2px; }
-.halle-nachricht { font-family: Fraunces, Georgia, serif; font-size: .98rem; }
+.halle-nachricht { font-family: var(--f-stimme); font-size: .98rem; }
 /* Kleiderschrank als Tür nebenan – klar getrennt vom Laden */
 .laden-nebenan { margin-top: 22px; padding-top: 16px; border-top: 3px dashed rgba(122,90,58,.35); }
 .nebenan-schild { margin: 0 0 8px; text-align: center; color: var(--tinte-2); font-style: italic; }
@@ -279,7 +279,7 @@ header.kopf { position: relative; }
 /* iPhone-Befund: Abteilungs-Chips – sichtbares Weiterscroll-Zeichen, sanftes Einrasten, letzter Chip ganz erreichbar */
 .laden-chips { scroll-snap-type: x proximity; padding-right: 40px; -webkit-overflow-scrolling: touch; }
 .laden-chips .chip { scroll-snap-align: start; scroll-margin-left: 4px; }
-.laden-chips-rahmen::after { content: "›"; display: flex; align-items: center; justify-content: flex-end; padding-right: 20px; width: 40px; right: -18px; font: 800 1.5rem/1 Nunito, system-ui, sans-serif; color: var(--moos); background: linear-gradient(90deg, rgba(0,0,0,0), var(--bogen) 55%); transition: opacity .2s; }
+.laden-chips-rahmen::after { content: "›"; display: flex; align-items: center; justify-content: flex-end; padding-right: 20px; width: 40px; right: -18px; font: 800 1.5rem/1 var(--f-text); color: var(--moos); background: linear-gradient(90deg, rgba(0,0,0,0), var(--bogen) 55%); transition: opacity .2s; }
 .laden-chips-rahmen.am-ende::after { opacity: 0; }
 /* Münze an der Kasse und in der Plakette: drehen beim Antippen */
 .muenze-knopf { position: relative; display: grid; place-items: center; flex: none; width: 52px; height: 52px; padding: 0; border: 0; border-radius: 50%; background: none; cursor: pointer; perspective: 260px; -webkit-tap-highlight-color: transparent; }
@@ -288,3 +288,4 @@ header.kopf { position: relative; }
 .muenze.dreht { animation: muenz-dreh .95s cubic-bezier(.2,.7,.3,1); transform-style: preserve-3d; }
 @keyframes muenz-dreh { 0% { transform: rotateY(0) scale(1); } 40% { transform: rotateY(540deg) scale(1.12); } 100% { transform: rotateY(1080deg) scale(1); } }
 @media (prefers-reduced-motion: reduce) { .muenze.dreht { animation: none; } }
+.laden-tuer { min-width: 0; overflow-wrap: anywhere; hyphens: auto; } .laden-tuer .lt-bild { max-width: 100%; overflow: hidden; }

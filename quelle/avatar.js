@@ -62,7 +62,7 @@ function avFrisur(id) {
     case "welle": return { ohren: true, kreise: [[31.6, 45, 4.6], [32, 38, 5.6], [35.4, 31, 6.2], [41, 25.6, 6.6], [48, 22.6, 6.8], [55, 22.8, 6.8], [61.6, 26, 6.4], [66.4, 31.6, 6], [68.4, 38.4, 5.4], [68.6, 45, 4.4], [40, 32, 5], [47, 29.6, 5], [54, 29.8, 5], [60.6, 32.4, 4.8], [44, 22, 4], [52, 19.6, 4.4], [59, 21, 3.8]], licht: "M42 23 Q47 20 52 20.4" };
     case "locken": return { ohren: false, ringX: 33.4, hinten: [[25.4, 62, 8], [24, 50, 9], [26, 37, 9.6], [33, 25.6, 10], [43.4, 18.4, 10], [56.6, 18.4, 10], [67, 25.6, 10], [74, 37, 9.6], [76, 50, 9], [74.6, 62, 8], [29.6, 71, 6.4], [70.4, 71, 6.4]], kreise: [[36, 32.6, 5.4], [42.4, 28, 5.6], [49.4, 26.6, 5.8], [56.6, 27.6, 5.6], [63.4, 32, 5.4], [33, 39.4, 4.4], [67, 39.4, 4.4]], licht: "M38 23 Q44 18.6 50 18.8" };
     case "bob": return { ohren: false, ringX: 33.6, ringY: 57, hinten: `<path d="M22 57 Q17 20 50 15 Q83 20 78 57 Q78 68.6 71 72.6 L66 71.4 Q70 42 50 37 Q30 42 34 71.4 L29 72.6 Q22 68.6 22 57Z"/>`, vorn: `<path d="M29 44 Q31 19 54 19 Q74 22 73 45 Q66 31 50 32 Q40 33 34 40 Q31 43 29 46Z"/>`, licht: "M44 23 Q55 20 66 27" };
-    case "lang": return { ohren: false, ringX: 37.8, hinten: `<path d="M27.6 42 Q25.6 21.6 50 19.6 Q74.4 21.6 72.4 42 L76 90 Q66 95 60 87 L40 87 Q34 95 24 90Z"/>`,
+    case "lang": return { ohren: false, ringX: 33, hinten: `<path d="M27.6 42 Q25.6 21.6 50 19.6 Q74.4 21.6 72.4 42 L76 90 Q66 95 60 87 L40 87 Q34 95 24 90Z"/>`,
       vorn: `<path d="M50 19.8 Q36 20.6 31.6 35 Q29.4 50 30.4 64 Q30.6 79 27 91 Q33.6 93 38.6 87 Q36.4 74 37 60 Q36.6 45 40 36.6 Q44 30.4 50 29.6Z M50 19.8 Q64 20.6 68.4 35 Q70.6 50 69.6 64 Q69.4 79 73 91 Q66.4 93 61.4 87 Q63.6 74 63 60 Q63.4 45 60 36.6 Q56 30.4 50 29.6Z"/>`, linie: "M50 20.4 L50 29.2", licht: "M40.6 26.6 Q45 24 49 24 M57 25 Q62 26.6 65 31" };
     case "zopf": return { ohren: true, zopf: true, hinten: `<path d="M33 48 Q31 64 40 69 L60 69 Q69 64 67 48Z"/>`,
       vorn: `<path d="M30.8 48 Q28.6 20.6 50 19.4 Q71.4 20.6 69.2 48 Q67.4 34.4 60.4 30.6 Q55 28.6 50 29.6 Q45 28.6 39.6 30.6 Q32.6 34.4 30.8 48Z"/>`, linie: "M50 19.8 L50 29.2", licht: "M39 25.6 Q44 22.4 48.4 22.2 M51.6 22.2 Q56 22.4 61 25.6" };
@@ -105,11 +105,11 @@ function avatarSVG(cfg, gr = 64, opt = {}) {
   // Hintergrund etwas abdunkeln, wenn Haut, Haar oder Oberteil sonst darin verschwinden
   let hg = avWert("hg", c.hg);
   const haarSichtbar = c.frisur !== "glatze";
-  if (avKontrast(hg, haut) < 1.15 || (haarSichtbar && avKontrast(hg, haar) < 1.15) || avKontrast(hg, oben) < 1.12) hg = avMix(hg, "#7A6A5A", .2);
+  if (avKontrast(hg, haut) < 1.15 || (haarSichtbar && avKontrast(hg, haar) < 1.15) || avKontrast(hg, oben) < 1.12) hg = avMix(hg, "#7A6A5A", .12);
   // Kopf: Schädelform wie bei den festen Porträts, das Haar legt sich darüber
   const kopf = "M50 24 C62.4 24 68.6 33.6 68.6 47 C68.6 61 64 72 50 75.4 C36 72 31.4 61 31.4 47 C31.4 33.6 37.6 24 50 24Z";
   const vornForm = (F.vorn || "") + avKreise(F.kreise);
-  const vb = opt.vb || (klein ? "9 9 82 82" : "0 0 100 100");
+  const vb = opt.vb || (klein ? (c.frisur === "dutt" ? "8 5 84 84" : "9 9 82 82") : "0 0 100 100");
   const blinz = (avHash(JSON.stringify(c)) % 54) / 10;
   let s = `<svg class="portrait avatar" viewBox="${vb}" style="width:${gr}px;height:${gr}px" aria-hidden="true"><defs><clipPath id="${n}r"><circle cx="50" cy="50" r="49.2"/></clipPath>${vornForm ? `<clipPath id="${n}h">${vornForm}</clipPath>` : ""}${c.bart === "stoppel" ? `<pattern id="${n}p" width="1.5" height="1.5" patternUnits="userSpaceOnUse"><circle cx=".75" cy=".75" r="${klein ? .5 : .36}" fill="${FA.bart}"/></pattern>` : ""}</defs><g clip-path="url(#${n}r)">
   <circle cx="50" cy="50" r="48" fill="${hg}"/>`;
@@ -173,7 +173,7 @@ function avatarSVG(cfg, gr = 64, opt = {}) {
   s += `<g class="mund">${mund}</g>`;
   if (c.bart === "keiner" || c.bart === "stoppel") s += `<ellipse cx="38.5" cy="56.4" rx="3.4" ry="2.1" fill="${wange}" opacity="${c.alter === "jung" ? .42 : .32}"/><ellipse cx="61.5" cy="56.4" rx="3.4" ry="2.1" fill="${wange}" opacity="${c.alter === "jung" ? .42 : .32}"/>`;
   // Zopf: fällt über die Schulter nach vorn
-  if (F.zopf) { const z2 = hellesHaar ? avMix(haar, haarDunkel, .5) : haarDunkel, gummi = c.oben === "rot" ? "#F2C14E" : "#D2342C";
+  if (F.zopf) { const z2 = hellesHaar ? avMix(haar, "#6A6258", .35) : haarDunkel, gummi = c.oben === "rot" ? "#F2C14E" : "#D2342C";
     s += `<g>${[[71.8, 61], [72.4, 66.4], [72.8, 71.8], [73, 77.2]].map(([x, y], i) => `<ellipse cx="${x}" cy="${y}" rx="3.4" ry="3.2" fill="${i % 2 ? z2 : haar}" transform="rotate(${i % 2 ? 14 : -14} ${x} ${y})"/>`).join("")}<rect x="70.6" y="79.4" width="5" height="2.6" rx="1.2" fill="${gummi}"/><path d="M71.4 82 Q71 86.6 73 89 Q75.2 86.6 74.8 82Z" fill="${haar}"/></g>`; }
   // Ohrringe am Ohrläppchen
   if (F.ohren) s += ohrring(31, 53.8);
@@ -204,7 +204,7 @@ const personFest = m => !!(m && AV_FEST[m.id]);
 function avatarFigur(id) {
   const m = (S.menschen || []).find(x => x.id === id); if (!m || !m.avatar) return null;
   const c = avatarNorm(m.avatar), FA = avFarben(c), kahl = c.frisur === "glatze" || c.frisur === "kranz";
-  return { haut: FA.haut, haar: kahl ? null : FA.haar, kranz: c.frisur === "kranz" ? FA.haar : null, frisur: c.frisur, bart: c.bart === "voll" || c.bart === "schnurr" ? FA.bart : null, bartArt: c.bart,
+  return { haut: FA.haut, haar: kahl ? null : FA.haar, kranz: c.frisur === "kranz" ? FA.haar : null, frisur: c.frisur, avBart: c.bart === "voll" || c.bart === "schnurr" ? FA.bart : null, bartArt: c.bart,
     oben: FA.oben, unten: "#5A6272", schuh: "#3A3530", brille: c.brille === "keine" ? null : c.brille === "bunt" ? "#D2342C" : "#2A2A2E", locken: ["locken", "welle"].includes(c.frisur), gross: 1 };
 }
 
@@ -214,10 +214,10 @@ function avFigurExtras(ctx, F, flaeche) {
   if (F.haar && F.frisur === "lang") { flaeche([[-8.6, -62], [-9, -51], [-6, -51], [-6, -62]], F.haar); flaeche([[8.6, -62], [9, -51], [6, -51], [6, -62]], F.haar); }
   if (F.haar && F.frisur === "bob") { flaeche([[-8.6, -63], [-8.8, -58.6], [-6, -58.6], [-6, -63]], F.haar); flaeche([[8.6, -63], [8.8, -58.6], [6, -58.6], [6, -63]], F.haar); }
   if (F.haar && F.frisur === "dutt") kreis(0, -77.5, 3, F.haar);
-  if (F.haar && F.frisur === "zopf") [[7, -60], [7.6, -56], [8, -52]].forEach(([x, y]) => kreis(x, y, 1.8, F.haar));
+  if (F.haar && F.frisur === "zopf") { ctx.strokeStyle = F.haar; ctx.lineWidth = 2.6; ctx.lineCap = "round"; ctx.beginPath(); ctx.moveTo(6, -65); ctx.quadraticCurveTo(8.4, -60, 8, -52); ctx.stroke(); [[7.2, -60], [7.8, -56], [8, -52]].forEach(([x, y]) => kreis(x, y, 1.8, F.haar)); }
   if (F.kranz) { ctx.fillStyle = F.kranz; ctx.beginPath(); ctx.ellipse(-6.8, -66, 1.4, 3, 0, 0, Math.PI * 2); ctx.ellipse(6.8, -66, 1.4, 3, 0, 0, Math.PI * 2); ctx.fill(); }
-  if (F.bart && F.bartArt === "voll") { ctx.fillStyle = F.bart; ctx.beginPath(); ctx.ellipse(0, -62.4, 5.6, 3.8, 0, 0, Math.PI); ctx.fill(); ctx.fillRect(-5.6, -64, 11.2, 1.8); }
-  if (F.bart && F.bartArt === "schnurr") { ctx.fillStyle = F.bart; ctx.fillRect(-2.6, -64.4, 5.2, 1.3); }
+  if (F.avBart && F.bartArt === "voll") { ctx.fillStyle = F.avBart; ctx.beginPath(); ctx.ellipse(0, -62.4, 5.6, 3.8, 0, 0, Math.PI); ctx.fill(); ctx.fillRect(-5.6, -64, 11.2, 1.8); }
+  if (F.avBart && F.bartArt === "schnurr") { ctx.fillStyle = F.avBart; ctx.fillRect(-2.6, -64.4, 5.2, 1.3); }
 }
 
 /* ---------- Editor ---------- */
@@ -256,7 +256,7 @@ function avatarEditorInhalt() {
   const c = AVED.cfg, ohne = AVED.ohne;
   const kachel = (k, o, bild) => `<button class="av-wahl" aria-pressed="${!ohne && c[k] === o[0]}" data-act="av-setz" data-k="${k}" data-v="${o[0]}">${bild}<span>${o[1].startsWith("#") ? o[2] : o[1]}</span></button>`;
   const kacheln = (k, titel, vb, basis = c, extra = {}) => `<h3 class="av-titel">${titel}</h3><div class="av-raster">${AV[k].map(o => kachel(k, o, avatarSVG({ ...basis, [k]: o[0] }, 56, { vb, ...extra }))).join("")}</div>`;
-  const farben = (k, titel) => `<h3 class="av-titel">${titel}</h3><div class="av-farben">${AV[k].map(o => { const an = !ohne && c[k] === o[0]; return `<button class="av-farbe${avLum(o[1]) > .45 ? " hell" : ""}" aria-pressed="${an}" aria-label="${o[2]}" title="${o[2]}" data-act="av-setz" data-k="${k}" data-v="${o[0]}" style="--f:${o[1]}">${an ? ic("haken") : ""}</button>`; }).join("")}</div><p class="klein av-gewaehlt">${ohne ? "" : avName(k, c[k])}</p>`;
+  const farben = (k, titel) => `<h3 class="av-titel">${titel}</h3><div class="av-farben">${AV[k].map(o => { const an = !ohne && c[k] === o[0]; return `<button class="av-farbe${avLum(o[1]) > .38 ? " hell" : ""}" aria-pressed="${an}" aria-label="${o[2]}" title="${o[2]}" data-act="av-setz" data-k="${k}" data-v="${o[0]}" style="--f:${o[1]}">${an ? ic("haken") : ""}</button>`; }).join("")}</div><p class="klein av-gewaehlt">${ohne ? "" : avName(k, c[k])}</p>`;
   const gesicht = "26 28 48 48", unten = "24 38 52 52";
   const bild = ohne ? avInitialeHTML(m, 116) : avatarSVG(c, 116);
   return `<div class="av-vorschau"><div class="av-bild">${bild}</div><div class="av-name"><label class="feld" for="av-name">Name</label><input id="av-name" class="text" value="${esc(m.name)}" maxlength="30" aria-label="Name"><label class="feld" for="av-rolle">Wer ist das für dich?</label><input id="av-rolle" class="text" value="${esc(m.rolle || "")}" maxlength="40" placeholder="z. B. Nachbarin" aria-label="Rolle"></div></div>

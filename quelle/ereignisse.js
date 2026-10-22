@@ -10,7 +10,7 @@ const EREIGNISSE = [
     antworten: [{ text: "Tschüss-Duell?", sagt: "Oh nein. Oh doch. Ich ruf an!", aktion: "tel:max" }, { text: "Fahr vorsichtig!", sagt: "Mach ich. Fast immer. Tschüss!", effekt: "herzen" }] },
   { id: "max-backen", wer: "max", zeilen: ["Mama hat mir ihr Kuchenrezept geschickt.", "Ich hab’s versucht. Ergebnis: essbar. Knapp."],
     antworten: [{ text: "Schick ein Foto!", sagt: "Lieber nicht. Das ist jetzt Beweismaterial." }, { text: "Nächstes Mal backen wir zusammen", sagt: "Abgemacht! Du rührst, ich esse.", effekt: "herzen" }] },
-  { id: "max-quiz", wer: "max", zeilen: ["Kurze Quizfrage, ganz spontan:", "Wie viele Kapitel hat der Feuerkelch?"],
+  { id: "max-quiz", wer: "max", ab: [4, 0], zeilen: ["Kurze Quizfrage, ganz spontan:", "Wie viele Kapitel hat der Feuerkelch?"],
     antworten: [{ text: "37", sagt: "Richtig! Du Streberin. Ich bin stolz.", effekt: "konfetti" }, { text: "Zu viele", sagt: "Auch richtig. Aber du schaffst die locker." }] },
   { id: "max-tv", wer: "max", wenn: () => typeof tvDaten === "function" && (tvDaten().fernsehen || []).some(x => x.datum === heute()), zeilen: ["Psst, ich hab dir was rausgesucht.", "Heute Abend läuft was Gutes im Fernsehen."],
     antworten: [{ text: "Zeig her!", sagt: "Bitte sehr. Popcorn musst du selbst machen.", aktion: "tv-auf" }, { text: "Ich lese lieber", sagt: "Auch gut. Hermine wäre einverstanden." }] },
@@ -117,6 +117,7 @@ function erPasst(e) {
   if (w.wochentag != null && d.getDay() !== w.wochentag) return false;
   if (w.von != null && (d.getHours() < w.von || d.getHours() >= w.bis)) return false;
   if (e.wer === "huhn" && !S.huhn) return false;
+  if (e.ab && typeof hpFrei === "function" && !hpFrei(e.ab)) return false; // Harry Potter: erst ab dem Kapitel
   if (e.wenn && !e.wenn()) return false;
   if (e.selten && (hash32('sel' + e.id + heute()) % 100) / 100 > e.selten) return false;
   return true;

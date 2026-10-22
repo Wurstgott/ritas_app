@@ -1,0 +1,97 @@
+/* ============================================================
+   Akte Feuerkelch – bewusst schlicht, nur über die vorhandenen Tokens
+   (--bogen, --mulde, --tinte, --moos, --ziegel, --licht …), damit das Redesign greift.
+   ============================================================ */
+.hp-zugang { justify-content: flex-start; text-align: left; gap: 12px; margin-top: 10px; }
+.hp-zugang-text { display: flex; flex-direction: column; min-width: 0; }
+.hp-zugang-unter { font-weight: 400; font-size: .84rem; color: var(--tinte-2); }
+
+.hp-kopf { display: flex; gap: 12px; align-items: flex-start; margin: 0 0 14px; }
+.hp-fig { flex: none; }
+.hp-kopf-text { flex: 1; min-width: 0; }
+.hp-kopf-text p { margin: 4px 0 0; }
+.hp-name { font-family: Fraunces, Georgia, serif; font-weight: 600; font-size: 1.05rem; display: inline-flex; flex-wrap: wrap; align-items: center; gap: 6px; }
+.hp-plakette { font-family: Nunito, system-ui, sans-serif; font-size: .72rem; font-weight: 700; letter-spacing: .04em; text-transform: uppercase; padding: 2px 8px; border-radius: 999px; background: var(--mulde); color: var(--tinte-2); }
+
+.hp-sprecher { display: flex; gap: 10px; align-items: flex-start; margin: 0 0 14px; }
+.hp-sprecher > span { flex: none; }
+.hp-blase { margin: 0; flex: 1; min-width: 0; background: var(--mulde); border-radius: 12px; padding: 10px 12px; }
+
+.sheet .bogen + .bogen, .hp-kopf + .bogen { margin-top: 12px; }
+.hp-lesezeichen { display: flex; flex-wrap: wrap; align-items: center; gap: 10px 14px; padding-left: 30px; overflow: hidden; }
+.hp-band-zier { position: absolute; left: 10px; top: -2px; width: 12px; height: 42px; background: var(--ziegel); clip-path: polygon(0 0, 100% 0, 100% 100%, 50% 80%, 0 100%); }
+.hp-lz-text { display: flex; flex-direction: column; flex: 1 1 9em; min-width: 0; }
+.hp-lz-text strong { font-family: Fraunces, Georgia, serif; font-size: 1.1rem; }
+.hp-lz-knoepfe, .hp-knoepfe { display: flex; flex-wrap: wrap; gap: 8px 10px; align-items: center; }
+.hp-lz-knoepfe .knopf.haupt { flex: 1 1 auto; }
+.hp-stepper { flex: 1 1 100%; }
+
+.hp-rueckfrage { box-shadow: inset 0 0 0 2px var(--licht), var(--schatten-1); }
+.hp-rueckfrage p { margin: 0 0 10px; }
+.hp-knoepfe .knopf { flex: 1 1 auto; }
+
+.hp-siegel-karte { display: flex; flex-wrap: wrap; gap: 12px 16px; align-items: center; }
+.hp-siegel { position: relative; flex: none; width: 96px; height: 96px; display: grid; place-items: center; border-radius: 50%; cursor: pointer;
+  touch-action: none; user-select: none; -webkit-user-select: none; -webkit-touch-callout: none; }
+.hp-siegel-svg { display: block; filter: drop-shadow(0 2px 0 rgba(0,0,0,.25)); transition: transform .2s; }
+.hp-siegel.haelt .hp-siegel-svg { transform: scale(.94) rotate(-4deg); }
+.hp-siegel .hp-ring { transition: stroke-dashoffset 0s; }
+.hp-siegel.haelt .hp-ring { stroke-dashoffset: 0; transition: stroke-dashoffset .9s linear; }
+.hp-siegel-text { flex: 1 1 10em; min-width: 0; }
+.hp-siegel-text h3 { margin: 0 0 2px; }
+.hp-mini-frage { margin: 6px 0 8px; font-weight: 700; }
+.hp-morgen { margin-top: 12px; }
+
+.hp-akte-titel { margin: 22px 0 8px; }
+.hp-blatt { background: var(--bogen); }
+.hp-blatt + .hp-blatt, .hp-alt + .hp-alt, .hp-blatt + .hp-alt { margin-top: 12px; }
+.hp-blatt-kopf { display: flex; flex-wrap: wrap; justify-content: space-between; align-items: baseline; gap: 4px 10px; margin-bottom: 8px; }
+.hp-stempel { font-family: Fraunces, Georgia, serif; font-weight: 700; color: var(--ziegel); letter-spacing: .03em; text-transform: uppercase; font-size: .86rem; }
+.hp-zeilen p { margin: 0 0 .55rem; }
+.hp-dunkel p { color: var(--tinte-2); }
+.hp-blatt.ist-dunkel .hp-stempel { color: var(--tinte-2); }
+.hp-vermerk { margin-top: 10px; background: var(--mulde); border-radius: 10px; padding: 10px 12px 4px; }
+.hp-vermerk p { margin: 4px 0 6px; }
+.hp-vermerk-titel { display: block; font-size: .78rem; font-weight: 800; letter-spacing: .05em; text-transform: uppercase; color: var(--tinte-2); }
+.hp-vermerk-fuss { display: flex; flex-wrap: wrap; justify-content: space-between; align-items: center; gap: 0 10px; }
+
+.hp-quiz { margin-top: 12px; padding-top: 12px; border-top: 2px dashed var(--mulde-2); }
+.hp-quiz-frage { margin: 0 0 10px; }
+.hp-antworten { display: grid; gap: 8px; }
+.hp-antworten .knopf { justify-content: flex-start; text-align: left; }
+.hp-du { margin: 6px 0; color: var(--tinte-2); }
+.hp-huhn { display: flex; gap: 8px; align-items: flex-start; margin: 0 0 10px; background: var(--mulde); border-radius: 10px; padding: 8px 10px; }
+.hp-huhn-fig { flex: none; }
+
+.hp-fall h3 { margin: 0 0 6px; }
+.hp-fall .klein { margin: 0 0 8px; }
+.hp-bitte p { margin: 0 0 10px; }
+.hp-pinnwand { display: flex; flex-wrap: wrap; gap: 10px; margin: 12px 0 6px; padding: 12px; border-radius: 10px; background: var(--mulde); }
+.hp-pinnwand .chip { background: var(--bogen); }
+.hp-pinnwand .chip[aria-pressed="true"] { background: var(--moos); color: var(--auf-moos); }
+.hp-frei-zeile { display: flex; flex-wrap: wrap; gap: 8px; }
+.hp-frei-zeile input { flex: 1 1 10em; min-width: 0; }
+
+.hp-schublade.offen { box-shadow: inset 0 0 0 2px var(--licht), var(--schatten-1); }
+.hp-zettel-paar { display: grid; grid-template-columns: repeat(auto-fit, minmax(9em, 1fr)); gap: 10px; margin: 6px 0 12px; }
+.hp-zettel { display: flex; flex-direction: column; padding: 10px 12px; border-radius: 6px; background: var(--mulde); transform: rotate(-1deg); }
+.hp-zettel.elsbeth { transform: rotate(1.2deg); }
+.hp-zettel strong { font-family: Fraunces, Georgia, serif; font-size: 1.05rem; overflow-wrap: anywhere; }
+.hp-max { margin: 12px 0 0; }
+
+.hp-alt { margin-top: 12px; }
+.hp-alt > summary { min-height: 56px; display: flex; align-items: center; gap: 10px; padding: 8px 14px; border-radius: 10px; background: var(--bogen); box-shadow: var(--schatten-1); cursor: pointer; font-weight: 700; color: var(--moos); list-style: none; }
+.hp-alt > summary::-webkit-details-marker { display: none; }
+.hp-alt > summary::before { content: "›"; font-size: 1.3em; line-height: 1; transition: transform .2s; }
+.hp-alt[open] > summary::before { transform: rotate(90deg); }
+.hp-alt[open] > summary { margin-bottom: 10px; }
+.hp-nebenfall { margin-top: 22px; }
+.hp-platzhalter h3 { margin: 0 0 6px; }
+
+/* Ballrobe: Sternenstaub funkelt leise */
+.skin-funkel { animation: hp-funkel 2.8s ease-in-out infinite; transform-box: fill-box; transform-origin: center; }
+.skin-funkel:nth-of-type(3n) { animation-delay: .9s; } .skin-funkel:nth-of-type(3n+1) { animation-delay: 1.7s; }
+@keyframes hp-funkel { 0%, 100% { opacity: 1; } 50% { opacity: .35; } }
+@media (prefers-reduced-motion: reduce) { .skin-funkel { animation: none; } .hp-siegel.haelt .hp-ring { transition: none; } }
+:root[data-motion="ruhig"] .skin-funkel { animation: none; }
+.hp-blase, .hp-kopf-text p, .hp-zeilen p, .hp-vermerk p { overflow-wrap: break-word; hyphens: auto; -webkit-hyphens: auto; }

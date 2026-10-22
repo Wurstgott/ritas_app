@@ -8,8 +8,8 @@
 }
 :root[data-theme="dark"] { --gk-papier: #2A251A; --gk-rand: #D9A54A; --gk-tinte: #A9CDEB; --gk-stempel: #EE9C7F; }
 
-.gk-hand { font-family: "Dancing Script", "Fraunces", cursive; font-weight: 700; color: var(--gk-tinte); }
-.gk-label { font: 800 .72rem/1 Nunito, system-ui, sans-serif; letter-spacing: .08em; text-transform: uppercase; color: var(--tinte-2); }
+.gk-hand { font-family: "Dancing Script", cursive; font-weight: 700; color: var(--gk-tinte); }
+.gk-label { font: 800 .72rem/1 var(--f-text); letter-spacing: .08em; text-transform: uppercase; color: var(--tinte-2); }
 .gk-balken { display: block; height: 8px; border-radius: 4px; background: var(--mulde-2); overflow: hidden; margin-top: 8px; }
 .gk-balken > i { display: block; height: 100%; border-radius: 4px; background: var(--gk-rand); min-width: 4px; }
 .gk-reihe { display: flex; gap: 8px; margin-top: 8px; }
@@ -19,7 +19,7 @@
 .goenn-leiste { position: relative; display: flex; align-items: center; gap: 12px; width: 100%; margin: 0 0 14px; padding: 10px 12px; min-height: 64px; border: 1.5px dashed var(--gk-rand); border-radius: 12px; background: var(--gk-papier); color: var(--tinte); font: inherit; text-align: left; cursor: pointer; box-shadow: var(--schatten-1); }
 .goenn-leiste:focus-visible { outline: 3px solid var(--fokus); outline-offset: 2px; }
 .goenn-leiste .gl-text { flex: 1 1 auto; min-width: 0; }
-.goenn-leiste .gl-titel { display: block; font-family: Fraunces, Georgia, serif; font-weight: 600; font-size: 1.05rem; }
+.goenn-leiste .gl-titel { display: block; font-family: var(--f-schild); font-weight: 600; font-size: 1.05rem; }
 .goenn-leiste .gl-unter { display: block; font-size: .88rem; line-height: 1.3; color: var(--tinte-2); margin-top: 2px; }
 .goenn-leiste .gk-balken { height: 6px; margin-top: 6px; }
 .goenn-leiste .pfeil { width: 20px; height: 20px; flex: none; opacity: .6; }
@@ -42,8 +42,8 @@
 .gk-karte { position: relative; margin: 6px 0 0; padding: 18px 20px 16px; color: var(--tinte); background: var(--gk-papier); border-radius: 12px; box-shadow: var(--schatten-2); overflow: hidden; }
 .gk-karte::before { content: ""; position: absolute; inset: 8px; border: 1.5px dashed var(--gk-rand); border-radius: 6px; pointer-events: none; opacity: .8; }
 .gk-kopf { display: flex; justify-content: space-between; align-items: baseline; gap: 8px; padding-right: 76px; }
-.gk-titel { font-family: Fraunces, Georgia, serif; font-weight: 700; font-size: 1.25rem; letter-spacing: .01em; }
-.gk-nr { font: 800 .8rem/1 Nunito, system-ui, sans-serif; color: var(--tinte-2); white-space: nowrap; }
+.gk-titel { font-family: var(--f-schild); font-weight: 700; font-size: 1.25rem; letter-spacing: .01em; }
+.gk-nr { font: 800 .8rem/1 var(--f-text); color: var(--tinte-2); white-space: nowrap; }
 .gk-von { margin: 6px 0 10px; padding-right: 70px; line-height: 1.2; }
 .gk-von .gk-hand { font-size: 1.35rem; }
 .gk-was { margin: 4px 0 2px; font-size: 1.75rem; line-height: 1.15; overflow-wrap: anywhere; }

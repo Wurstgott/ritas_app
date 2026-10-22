@@ -58,7 +58,7 @@ button.mb-umschlag { position: relative; }
 .mb-brief { padding-top: 22px; background-image: none; }
 .mb-brief .brief-marke svg { display: block; }
 .mb-brief-gb { border-color: color-mix(in srgb, var(--mb-gold) 70%, var(--umschlag-rand)); }
-.mb-ort { margin: 0 70px 8px 0; font-family: Fraunces, Georgia, serif; font-style: italic; font-size: .9rem; color: var(--tinte-2); }
+.mb-ort { margin: 0 70px 8px 0; font-family: var(--f-stimme); font-style: italic; font-size: .9rem; color: var(--tinte-2); }
 .mb-wusstest { position: relative; display: flex; gap: 10px; align-items: flex-start; margin: 10px 0 14px; padding: 12px 12px 10px; border-radius: 10px;
   background: color-mix(in srgb, var(--bogen) 82%, var(--licht)); border: 1.5px dashed color-mix(in srgb, var(--licht) 70%, var(--umschlag-rand)); transform: rotate(-.6deg); }
 .mb-wusstest > .icon { flex: none; width: 28px; height: 28px; color: var(--ocker); margin-top: 2px; }

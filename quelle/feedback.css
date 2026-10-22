@@ -4,11 +4,13 @@
    Beim Redesign genügt es, die Tokens neu zu belegen.
    ============================================================ */
 :root {
-  --fb-nav: var(--moos);                 /* gleitender Zeiger unter der aktiven Lasche */
-  --fb-erfolg-grund: var(--moos);        /* Haken-Plakette */
-  --fb-erfolg-tinte: var(--auf-moos);
-  --fb-welle: .16;                       /* Deckkraft der Welle */
+  --fb-nav: var(--ziegel);               /* gleitender Zeiger: feiner Ziegelstrich oben an der Leiste (C2) */
+  --fb-erfolg-grund: var(--em-moos);     /* Haken-Plakette: Emaille-Moos mit Creme-Haken */
+  --fb-erfolg-tinte: var(--em-schrift);
+  --fb-welle: .14;                       /* Deckkraft der Welle */
 }
+@media (prefers-color-scheme: dark) { :root:not([data-theme="light"]) { --fb-welle: .2; } }
+:root[data-theme="dark"] { --fb-welle: .2; }
 @property --r { syntax: "<length>"; inherits: false; initial-value: 0px; }
 
 /* neu in HAPSEL: braucht ein eigenes Bezugssystem fürs iOS-label.hap */

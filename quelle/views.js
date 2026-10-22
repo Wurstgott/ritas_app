@@ -116,7 +116,7 @@ function viewHeute() {
     ? `<section class="abschnitt"><div class="brief-papier"><span class="brief-marke" aria-hidden="true">${post.wer === "max" ? maxSVG(52) : post.wer === "christiane" ? janeSVG(52) : post.wer === "micha" ? michaSVG(52) : huhnSVG({ gr: 52, kopf: true })}</span><p class="brief-anrede">Liebe ${esc(S.name)},</p><p class="brief-text">${esc(post.text)}</p><p class="brief-gruss">${gruss} <span aria-hidden="true">♥</span></p>${post.extra ? `<button class="knopf klein leise" style="padding-left:0" data-act="post-gelesen">Zumachen</button>` : tschuessHTML()}</div></section>`
     : `<section class="abschnitt"><button class="umschlag" data-act="post-auf" aria-label="Post von ${von} – zum Öffnen antippen">${umschlagSVG(von)}<span class="umschlag-hinweis">Post von ${von} · zum Öffnen antippen</span></button></section>`; }
   if (typeof mbHeutePost === "function") html += mbHeutePost(); // Brief von Max (maxbriefe.js)
-  if (ruhig) html += `<section class="abschnitt"><button class="kachel breit k-ruhe" data-act="hilft">${ic("sessel")}<span><span class="titel">Ablenkung?</span><br><span class="unter">Wenn der Rücken zwickt oder das Handyspiel lockt.</span></span></button></section>`;
+  if (ruhig) html += `<section class="abschnitt"><button class="kachel breit k-ruhe" data-act="hilft">${ic("windrad")}<span><span class="titel">Ablenkung?</span><br><span class="unter">Wenn der Rücken zwickt oder das Handyspiel lockt.</span></span></button></section>`;
   // Was Rita jeden Tag tut, steht oben: To-do-Liste und Eintragen – dann das Bild und der Rest
   html += listeHTML();
   html += `<section class="abschnitt"><h2>Eintragen</h2><div class="kacheln">${schnellHeute(tf).map(id => { const t = tat(id); return kachel(t, zuletztText(id), `data-act="eintragen" data-t="${id}"`); }).join("")}</div>
@@ -131,7 +131,7 @@ function viewHeute() {
   // abends nur eine kompakte Zeile – die volle Tagebuch-Karte (mit Merkzettel) steht im Rückblick
   if (tbZeileHeute()) html += `<section class="abschnitt"><div class="liste">${zeileBtn("feder", "Für dein Tagebuch", "Eine Frage für heute Abend", 'data-tab="tagebuch"', "k-geist")}</div></section>`;
   if (tf === "A") html += draussenVorschlagHTML();
-  if (!ruhig) html += `<section class="abschnitt"><button class="kachel breit k-ruhe" data-act="hilft">${ic("sessel")}<span><span class="titel">Ablenkung?</span><br><span class="unter">Wenn der Rücken zwickt oder das Handyspiel lockt.</span></span></button></section>`;
+  if (!ruhig) html += `<section class="abschnitt"><button class="kachel breit k-ruhe" data-act="hilft">${ic("windrad")}<span><span class="titel">Ablenkung?</span><br><span class="unter">Wenn der Rücken zwickt oder das Handyspiel lockt.</span></span></button></section>`;
   // Heute eingetragen
   const ohneHaken = liste.filter(e => e.t !== "abgehakt");
   if (ohneHaken.length) {
@@ -198,21 +198,50 @@ function hinweisDesTages() {
 /* ============================================================
    IDEEN
    ============================================================ */
+/* Ideen als Schaufenster (Gestaltung C2): „Heute entdecken“ (neuer Karin-Brief hat Vorrang),
+   Drinnen/Draußen als Emaille-Türen, „Was es hier alles gibt“ mit Markisen-Fächern, Stöberkiste statt Schlagwortliste */
+function cFunde() {
+  const A2 = (du, sie) => (typeof A === "function" ? A(du, sie) : du);
+  const neuPost = typeof bvHeuteNeu === "function" && bvHeuteNeu();
+  const f = [
+    { id: "tel", act: `data-act="fenster" data-ziel="tel-auf"`, icon: "telefon", ton: "falu", titel: "Kurz plaudern", text: "Mit Hühnchen, Christiane, Max und Co. – nur zum Spaß" },
+    { id: "post", act: `data-act="fenster" data-ziel="bv-auf"`, icon: "briefkasten", ton: "dala", titel: "Post aus Vimmerby", text: neuPost ? "Karin hat geschrieben – auf Schwedisch, mit Übersetzung" : "Briefe von Karin auf Schwedisch, mit Übersetzung", marke: neuPost ? "Neu" : "" },
+    { id: "tv", act: `data-act="fenster" data-ziel="tv-auf"`, icon: "fernseher", ton: "senf", titel: "Film & Fernsehen", text: "Krimis und gute Filme aus der Mediathek" },
+    { id: "buch", act: `data-act="fenster" data-ziel="lesebegleiter"`, icon: "buch", ton: "pflaume", titel: "Bücher & Hörbücher", text: "Dein Bücherregal, Tipps, das nächste Buch" },
+    { id: "winter", act: `data-act="fenster" data-ziel="wi-auf"`, icon: "tasse", ton: "petrol", titel: "Gut durch den Winter", text: "Tees, Ingwer-Tricks, Heizen und Lüften" },
+    { id: "angebote", act: `data-act="fenster" data-ziel="angebote"`, icon: "tassen", ton: "falu", titel: "Angebote in Spandau", text: "Konzerte, Treffs und Feste mit Terminen" },
+    { id: "bingo", act: `data-act="fenster" data-ziel="bingo-auf"`, icon: "bingo", ton: "moos", titel: "Forst-Bingo", text: "Hühnchens Karte für diese Woche" },
+    { id: "ausflug", act: `data-act="fenster" data-ziel="ausflug"`, icon: "rucksack", ton: "moos", titel: "Ausflug planen", text: "Von nah bis weit, mit Checkliste" },
+    { id: "tagebuch", act: `data-act="fenster" data-ziel="tab:tagebuch"`, icon: "tagebuch", ton: "pflaume", titel: "Tagebuch", text: A2("Eine Frage für deinen Abend", "Eine Frage für Ihren Abend") },
+    { id: "wissen", act: `data-act="fenster" data-ziel="wissen"`, icon: "funke", ton: "senf", titel: "Wissen", text: "Kurze Häppchen, mit Quelle" },
+    { id: "vorhaben", act: `data-act="fenster" data-ziel="missionen"`, icon: "stern", ton: "dala", titel: "Kleine Vorhaben", text: "Ein paar Tage dranbleiben, mit Kästchen" }
+  ];
+  if (S.spiel && S.spiel.an) f.push({ id: "spiel", act: `data-act="fenster" data-ziel="spiel"`, icon: "karten", ton: "petrol", titel: "Waldpatience", text: "Eine ruhige Runde Karten" });
+  f.push({ id: "laden", act: `data-act="fenster" data-ziel="laden"`, icon: "laden", ton: "falu", titel: "Kramladen", text: "Taler ausgeben: Bilder, Spiele, Kostüme" });
+  return f;
+}
+function cTag() { return Math.round(tagDatum(heute()) / 864e5); }
 function viewIdeen() {
   const tf = S.tf[heute()] || "B";
-  let html = `<div class="gruss"><h1>Ideen</h1><div class="datum">${S.tf[heute()] ? `${A("Passend zu deinem Tag", "Passend zu Ihrem Tag")}: ${D.tagesformen.find(f => f.id === tf).name}` : A("Für einen gemächlichen Tag. Deine Energie kannst du auf „Heute“ antippen.", "Für einen gemächlichen Tag. Ihre Energie können Sie auf „Heute“ antippen.")}</div></div>`;
+  const form = D.tagesformen.find(f => f.id === tf);
+  const F = cFunde(), post = F.find(x => x.id === "post" && x.marke), top = post || F[cTag() % F.length];
+  const topTon = top.ton === "senf" || top.ton === "moos" ? "dala" : top.ton; // Drinnen = Senf, Draußen = Moos
+  let html = `<div class="gruss c-kopf"><span class="c-kicker">Schaufenster</span><h1>Ideen</h1><div class="datum">${S.tf[heute()] ? `${A("Passend zu deinem Tag", "Passend zu Ihrem Tag")}: ${esc(form.name)}` : A("Für einen gemächlichen Tag", "Für einen gemächlichen Tag")}</div></div>`;
+  html += `<section class="abschnitt"><button class="c-entdecken c-ton-${topTon}" ${top.act}>${top.marke ? `<span class="ks-marke c-entdecken-marke">Neuer Brief</span>` : ""}
+    <span class="c-kicker">Heute entdecken</span>
+    <span class="c-teller" aria-hidden="true">${ic(top.icon)}</span>
+    <span class="c-titel">${esc(top.titel)}</span><span class="c-text">${esc(top.text)}</span>
+    <span class="c-los">Anschauen${ic("pfeil", "pfeil")}</span></button></section>`;
   html += `<section class="abschnitt"><div class="tueren-gross">
     <button class="tuer-gross drinnen" data-act="tuer" data-v="drinnen"><span class="tg-bild" aria-hidden="true">${ic("lampe")}</span><span class="titel">Drinnen</span><span class="unter">Lesen, Telefon, Filme, Tee, Patience</span></button>
     <button class="tuer-gross draussen" data-act="tuer" data-v="draussen"><span class="tg-bild" aria-hidden="true">${ic("rucksack")}</span><span class="titel">Draußen</span><span class="unter">Ausflüge, Bingo, Binger, Angebote</span></button>
-  </div>
-  ${notfallLeiste("ruhe-plan")}</section>`;
+  </div>${notfallLeiste("ruhe-plan")}</section>`;
   const vorschl = vorschlaege(tf, 3, "ideen" + heute() + (S._mischen || 0));
   html += `<section class="abschnitt"><h2>Jetzt vielleicht</h2><div class="liste kurz-liste">${vorschl.map(v => zeileBtn(katIcon(v.kat, v), v.titel, ideeKurz(v), `data-act="idee" data-id="${v.id}"`, "k-geist")).join("")}</div>
-    <button class="knopf leise" data-act="mischen">Andere Ideen zeigen</button></section>`;
-  // K-F-07: alle Ideen nach Themen durchstöbern
-  html += `<section class="abschnitt"><h2>Alle Ideen nach Themen</h2><div class="chips ideen-themen">${ideenThemen().map(([k, n]) => `<button class="chip" data-act="idee-thema" data-v="${esc(k)}">${ic(katIcon(k))}${esc(k)} <span class="klein">${n}</span></button>`).join("")}</div></section>`;
-  html += `<section class="abschnitt"><button class="exkurs-karte" data-act="bv-auf"><span class="fig-idle">${karinKopfSVG(72)}</span><span class="text"><span class="klein" style="font-weight:700;letter-spacing:.04em">AUSFLUG NACH SMÅLAND</span><span class="titel">Post von Karin aus Vimmerby</span><span class="unter">${bvHeuteNeu() ? "Ein neuer Brief wartet – auf Schwedisch, mit Übersetzung zum Aufklappen." : "Eine ausgedachte Brieffreundin zum Schwedisch-Auffrischen: Krimis, Fika und Katze Sotis."}</span></span></button></section>`;
-
+    <p class="c-mitte"><button class="knopf leise" data-act="mischen">Andere Ideen zeigen</button></p></section>`;
+  html += `<section class="abschnitt"><h2>Was es hier alles gibt</h2><div class="c-fenster">${F.filter(x => x !== top).map(x => `<button class="c-fach c-ton-${x.ton}" ${x.act}><span class="c-fach-bild" aria-hidden="true">${ic(x.icon)}</span>${x.marke ? `<span class="ks-marke c-fach-marke">${esc(x.marke)}</span>` : ""}<span class="c-fach-titel">${esc(x.titel)}</span><span class="c-fach-text">${esc(x.text)}</span></button>`).join("")}</div></section>`;
+  const th = ideenThemen(), summe = th.reduce((a, [, n]) => a + n, 0);
+  html += `<section class="abschnitt c-stoeber"><h2>Stöberkiste</h2><p class="c-unter">${summe} kleine Ideen, nach Themen sortiert. Einfach reingreifen.</p><div class="c-setzkasten">${th.map(([k, n]) => `<button class="c-kasten" data-act="idee-thema" data-v="${esc(k)}">${ic(katIcon(k))}<span class="c-kasten-name">${esc(k)}</span><span class="c-kasten-zahl zahl">${n}</span></button>`).join("")}</div></section>`;
   return html;
 }
 function tuerSheet(was) {
@@ -230,9 +259,9 @@ function tuerSheet(was) {
   // Reihenfolge wie auf der Tür: Lesen, Vergnügen (Telefon, Filme, Winter-Tees), Vorhaben, Patience – Timer am Ende
   const hp = D.hp && D.hp.baende ? D.hp.baende.find(b => b.nr === S.hp.band) : null;
   if (hp) html += `<h3 style="margin-top:4px">Lesen</h3><div class="bogen streifen k-geist"><h3>${esc(hp.titel)}</h3><p class="klein">${S.hp.kapitel ? `Kapitel ${S.hp.kapitel} von ${hp.kapitel}` : A("Wo bist du gerade? Stell dein Kapitel ein.", "Wo sind Sie gerade? Stellen Sie Ihr Kapitel ein.")}</p><div class="fortschritt" aria-hidden="true"><i style="width:${Math.round(S.hp.kapitel / hp.kapitel * 100)}%;background:var(--flieder)"></i></div>
-    <div class="zeile" style="margin-top:12px;flex-wrap:wrap"><button class="knopf klein zweit" data-act="kapitel">${ic("plus")} Ein Kapitel gelesen</button></div></div>`;
+    <div class="zeile" style="margin-top:12px;flex-wrap:wrap"><button class="knopf klein zweit" data-act="kapitel">${ic("plus")} Ein Kapitel gelesen</button></div>${typeof hpKnopf === "function" ? hpKnopf(true) : ""}</div>`;
   html += `${S.buecherEigen.filter(x => x.status === "liest").map(x => `<div class="buch-zeile">${buchCover(x.titel, x.autor, 48)}<div style="flex:1;min-width:0"><div style="font-weight:700">${esc(x.titel)}</div><div class="zeile" style="gap:6px;margin-top:6px;flex-wrap:wrap"><button class="knopf klein zweit" data-act="buch-stueck" data-id="${x.id}">${ic("plus")} Ein Stück gelesen</button></div></div></div>`).join("")}<button class="knopf zweit voll" style="margin-top:10px" data-act="lesebegleiter">${ic("buch")} Bücherregal, Tipps, neues Buch</button>`;
-  html += `<h3 style="margin-top:20px">Zum Vergnügen</h3><div class="liste">${zeileBtn("plaudern", "Kurz plaudern", "Mit Hühnchen, Christiane, Max und Co. – nur zum Spaß", `data-act="tel-auf"`, "k-menschen")}${zeileBtn("maske", "Film & Fernsehen", "Krimis und gute Filme aus der Mediathek, Tipps der Woche", `data-act="tv-auf"`, "k-geist")}${zeileBtn("tasse", "Gut durch den Winter", "Tees, Ingwer-Tricks, Heizen & Lüften, Besuch", `data-act="wi-auf"`, "k-ruhe")}${zeileBtn("funke", "Wissen", "Kurze Häppchen mit Quelle", `data-act="wissen"`, "k-geist")}${zeileBtn("sprechen", "Erzählfragen", "Zum Plaudern, mit Max oder beim Kaffee", `data-act="lebensbuch"`, "k-geist")}</div>
+  html += `<h3 style="margin-top:20px">Zum Vergnügen</h3><div class="liste">${zeileBtn("plaudern", "Kurz plaudern", "Mit Hühnchen, Christiane, Max und Co. – nur zum Spaß", `data-act="tel-auf"`, "k-menschen")}${zeileBtn("fernseher", "Film & Fernsehen", "Krimis und gute Filme aus der Mediathek, Tipps der Woche", `data-act="tv-auf"`, "k-geist")}${zeileBtn("tasse", "Gut durch den Winter", "Tees, Ingwer-Tricks, Heizen & Lüften, Besuch", `data-act="wi-auf"`, "k-ruhe")}${zeileBtn("funke", "Wissen", "Kurze Häppchen mit Quelle", `data-act="wissen"`, "k-geist")}${zeileBtn("sprechen", "Erzählfragen", "Zum Plaudern, mit Max oder beim Kaffee", `data-act="lebensbuch"`, "k-geist")}</div>
     <p class="klein" style="margin-top:8px">${WOCHENPLAN}</p>`;
   const aktiv = S.missionen.aktiv.map(a => ({ a, m: (D.missionen || []).find(x => x.id === a.id) })).filter(x => x.m);
   html += `<h3 style="margin-top:20px">Kleine Vorhaben</h3>${aktiv.length ? `<div class="liste">${aktiv.map(({ a, m }) => zeileBtn("funke", m.titel, `${a.tage?.length || 0} von ${m.tage} Tagen`, `data-act="mission" data-id="${m.id}"`, "k-mut")).join("")}</div>` : `<p class="klein">Ein Vorhaben für ein paar Tage – mit Kästchen zum Abhaken.</p>`}
@@ -252,7 +281,7 @@ function ideenThemaSheet(kat) {
   const arr = (D.stattDaddeln || []).filter(v => v.kat === kat);
   sheet({ titel: kat, id: "thema", inhalt: `<p class="klein" style="margin-top:0">${arr.length} Ideen. Antippen, dann steht alles da.</p><div class="liste kurz-liste">${arr.map(v => zeileBtn(katIcon(v.kat, v), v.titel, ideeKurz(v), `data-act="idee" data-id="${v.id}"`, "k-geist")).join("")}</div>` });
 }
-function katIcon(kat, v) { if (/list/i.test(kat || "")) return "feder"; if (v && /karte|brief|post/i.test(v.titel + v.text)) return "brief"; const k = (kat || "").toLowerCase(); if (k.includes("handy")) return "handy"; if (k.includes("tee")) return "waerme"; if (k.includes("geschützt")) return "schild"; if (k.includes("essen")) return "topf"; if (k.includes("krimi")) return "maske"; if (k.includes("kreativ")) return "pinsel"; if (k.includes("schwed")) return "sprechen"; if (k.includes("geschicht")) return "lesezeichen"; return k.includes("les") ? "buch" : k.includes("hör") ? "kopfhoerer" : k.includes("hand") || k.includes("händ") ? "pinsel" : k.includes("kontakt") ? "telefon" : k.includes("körper") ? "matte" : k.includes("sinn") ? "blume" : k.includes("erinn") ? "feder" : k.includes("ordn") ? "kiste" : k.includes("lern") ? "funke" : k.includes("musik") || k.includes("tanz") ? "note" : "stern"; }
+function katIcon(kat, v) { { const k0 = (kat || "").toLowerCase(); if (k0.includes("krimi")) return "lupe"; if (k0.includes("körper")) return "matte"; if (k0.includes("hände")) return "pinsel"; } if (/list/i.test(kat || "")) return "feder"; if (v && /karte|brief|post/i.test(v.titel + v.text)) return "brief"; const k = (kat || "").toLowerCase(); if (k.includes("handy")) return "handy"; if (k.includes("tee")) return "waerme"; if (k.includes("geschützt")) return "schild"; if (k.includes("essen")) return "topf"; if (k.includes("krimi")) return "maske"; if (k.includes("kreativ")) return "pinsel"; if (k.includes("schwed")) return "sprechen"; if (k.includes("geschicht")) return "lesezeichen"; return k.includes("les") ? "buch" : k.includes("hör") ? "kopfhoerer" : k.includes("hand") || k.includes("händ") ? "pinsel" : k.includes("kontakt") ? "telefon" : k.includes("körper") ? "matte" : k.includes("sinn") ? "blume" : k.includes("erinn") ? "feder" : k.includes("ordn") ? "kiste" : k.includes("lern") ? "funke" : k.includes("musik") || k.includes("tanz") ? "note" : "stern"; }
 function vorschlaege(tf, n, key) {
   const pool = (D.stattDaddeln || []).filter(v => (v.tf || "ABCD").includes(tf) && (tf !== "D" || /Hören|Körper|Sinne|Musik|Lesen/.test(v.kat)) && (tf !== "C" || !/Ordnen/.test(v.kat)));
   const r = rnd(key), a = pool.slice();
@@ -444,7 +473,7 @@ function hilftSheet() {
   if (tf === "C" || tf === "D") { const lind = (D.stattDaddeln || []).filter(x => /Körper|Hören/.test(x.kat) && x.tf.includes(tf)); if (lind.length && !v.some(x => lind.includes(x))) v = [lind[Math.floor(Math.random() * lind.length)], ...v.slice(0, 2)]; }
   let html = `${notfallLeiste("ruhe-jetzt")}<p>${A("Drei Ideen für jetzt. Oder keine – auch gut.", "Drei Ideen für jetzt. Oder keine – auch gut.")}</p><div class="liste kurz-liste">${v.map(x => zeileBtn(katIcon(x.kat, x), x.titel, ideeKurz(x), `data-act="idee" data-id="${x.id}"`, "k-geist")).join("")}</div>`;
   if (S.spiel.an && S.gekauft.patience && (tf === "C" || tf === "D")) html += `<div class="bogen mulde" style="margin-top:14px"><p style="margin:0 0 8px">Spiel ruhig eine Runde Patience – nach 10 Minuten ist sie vorbei.</p><button class="knopf zweit voll" data-act="spiel">${ic("karten")} Waldpatience</button></div>`;
-  html += `<button class="knopf leise" data-act="hilft-neu">Andere Ideen</button><div class="liste" style="margin-top:12px">${zeileBtn("plaudern", "Kurz plaudern – zum Spaß", "Mit Hühnchen, Christiane, Max und Co.", `data-act="tel-auf"`, "k-menschen")}${zeileBtn("briefkasten", "Post von Karin aus Vimmerby", "Briefwechsel auf Schwedisch", `data-act="bv-auf"`, "k-menschen")}${zeileBtn("maske", "Film & Fernsehen", "Krimis und gute Filme aus der Mediathek", `data-act="tv-auf"`, "k-geist")}</div>`;
+  html += `<button class="knopf leise" data-act="hilft-neu">Andere Ideen</button><div class="liste" style="margin-top:12px">${zeileBtn("plaudern", "Kurz plaudern – zum Spaß", "Mit Hühnchen, Christiane, Max und Co.", `data-act="tel-auf"`, "k-menschen")}${zeileBtn("briefkasten", "Post von Karin aus Vimmerby", "Briefwechsel auf Schwedisch", `data-act="bv-auf"`, "k-menschen")}${zeileBtn("fernseher", "Film & Fernsehen", "Krimis und gute Filme aus der Mediathek", `data-act="tv-auf"`, "k-geist")}</div>`;
   sheet({ titel: "Ablenkung?", inhalt: html, id: "hilft" });
 }
 function ideeSheet(id) {
@@ -630,11 +659,11 @@ function kaufenFrage(id) {
 /* ---------- Lesestoff aus dem Laden ---------- */
 function leseSheet(was) {
   let titel = "", html = "";
-  if (was.startsWith("gedichte")) { titel = was === "gedichte1" ? "Gedichte: Jahreszeiten" : "Gedichte: Unterwegs"; html = (D.gedichte?.[was] || []).map(g => `<div class="bogen"><h3>${esc(g.titel)}</h3><p style="white-space:pre-line;font-family:Fraunces, Georgia, serif;line-height:1.6">${esc(g.text)}</p><p class="klein">${esc(g.autor)}${g.jahr ? `, ${esc(g.jahr)}` : ""}</p></div>`).join(""); }
+  if (was.startsWith("gedichte")) { titel = was === "gedichte1" ? "Gedichte: Jahreszeiten" : "Gedichte: Unterwegs"; html = (D.gedichte?.[was] || []).map(g => `<div class="bogen"><h3>${esc(g.titel)}</h3><p style="white-space:pre-line;font-family:var(--f-stimme);line-height:1.6">${esc(g.text)}</p><p class="klein">${esc(g.autor)}${g.jahr ? `, ${esc(g.jahr)}` : ""}</p></div>`).join(""); }
   else if (was.startsWith("rezepte")) { titel = was === "rezepte1" ? "Einfach und warm" : was === "rezepte3" ? "Schwedisch backen" : "Kuchen für Besuch"; html = (D.rezepte?.[was] || []).map(r => `<div class="bogen"><h3>${esc(r.titel)}</h3>${r.dauer ? `<p class="klein">${esc(r.dauer)}</p>` : ""}<p style="font-weight:700;margin-bottom:4px">Zutaten</p><ul style="margin:0 0 10px;padding-left:22px">${r.zutaten.map(z => `<li>${esc(z)}</li>`).join("")}</ul><p style="font-weight:700;margin-bottom:4px">So geht’s</p><ol style="margin:0 0 10px;padding-left:22px">${r.schritte.map(z => `<li style="margin-bottom:4px">${esc(z)}</li>`).join("")}</ol>${r.tipp ? `<p class="klein">${esc(r.tipp)}</p>` : ""}</div>`).join(""); }
-  else if (was === "briefe") { titel = "Briefanfänge"; html = (D.briefe || []).map((b, i) => `<div class="bogen"><div class="klein">${esc(b.anlass)}</div><p style="font-family:Fraunces, Georgia, serif;margin:6px 0 10px">${esc(b.anfang)}</p><button class="knopf klein leise" data-act="kopieren-text" data-text="${esc(b.anfang)}">Kopieren</button></div>`).join(""); }
-  else if (was === "fragen") { titel = "Fangfragen fürs Telefon"; html = `<p class="klein">Für das nächste Telefonat. Eine reicht, zwei sind frech.</p>` + (D.fragekarten || []).map(f => `<div class="bogen"><p style="margin:0;font-family:Fraunces, Georgia, serif">${esc(f)}</p></div>`).join(""); }
-  else if (was === "tanzkarten") { titel = "Tanzkarten mit Geschichten"; html = `<p class="klein">Zum Weitererzählen in der Tanzstunde – und Musik zum Reinhören.</p>` + (D.tanzkarten || []).map(k => `<div class="bogen streifen k-tanz"><h3>${esc(k.tanz)}</h3>${k.takt ? `<p class="klein" style="margin-top:0">${esc(k.takt)}</p>` : ""}${(k.erzaehl || k.schritte || []).map(s => `<p style="white-space:pre-line${/\n/.test(s) ? ";font-family:Fraunces, Georgia, serif;font-style:italic" : ""}">${esc(s)}</p>`).join("")}${(k.musik || []).length ? `<div class="tanz-musik">${k.musik.map(m => `<a class="knopf zweit klein" href="https://www.youtube.com/results?search_query=${encodeURIComponent(m)}" target="_blank" rel="noopener">${ic("note")} ${esc(m)}</a>`).join("")}</div>` : ""}${k.tipp ? `<p class="klein">${esc(k.tipp)}</p>` : ""}</div>`).join("") + (S.gekauft.takt ? `<button class="knopf zweit voll" data-act="takt">${ic("note")} Taktgeber öffnen</button>` : ""); }
+  else if (was === "briefe") { titel = "Briefanfänge"; html = (D.briefe || []).map((b, i) => `<div class="bogen"><div class="klein">${esc(b.anlass)}</div><p style="font-family:var(--f-stimme);margin:6px 0 10px">${esc(b.anfang)}</p><button class="knopf klein leise" data-act="kopieren-text" data-text="${esc(b.anfang)}">Kopieren</button></div>`).join(""); }
+  else if (was === "fragen") { titel = "Fangfragen fürs Telefon"; html = `<p class="klein">Für das nächste Telefonat. Eine reicht, zwei sind frech.</p>` + (D.fragekarten || []).map(f => `<div class="bogen"><p style="margin:0;font-family:var(--f-stimme)">${esc(f)}</p></div>`).join(""); }
+  else if (was === "tanzkarten") { titel = "Tanzkarten mit Geschichten"; html = `<p class="klein">Zum Weitererzählen in der Tanzstunde – und Musik zum Reinhören.</p>` + (D.tanzkarten || []).map(k => `<div class="bogen streifen k-tanz"><h3>${esc(k.tanz)}</h3>${k.takt ? `<p class="klein" style="margin-top:0">${esc(k.takt)}</p>` : ""}${(k.erzaehl || k.schritte || []).map(s => `<p style="white-space:pre-line${/\n/.test(s) ? ";font-family:var(--f-stimme);font-style:italic" : ""}">${esc(s)}</p>`).join("")}${(k.musik || []).length ? `<div class="tanz-musik">${k.musik.map(m => `<a class="knopf zweit klein" href="https://www.youtube.com/results?search_query=${encodeURIComponent(m)}" target="_blank" rel="noopener">${ic("note")} ${esc(m)}</a>`).join("")}</div>` : ""}${k.tipp ? `<p class="klein">${esc(k.tipp)}</p>` : ""}</div>`).join("") + (S.gekauft.takt ? `<button class="knopf zweit voll" data-act="takt">${ic("note")} Taktgeber öffnen</button>` : ""); }
   sheet({ titel, inhalt: html || "<p>Hier kommt bald etwas.</p>" });
 }
 
@@ -697,7 +726,7 @@ function wissenSheet() {
 }
 function lebensbuchSheet() {
   const f = D.lebensbuch || [];
-  sheet({ titel: "Erzählfragen", inhalt: `<p class="klein">Fragen zum Plaudern – beim Kaffee, am Telefon oder mit Max. Nichts davon muss.</p>` + f.map(x => `<div class="bogen"><p style="font-family:Fraunces, Georgia, serif;font-weight:600">${esc(x.frage)}</p><p class="klein">${x.mit === "zusammen" ? "Zum Erzählen" : "Zum Aufschreiben"}</p><textarea class="text" data-lb="${x.id}" placeholder="Wenn du magst …">${esc(S.lebensbuch[x.id] || "")}</textarea></div>`).join("") });
+  sheet({ titel: "Erzählfragen", inhalt: `<p class="klein">Fragen zum Plaudern – beim Kaffee, am Telefon oder mit Max. Nichts davon muss.</p>` + f.map(x => `<div class="bogen"><p style="font-family:var(--f-stimme);font-weight:600">${esc(x.frage)}</p><p class="klein">${x.mit === "zusammen" ? "Zum Erzählen" : "Zum Aufschreiben"}</p><textarea class="text" data-lb="${x.id}" placeholder="Wenn du magst …">${esc(S.lebensbuch[x.id] || "")}</textarea></div>`).join("") });
 }
 function momentSheet() {
   const h = heute();
@@ -933,25 +962,25 @@ function umschlagSVG(von = "Max") {
   const stempel = (x, y, r, dreh, deckung) => `<g transform="translate(${x} ${y}) rotate(${dreh})" opacity="${deckung}" fill="none" stroke="#5A3A5E" stroke-width="1.4" stroke-dasharray="14 1.6 6 1.2">
       <circle r="${r}"/><circle r="${r - 4.5}" stroke-width=".7" stroke-dasharray="9 1.4"/>
       <path id="pm${x}" d="M${-r + 6} 0 A${r - 6} ${r - 6} 0 0 1 ${r - 6} 0" stroke="none"/>
-      <text font-family="Nunito, system-ui, sans-serif" font-size="5" font-weight="800" fill="#5A3A5E" stroke="none" letter-spacing=".6"><textPath href="#pm${x}" startOffset="50%" text-anchor="middle">${ort}</textPath></text>
-      <text y="5" text-anchor="middle" font-family="Nunito, system-ui, sans-serif" font-size="6.4" font-weight="800" fill="#5A3A5E" stroke="none">${tag}.${mon}.${jahr}</text>
-      <text y="12" text-anchor="middle" font-family="Nunito, system-ui, sans-serif" font-size="4.6" font-weight="700" fill="#5A3A5E" stroke="none">12-14</text></g>`;
+      <text font-family="Familjen Grotesk, sans-serif" font-size="5" font-weight="800" fill="#5A3A5E" stroke="none" letter-spacing=".6"><textPath href="#pm${x}" startOffset="50%" text-anchor="middle">${ort}</textPath></text>
+      <text y="5" text-anchor="middle" font-family="Familjen Grotesk, sans-serif" font-size="6.4" font-weight="800" fill="#5A3A5E" stroke="none">${tag}.${mon}.${jahr}</text>
+      <text y="12" text-anchor="middle" font-family="Familjen Grotesk, sans-serif" font-size="4.6" font-weight="700" fill="#5A3A5E" stroke="none">12-14</text></g>`;
   return `<svg class="umschlag-bild" viewBox="0 0 300 150" aria-hidden="true">
     <rect x="3" y="3" width="294" height="144" rx="6" fill="var(--umschlag)" stroke="var(--umschlag-rand)" stroke-width="1.6"/>
-    <text x="18" y="27" font-family="Fraunces, Georgia, serif" font-size="11.5" font-style="italic" fill="var(--tinte-2)">${esc(von)}</text>
-    <text x="18" y="40" font-family="Fraunces, Georgia, serif" font-size="9" font-style="italic" fill="var(--tinte-2)" opacity=".85">${esc(absOrt)}</text>
+    <text x="18" y="27" font-family="Literata, Georgia, serif" font-size="11.5" font-style="italic" fill="var(--tinte-2)">${esc(von)}</text>
+    <text x="18" y="40" font-family="Literata, Georgia, serif" font-size="9" font-style="italic" fill="var(--tinte-2)" opacity=".85">${esc(absOrt)}</text>
     <g transform="translate(234 13) rotate(3)">
       <rect x="0" y="0" width="52" height="62" rx="2" fill="#FFFDF5" stroke="#FFFDF5" stroke-width="6" stroke-dasharray="3 3"/>
       <rect x="4" y="4" width="44" height="54" fill="#CFE3DA"/>
       <svg x="4" y="10" width="44" height="48" viewBox="8 2 92 98">${huhnSVG({ gr: 10 }).replace(/^<svg[^>]*>/, "").replace(/<\/svg>\s*$/, "")}${markenWitz()}</svg>
-      <text x="26" y="11" text-anchor="middle" font-family="Nunito, sans-serif" font-size="6.5" font-weight="800" fill="#1F4A34">1 KUSS</text>
+      <text x="26" y="11" text-anchor="middle" font-family="Familjen Grotesk, sans-serif" font-size="6.5" font-weight="800" fill="#1F4A34">1 KUSS</text>
     </g>
     <g opacity=".62" fill="none" stroke="#5A3A5E" stroke-width="1.5" stroke-linecap="round" stroke-dasharray="22 2 9 1.5">
       <path d="M178 34 q7 -5 14 0 t14 0 t14 0 t14 0 t14 0 t14 0 t14 0"/><path d="M178 43 q7 -5 14 0 t14 0 t14 0 t14 0 t14 0 t14 0 t14 0"/><path d="M178 52 q7 -5 14 0 t14 0 t14 0 t14 0 t14 0 t14 0 t14 0"/><path d="M178 61 q7 -5 14 0 t14 0 t14 0 t14 0 t14 0 t14 0 t14 0"/>
     </g>
     ${stempel(226, 62, 21, -12, .78)}${stempel(206, 30, 17, 9, .32)}
-    <text x="70" y="104" font-family="Fraunces, Georgia, serif" font-size="19" font-style="italic" fill="var(--tinte)">An ${esc(S.name)}</text>
-    <text x="70" y="126" font-family="Fraunces, Georgia, serif" font-size="13" font-style="italic" fill="var(--tinte-2)">Am Spandauer Forst, Berlin</text>
+    <text x="70" y="104" font-family="Literata, Georgia, serif" font-size="19" font-style="italic" fill="var(--tinte)">An ${esc(S.name)}</text>
+    <text x="70" y="126" font-family="Literata, Georgia, serif" font-size="13" font-style="italic" fill="var(--tinte-2)">Am Spandauer Forst, Berlin</text>
     <path d="M70 110 H230 M70 132 H210" stroke="var(--umschlag-rand)" stroke-width="1" opacity=".6"/>
   </svg>`;
 }
@@ -989,7 +1018,7 @@ function angeboteInhalt() {
   if (!alle.includes(ANG_KAT)) ANG_KAT = alle[0];
   const kats = [ANG_KAT];
   const zeile = (k, v) => v ? `<p style="margin:0 0 4px"><span style="font-weight:700">${k}:</span> ${esc(v)}</p>` : "";
-  const html = `<div class="chips" style="margin-bottom:6px">${alle.map(k => chip(k === ANG_KAT, `${k} · ${zahl(k)}`, `data-act="angebot-kat" data-v="${esc(k)}"`)).join("")}</div><label class="schalter-zeile" style="margin:4px 0 2px"><span>Nur draußen oder mit viel Platz</span><input type="checkbox" data-act="ang-luft" ${S.angLuft !== false ? "checked" : ""}></label><p class="klein">Stand: ${D.angeboteStand ? datumLang(D.angeboteStand).replace(/^[^,]*, /, "") : "Oktober 2026"}. Die Liste frischt sich jeden Sonntag von selbst auf. Termine und Preise vorher kurz nachfragen – angerufen ist schnell.</p>` + kats.map(k => {
+  const html = `<div class="chips" style="margin-bottom:6px">${alle.map(k => chip(k === ANG_KAT, `${k} · ${zahl(k)}`, `data-act="angebot-kat" data-v="${esc(k)}"`)).join("")}</div><label class="schalter-zeile" style="margin:4px 0 2px"><span>Nur draußen oder mit viel Platz</span><input type="checkbox" switch data-act="ang-luft" ${S.angLuft !== false ? "checked" : ""}></label><p class="klein">Stand: ${D.angeboteStand ? datumLang(D.angeboteStand).replace(/^[^,]*, /, "") : "Oktober 2026"}. Die Liste frischt sich jeden Sonntag von selbst auf. Termine und Preise vorher kurz nachfragen – angerufen ist schnell.</p>` + kats.map(k => {
     const h = heute(), arr = D.angebote.filter(a => (a.kategorie || "Kultur") === k && !angebotVorbei(a) && !(S.angLuft !== false && a.luft === "drinnen voll")).sort((x, y) => (angebotNaechstes(x) || "9") < (angebotNaechstes(y) || "9") ? -1 : 1); if (!arr.length) return `<p class="klein" style="margin-top:14px">Gerade nichts${S.angLuft !== false ? " mit viel Platz" : ""} in dieser Rubrik.${S.angLuft !== false ? " Schalter oben aus, dann siehst du alles." : ""}</p>`;
     return `<h3 style="margin-top:18px">${esc(k)}</h3>` + arr.map(a => {
       const auf = (S.liste || []).some(y => !y.erledigt && (y.angebot === a.id || y.text === angebotKurz(a)));

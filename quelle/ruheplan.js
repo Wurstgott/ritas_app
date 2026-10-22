@@ -49,23 +49,34 @@ function ruheUnterwegsListe() { const R = ruheP(); return [...D.ruhe.unterwegs.f
 
 /* ---------- Übersicht ---------- */
 function ruheSheet() { sheet({ titel: "Mein Notfallplan", inhalt: ruheInhalt(), id: "ruhe" }); }
+/* Übersicht (Gestaltung C2): Schild mit eigenem Satz und EINEM Knopf · Plan (Hilft als Symbol-Raster, höchstens 3 sichtbar;
+   Anrufen als tel:-Felder; Unterwegs aufklappbar) · Plan zusammenstellen · Üben */
+const C_RUHE_IC = { fuesse: "schuh", hand: "hand", wasser: "glas", luft: "blatt", platz: "bank", decke: "decke", musik: "note", bonbon: "geschenk", zaehlen: "funke", anrufen: "telefon",
+  pausen: "bank", halt: "karte", bescheid: "handy", ohren: "kopfhoerer", pause: "tasse" };
 function ruheInhalt() {
-  const R = ruheP(), hilft = ruheHilftListe();
-  return `<p>${A("Bei Unruhe, Anspannung und dergleichen, zu Hause oder unterwegs: Hier steht, was dir dann hilft. Am besten ab und zu an einem ruhigen Tag durchgehen – dann sitzt es, wenn du es brauchst.", "Bei Unruhe, Anspannung und dergleichen, zu Hause oder unterwegs: Hier steht, was Ihnen dann hilft. Am besten ab und zu an einem ruhigen Tag durchgehen – dann sitzt es, wenn Sie es brauchen.")}</p>
-    <button class="knopf haupt voll" data-act="ruhe-jetzt">${ic("atem")} Jetzt Schritt für Schritt</button>
-    <h3 style="margin-top:20px">Üben</h3><div class="liste">
-      ${zeileBtn("atem", "Atmen üben", "2 Minuten: länger aus- als einatmen", `data-act="ruhe-atmen"`, "k-ruhe")}
-      ${zeileBtn("feder", "Probelauf", "Alle Schritte einmal in Ruhe durchgehen", `data-act="ruhe-probe"`, "k-ruhe")}
-    </div>${R.geuebt ? `<p class="klein" style="margin-top:6px">Schon ${R.geuebt}-mal geübt.</p>` : ""}
-    <h3 style="margin-top:20px">${A("Dein Plan", "Ihr Plan")}</h3>
-    <div class="bogen mulde ruhe-plan">
-      <p class="serif" style="margin:0 0 10px;font-size:1.1rem">„${esc(ruheSatz())}“</p>
-      ${hilft.length ? `<p style="margin:0 0 4px;font-weight:700">Was mir hilft</p><ul>${hilft.map(t => `<li>${esc(t)}</li>`).join("")}</ul>` : ""}
-      ${(R.leute || []).length ? `<p style="margin:10px 0 4px;font-weight:700">Wen ich anrufen kann</p><ul>${R.leute.map(p => `<li>${esc(p.name)}${p.nr ? ` · <span class="zahl">${esc(p.nr)}</span>` : ""}</li>`).join("")}</ul>` : ""}
-      ${ruheUnterwegsListe().length ? `<p style="margin:10px 0 4px;font-weight:700">Für unterwegs</p><ul>${ruheUnterwegsListe().map(t => `<li>${esc(t)}</li>`).join("")}</ul>` : ""}
-    </div>
-    <button class="knopf zweit voll" style="margin-top:10px" data-act="ruhe-bearbeiten">${ic("feder")} ${A("Plan zusammenstellen", "Plan zusammenstellen")}</button>
-    `;
+  const R = ruheP();
+  const hilft = [...D.ruhe.hilft.filter(h => R.hilft.includes(h.id)).map(h => ({ t: h.text, i: C_RUHE_IC[h.id] })), ...(R.eigene || []).map(t => ({ t, i: "herz" }))];
+  const unterwegs = [...D.ruhe.unterwegs.filter(h => R.unterwegs.includes(h.id)).map(h => ({ t: h.text, i: C_RUHE_IC[h.id] || "rucksack" })), ...(R.unterwegsEigen || []).map(t => ({ t, i: "herz" }))];
+  const leute = R.leute || [];
+  // höchstens 3 Punkte sichtbar, der Rest unter „n weitere“
+  const mitMehr = (arr, bau) => arr.length <= 3 ? bau(arr) : `${bau(arr.slice(0, 3))}<details class="c-mehr"><summary>${arr.length - 3} weitere</summary>${bau(arr.slice(3))}</details>`;
+  const raster = arr => `<div class="c-hilft">${arr.map(x => `<div class="c-hilft-feld">${ic(x.i || "stern")}<span>${esc(x.t)}</span></div>`).join("")}</div>`;
+  const zeilen = arr => `<ul class="c-ruhe-liste">${arr.map(x => `<li>${ic(x.i || "stern")}<span>${esc(x.t)}</span></li>`).join("")}</ul>`;
+  const tel = arr => `<div class="c-tel-liste">${arr.map(p => p.nr ? `<a class="c-tel" href="tel:${esc(String(p.nr).replace(/[^0-9+]/g, ""))}">${ic("telefon")}<span class="c-tel-text"><span class="c-tel-name">${esc(p.name)}</span><span class="c-tel-nr zahl">${esc(p.nr)}</span></span></a>` : `<div class="c-tel">${ic("telefon")}<span class="c-tel-text"><span class="c-tel-name">${esc(p.name)}</span></span></div>`).join("")}</div>`;
+  const leer = t => `<p class="c-ruhe-leer">${t}</p>`;
+  return `<div class="c-ruhe-schild"><span class="c-kicker">${A("Dein Satz", "Ihr Satz")}</span><p class="c-ruhe-satz">„${esc(ruheSatz())}“</p>
+    <button class="knopf haupt voll" data-act="ruhe-jetzt">${ic("atem")} Jetzt Schritt für Schritt</button></div>
+    <details class="c-wozu"><summary>Wofür ist der Plan?</summary><p>${A("Bei Unruhe, Anspannung und dergleichen, zu Hause oder unterwegs: Hier steht, was dir dann hilft. Am besten ab und zu an einem ruhigen Tag durchgehen – dann sitzt es, wenn du es brauchst.", "Bei Unruhe, Anspannung und dergleichen, zu Hause oder unterwegs: Hier steht, was Ihnen dann hilft. Am besten ab und zu an einem ruhigen Tag durchgehen – dann sitzt es, wenn Sie es brauchen.")}</p></details>
+    <h3 class="c-ruhe-h">${A("Dein Plan", "Ihr Plan")}</h3>
+    <div class="c-ruhe-fach"><h4>Was mir hilft</h4>${hilft.length ? mitMehr(hilft, raster) : leer("Noch nichts ausgewählt.")}</div>
+    <div class="c-ruhe-fach"><h4>Wen ich anrufen kann</h4>${leute.length ? mitMehr(leute, tel) : leer("Noch niemand eingetragen.")}</div>
+    ${unterwegs.length ? `<details class="c-ruhe-fach c-unterwegs"><summary>${ic("rucksack")}<span>Für unterwegs <span class="c-anzahl">· ${unterwegs.length} ${unterwegs.length === 1 ? "Punkt" : "Punkte"}</span></span></summary>${zeilen(unterwegs)}</details>` : `<div class="c-ruhe-fach"><h4>Für unterwegs</h4>${leer("Noch nichts ausgewählt.")}</div>`}
+    <button class="knopf zweit voll" style="margin-top:12px" data-act="ruhe-bearbeiten">${ic("stift")} ${A("Plan zusammenstellen", "Plan zusammenstellen")}</button>
+    <h3 class="c-ruhe-h">Üben, wenn es ruhig ist</h3>
+    <div class="c-ruhe-ueben">
+      <button class="c-ruhe-kachel" data-act="ruhe-atmen">${ic("atem")}<span class="c-rk-text"><span class="titel">Atmen üben</span><span class="unter">2 Minuten</span></span></button>
+      <button class="c-ruhe-kachel" data-act="ruhe-probe">${ic("feder")}<span class="c-rk-text"><span class="titel">Probelauf</span><span class="unter">alle Schritte</span></span></button>
+    </div>${R.geuebt ? `<p class="c-geuebt">${ic("stern")}<span>Schon ${R.geuebt}-mal geübt</span></p>` : ""}`;
 }
 
 /* ---------- Plan zusammenstellen ---------- */

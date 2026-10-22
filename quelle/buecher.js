@@ -15,8 +15,8 @@ function buchCover(titel, autor = "", breite = 84) {
     `${[0, 1, 2, 3, 4].map(i => `<rect x="${8 + i * 18}" y="0" width="5" height="150" fill="${fg}" opacity=".18"/>`).join("")}`,
     `<path d="M50 96 l6 12 13 2 -9 9 2 13 -12 -6 -12 6 2 -13 -9 -9 13 -2Z" fill="${fg}" opacity=".7"/>`][motiv];
   return `<svg class="buch-cover" viewBox="0 0 100 150" width="${breite}" height="${H}" role="img" aria-label="${esc(titel)}"><rect width="100" height="150" rx="4" fill="${bg}"/>${m}<rect x="0" y="0" width="7" height="150" fill="rgba(0,0,0,.18)"/>
-    <text x="54" y="${motiv === 0 ? 62 : 26}" text-anchor="middle" font-family="Fraunces, Georgia, serif" font-weight="700" font-size="11.5" fill="${fg}">${zl.map((l, i) => `<tspan x="54" dy="${i ? 13 : 0}">${esc(l)}</tspan>`).join("")}</text>
-    ${autor ? `<text x="54" y="142" text-anchor="middle" font-family="Nunito, sans-serif" font-size="8" fill="${fg}" opacity=".9">${esc(autor.length > 22 ? autor.slice(0, 21) + "…" : autor)}</text>` : ""}</svg>`;
+    <text x="54" y="${motiv === 0 ? 62 : 26}" text-anchor="middle" font-family="Young Serif, Georgia, serif" font-weight="700" font-size="11.5" fill="${fg}">${zl.map((l, i) => `<tspan x="54" dy="${i ? 13 : 0}">${esc(l)}</tspan>`).join("")}</text>
+    ${autor ? `<text x="54" y="142" text-anchor="middle" font-family="Familjen Grotesk, sans-serif" font-size="8" fill="${fg}" opacity=".9">${esc(autor.length > 22 ? autor.slice(0, 21) + "…" : autor)}</text>` : ""}</svg>`;
 }
 function hpBand() { return D.hp?.baende?.find(b => b.nr === S.hp.band) || null; }
 function regalBuecher() {
@@ -30,7 +30,7 @@ function lesebegleiterSheet() {
   const hpOffen = (D.hp?.baende || []).filter(x => x.nr < S.hp.band && !S.eintraege.some(e => e.t === "buchfertig" && e.titel === x.titel));
   let h = `<h3 style="margin-top:0">Gerade dabei</h3>`;
   if (b) h += `<div class="buch-zeile">${buchCover(b.titel, "J. K. Rowling", 64)}<div style="flex:1;min-width:0"><div style="font-weight:700">${esc(b.titel)}</div><p class="klein" style="margin:2px 0 6px">Band ${b.nr} · ${S.hp.kapitel ? `Kapitel ${S.hp.kapitel} von ${b.kapitel}` : "Wo bist du gerade? Stell dein Kapitel ein."}</p>
-    <div class="stepper"><button class="knopf zweit" data-act="kap" data-d="-1" aria-label="Ein Kapitel zurück">${ic("minus")}</button><div class="wert zahl">${S.hp.kapitel}<small>von ${b.kapitel}</small></div><button class="knopf zweit" data-act="kap" data-d="1" aria-label="Ein Kapitel weiter">${ic("plus")}</button></div></div></div>`;
+    <div class="stepper"><button class="knopf zweit" data-act="kap" data-d="-1" aria-label="Ein Kapitel zurück">${ic("minus")}</button><div class="wert zahl">${S.hp.kapitel}<small>von ${b.kapitel}</small></div><button class="knopf zweit" data-act="kap" data-d="1" aria-label="Ein Kapitel weiter">${ic("plus")}</button></div>${typeof hpKnopf === "function" ? hpKnopf(true) : ""}</div></div>`;
   h += liest.map(x => `<div class="buch-zeile">${buchCover(x.titel, x.autor, 64)}<div style="flex:1;min-width:0"><div style="font-weight:700">${esc(x.titel)}</div><p class="klein" style="margin:2px 0 6px">${esc([x.autor, x.von ? "von " + x.von : ""].filter(Boolean).join(" · "))}</p>
     <div class="zeile" style="gap:6px;flex-wrap:wrap"><button class="knopf klein zweit" data-act="buch-stueck" data-id="${x.id}">${ic("plus")} Ein Stück gelesen</button><button class="knopf klein haupt" data-act="buch-fertig" data-id="${x.id}">${ic("haken")} Ausgelesen</button></div></div></div>`).join("");
   h += `<button class="knopf zweit voll" style="margin-top:10px" data-act="buch-neu">${ic("plus")} Neues Buch eintragen</button><p class="klein" style="margin:6px 0 0">Zum Beispiel ein Geschenk von Christiane. Ausgelesene Bücher zählen und kommen ins Regal.</p>`;

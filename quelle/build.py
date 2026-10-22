@@ -8,8 +8,8 @@ d = pathlib.Path(__file__).parent
 stamp = datetime.datetime.now().strftime("%Y-%m-%d %H:%M")
 
 shell = (d / "app.html").read_text()
-css = (d / "fonts.css").read_text() + (d / "app.css").read_text() + ((d / "skins.css").read_text() if (d / "skins.css").exists() else "") + ((d / "goennen.css").read_text() if (d / "goennen.css").exists() else "") + ((d / "maxbriefe.css").read_text() if (d / "maxbriefe.css").exists() else "") + ((d / "feedback.css").read_text() if (d / "feedback.css").exists() else "")
-data = "\n".join((d / f).read_text() for f in ["data.js","data-orte.js","data-inhalte.js","data-laden.js","data-korrektur.js","data-sprache.js","data-lektorat.js","data-ablenkung.js", "data-winter.js","data-angebote.js","data-eier.js","data-eier2.js","data-anrufe.js", "data-anrufe2.js", "data-brevvan.js", "data-ereignisse2.js", "data-feinschliff.js"] if (d / f).exists())
+css = (d / "fonts.css").read_text() + (d / "app.css").read_text() + ((d / "skins.css").read_text() if (d / "skins.css").exists() else "") + ((d / "goennen.css").read_text() if (d / "goennen.css").exists() else "") + ((d / "maxbriefe.css").read_text() if (d / "maxbriefe.css").exists() else "") + ((d / "feedback.css").read_text() if (d / "feedback.css").exists() else "") + ((d / "hp.css").read_text() if (d / "hp.css").exists() else "") + ((d / "design.css").read_text() if (d / "design.css").exists() else "")  # Gestaltung C2 – zuletzt
+data = "\n".join((d / f).read_text() for f in ["data.js","data-orte.js","data-inhalte.js","data-laden.js","data-korrektur.js","data-sprache.js","data-lektorat.js","data-ablenkung.js", "data-winter.js","data-angebote.js","data-eier.js","data-eier2.js","data-anrufe.js", "data-anrufe2.js", "data-brevvan.js", "data-ereignisse2.js", "data-feinschliff.js", "data-hp.js"] if (d / f).exists())
 _tj = d / "tv.json"
 if _tj.exists():
     import json as _json2
@@ -19,7 +19,7 @@ if _aj.exists():
     import json as _json
     _a = _json.loads(_aj.read_text())
     data += "\n/* Angebote aus angebote.json */\n(function(){var A=" + _json.dumps(_a, ensure_ascii=False) + ";D.angeboteStand=A.stand;if(A.kategorien)D.angeboteKat=A.kategorien;D.angebote=A.angebote.map(function(x){return Object.assign({},x,{id:'an-'+angebotId(x.name)})});})();\n"
-app = "\n".join((d / f).read_text() for f in ["core.js","feedback.js","skins.js","figuren.js","avatar.js","scene.js","views.js","ruheplan.js","eigenes.js","eier.js","extras.js","telefon.js", "brevvan.js", "buecher.js", "tv.js", "winter.js", "ereignisse.js", "wunsch.js", "wetter.js","game.js","goennen.js","laden2.js","maxbriefe.js","main.js"]).replace("__BUILD__", stamp)
+app = "\n".join((d / f).read_text() for f in ["core.js","feedback.js","skins.js","figuren.js","avatar.js","scene.js","views.js","ruheplan.js","eigenes.js","eier.js","extras.js","telefon.js", "brevvan.js", "buecher.js", "hp.js", "tv.js", "winter.js", "ereignisse.js", "wunsch.js", "wetter.js","game.js","goennen.js","laden2.js","maxbriefe.js","main.js"]).replace("__BUILD__", stamp)
 # --- Schriften verkleinern (QA-17): Kaushan Script fällt weg (von Satisfy verdrängt),
 #     alle übrigen werden auf die Zeichen reduziert, die in der App vorkommen (+ Latin-1/Ext-A, Typo-Zeichen, Pfeile).
 def _fonts_klein(css_all, text):
@@ -52,6 +52,22 @@ for _f in sorted(d.glob("*.js")):
     for _i, _z in enumerate(_f.read_text().splitlines(), 1):
         for _m in re.finditer(r"[A-Za-zÄÖÜäöüß]'s\b", _z):
             print(f"Hinweis Typografie: {_f.name}:{_i}: gerader Apostroph „{_z[max(0,_m.start()-12):_m.end()+6]}“ – besser ’")
+# --- Akte Feuerkelch: Spoiler- und Regelprüfung (Register, Vorgriffswörter, dunkle Kapitel, Fragen-Takt)
+def _hp_pruefen():
+    import subprocess, shutil
+    if not shutil.which("node") or not (d / "data-hp.js").exists(): return
+    js = ("const vm=require('vm'),fs=require('fs');const ctx={console,S:{}};vm.createContext(ctx);"
+          "for(const f of JSON.parse(process.argv[1])){if(fs.existsSync(f))vm.runInContext(fs.readFileSync(f,'utf8'),ctx,{filename:f});}"
+          "const r=vm.runInContext('D.hpPruefen(D.hpFremdTexte())',ctx);console.log(JSON.stringify(r));")
+    files = [str(d / f) for f in ["data.js","data-orte.js","data-inhalte.js","data-laden.js","data-korrektur.js","data-sprache.js","data-lektorat.js","data-ablenkung.js","data-winter.js","data-angebote.js","data-eier.js","data-eier2.js","data-anrufe.js","data-anrufe2.js","data-brevvan.js","data-ereignisse2.js","data-feinschliff.js","data-hp.js"]]
+    try:
+        r = json.loads(subprocess.run(["node", "-e", js, json.dumps(files)], capture_output=True, text=True, timeout=60).stdout)
+    except Exception as ex:
+        print("HP-Prüfung nicht gelaufen:", ex); return
+    for w in r["warnungen"]: print("HP-Warnung (Altlast):", w)
+    for f in r["fehler"]: print("HP-FEHLER:", f)
+    print("HP-Prüfung:", "OK" if not r["fehler"] else f"{len(r['fehler'])} Fehler")
+_hp_pruefen()
 body = shell.replace("/*CSS*/", css).replace("/*DATA*/", data).replace("/*APP*/", app)
 
 HEAD_COMMON = """<meta charset="utf-8">

@@ -1,0 +1,377 @@
+/* ============================================================
+   Entwurf C2 – „Skandinavisch-Vintage / Kramladen“
+   Wird als letzte CSS-Datei geladen (build.py: nach feedback.css).
+   Ordnung: 1 Token · 2 Schrift · 3 Grundformen (Etikett, Schild)
+            4 Heute · 5 Listen/Chips · 6 Tagebuch · 7 Navigation · 8 Kramladen
+            9 Kleiderschrank · 10 Ideen · 11 Notfallplan · 12 Schriftgröße 3 · 13 Sonstiges
+   Klick/Haptik: bewusst KEINE eigenen :active-Transformationen oder Animationen –
+   das macht feedback.css/feedback.js (currentColor, --fb-*). box-shadow trägt hier Linie und Kante.
+   ============================================================ */
+
+/* ---------- 1  Token ---------- stehen in app.css (:root, Dunkel-Blöcke) */
+
+/* Symbol-Farbklassen (aus icons.js: f-x Fläche, l-x Linie) */
+.ic-f { overflow: visible; }
+.ic-f .f-r{fill:var(--i-r)} .ic-f .f-R{fill:var(--i-R)} .ic-f .f-g{fill:var(--i-g)} .ic-f .f-G{fill:var(--i-G)}
+.ic-f .f-y{fill:var(--i-y)} .ic-f .f-Y{fill:var(--i-Y)} .ic-f .f-b{fill:var(--i-b)} .ic-f .f-B{fill:var(--i-B)}
+.ic-f .f-s{fill:var(--i-s)} .ic-f .f-c{fill:var(--i-c)} .ic-f .f-w{fill:var(--i-w)} .ic-f .f-p{fill:var(--i-p)}
+.ic-f .f-h{fill:var(--i-h)} .ic-f .f-H{fill:var(--i-H)} .ic-f .f-k{fill:var(--i-k)} .ic-f .f-l{fill:var(--i-l)} .ic-f .f-e{fill:var(--i-e)}
+.ic-f [class^="l-"] { fill: none; stroke-linecap: round; stroke-linejoin: round; }
+.ic-f .l-r{stroke:var(--i-r)} .ic-f .l-R{stroke:var(--i-R)} .ic-f .l-g{stroke:var(--i-g)} .ic-f .l-G{stroke:var(--i-G)}
+.ic-f .l-y{stroke:var(--i-y)} .ic-f .l-Y{stroke:var(--i-Y)} .ic-f .l-b{stroke:var(--i-b)} .ic-f .l-B{stroke:var(--i-B)}
+.ic-f .l-s{stroke:var(--i-s)} .ic-f .l-c{stroke:var(--i-c)} .ic-f .l-w{stroke:var(--i-w)} .ic-f .l-p{stroke:var(--i-p)}
+.ic-f .l-h{stroke:var(--i-h)} .ic-f .l-H{stroke:var(--i-H)} .ic-f .l-k{stroke:var(--i-k)} .ic-f .l-l{stroke:var(--i-l)} .ic-f .l-e{stroke:var(--i-e)}
+/* Medaillon in der Feldfarbe (eine Regel für Kacheln, Listen, Tagesform …) */
+.c-med { border-radius: 50%; background: color-mix(in srgb, var(--k, var(--moos)) var(--tmix), var(--bogen)); }
+
+/* ---------- 2  Schrift ----------
+   Familjen Grotesk = Text und Bedienung · Young Serif = Schilder · Literata = Erzählstimme
+   Skala (1rem = 18/21/27 px): Gruß ≤1.55 (einzeilig) · Seitentitel 1.75 · Rubrik 1.25 · Kachel 1.04 fett
+   · Text 1 · klein .88 · Kicker .72 Versalien */
+body { font-family: var(--f-text); font-weight: 400; letter-spacing: .003em; font-synthesis: none; }
+h1, h2, .serif, .sheet .sheet-kopf h2 { font-family: var(--f-schild); font-weight: 400; letter-spacing: 0; }
+h3 { font-family: var(--f-text); font-weight: 700; letter-spacing: -.003em; }
+h1 { font-size: 1.6rem; line-height: 1.15; }
+h2 { font-size: 1.25rem; line-height: 1.2; }
+.klein { line-height: 1.45; font-weight: 500; }
+.unter, .tf-text, .klein, .datum { font-weight: 500; }
+.stepper .wert, .timer-kreis .rest, .atem-text, .onb-nr, .strich, .exkurs-karte .titel, .tuer .titel,
+.tuer-gross .titel, .ks-titel, .lt-titel, .goenn-leiste .gl-titel, .gk-titel, .tel-initial, .zettel-initial { font-weight: 400; } /* Young Serif hat nur 400 */
+/* Erzählstimme (Familie steht in app.css, hier nur Gewicht; Tagebuchfrage und eigener Satz neu) */
+.sprechblase, .brief, .brief-anrede, .brief-text, .brief-gruss, .ruhe-gross, .tel-blase, .bv-sv, .bv-antwort span[lang], .er-blase, .er-blase .er-du,
+.tb-frage, .c-ruhe-satz { font-family: var(--f-stimme); font-weight: 450; }
+.sprechblase { font-size: 1.02rem; line-height: 1.45; }
+.sprechblase .wer { font-size: .72rem; letter-spacing: .12em; text-transform: uppercase; font-weight: 700; color: var(--ziegel); }
+.knopf { font-family: var(--f-text); font-weight: 700; letter-spacing: .005em; }
+.c-kicker { display: block; font: 700 .72rem/1.2 var(--f-text); letter-spacing: .16em; text-transform: uppercase; color: var(--ziegel); }
+
+/* ---------- 3  Grundformen ----------
+   Etikett = helles Feld, feine Linie, harte Kante · Schild = Emaille mit Cremelinie */
+.bogen { border-radius: 14px; box-shadow: inset 0 0 0 1.5px var(--linie-fein), var(--kante); }
+.bogen.mulde { box-shadow: none; }
+.bogen.streifen::before { display: none; }
+.bogen.streifen { padding-left: 18px; }
+.knopf { border-radius: 14px; }
+.knopf.haupt { box-shadow: inset 0 0 0 3px var(--moos), inset 0 0 0 4.5px color-mix(in srgb, var(--auf-moos) 40%, transparent), 0 3px 0 color-mix(in srgb, var(--moos) 55%, #000); }
+.knopf.zweit { box-shadow: inset 0 0 0 1.5px var(--linie), var(--kante); }
+.knopf.leise { text-decoration-thickness: 1.5px; text-underline-offset: 6px; }
+
+/* ---------- 4  Heute ---------- */
+/* Seitenköpfe aller Tabs wirklich zentriert (app.css reserviert rechts 58 px für das Himmelsbild) */
+.gruss { text-align: center; }
+.gruss h1 { padding-inline: 0; }
+.gruss .datum { text-wrap: balance; }
+.gruss-heute { text-align: center; margin: 4px 0 18px; container-type: inline-size; }
+/* Gruß einzeilig: wächst bis 1.55rem, schrumpft mit der Breite (cqi), bricht erst bei Schriftgröße 3 */
+.gruss-heute h1 { font-size: min(1.55rem, 8.2cqi); line-height: 1.12; text-wrap: balance; }
+.gruss-heute .gruss-zeile { justify-content: center; margin-top: 4px; }
+.gruss-heute .datum > span:first-child { font-weight: 600; letter-spacing: .02em; }
+/* Rubriken zentriert zwischen zwei Linien */
+section.abschnitt > h2, .abschnitt > .zeile.zwischen:first-child > h2, .ks-fach {
+  display: flex; align-items: center; gap: 12px; text-align: center; justify-content: center;
+}
+section.abschnitt > h2::before, section.abschnitt > h2::after,
+.abschnitt > .zeile.zwischen:first-child > h2::before, .abschnitt > .zeile.zwischen:first-child > h2::after,
+.ks-fach::before, .ks-fach::after {
+  content: ""; flex: 1 1 0; min-width: 10px; height: 5px; border-block: 1.5px solid var(--linie);
+}
+.abschnitt > .zeile.zwischen:first-child { gap: 8px; }
+.abschnitt > .zeile.zwischen:first-child > h2 { flex: 1; }
+section.abschnitt > h2 { margin-bottom: 14px; }
+
+/* Tagesform: Text darf die Zeile nutzen, „Ändern“ rutscht sonst darunter */
+.tf { border-radius: 14px; box-shadow: inset 0 0 0 1.5px var(--linie-fein), var(--kante); background: var(--bogen); }
+.tf svg.ic-f, .tf-kurz svg.ic-f { width: 52px; height: 52px; padding: 5px; flex: none; border-radius: 50%; background: color-mix(in srgb, var(--licht) var(--tmix), var(--bogen)); }
+.tf[aria-pressed="true"] svg.ic-f { background: var(--bogen); }
+.bogen.mulde.zeile.zwischen:has(.tf-kurz) { flex-wrap: wrap; row-gap: 4px; }
+.tf-kurz { flex: 1 1 210px; min-width: 0; }
+
+/* Eintragen-Kacheln: Etiketten mit Doppellinie, Symbol groß auf getöntem Medaillon */
+.kacheln { gap: 12px; }
+.kachel {
+  align-items: center; justify-content: flex-start; text-align: center; gap: 8px;
+  padding: 16px 10px 14px; border-radius: 16px; background: var(--bogen);
+  box-shadow: inset 0 0 0 1.5px color-mix(in srgb, var(--k, var(--moos)) 45%, transparent), var(--kante);
+}
+.kachel::before {
+  left: 5px; right: 5px; top: 5px; bottom: 5px; width: auto; border-radius: 11px; background: none;
+  border: 1px solid color-mix(in srgb, var(--k, var(--moos)) 24%, transparent); pointer-events: none;
+}
+.kachel > span { display: block; min-width: 0; }
+.kachel .icon.ic-f, .kachel svg.ic-f {
+  width: 66px; height: 66px; padding: 6px; border-radius: 50%; flex: none;
+  background: color-mix(in srgb, var(--k, var(--moos)) var(--tmix), var(--bogen));
+}
+.kachel .titel { font-size: 1.04rem; font-weight: 700; letter-spacing: -.005em; overflow-wrap: normal; }
+.kachel br { display: none; }
+.kachel .unter { display: block; margin-top: 2px; font-size: .86rem; }
+
+/* Ablenkung: Emaille-Schild mit Windrad */
+.kachel.breit.k-ruhe {
+  flex-direction: row; text-align: left; gap: 14px; padding: 16px 18px; min-height: 96px;
+  background: var(--em-petrol); color: var(--em-schrift);
+  box-shadow: inset 0 0 0 5px var(--em-petrol), inset 0 0 0 6.5px var(--em-linie), var(--em-kante);
+}
+.kachel.breit.k-ruhe::before { display: none; }
+.kachel.breit.k-ruhe svg.ic-f { width: 66px; height: 66px; padding: 7px; background: var(--em-schrift); }
+.kachel.breit.k-ruhe .titel { font-family: var(--f-schild); font-weight: 400; font-size: 1.3rem; }
+.kachel.breit.k-ruhe .unter { color: var(--em-schrift); font-size: .9rem; }
+
+.sprechblase { border-radius: 16px; box-shadow: inset 0 0 0 1.5px var(--linie-fein), var(--kante); }
+
+/* ---------- 5  Listen, Chips ---------- */
+.liste { gap: 8px; }
+.liste-zeile { border-radius: 14px; box-shadow: inset 0 0 0 1.5px var(--linie-fein), var(--kante); }
+.liste-zeile svg.ic-f { width: 50px; height: 50px; padding: 5px; border-radius: 50%; background: color-mix(in srgb, var(--k, var(--moos)) var(--tmix), var(--bogen)); }
+.liste-zeile .titel { font-weight: 700; overflow-wrap: normal; }
+.chip { font-family: var(--f-text); font-weight: 600; border-radius: 12px; box-shadow: inset 0 0 0 1.5px var(--linie); background: var(--bogen); }
+.chip[aria-pressed="true"] { box-shadow: inset 0 0 0 1.5px var(--k, var(--moos)); }
+.chip svg.ic-f { width: 24px; height: 24px; }
+.schalter-zeile { border-radius: 14px; }
+
+/* ---------- 6  Tagebuch-Karte (kräftig, Flieder) mit Registerreitern ---------- */
+.tb-karte { --k: var(--flieder); text-align: center; padding: 0 18px 18px; overflow: hidden;
+  background: color-mix(in srgb, var(--flieder) 11%, var(--bogen));
+  box-shadow: inset 0 0 0 1.5px color-mix(in srgb, var(--flieder) 35%, transparent), var(--kante); }
+.tb-karte > h3:first-child { margin: 18px 0 0 !important; font: 700 .74rem/1.2 var(--f-text); letter-spacing: .16em; text-transform: uppercase; color: var(--flieder); }
+/* Registerreiter: zwei Laschen, die aktive gehört zur Karte (gleiche Fläche, Linie unten offen) */
+.tb-karte .chips.tb-modus { display: grid; grid-template-columns: 1fr 1fr; gap: 6px; margin: 12px 0 0; padding: 0; background: none;
+  border-bottom: 2px solid color-mix(in srgb, var(--flieder) 45%, transparent); }
+.tb-karte .tb-modus .chip { justify-content: center; min-height: 52px; border-radius: 12px 12px 0 0; margin-bottom: -2px;
+  background: var(--mulde); color: var(--tinte-2); box-shadow: none; }
+.tb-karte .tb-modus .chip[aria-pressed="true"] { background: var(--bogen); color: var(--tinte);
+  box-shadow: inset 0 2px 0 var(--flieder), inset 2px 0 0 color-mix(in srgb, var(--flieder) 45%, transparent), inset -2px 0 0 color-mix(in srgb, var(--flieder) 45%, transparent); }
+.tb-karte .tb-modus .chip svg { display: none; }
+.tb-karte .tb-frage { font-size: 1.32rem; line-height: 1.32; text-wrap: balance; margin: 16px 0 8px; color: var(--flieder); font-weight: 500; }
+.tb-karte .zeile { justify-content: center; }
+.tb-karte .tb-merk { text-align: left; margin-top: 16px; padding-top: 6px; border-top: 1.5px dashed var(--linie); }
+.tb-karte .tb-merk .zeile { justify-content: flex-start; }
+
+/* ---------- 7  Navigation: leichte Leiste, kein Kastenreiter ---------- */
+nav.tabs { background: var(--bogen); box-shadow: 0 -1.5px 0 var(--linie-fein); }
+nav.tabs button { background: transparent; border-radius: 0; box-shadow: none; transform: none; color: var(--tinte-2); font-family: var(--f-text); font-weight: 600; gap: 3px; }
+nav.tabs button svg.ic-f { width: 54px; height: 32px; padding: 2px 11px; border-radius: 16px; }
+nav.tabs button:not([aria-current="page"]) svg.ic-f { filter: saturate(.7); opacity: .85; }
+nav.tabs button[aria-current="page"] { background: transparent; box-shadow: none; transform: none; color: var(--tinte); font-weight: 700; }
+nav.tabs button[aria-current="page"] svg.ic-f { background: color-mix(in srgb, var(--moos) var(--tmix), var(--bogen)); }
+nav.tabs button[aria-current="page"]::before { top: 0; left: 18%; right: 18%; height: 3px; border-radius: 0 0 3px 3px; background: var(--ziegel); }
+/* gleitender Zeiger aus feedback.js: als feiner Strich an der Oberkante der Leiste (Farbe: --fb-nav) */
+nav.tabs .fb-tabzeiger { top: 0; height: 3px; border-radius: 0 0 3px 3px; }
+#knopf-einst { box-shadow: inset 0 0 0 1.5px var(--linie-fein), var(--kante); }
+
+/* ---------- 8  Kramladen ---------- */
+.laden-front { background: var(--mulde); border-radius: 16px; text-align: center; }
+.laden-kasse { flex-direction: column; gap: 6px; text-align: center; padding-top: 6px; }
+.laden-kasse .zahl { font-family: var(--f-schild); font-weight: 400 !important; font-size: 1.6em !important; }
+.laden-naechst { justify-content: center; text-align: left; color: var(--ocker); box-shadow: inset 0 0 0 1.5px var(--linie-fein); }
+.laden-chips .chip { background: var(--bogen); }
+.abt-schild {
+  display: flex; justify-content: center; align-items: center; gap: 10px; width: 100%;
+  margin: 8px 0 14px; padding: 9px 16px; border-radius: 12px;
+  background: var(--em, var(--em-moos)); color: var(--em-schrift); text-shadow: none;
+  font-family: var(--f-schild); font-weight: 400; font-size: 1.22rem; letter-spacing: .01em;
+  box-shadow: inset 0 0 0 4px var(--em, var(--em-moos)), inset 0 0 0 5.5px var(--em-linie), var(--em-kante);
+}
+.abt-schild::before, .abt-schild::after { content: ""; position: static; flex: none; width: 7px; height: 7px; margin: 0; border-radius: 50%; background: var(--em-linie); box-shadow: none; }
+.abt-schild::before { order: -1; } .abt-schild::after { order: 9; }
+.abt-schild svg.ic-f { width: 40px; height: 40px; padding: 4px; border-radius: 50%; background: var(--em-schrift); }
+#abt-schrank { --em: var(--em-falu); } #abt-bild { --em: var(--em-moos); } #abt-spiele { --em: var(--em-dala); }
+#abt-hoeren { --em: var(--em-petrol); } #abt-lesen { --em: var(--em-pflaume); } #abt-ausflug { --em: var(--em-senf); } #abt-halle { --em: var(--em-dala); }
+#abt-bild { --k: var(--em-moos); } #abt-spiele { --k: var(--em-dala); } #abt-hoeren { --k: var(--em-petrol); } #abt-lesen { --k: var(--em-pflaume); } #abt-ausflug { --k: var(--em-senf); }
+.ware-kachel { gap: 8px; padding: 14px 8px 14px; border-radius: 16px; background: var(--bogen); box-shadow: inset 0 0 0 1.5px var(--linie-fein), var(--kante); }
+.ware-kachel.hat { background: var(--bogen); box-shadow: inset 0 0 0 2px color-mix(in srgb, var(--moos) 50%, transparent), var(--kante); }
+/* Lindberg-Teller, leicht in der Abteilungsfarbe getönt */
+.ware-bild { width: 90px; height: 90px; border-radius: 50%; overflow: visible;
+  background: color-mix(in srgb, var(--k, var(--moos)) calc(var(--tmix) - 6%), var(--bogen));
+  box-shadow: inset 0 0 0 1.5px var(--teller-rand), inset 0 0 0 7px color-mix(in srgb, var(--k, var(--moos)) var(--tmix), var(--bogen)), inset 0 0 0 8px var(--teller-rand); }
+.ware-bild .ware-svg { width: 62px; height: 62px; }
+.ware-name { font-family: var(--f-text); font-weight: 700; font-size: .95rem; overflow-wrap: normal; hyphens: auto; }
+/* Preis als schiefer Anhänger mit Loch */
+.preis-schild { font: 700 .92rem/1.1 var(--f-text); padding: 4px 11px 4px 17px; border-radius: 3px 8px 8px 3px; background: #F4D58C; color: #4A3206;
+  transform: rotate(-3deg); box-shadow: 1px 2px 0 rgba(90,60,10,.25); }
+.preis-schild::before { left: 6px; width: 5px; height: 5px; margin-top: -2.5px; background: var(--bogen); box-shadow: inset 0 0 0 1px rgba(90,60,10,.4); }
+.preis-schild:not(.geht) { opacity: 1; background: var(--mulde); color: var(--tinte-2); }
+.regal-brett { height: 10px; border-radius: 2px; background: var(--holz); box-shadow: 0 3px 0 rgba(0,0,0,.18); }
+.ware-kachel.breit .ware-bild.schrank-bild { width: auto; height: auto; border-radius: 50px; padding: 6px 18px 0; background: var(--teller); box-shadow: inset 0 0 0 1.5px var(--teller-rand); }
+.ware-gross .ware-svg { width: 120px; height: 120px; }
+.laden-tuer { border-radius: 18px 18px 12px 12px; box-shadow: inset 0 0 0 1.5px var(--linie-fein), var(--kante); }
+.lt-titel { font-size: 1rem; color: var(--tinte); overflow-wrap: normal; hyphens: auto; }
+.lt-titel svg.ic-f { width: 26px; height: 26px; vertical-align: -6px; }
+.ks-karte { box-shadow: inset 0 0 0 1.5px var(--linie-fein), var(--kante); }
+.ks-titel { font-size: 1.2rem; }
+.ks-titel svg.ic-f { width: 30px; height: 30px; }
+
+/* ---------- 9  Kleiderschrank: Teile hängen an Bügelhaken ---------- */
+.ks-fig { background: var(--mulde); border-radius: 16px; }
+.ks-fig.an { background: var(--bogen); box-shadow: inset 0 0 0 2.5px var(--moos), var(--kante); }
+.ks-fig-name { font-family: var(--f-text); font-weight: 700; font-size: 1rem; overflow-wrap: normal; hyphens: auto; }
+.ks-kasse { justify-content: center; text-align: left; background: var(--mulde); }
+.ks-fach { font-family: var(--f-schild); font-weight: 400; font-size: 1.2rem; margin: 22px 0 16px; }
+.ks-raster { row-gap: 22px; padding-top: 6px; }
+.ks-teil { padding: 16px 8px 12px; border-radius: 16px; box-shadow: inset 0 0 0 1.5px var(--linie-fein), var(--kante); gap: 6px; }
+.ks-teil::after { content: ""; position: absolute; top: -9px; left: 50%; width: 22px; height: 14px; margin-left: -11px; pointer-events: none;
+  border: 2.5px solid var(--i-e); border-bottom: 0; border-radius: 12px 12px 0 0; }
+.ks-teil.traegt { background: var(--bogen); box-shadow: inset 0 0 0 2.5px var(--moos), var(--kante); }
+.ks-teil.gewaehlt { box-shadow: inset 0 0 0 3px var(--licht), var(--kante); }
+.ks-teil-bild { width: 88px; height: 88px; border-radius: 50%; background: var(--teller); box-shadow: inset 0 0 0 1.5px var(--teller-rand), inset 0 0 0 6px var(--teller), inset 0 0 0 7px var(--teller-rand); overflow: visible; }
+.ks-teil-name { font-weight: 700; font-size: .95rem; overflow-wrap: normal; hyphens: auto; }
+.ks-marke { font: 700 .66rem/1 var(--f-text); letter-spacing: .1em; border-radius: 6px; padding: 5px 7px 4px; background: var(--em-falu); color: var(--em-schrift); }
+.ks-marke.saison { background: var(--em-petrol); }
+.ks-hat { font-weight: 700; }
+.sheet[data-id="schrank"] .ks-buehne .ks-fig > svg { width: 54px !important; height: 54px !important; } /* skins.css setzt dort selbst !important */
+.sheet[data-id="schrank"] .ks-buehne .ks-fig { padding-inline: 6px 4px; }
+
+/* ---------- 10  Ideen: Schaufenster ---------- */
+.c-kopf { text-align: center; margin-bottom: 16px; }
+.c-kopf h1 { font-size: 1.9rem; }
+.c-mitte { text-align: center; margin: 6px 0 0; }
+.c-unter { text-align: center; color: var(--tinte-2); font-size: .92rem; margin: -6px 0 14px; }
+.c-entdecken {
+  position: relative; display: flex; flex-direction: column; align-items: center; gap: 6px; width: 100%;
+  padding: 20px 20px 18px; border: 0; border-radius: 20px; cursor: pointer; font: inherit; text-align: center;
+  background: var(--em); color: var(--em-schrift);
+  box-shadow: inset 0 0 0 6px var(--em), inset 0 0 0 7.5px var(--em-linie), var(--em-kante);
+}
+.c-entdecken .c-kicker { color: var(--em-schrift); }
+.c-entdecken-marke { position: absolute; top: -11px; left: 50%; transform: translateX(-50%); padding: 6px 10px 5px !important; font-size: .74rem !important; background: var(--licht) !important; color: #2A1E05 !important; }
+.c-entdecken .c-teller { display: grid; place-items: center; width: 120px; height: 120px; margin: 6px 0 4px; border-radius: 50%; background: var(--em-schrift); }
+.c-entdecken .c-teller svg { width: 92px; height: 92px; }
+.c-entdecken .c-titel { font-family: var(--f-schild); font-size: 1.55rem; line-height: 1.15; }
+.c-entdecken .c-text { font-size: .95rem; line-height: 1.35; max-width: 22em; font-weight: 500; }
+.c-entdecken .c-los { display: inline-flex; align-items: center; gap: 4px; margin-top: 8px; padding: 10px 14px 10px 18px; border-radius: 12px; background: var(--em-schrift); color: var(--em); font-weight: 700; }
+.c-entdecken .c-los .pfeil { width: 20px; height: 20px; color: currentColor; }
+.c-ton-falu { --em: var(--em-falu); --ton: var(--em-falu); } .c-ton-moos { --em: var(--em-moos); --ton: var(--em-moos); }
+.c-ton-dala { --em: var(--em-dala); --ton: var(--em-dala); } .c-ton-petrol { --em: var(--em-petrol); --ton: var(--em-petrol); }
+.c-ton-senf { --em: var(--em-senf); --ton: var(--em-senf); } .c-ton-pflaume { --em: var(--em-pflaume); --ton: var(--em-pflaume); }
+/* Drinnen (Senf) / Draußen (Moos) als Emaille-Türen */
+.tuer-gross { min-height: 150px; border-radius: 18px; align-content: start; text-align: center; justify-items: center; padding: 16px 10px 14px; }
+.tuer-gross.drinnen { background: var(--em-senf); box-shadow: inset 0 0 0 5px var(--em-senf), inset 0 0 0 6.5px var(--em-linie), var(--em-kante); }
+.tuer-gross.draussen { background: var(--em-moos); box-shadow: inset 0 0 0 5px var(--em-moos), inset 0 0 0 6.5px var(--em-linie), var(--em-kante); }
+.tuer-gross .tg-bild { position: static; opacity: 1; display: grid; place-items: center; width: 74px; height: 74px; margin-bottom: 6px; border-radius: 50%; background: var(--em-schrift); }
+.tuer-gross .tg-bild .icon, .tuer-gross .tg-bild svg { width: 56px; height: 56px; }
+.tuer-gross .titel { font-size: 1.35rem; font-weight: 400; overflow-wrap: normal; }
+.tuer-gross .unter { padding: 0; font-size: .86rem; color: var(--em-schrift); }
+/* Schaufenster-Fächer mit Markise */
+.c-fenster { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; }
+.c-fach {
+  position: relative; display: flex; flex-direction: column; align-items: center; gap: 4px; min-height: 48px;
+  padding: 0 10px 14px; border: 0; border-radius: 16px; overflow: hidden; cursor: pointer; font: inherit; text-align: center;
+  color: var(--tinte); background: var(--bogen); box-shadow: inset 0 0 0 1.5px var(--linie-fein), var(--kante);
+}
+.c-fach::before { content: ""; position: absolute; left: 0; right: 0; top: 0; height: 40px;
+  background: repeating-linear-gradient(90deg, var(--ton) 0 20px, color-mix(in srgb, var(--ton) 80%, #fff) 20px 40px); }
+.c-fach-bild { position: relative; display: grid; place-items: center; width: 80px; height: 80px; margin-top: 8px; border-radius: 50%;
+  background: color-mix(in srgb, var(--ton) var(--tmix), var(--bogen)); box-shadow: 0 0 0 4px var(--bogen); }
+.c-fach-bild svg { width: 60px; height: 60px; }
+.c-fach-titel { margin-top: 6px; font-family: var(--f-schild); font-size: 1rem; line-height: 1.15; overflow-wrap: normal; hyphens: auto; text-wrap: balance; }
+.c-fach-text { font-size: .82rem; line-height: 1.3; color: var(--tinte-2); font-weight: 500; }
+.c-fach-marke { position: absolute; top: 48px; right: 10px; }
+/* Stöberkiste: Setzkasten aus Holz, Fächer reihum in fünf Feldfarben getönt */
+.c-setzkasten { display: grid; grid-template-columns: 1fr 1fr; gap: 6px; padding: 8px; border-radius: 14px; background: var(--holz);
+  box-shadow: inset 0 0 0 3px var(--holz-d), 0 3px 0 rgba(0,0,0,.2); }
+.c-kasten { display: grid; grid-template-columns: auto 1fr; grid-template-rows: auto auto; align-content: center; align-items: center; column-gap: 8px; min-height: 64px; padding: 6px 8px 6px 6px;
+  border: 0; border-radius: 8px; cursor: pointer; font: inherit; text-align: left; color: var(--tinte); background: var(--bogen); box-shadow: inset 0 2px 0 rgba(0,0,0,.08); }
+.c-kasten:nth-child(5n+1) { --k: var(--em-falu); } .c-kasten:nth-child(5n+2) { --k: var(--em-dala); } .c-kasten:nth-child(5n+3) { --k: var(--em-moos); }
+.c-kasten:nth-child(5n+4) { --k: var(--em-senf); } .c-kasten:nth-child(5n) { --k: var(--em-pflaume); }
+.c-kasten svg.ic-f { grid-row: 1 / 3; width: 46px; height: 46px; padding: 4px; border-radius: 50%; background: color-mix(in srgb, var(--k) var(--tmix), var(--bogen)); }
+.c-kasten-name { align-self: end; font-weight: 700; font-size: .92rem; line-height: 1.15; overflow-wrap: normal; hyphens: auto; }
+.c-kasten-zahl { align-self: start; font-size: .8rem; font-weight: 500; color: var(--tinte-2); }
+.c-kasten-zahl::after { content: " Ideen"; }
+.notfall-leiste { border: 0; border-radius: 16px; background: var(--bogen); box-shadow: inset 0 0 0 1.5px color-mix(in srgb, var(--em-dala) 45%, transparent), inset 0 0 0 4px var(--bogen), inset 0 0 0 5px color-mix(in srgb, var(--em-dala) 25%, transparent), var(--kante); }
+.notfall-leiste svg.ic-f { width: 50px; height: 50px; padding: 5px; border-radius: 50%; background: color-mix(in srgb, var(--havel) var(--tmix), var(--bogen)); }
+.notfall-leiste .titel { font-family: var(--f-schild); font-weight: 400; font-size: 1.1rem; }
+.exkurs-karte { background: var(--bogen); box-shadow: inset 0 0 0 1.5px var(--linie-fein), var(--kante); }
+
+/* ---------- 11  Notfallplan ---------- */
+.c-ruhe-schild { text-align: center; padding: 18px; border-radius: 18px; background: var(--em-dala); color: var(--em-schrift);
+  box-shadow: inset 0 0 0 5px var(--em-dala), inset 0 0 0 6.5px var(--em-linie), var(--em-kante); }
+.c-ruhe-schild .c-kicker { color: var(--em-schrift); }
+.c-ruhe-satz { font-size: 1.3rem; line-height: 1.35; margin: 8px 0 16px; text-wrap: balance; font-weight: 500; }
+.c-ruhe-schild .knopf.haupt { background: var(--em-schrift); color: #24405E; box-shadow: 0 3px 0 rgba(0,0,0,.25); }
+.c-wozu, .c-mehr { margin: 10px 2px 0; }
+.c-wozu summary, .c-mehr summary { min-height: 48px; display: flex; align-items: center; justify-content: center; gap: 6px; cursor: pointer; font-weight: 700; color: var(--moos); text-decoration: underline; text-underline-offset: 5px; text-decoration-thickness: 1.5px; list-style: none; }
+.c-wozu summary::-webkit-details-marker, .c-mehr summary::-webkit-details-marker, .c-unterwegs summary::-webkit-details-marker { display: none; }
+.c-wozu summary::after, .c-mehr summary::after { content: "▾"; text-decoration: none; }
+.c-wozu[open] summary::after, .c-mehr[open] summary::after { content: "▴"; }
+.c-mehr[open] summary { display: none; }
+.c-wozu p { font-size: .92rem; color: var(--tinte-2); text-align: center; font-weight: 500; }
+.c-ruhe-h { display: flex; align-items: center; gap: 10px; margin: 22px 0 10px; font: 400 1.15rem/1.2 var(--f-schild); }
+.c-ruhe-h::before, .c-ruhe-h::after { content: ""; flex: 1; height: 5px; border-block: 1.5px solid var(--linie); }
+.c-ruhe-fach { margin-top: 10px; padding: 12px 14px 10px; border-radius: 16px; background: var(--bogen); box-shadow: inset 0 0 0 1.5px var(--linie-fein); }
+.c-ruhe-fach h4 { margin: 0 0 8px; font: 700 1rem/1.2 var(--f-text); color: var(--tinte); }
+/* „Was mir hilft“: Symbol-Raster, 3 nebeneinander */
+.c-hilft { display: grid; grid-template-columns: repeat(3, 1fr); gap: 8px; }
+.c-hilft-feld { display: flex; flex-direction: column; align-items: center; gap: 6px; padding: 10px 4px 10px; border-radius: 12px; text-align: center;
+  background: color-mix(in srgb, var(--havel) 8%, var(--bogen)); font-size: .86rem; font-weight: 600; line-height: 1.25; hyphens: auto; overflow-wrap: normal; }
+.c-hilft-feld svg.ic-f { width: 54px; height: 54px; padding: 5px; border-radius: 50%; background: color-mix(in srgb, var(--havel) var(--tmix), var(--bogen)); }
+/* Anrufen: Name und Nummer eine Einheit, tippbar */
+.c-tel-liste { display: grid; gap: 8px; }
+.c-tel { display: flex; align-items: center; gap: 12px; min-height: 64px; padding: 8px 12px 8px 8px; border-radius: 12px; text-decoration: none; color: var(--tinte);
+  background: color-mix(in srgb, var(--moos) 9%, var(--bogen)); box-shadow: inset 0 0 0 1.5px color-mix(in srgb, var(--moos) 30%, transparent); }
+.c-tel svg.ic-f { width: 48px; height: 48px; padding: 5px; flex: none; border-radius: 50%; background: var(--bogen); }
+.c-tel-text { display: flex; flex-direction: column; min-width: 0; }
+.c-tel-name { font-weight: 700; }
+.c-tel-nr { font-weight: 700; font-size: 1.1rem; color: var(--moos); letter-spacing: .02em; white-space: nowrap; }
+/* Für unterwegs: eingeklappt */
+.c-unterwegs summary { display: flex; align-items: center; gap: 10px; min-height: 52px; cursor: pointer; list-style: none; font-weight: 700; }
+.c-unterwegs summary svg.ic-f { width: 44px; height: 44px; padding: 4px; border-radius: 50%; background: color-mix(in srgb, var(--moos) var(--tmix), var(--bogen)); }
+.c-unterwegs summary > span { flex: 1; }
+.c-unterwegs summary::after { content: "▾"; color: var(--moos); }
+.c-unterwegs[open] summary::after { content: "▴"; }
+.c-anzahl { font-weight: 500; color: var(--tinte-2); }
+.c-ruhe-liste { list-style: none; margin: 0; padding: 0; }
+.c-ruhe-liste li { display: flex; align-items: center; gap: 12px; padding: 8px 0; border-top: 1px solid var(--linie-fein); line-height: 1.3; }
+.c-ruhe-liste svg.ic-f { width: 40px; height: 40px; padding: 4px; flex: none; border-radius: 50%; background: color-mix(in srgb, var(--moos) var(--tmix), var(--bogen)); }
+.c-ruhe-leer { margin: 2px 0 6px; color: var(--tinte-2); font-size: .92rem; font-weight: 500; }
+/* Üben (nach dem Plan) */
+.c-ruhe-ueben { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; }
+.c-ruhe-kachel { position: relative; display: flex; flex-direction: column; align-items: center; gap: 4px; min-height: 48px; padding: 14px 8px 12px;
+  border: 0; border-radius: 16px; cursor: pointer; font: inherit; color: var(--tinte); background: var(--bogen); text-align: center;
+  box-shadow: inset 0 0 0 1.5px color-mix(in srgb, var(--quelle) 40%, transparent), var(--kante); }
+.c-ruhe-kachel svg.ic-f { width: 60px; height: 60px; padding: 6px; border-radius: 50%; background: color-mix(in srgb, var(--quelle) var(--tmix), var(--bogen)); flex: none; }
+.c-rk-text { display: flex; flex-direction: column; }
+.c-ruhe-kachel .titel { font-weight: 700; }
+.c-ruhe-kachel .unter { font-size: .86rem; color: var(--tinte-2); }
+.c-geuebt { display: flex; align-items: center; justify-content: center; gap: 6px; margin: 10px 0 0; font-weight: 700; color: var(--ocker); }
+.c-geuebt svg.ic-f { width: 26px; height: 26px; }
+
+/* ---------- 12  Schriftgröße 3 ----------
+   Grundsatz: kein Wort darf brechen. Raster werden einspaltige Querkacheln (Symbol links). */
+html[data-size="3"] h2 { font-size: 1.08rem; }
+html[data-size="3"] section.abschnitt > h2::before, html[data-size="3"] section.abschnitt > h2::after,
+html[data-size="3"] .abschnitt > .zeile.zwischen:first-child > h2::before, html[data-size="3"] .abschnitt > .zeile.zwischen:first-child > h2::after { display: none; }
+html[data-size="3"] .abschnitt > .zeile.zwischen:first-child > h2 { white-space: nowrap; }
+html[data-size="3"] .kacheln { grid-template-columns: 1fr; gap: 10px; }
+html[data-size="3"] .kachel:not(.breit) { flex-direction: row; justify-content: flex-start; text-align: left; gap: 14px; min-height: 92px; padding: 12px 16px; }
+html[data-size="3"] .kachel:not(.breit) svg.ic-f { width: 62px; height: 62px; }
+html[data-size="3"] .kachel.breit.k-ruhe .titel { font-size: 1.1rem; }
+html[data-size="3"] .c-fenster, html[data-size="3"] .c-setzkasten, html[data-size="3"] .regal, html[data-size="3"] .ks-raster { grid-template-columns: 1fr; }
+html[data-size="3"] .c-ruhe-ueben { grid-template-columns: 1fr; }
+html[data-size="3"] .c-ruhe-kachel { flex-direction: row; text-align: left; justify-content: flex-start; gap: 14px; padding: 10px 14px; }
+html[data-size="3"] .c-hilft { grid-template-columns: 1fr 1fr; }
+html[data-size="3"] .tueren-gross { grid-template-columns: 1fr; }
+html[data-size="3"] .tuer-gross { min-height: 0; }
+html[data-size="3"] .c-entdecken .c-titel, html[data-size="3"] .c-kopf h1 { font-size: 1.3rem; }
+html[data-size="3"] .sheet .sheet-kopf h2 { font-size: min(1.05rem, 6.2vw); overflow-wrap: normal; }
+html[data-size="3"] .sheet[data-id="schrank"] .ks-buehne .ks-fig > svg { width: 42px !important; height: 42px !important; }
+html[data-size="3"] .ks-fig-name { font-size: .8rem; }
+html[data-size="3"] .sheet[data-id="schrank"] .ks-buehne { gap: 6px; }
+html[data-size="3"] .sheet[data-id="schrank"] .ks-buehne .ks-fig { padding-inline: 4px 2px; gap: 4px; }
+html[data-size="3"] .ks-fig .klein { font-size: .74rem; }
+
+/* ---------- 13  Sonstiges ---------- */
+.sheet { background: var(--bogen); }
+.sheet .sheet-kopf h2 { font-size: 1.15rem; line-height: 1.2; }
+.tuer { box-shadow: inset 0 0 0 1.5px var(--linie-fein), var(--kante); }
+.tuer::before { display: none; }
+.tuer svg.ic-f { width: 56px; height: 56px; padding: 5px; border-radius: 50%; background: color-mix(in srgb, var(--k, var(--moos)) var(--tmix), var(--bogen)); }
+.bild-wetter-knopf svg.ic-f { width: 30px; height: 30px; }
+html[data-size="3"] .tueren-zwei { grid-template-columns: 1fr; }
+html[data-size="3"] .c-ruhe-satz { font-size: 1.1rem; }
+html[data-size="3"] .bogen.mulde.zeile.zwischen:has(.tf-kurz) { flex-direction: column; align-items: stretch; }
+html[data-size="3"] .bogen.mulde.zeile.zwischen:has(.tf-kurz) > .knopf { align-self: flex-end; }
+.c-entdecken { padding-top: 26px; }
+
+/* ---------- 14  Neue Teile (Übernahme) ---------- */
+.ereignis-zu { width: 48px; height: 48px; }          /* Tippziel ≥ 44 px, auch während der Einblend-Animation */
+html[data-size="3"] .gk-titel { font-size: 1.05rem; white-space: nowrap; }

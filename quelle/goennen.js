@@ -87,7 +87,7 @@ const gkNeu = () => S.goenn.gesehen < S.goenn.ausgestellt && gkOffen().length > 
 function gkStempel(cls = "gk-stempel") {
   return `<svg class="${cls}" viewBox="0 0 100 100" aria-hidden="true"><defs><path id="gk-kreis" d="M50 50m-34 0a34 34 0 1 1 68 0a34 34 0 1 1 -68 0"/></defs>
   <g fill="none" stroke="currentColor"><circle cx="50" cy="50" r="46" stroke-width="3"/><circle cx="50" cy="50" r="27" stroke-width="1.6"/></g>
-  <text fill="currentColor" font-family="Nunito, system-ui, sans-serif" font-weight="800" font-size="11.5" letter-spacing="2.2"><textPath href="#gk-kreis" startOffset="2%">GÖNN DIR WAS · GÖNN DIR WAS ·</textPath></text>
+  <text fill="currentColor" font-family="Familjen Grotesk, sans-serif" font-weight="800" font-size="11.5" letter-spacing="2.2"><textPath href="#gk-kreis" startOffset="2%">GÖNN DIR WAS · GÖNN DIR WAS ·</textPath></text>
   <g fill="currentColor"><ellipse cx="48" cy="56" rx="13" ry="11"/><ellipse cx="53.5" cy="47" rx="6" ry="7"/><circle cx="56" cy="41" r="7.5"/><circle cx="52" cy="33.6" r="2.4"/><circle cx="55.6" cy="32.4" r="2.6"/><circle cx="59.2" cy="33.6" r="2.4"/><path d="M63 39.4 69.5 42.4 63 45.4Z"/><path d="M37 53 29 44.5 33 56Z"/><path d="M36.5 57 28 53 34.5 61.5Z"/></g>
   <g fill="none" stroke="var(--gk-papier, #FFF7E6)" stroke-width="1.6" stroke-linecap="round"><path d="M42 55.5q6 6.5 12.5 0"/></g><circle cx="58.2" cy="40" r="1.7" fill="var(--gk-papier, #FFF7E6)"/>
   <path d="M45 66.5v5.5M52 66.5v5.5" stroke="currentColor" stroke-width="2.2" stroke-linecap="round"/></svg>`;
