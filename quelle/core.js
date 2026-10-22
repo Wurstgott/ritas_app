@@ -251,7 +251,7 @@ function vibriere(art) {
   try { if (navigator.vibrate) navigator.vibrate(VIB[art] || 10); } catch (e) { }
 }
 /* iOS: echter Schalter unter einem label erzeugt den System-Tick (ab iOS 18) */
-const HAPSEL = ".c-entdecken,.c-fach,.c-kasten,.c-ruhe-kachel,.link-knopf,button.umschlag,.buehne button.ueber,.mb-torte,.mb-umschlag,.av-wahl,.av-farbe,.av-knopf,.ks-teil,.ks-fig,.ks-karte,.taler-plakette,.laden-schrank,.bild-wetter-knopf,.mem-karte,.wetter-chip,.tel-leiste,.tuer-gross,.notfall-leiste,.tel-kontakt,.tel-karte-knopf,.goenn-leiste,.ware-kachel:not(.bald-kachel),.laden-tuer,.muenze-knopf,.ks-punkt,.schaufenster,.exkurs-karte,.bingo-feld,.huhn-karte,.tuer,.logo-knopf,.knopf,.kachel,.tf,.chip,.liste-zeile,nav.tabs button,.karte:not(.zu),.fach:not(.leer),.schalter-zeile";
+const HAPSEL = ".rg-knopf,.rg-skip,.rg-muenze,.rg-huhn,.rg-einst,.c-entdecken,.c-fach,.c-kasten,.c-ruhe-kachel,.link-knopf,button.umschlag,.buehne button.ueber,.mb-torte,.mb-umschlag,.av-wahl,.av-farbe,.av-knopf,.ks-teil,.ks-fig,.ks-karte,.taler-plakette,.laden-schrank,.bild-wetter-knopf,.mem-karte,.wetter-chip,.tel-leiste,.tuer-gross,.notfall-leiste,.tel-kontakt,.tel-karte-knopf,.goenn-leiste,.ware-kachel:not(.bald-kachel),.laden-tuer,.muenze-knopf,.ks-punkt,.schaufenster,.exkurs-karte,.bingo-feld,.huhn-karte,.tuer,.logo-knopf,.knopf,.kachel,.tf,.chip,.liste-zeile,nav.tabs button,.karte:not(.zu),.fach:not(.leer),.schalter-zeile";
 function armHaptics() {
   if (!IOS) return;
   // Vibration aus oder Bewegung reduziert: keine Haptik, auch kein iOS-Tick

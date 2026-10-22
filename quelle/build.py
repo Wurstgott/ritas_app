@@ -8,7 +8,7 @@ d = pathlib.Path(__file__).parent
 stamp = datetime.datetime.now().strftime("%Y-%m-%d %H:%M")
 
 shell = (d / "app.html").read_text()
-css = (d / "fonts.css").read_text() + (d / "app.css").read_text() + ((d / "skins.css").read_text() if (d / "skins.css").exists() else "") + ((d / "goennen.css").read_text() if (d / "goennen.css").exists() else "") + ((d / "maxbriefe.css").read_text() if (d / "maxbriefe.css").exists() else "") + ((d / "feedback.css").read_text() if (d / "feedback.css").exists() else "") + ((d / "hp.css").read_text() if (d / "hp.css").exists() else "") + ((d / "design.css").read_text() if (d / "design.css").exists() else "")  # Gestaltung C2 – zuletzt
+css = (d / "fonts.css").read_text() + (d / "app.css").read_text() + ((d / "skins.css").read_text() if (d / "skins.css").exists() else "") + ((d / "goennen.css").read_text() if (d / "goennen.css").exists() else "") + ((d / "maxbriefe.css").read_text() if (d / "maxbriefe.css").exists() else "") + ((d / "feedback.css").read_text() if (d / "feedback.css").exists() else "") + ((d / "hp.css").read_text() if (d / "hp.css").exists() else "") + ((d / "design.css").read_text() if (d / "design.css").exists() else "") + ((d / "rundgang.css").read_text() if (d / "rundgang.css").exists() else "")  # Gestaltung C2, dann Rundgang mit Max
 data = "\n".join((d / f).read_text() for f in ["data.js","data-orte.js","data-inhalte.js","data-laden.js","data-korrektur.js","data-sprache.js","data-lektorat.js","data-ablenkung.js", "data-winter.js","data-angebote.js","data-eier.js","data-eier2.js","data-anrufe.js", "data-anrufe2.js", "data-brevvan.js", "data-ereignisse2.js", "data-feinschliff.js", "data-hp.js"] if (d / f).exists())
 _tj = d / "tv.json"
 if _tj.exists():
@@ -19,7 +19,7 @@ if _aj.exists():
     import json as _json
     _a = _json.loads(_aj.read_text())
     data += "\n/* Angebote aus angebote.json */\n(function(){var A=" + _json.dumps(_a, ensure_ascii=False) + ";D.angeboteStand=A.stand;if(A.kategorien)D.angeboteKat=A.kategorien;D.angebote=A.angebote.map(function(x){return Object.assign({},x,{id:'an-'+angebotId(x.name)})});})();\n"
-app = "\n".join((d / f).read_text() for f in ["core.js","feedback.js","skins.js","figuren.js","avatar.js","scene.js","views.js","ruheplan.js","eigenes.js","eier.js","extras.js","telefon.js", "brevvan.js", "buecher.js", "hp.js", "tv.js", "winter.js", "ereignisse.js", "wunsch.js", "wetter.js","game.js","goennen.js","laden2.js","maxbriefe.js","main.js"]).replace("__BUILD__", stamp)
+app = "\n".join((d / f).read_text() for f in ["core.js","feedback.js","skins.js","figuren.js","avatar.js","scene.js","views.js","ruheplan.js","eigenes.js","eier.js","extras.js","telefon.js", "brevvan.js", "buecher.js", "hp.js", "tv.js", "winter.js", "ereignisse.js", "wunsch.js", "wetter.js","game.js","goennen.js","laden2.js","maxbriefe.js","main.js","rundgang.js"]).replace("__BUILD__", stamp)
 # --- Schriften verkleinern (QA-17): Kaushan Script fällt weg (von Satisfy verdrängt),
 #     alle übrigen werden auf die Zeichen reduziert, die in der App vorkommen (+ Latin-1/Ext-A, Typo-Zeichen, Pfeile).
 def _fonts_klein(css_all, text):

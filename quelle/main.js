@@ -206,6 +206,7 @@ function aktion(a, d, el, ev) {
       haptik("aktion"); break;   // Rückgängig ist kein Fehler
     }
     case "go": if (d.go === "einstellungen") einstellungenSheet(); break;
+    case "rundgang": if (window.RUNDGANG) RUNDGANG.start(); break;
 
     /* Tagesform */
     case "tf": S.tf[heute()] = d.v; if (S.huhn) S.huhnSagt = { tag: heute(), text: { A: "Mehr Energie? Dann halt ich hier die Stellung, und du ziehst los.", B: "Gemächlich? Mein Tempo. Ich hab ja nur das eine.", C: "Ruhig angehen. Da bin ich Profi, ich steh seit Jahren still.", D: "Sparflamme. Dann halt ich heute auch mal den Schnabel." }[d.v] }; try { eierTagesform(d.v); } catch (e) { } speichern(); haptik("auswahl"); el.setAttribute("aria-pressed", "true");

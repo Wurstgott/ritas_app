@@ -37,11 +37,11 @@ D.hpAkte = {
     { m: ["drei bestellt"], ab: [4, 16], art: "enthuellung" }, { m: ["vier champions"], ab: [4, 16], art: "enthuellung" }, { m: ["vierten champion"], ab: [4, 16], art: "enthuellung" },
     { m: ["harrys namen", "kelch"], ab: [4, 16], art: "enthuellung" }, { m: ["fred", "bart"], ab: [4, 16], art: "enthuellung" }, { m: ["fall:"], ab: [4, 16], art: "enthuellung" },
     { m: ["ollivander"], ab: [4, 18], art: "auftritt" }, { m: ["eichung"], ab: [4, 18], art: "erwaehnung" }, { m: ["besenkammer"], ab: [4, 18], art: "enthuellung" },
-    { m: ["drache", "aufgabe"], ab: [4, 19], art: "enthuellung" }, { m: ["hornschwanz"], ab: [4, 19], art: "enthuellung" }, { m: ["horntail"], ab: [4, 19], art: "enthuellung" },
+    { m: ["drache"], ab: [4, 19], art: "enthuellung" }, { m: ["drache", "aufgabe"], ab: [4, 19], art: "enthuellung" }, { m: ["hornschwanz"], ab: [4, 19], art: "enthuellung" }, { m: ["horntail"], ab: [4, 19], art: "enthuellung" },
     { m: ["karkaroff", "todesser"], ab: [4, 19], art: "identitaet" },
     { m: ["goldene ei"], ab: [4, 20], art: "enthuellung" }, { m: ["besen", "accio"], ab: [4, 20], art: "enthuellung" }, { m: ["zweite aufgabe"], ab: [4, 20], art: "enthuellung" },
     { m: ["weihnachtsball"], ab: [4, 22], art: "enthuellung" }, { m: ["yule"], ab: [4, 22], art: "enthuellung" }, { m: ["ersten tanz"], ab: [4, 22], art: "enthuellung" }, { m: ["walzer"], ab: [4, 22], art: "enthuellung" },
-    { m: ["parvati"], ab: [4, 22], art: "auftritt" }, { m: ["ballrobe"], ab: [4, 23], art: "enthuellung" },
+    { m: ["parvati"], ab: [4, 22], art: "auftritt" }, { m: ["ballrobe"], ab: [4, 23], art: "enthuellung" }, { m: ["festumhang", "ball"], ab: [4, 23], art: "enthuellung" },
     { m: ["halbries"], ab: [4, 23], art: "identitaet" }, { m: ["hagrid", "riese"], ab: [4, 23], art: "identitaet" }, { m: ["mit dem ei", "bad"], ab: [4, 23], art: "enthuellung" },
     { m: ["riesenknüller"], ab: [4, 24], art: "erwaehnung" },
     { m: ["unter wasser"], ab: [4, 25], art: "enthuellung" },
@@ -89,14 +89,14 @@ D.hpAkte = {
           kurz: { ab: [4, 1], t: "Kapitel 1: Ein dunkler Anfang in Little Hangleton. Der alte Gärtner Frank Bryce überlebt die Nacht nicht." } },
         { id: "b4-02", von: 2, bis: 3, du: true,
           zeilen: [{ ab: [4, 2], t: "Kapitel 2: Harry wacht mit schmerzender Narbe auf und schreibt seinem Paten Sirius. Ein Junge, der bei Kopfweh seinem Paten schreibt – das notier ich gern.", fakt: "F06" },
-            { ab: [4, 3], t: "Kapitel 3: Die Einladung zur Weltmeisterschaft kommt mit der ganz normalen Post. Der Umschlag ist über und über mit Briefmarken beklebt. Mrs Weasley wollte sichergehen.", fakt: "F07" }],
+            { ab: [4, 3], t: "Kapitel 3: Die Einladung zur Weltmeisterschaft kommt mit der ganz normalen Post. Der Umschlag ist mit Briefmarken regelrecht zugepflastert. Mrs Weasley wollte sichergehen.", fakt: "F07" }],
           vermerk: { ab: [4, 3], t: "Übersetzt hat den Feuerkelch Klaus Fritz. Er übersetzt Harry Potter seit dem ersten Band, also seit 1998, und hat in Berlin studiert. Ein halber Berliner also, wie du – gewissermaßen.", fundstelle: "Impressum", fakt: "F03" },
           kurz: { ab: [4, 3], t: "Kapitel 2 und 3: Harrys Narbe schmerzt, er schreibt Sirius. Dann kommt die Einladung zur Weltmeisterschaft – mit viel zu vielen Briefmarken." } },
         { id: "b4-03", von: 4, bis: 5,
           zeilen: [{ ab: [4, 4], t: "Kapitel 4: Die Weasleys kommen durch den Kamin, den die Dursleys verschlossen hatten. Danach hat Dudley eine sehr lange Zunge, und ich hab beim Lesen laut gelacht.", fakt: "F08" },
             { ab: [4, 4], t: "Buch, nicht Film: Im Film fehlt diese ganze Szene bei den Dursleys. Schade drum.", fakt: "F61" },
             { ab: [4, 5], t: "Kapitel 5: Im Fuchsbau sitzen auf einmal alle Weasleys am Tisch, auch Bill und Charlie. Fred und George basteln an Scherzartikeln, und Mrs Weasley findet das gar nicht komisch.", fakt: "F09" }],
-          vermerk: { ab: [4, 5], t: "Im Original heißt der Traum der Zwillinge „Weasleys’ Wizard Wheezes“. Herr Fritz hat daraus „Weasleys zauberhafte Zauberscherze“ gemacht. Den Gleichklang hat er gerettet, nur mit Z statt W.", fundstelle: "Kapitel 5", fakt: "F10" },
+          vermerk: { ab: [4, 5], t: "Im Original heißt der Traum der Zwillinge „Weasleys’ Wizard Wheezes“. Herr Fritz macht daraus zauberhafte Zauberscherze. Den Gleichklang hat er gerettet, nur mit Z statt W.", fundstelle: "Kapitel 5", fakt: "F10" },
           kurz: { ab: [4, 5], t: "Kapitel 4 und 5: Die Weasleys holen Harry durch den Kamin ab, Dudley bekommt eine lange Zunge. Im Fuchsbau sind alle Weasleys versammelt." } },
         { id: "b4-04", von: 6, bis: 7,
           zeilen: [{ ab: [4, 6], t: "Kapitel 6: Früh um fünf auf einem Hügel, und der Portschlüssel ist ein alter Stiefel. Ich hätte ihn weggeworfen. Gut, dass ich nie im Ministerium war.", fakt: "F11" },
@@ -122,16 +122,16 @@ D.hpAkte = {
         { id: "b4-08", von: 13, bis: 14,
           zeilen: [{ ab: [4, 13], t: "Kapitel 13: Moody verwandelt Draco Malfoy in ein Frettchen. Ich sag nichts dazu. Ich hab’s nur dreimal gelesen.", fakt: "F22" },
             { ab: [4, 13], t: "Und Hagrid bringt neue Tierchen mit, bei denen keiner weiß, wo vorne ist. Übrigens: „Mad-Eye“ hat Herr Fritz gar nicht übersetzt, das heißt auch bei uns so.", fakt: "F23" },
-            { ab: [4, 14], t: "Kapitel 14: Moodys erste Stunde geht allen an die Nieren, Neville am meisten. Abends gründet Hermine einen Verein für Hauselfen: B.Elfe.R., den Bund für Elfenrechte. Ich wäre eingetreten.", fakt: "F24" }],
-          vermerk: { ab: [4, 14], t: "Im Original heißt Hermines Verein S.P.E.W. Liest man das als Wort, heißt „spew“ so viel wie ausspucken. Herr Fritz hat lieber B.Elfe.R. draus gemacht. Ich finde: zu Recht.", fundstelle: "Kapitel 14", fakt: "F25" },
-          kurz: { ab: [4, 14], t: "Kapitel 13 und 14: Moody macht aus Draco ein Frettchen und gibt eine harte erste Stunde. Hermine gründet B.Elfe.R., den Bund für Elfenrechte." } },
+            { ab: [4, 14], t: "Kapitel 14: Moodys erste Stunde geht allen an die Nieren, Neville am meisten. Abends gründet Hermine einen Verein für Hauselfen: B.ELFE.R., den Bund für Elfenrechte. Ich wäre eingetreten.", fakt: "F24" }],
+          vermerk: { ab: [4, 14], t: "Im Original heißt Hermines Verein S.P.E.W. Liest man das als Wort, heißt „spew“ so viel wie ausspucken. Herr Fritz hat lieber B.ELFE.R. draus gemacht. Ich finde: zu Recht.", fundstelle: "Kapitel 14", fakt: "F25" },
+          kurz: { ab: [4, 14], t: "Kapitel 13 und 14: Moody macht aus Draco ein Frettchen und gibt eine harte erste Stunde. Hermine gründet B.ELFE.R., den Bund für Elfenrechte." } },
         { id: "b4-09", von: 15, bis: 16,
           zeilen: [{ ab: [4, 15], t: "Kapitel 15: Die Gäste kommen. Beauxbatons in einer riesigen fliegenden Kutsche mit Madame Maxime, Durmstrang auf einem Schiff aus dem See, mit Karkaroff. Ron erkennt Viktor Krum sofort.", fakt: "F26" },
             { ab: [4, 15], t: "Buch, nicht Film: Im Film reisen mit Beauxbatons nur Mädchen an. Im Buch ist das keine Mädchenschule.", fakt: "F27" },
             { ab: [4, 16], t: "Kapitel 16: Der Kelch steht bereit, mit einer Alterslinie drumherum. Fred und George trinken einen Trank, der sie älter machen soll, und fliegen raus – mit Bärten.", fakt: "F28" },
-            { ab: [4, 16], t: "Dann wirft der Kelch die Namen aus: Fleur Delacour, Viktor Krum, Cedric Diggory. Und noch einen: Harry Potter. Drei bestellt, vier geliefert. Ab jetzt ist das hier eine richtige Akte.", fakt: "F28" }],
+            { ab: [4, 16], t: "Dann wirft der Kelch die Namen aus: Viktor Krum, Fleur Delacour, Cedric Diggory. Und noch einen: Harry Potter. Drei bestellt, vier geliefert. Ab jetzt ist das hier eine richtige Akte.", fakt: "F28" }],
           vermerk: { ab: [4, 16], t: "Im Original ist der Kelch ein „Goblet of Fire“. Auf Schwedisch heißt der Band „Harry Potter och den flammande bägaren“, wörtlich: der flammende Becher.", fundstelle: "Kapitel 16", fakt: "F29" },
-          kurz: { ab: [4, 16], t: "Kapitel 15 und 16: Beauxbatons und Durmstrang kommen an. Der Kelch wählt Fleur, Krum und Cedric – und dann noch Harry. Drei bestellt, vier geliefert." } },
+          kurz: { ab: [4, 16], t: "Kapitel 15 und 16: Beauxbatons und Durmstrang kommen an. Der Kelch wählt Krum, Fleur und Cedric – und dann noch Harry. Drei bestellt, vier geliefert." } },
         { id: "b4-10", von: 17, bis: 18,
           zeilen: [{ ab: [4, 17], t: "Kapitel 17: Harry sagt, er hat seinen Namen nicht eingeworfen, und Dumbledore glaubt ihm. Ron leider nicht. Das tat mir beim Lesen richtig weh.", fakt: "F30" },
             { ab: [4, 18], t: "Kapitel 18: Rita Kimmkorn in echt. Sie zieht Harry in eine Besenkammer, und ihre Feder schreibt Sachen auf, die er nie gesagt hat. So hätte ich nie vernommen.", fakt: "F31" },
@@ -232,14 +232,14 @@ D.hpAkte = {
       /* Pinnwand: alle aufgetretenen Personen, gleichrangig, alphabetisch (nach s), ab ihrem Auftritt */
       pinnwand: [
         { n: "Ludo Bagman", s: "Bagman", ab: [4, 7] }, { n: "Sirius Black", s: "Black", ab: [4, 19] }, { n: "Barty Crouch", s: "Crouch", ab: [4, 7] },
-        { n: "Barty Crouch junior", s: "Crouch junior", ab: [4, 30] }, { n: "Fleur Delacour", s: "Delacour", ab: [4, 16] }, { n: "Amos Diggory", s: "Diggory A", ab: [4, 6] },
+        { n: "Barty Crouch junior", s: "Crouch junior", ab: [4, 35] }, { n: "Cho Chang", s: "Chang", ab: [4, 16] }, { n: "Parvati Patil", s: "Patil", ab: [4, 22] }, { n: "Fleur Delacour", s: "Delacour", ab: [4, 16] }, { n: "Amos Diggory", s: "Diggory A", ab: [4, 6] },
         { n: "Cedric Diggory", s: "Diggory C", ab: [4, 6] }, { n: "Dobby", s: "Dobby", ab: [4, 21] }, { n: "Albus Dumbledore", s: "Dumbledore", ab: [4, 12] },
         { n: "Cornelius Fudge", s: "Fudge", ab: [4, 8] }, { n: "Hermine Granger", s: "Granger", ab: [4, 7] }, { n: "Rubeus Hagrid", s: "Hagrid", ab: [4, 11] },
         { n: "Igor Karkaroff", s: "Karkaroff", ab: [4, 15] }, { n: "Rita Kimmkorn", s: "Kimmkorn", ab: [4, 18] }, { n: "Viktor Krum", s: "Krum", ab: [4, 8] },
         { n: "Neville Longbottom", s: "Longbottom", ab: [4, 11] }, { n: "Draco Malfoy", s: "Malfoy D", ab: [4, 8] }, { n: "Lucius Malfoy", s: "Malfoy L", ab: [4, 8] },
         { n: "Madame Maxime", s: "Maxime", ab: [4, 15] }, { n: "Minerva McGonagall", s: "McGonagall", ab: [4, 13] }, { n: "Alastor Moody", s: "Moody", ab: [4, 12] },
         { n: "Mr Ollivander", s: "Ollivander", ab: [4, 18] }, { n: "Severus Snape", s: "Snape", ab: [4, 17] }, { n: "Lord Voldemort", s: "Voldemort", ab: [4, 1] },
-        { n: "Charlie Weasley", s: "Weasley C", ab: [4, 5] }, { n: "Fred und George Weasley", s: "Weasley F", ab: [4, 4] }, { n: "Percy Weasley", s: "Weasley P", ab: [4, 5] },
+        { n: "Bill Weasley", s: "Weasley B", ab: [4, 5] }, { n: "Charlie Weasley", s: "Weasley C", ab: [4, 5] }, { n: "Fred und George Weasley", s: "Weasley F", ab: [4, 4] }, { n: "Ginny Weasley", s: "Weasley G", ab: [4, 22] }, { n: "Mr Weasley", s: "Weasley M1", ab: [4, 4] }, { n: "Mrs Weasley", s: "Weasley M2", ab: [4, 5] }, { n: "Percy Weasley", s: "Weasley P", ab: [4, 5] },
         { n: "Ron Weasley", s: "Weasley R", ab: [4, 4] }, { n: "Winky", s: "Winky", ab: [4, 8] }, { n: "Wurmschwanz", s: "Wurmschwanz", ab: [4, 1] }
       ],
       pinHinweis: { ab: [4, 16], t: "Ein Zettel, ein Name. Umhängen darfst du jederzeit. Aufgemacht wird erst, wenn das Buch zu ist. Meiner liegt schon in der Schublade." },
@@ -334,8 +334,13 @@ D.hpAkte = {
 };
 
 /* Vorhandene Harry-Potter-Texte anderer Teile bekommen eine Freigabe (ohne die Dateien selbst zu ändern) */
-D.hpFremdAb = { "pauli-07": [4, 14], "max-quiz": [4, 0], "jane-16": [4, 0], "max-06": [4, 0], "huhn-05": [4, 0] };
+D.hpFremdAb = { "pauli-07": [4, 14], "max-quiz": [4, 0], "jane-16": [4, 20], "max-06": [4, 12], "huhn-05": [4, 20] };
 (D.anrufe || []).forEach(a => { if (a && D.hpFremdAb[a.id]) a.ab = D.hpFremdAb[a.id]; });
+/* Ideen mit Harry-Potter-Bezug: erst ab ihrem Kapitel (Feld ab, z. B. SD201). Eine Ansicht, die nach Ritas Lesestand filtert. */
+(() => { if (!Array.isArray(D.stattDaddeln)) return; let alle = D.stattDaddeln;
+  Object.defineProperty(D, "stattDaddeln", { configurable: true, enumerable: true, get() { return alle.filter(x => !x || !x.ab || typeof hpFrei !== "function" || hpFrei(x.ab)); }, set(v) { alle = v; } }); D.hpIdeenAlle = () => alle; })();
+/* Lesebegleiter: kein Hinweis auf den Aufbau späterer Bände */
+if (D.hp) D.hp.hinweis = "Kapitelzahlen nach der Originalgliederung. Ein gehörtes Kapitel zählt wie ein gelesenes.";
 
 /* Seltene Besuche: Hühnchen meldet die Akte (Bedingungen in hp.js) */
 D.ereignisse2 = D.ereignisse2 || [];
@@ -413,7 +418,7 @@ D.hpFremdTexte = function () {
   const ids = ["huhn-05", "max-06", "jane-16", "pauli-07"], out = [];
   for (const a of D.anrufe || []) if (ids.includes(a.id)) out.push({ wo: "anrufe:" + a.id, ab: a.ab || [4, 0], o: { knoten: a.knoten, schluss: a.schluss } });
   for (const b of D.brevvan || []) if (b && /Harry Potter/.test(b.thema || "")) out.push({ wo: "karin:" + b.id, ab: [4, 0], o: { knoten: b.knoten, schluss: b.schluss } });
-  for (const s of D.stattDaddeln || []) if (/Potter|Feuerkelch|Zauber/.test((s.titel || "") + (s.text || ""))) out.push({ wo: "ideen:" + s.id, ab: [4, 0], o: { kopf: s.titel, text: s.text } });
+  for (const s of (D.hpIdeenAlle ? D.hpIdeenAlle() : D.stattDaddeln) || []) if (/Potter|Feuerkelch|Zauber/.test((s.titel || "") + (s.text || ""))) out.push({ wo: "ideen:" + s.id, ab: s.ab || [4, 0], o: { kopf: s.titel, text: s.text } });
   if (typeof EREIGNISSE !== "undefined") for (const e of EREIGNISSE) if (/Potter|Feuerkelch|Buch|Hogwarts/.test(JSON.stringify(e.zeilen))) out.push({ wo: "ereignis:" + e.id, ab: e.ab || [4, 0], o: { zeilen: e.zeilen, antworten: e.antworten } });
   return out;
 };

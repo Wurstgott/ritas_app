@@ -389,7 +389,7 @@ D.anrufe2 = [
       { text: "Ich hab immer gesagt, was nicht stimmt.", weiter: "k6" },
       { text: "Bei jeder Betriebsversammlung.", weiter: "k6" } ] },
     k5: { sagt: "Und verkauft trotzdem weiter ihre Anstecker. Ich find das super, die gibt einfach nicht auf.", antworten: [
-      { text: "Strick doch mit.", weiter: "k6" },
+      { text: "Mach doch mit.", weiter: "k6" },
       { text: "Davon kann man was lernen.", weiter: "k6" } ] },
     k6: { sagt: "Okay, ich les Band vier nochmal. Dann reden wir drüber.", antworten: [
       { text: "Aber nichts verraten, ich bin mittendrin.", weiter: null },

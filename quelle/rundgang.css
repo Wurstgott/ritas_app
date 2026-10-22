@@ -1,0 +1,221 @@
+/* ============================================================
+   Rundgang mit Max (Team 2) – Papier & Scherenschnitt
+   Nur eigene Klassen (rg-*), Farben aus den App-Tokens mit Ersatzwerten.
+   ============================================================ */
+:root {
+  --rg-dim: rgba(24, 32, 27, .62);
+  --rg-schnitt: #F2C36B;
+  --rg-papier: var(--bogen, #FBF8F1);
+  --rg-karton: rgba(60, 44, 20, .28);
+  --rg-tinte: var(--tinte, #1C2620);
+  --rg-leise: var(--tinte-2, #353F38);
+  --rg-gruen: var(--moos, #1F4A34);
+  --rg-auf-gruen: var(--auf-moos, #FBF8F1);
+  --rg-mulde: var(--mulde, #E9E1CF);
+  --rg-rand: var(--rand, rgba(28,38,32,.38));
+  --rg-stempel: #A6372A;
+  --rg-huhnname: var(--huhnname, #B8552F);
+  --rg-gold: #E2A93B;
+  --rg-kante: rgba(60, 44, 20, .10);
+}
+@media (prefers-color-scheme: dark) {
+  :root:not([data-theme="light"]) {
+    --rg-papier: #25312B; --rg-kante: rgba(255, 240, 210, .22);
+    --rg-dim: rgba(0, 0, 0, .72);
+    --rg-schnitt: #F2C36B;
+    --rg-karton: rgba(0, 0, 0, .55);
+    --rg-stempel: #F09A86;
+  }
+}
+:root[data-theme="dark"] {
+  --rg-papier: #25312B; --rg-kante: rgba(255, 240, 210, .22);
+  --rg-dim: rgba(0, 0, 0, .72);
+  --rg-schnitt: #F2C36B;
+  --rg-karton: rgba(0, 0, 0, .55);
+  --rg-stempel: #F09A86;
+}
+
+/* ---------- Ebene ---------- */
+.rg { position: fixed; inset: 0; z-index: 1000; opacity: 0; transition: opacity .28s ease; -webkit-tap-highlight-color: transparent; }
+.rg.da { opacity: 1; }
+.rg.weg { opacity: 0; pointer-events: none; }
+.rg-fang { position: absolute; inset: 0; touch-action: none; }
+/* Münzen der App fliegen über den Rundgang hinweg in die Plakette */
+html.rg-an .taler-flug, html.rg-an .taler-plus { z-index: 1003; }
+html.rg-an .ereignis { visibility: hidden; }
+
+/* Scrollraum während des Rundgangs (wird danach entfernt) */
+.rg-platz { height: 80vh; pointer-events: none; }
+
+/* ---------- Der ausgeschnittene Rahmen ---------- */
+.rg-loch {
+  position: absolute; left: 0; top: 0; width: 0; height: 0; border-radius: 18px; pointer-events: none;
+  box-shadow: 0 0 0 200vmax var(--rg-dim);
+  transition: transform .5s cubic-bezier(.5, 0, .2, 1), width .5s cubic-bezier(.5, 0, .2, 1), height .5s cubic-bezier(.5, 0, .2, 1);
+}
+.rg-loch::after {
+  content: ""; position: absolute; inset: -7px; border-radius: 24px; border: 3px dashed var(--rg-schnitt);
+  opacity: 0; transition: opacity .25s ease .3s;
+}
+.rg-loch.offen::after { opacity: 1; }
+.rg-loch.rund, .rg-loch.rund::after { border-radius: 999px; }
+.rg-loch.rund .rg-schere { left: -18px; top: -20px; }
+.rg-schere { position: absolute; left: 14px; top: -26px; width: 36px; height: 36px; opacity: 0; transition: opacity .2s ease .35s; filter: drop-shadow(1px 2px 0 rgba(0,0,0,.3)); }
+.rg-loch.offen .rg-schere { opacity: 1; }
+.rg-schere g { transform-origin: 16px 16px; }
+.rg-loch.schnipp .rg-blatt-a { animation: rg-schnipp-a .32s ease-in-out .45s 2 alternate; }
+.rg-loch.schnipp .rg-blatt-b { animation: rg-schnipp-b .32s ease-in-out .45s 2 alternate; }
+@keyframes rg-schnipp-a { to { transform: rotate(12deg); } }
+@keyframes rg-schnipp-b { to { transform: rotate(-12deg); } }
+
+/* Zeigefinger aus Papier: beim Reiterwechsel und beim Mitmachen */
+.rg-finger { position: absolute; left: 50%; top: 55%; width: 40px; height: 48px; margin-left: -12px; opacity: 0; pointer-events: none; filter: drop-shadow(2px 3px 0 rgba(0,0,0,.28)); }
+.rg-finger svg { width: 100%; height: 100%; display: block; }
+.rg.tippt .rg-finger { opacity: 1; animation: rg-tipp .7s ease-in-out both; }
+.rg.mitmach-huhn:not(.geklappt) .rg-finger { opacity: 1; animation: rg-tipp-schleife 1.6s ease-in-out .9s infinite; }
+@keyframes rg-tipp { 0% { transform: translate(14px, 22px); opacity: 0; } 35% { transform: translate(0, 0); opacity: 1; } 55% { transform: translate(0, 4px) scale(.92); } 75% { transform: translate(0, 0); } 100% { transform: translate(0, 0); opacity: 1; } }
+@keyframes rg-tipp-schleife { 0%, 60%, 100% { transform: translate(0, 0); } 70% { transform: translate(0, 5px) scale(.9); } 80% { transform: translate(0, 0); } }
+
+.rg-neben { position: absolute; left: 0; top: 0; border-radius: 999px; border: 3px dashed var(--rg-schnitt); opacity: 0; pointer-events: none; transition: opacity .3s ease .4s; }
+.rg-neben.offen { opacity: 1; animation: rg-puls 1.8s ease-in-out .6s infinite; }
+@keyframes rg-puls { 50% { box-shadow: 0 0 0 6px rgba(242, 195, 107, .35); } }
+
+/* ---------- Die Karte (ausgeschnittener Zettel) ---------- */
+.rg-karte {
+  position: absolute; left: 12px; right: 12px; bottom: calc(12px + env(safe-area-inset-bottom, 0px));
+  max-width: 520px; margin: 0 auto; padding: 14px 16px 14px; color: var(--rg-tinte);
+  transition: transform .35s cubic-bezier(.3, 1.3, .5, 1), top .35s ease, bottom .35s ease;
+  animation: rg-rein .45s cubic-bezier(.3, 1.4, .5, 1) both;
+}
+@keyframes rg-rein { from { transform: translateY(30px) rotate(-1.5deg); opacity: 0; } }
+.rg.karte-oben .rg-karte { bottom: auto; top: calc(62px + env(safe-area-inset-top, 0px)); }
+.rg.mitte .rg-karte { bottom: auto; top: 50%; transform: translateY(-42%); }
+.rg-papier { position: absolute; inset: 0; filter: drop-shadow(0 -1px 0 var(--rg-kante)) drop-shadow(1px 0 0 var(--rg-kante)) drop-shadow(-1px 0 0 var(--rg-kante)) drop-shadow(4px 5px 0 var(--rg-karton)); pointer-events: none; }
+.rg-papier::before {
+  content: ""; position: absolute; inset: 0; border-radius: 0 0 10px 10px; background-color: var(--rg-papier);
+  background-image: radial-gradient(rgba(120, 90, 40, .07) 1px, transparent 1.4px), radial-gradient(rgba(120, 90, 40, .05) 1px, transparent 1.4px);
+  background-size: 7px 7px, 11px 11px; background-position: 0 0, 3px 5px;
+  /* Zackenschere oben */
+  -webkit-mask: conic-gradient(from 135deg at top, #0000, #000 1deg 89deg, #0000 90deg) top / 14px 8px repeat-x, linear-gradient(#000 0 0) bottom / 100% calc(100% - 7.5px) no-repeat;
+  mask: conic-gradient(from 135deg at top, #0000, #000 1deg 89deg, #0000 90deg) top / 14px 8px repeat-x, linear-gradient(#000 0 0) bottom / 100% calc(100% - 7.5px) no-repeat;
+}
+.rg-karte > *:not(.rg-papier) { position: relative; }
+
+/* Max als ausgeschnittenes Porträt, halb über der Kante */
+.rg-max { position: absolute !important; left: 12px; top: -44px; width: 84px; height: 84px; border-radius: 50%; background: #FFFDF5; padding: 4px; box-shadow: 3px 4px 0 var(--rg-karton); transform: rotate(-4deg); animation: rg-wippen 3.6s ease-in-out infinite; }
+.rg-max svg { width: 76px !important; height: 76px !important; display: block; }
+@keyframes rg-wippen { 50% { transform: rotate(-1.5deg) translateY(-2px); } }
+
+/* Hühnchen steht auf der Kartenkante */
+.rg-huhn { position: absolute !important; right: 6px; top: -62px; width: 72px; height: 72px; padding: 0; border: 0; background: none; cursor: pointer; transform-origin: 50% 100%; animation: rg-schaukeln 4.2s ease-in-out infinite; -webkit-tap-highlight-color: transparent; }
+.rg-huhn svg { width: 72px !important; height: 72px !important; display: block; overflow: visible; filter: drop-shadow(2px 3px 0 var(--rg-karton)); }
+/* Station 4: das echte Hühnchen ist im Ausschnitt – kein zweites auf der Kante. Hühnchen aus: nie. */
+.rg[data-station="huhn"] .rg-huhn, .rg.ohne-huhn .rg-huhn { visibility: hidden; }
+.huhn.rg-hopst { animation: rg-hops .6s cubic-bezier(.3, 1.6, .5, 1); transform-origin: 50% 100%; }
+.rg-huhn.hops { animation: rg-hops .55s cubic-bezier(.3, 1.6, .5, 1); }
+.rg-huhn.froh .huhn-augen .pupillen { display: none; }
+.rg-huhn.froh .huhn-augen .froh { display: inline !important; }
+@keyframes rg-schaukeln { 0%, 100% { transform: rotate(0); } 50% { transform: rotate(2.5deg); } }
+@keyframes rg-hops { 0% { transform: translateY(0); } 40% { transform: translateY(-16px) rotate(-6deg); } 100% { transform: translateY(0); } }
+
+.rg-kopf { display: flex; align-items: flex-start; justify-content: space-between; gap: 8px; margin: -4px 66px 4px 88px; min-height: 40px; }
+.rg-ort { display: flex; align-items: baseline; flex-wrap: wrap; gap: 0 8px; margin-top: 4px; }
+.rg-titel { font-family: var(--f-schild, "Young Serif", Georgia, serif); font-size: max(15px, .8rem); font-weight: 600; line-height: 1.15; color: var(--rg-tinte); }
+.rg-wer { display: flex; flex-direction: column; line-height: 1; padding-top: 2px; min-width: 0; }
+.rg-name { font-family: "Satisfy", "Dancing Script", cursive; font-size: 1.55rem; color: var(--rg-gruen); line-height: 1.05; }
+.rg-zaehler { font-family: var(--f-text, "Familjen Grotesk", system-ui, sans-serif); font-size: max(13px, .66rem); font-weight: 600; line-height: 1.2; color: var(--rg-leise); white-space: nowrap; }
+.rg-skip { position: relative; min-height: 44px; min-width: 44px; padding: 0 2px; margin: -6px -4px 0 auto; align-self: flex-start; border: 0; background: none; color: var(--rg-leise); font-family: var(--f-text, "Familjen Grotesk", system-ui, sans-serif); font-size: max(14px, .72rem); font-weight: 600; text-decoration: underline; text-decoration-thickness: 1.5px; text-underline-offset: 4px; cursor: pointer; white-space: nowrap; }
+.rg-skip[hidden] { display: none; }
+
+.rg-rede { max-height: min(40vh, 22rem); overflow-y: auto; overscroll-behavior: contain; margin-top: 8px; padding-right: 2px; }
+.rg-text { margin: 0; font-family: var(--f-stimme, Literata, Georgia, serif); font-weight: 400; font-size: .94rem; line-height: 1.42; text-wrap: pretty; }
+.rg-w { opacity: .22; transition: opacity .22s ease; }
+.rg-w.da { opacity: 1; }
+
+.rg-huhn-satz { position: relative; margin: 12px 0 0; padding: 8px 12px 9px; border-radius: 12px; background: var(--rg-mulde); border: 1.5px dashed var(--rg-rand); font-family: var(--f-text, "Familjen Grotesk", system-ui, sans-serif); font-size: .8rem; line-height: 1.38; font-weight: 500; opacity: 0; transform: translateY(6px); transition: opacity .25s ease, transform .3s cubic-bezier(.3, 1.4, .5, 1); }
+.rg-huhn-satz.da { opacity: 1; transform: none; }
+.rg-huhn-satz[hidden] { display: none; }
+.rg-huhn-wer { display: block; font-weight: 800; font-size: .7rem; color: var(--rg-huhnname); letter-spacing: .02em; }
+
+/* Fußspuren von Hühnchen = Fortschritt */
+.rg-spuren { display: flex; justify-content: center; gap: 3px; margin: 12px 0 8px; }
+.rg-spur { width: 15px; height: 15px; color: var(--rg-leise); opacity: .62; transform: rotate(calc(var(--k) * 12deg)) translateY(calc(var(--k) * 2px)); transition: color .3s, opacity .3s, transform .3s; }
+.rg-spur svg { width: 100%; height: 100%; display: block; }
+.rg-spur.fertig { color: var(--rg-gruen); opacity: .9; }
+.rg-spur.jetzt { color: var(--rg-gold); opacity: 1; transform: rotate(calc(var(--k) * 12deg)) translateY(calc(var(--k) * 2px)) scale(1.35); }
+
+.rg-knoepfe { display: flex; gap: 10px; flex-wrap: wrap; }
+.rg-knopf { position: relative; min-height: 52px; min-width: 44px; padding: 8px 18px; border-radius: 14px; font-family: var(--f-text, "Familjen Grotesk", system-ui, sans-serif); font-size: 1rem; font-weight: 700; cursor: pointer; transition: transform .12s ease; }
+.rg-knopf:active { transform: translateY(2px); }
+.rg-knopf[hidden] { display: none; }
+.rg-weiter { flex: 1 1 60%; border: 0; background: var(--rg-gruen); color: var(--rg-auf-gruen); box-shadow: 0 3px 0 rgba(0, 0, 0, .28); }
+.rg-zurueck { flex: 0 1 auto; background: transparent; color: var(--rg-tinte); border: 2px solid var(--rg-rand); }
+.rg button:focus-visible { outline: 3px solid var(--fokus, #0A4A8C); outline-offset: 3px; }
+
+/* ---------- Belohnung ---------- */
+.rg-belohnung { display: flex; justify-content: center; }
+.rg-belohnung[hidden], .rg-belohnung:empty { display: none; }
+.rg-muenze { position: relative; display: flex; flex-direction: column; align-items: center; gap: 2px; margin: 10px auto 0; padding: 4px 10px; border: 0; background: none; color: var(--rg-tinte); cursor: pointer; min-width: 96px; min-height: 96px; }
+.rg-muenze svg { width: 74px; height: 74px; animation: rg-wackel 1.8s ease-in-out infinite; filter: drop-shadow(0 0 0 transparent); }
+.rg-muenze-zahl { position: absolute; top: 4px; right: 0; font-family: var(--f-text, "Familjen Grotesk", system-ui, sans-serif); font-size: .78rem; font-weight: 800; background: var(--rg-gruen); color: var(--rg-auf-gruen); border-radius: 10px; padding: 1px 7px; }
+.rg-muenze-tipp { font-family: var(--f-text, "Familjen Grotesk", system-ui, sans-serif); font-size: max(13px, .72rem); font-weight: 700; color: var(--rg-leise); }
+.rg-muenze.fliegt svg { animation: rg-muenze-weg .45s cubic-bezier(.5, 0, .7, .3) forwards; }
+@keyframes rg-wackel { 0%, 70%, 100% { transform: rotate(0); } 78% { transform: rotate(-9deg); } 86% { transform: rotate(8deg); } 94% { transform: rotate(-4deg); } }
+@keyframes rg-muenze-weg { to { transform: translateY(-60px) scale(.3) rotateY(540deg); opacity: 0; } }
+.rg-belohnung { align-items: center; gap: 14px; flex-wrap: wrap; }
+.rg-belohnung:has(.rg-stempel) { justify-content: flex-end; padding-right: 8px; }
+.rg-schild { font-family: var(--f-text, "Familjen Grotesk", system-ui, sans-serif); font-size: max(14px, .74rem); font-weight: 700; padding: 6px 12px; border-radius: 8px; background: var(--rg-mulde); border: 1.5px dashed var(--rg-rand); transform: rotate(1.5deg); }
+.rg-stempel { display: inline-flex; flex-direction: column; align-items: center; margin: 12px 0 2px; background: var(--rg-papier); padding: 6px 16px 5px; border: 3px double var(--rg-stempel); border-radius: 10px; color: var(--rg-stempel); transform: rotate(-7deg); font-family: var(--f-text, "Familjen Grotesk", system-ui, sans-serif); text-transform: uppercase; letter-spacing: .1em; line-height: 1.1; animation: rg-stempeln .4s cubic-bezier(.3, 1.6, .5, 1) both; }
+.rg-stempel { padding: 4px 10px 3px; }
+.rg-stempel span { font-size: 10px; font-weight: 800; }
+.rg-stempel b { font-size: 17px; font-weight: 900; }
+.rg-stempel small { font-size: 9px; font-weight: 700; letter-spacing: .04em; opacity: .85; }
+@keyframes rg-stempeln { from { transform: rotate(-7deg) scale(2.1); opacity: 0; } 60% { opacity: 1; } }
+
+/* Mitmachen: Hühnchen-Reaktionen */
+.rg-feder { position: absolute; width: 26px; height: 26px; margin: -13px 0 0 -13px; pointer-events: none; animation: rg-feder 1.6s ease-out forwards; }
+.rg-feder svg { width: 100%; height: 100%; }
+@keyframes rg-feder { 0% { transform: translate(0, 0) rotate(0); opacity: 0; } 15% { opacity: 1; } 100% { transform: translate(var(--dx), 70px) rotate(var(--dr)); opacity: 0; } }
+.rg-huhn-gross { position: absolute; width: 160px; height: 160px; border-radius: 50%; background: var(--rg-papier); box-shadow: 4px 5px 0 var(--rg-karton); display: grid; place-items: center; pointer-events: none; animation: rg-gross 1.7s cubic-bezier(.3, 1.5, .5, 1) forwards; }
+.rg-huhn-gross svg { width: 140px !important; height: 140px !important; }
+@keyframes rg-gross { 0% { transform: scale(.3); opacity: 0; } 18% { transform: scale(1); opacity: 1; } 82% { transform: scale(1); opacity: 1; } 100% { transform: scale(.85); opacity: 0; } }
+
+/* ---------- Nachklapp auf „Heute“ ---------- */
+.rg-nachklapp { position: fixed; z-index: 80; right: 16px; bottom: calc(86px + env(safe-area-inset-bottom, 0px)); display: flex; align-items: flex-end; gap: 6px; pointer-events: none; }
+.rg-nachklapp .huhn { filter: drop-shadow(2px 3px 0 var(--rg-karton)); order: 2; }
+.rg-nk-blase { order: 1; max-width: 210px; margin-bottom: 30px; padding: 8px 12px; border-radius: 14px 14px 4px 14px; background: var(--rg-papier); color: var(--rg-tinte); box-shadow: 3px 4px 0 var(--rg-karton); font-family: var(--f-text, "Familjen Grotesk", system-ui, sans-serif); font-size: .82rem; font-weight: 600; line-height: 1.3; }
+.rg-nachklapp.rein { animation: rg-nk-rein .55s cubic-bezier(.3, 1.5, .5, 1) both; }
+.rg-nachklapp.raus { animation: rg-nk-raus .35s ease-in both; }
+@keyframes rg-nk-rein { from { transform: translate(120px, 30px) rotate(12deg); opacity: 0; } }
+@keyframes rg-nk-raus { to { transform: translateY(20px); opacity: 0; } }
+
+/* ---------- Einstieg in den Einstellungen ---------- */
+.rg-einst { position: relative; display: flex; align-items: center; gap: 12px; width: 100%; min-height: 72px; margin: 0 0 14px; padding: 10px 12px; border: 0; border-radius: 16px; background: var(--rg-papier); color: var(--rg-tinte); box-shadow: 3px 4px 0 var(--rg-karton); text-align: left; cursor: pointer; font: inherit; }
+.rg-einst::after { content: ""; position: absolute; inset: 5px; border: 1.5px dashed var(--rg-rand); border-radius: 12px; pointer-events: none; }
+.rg-einst-bild { flex: none; width: 52px; height: 52px; border-radius: 50%; background: #FFFDF5; padding: 2px; box-shadow: 2px 2px 0 var(--rg-karton); }
+.rg-einst-bild svg { width: 48px !important; height: 48px !important; display: block; }
+.rg-einst-text { flex: 1; min-width: 0; display: flex; flex-direction: column; }
+.rg-einst-text { font-family: var(--f-text, "Familjen Grotesk", system-ui, sans-serif); }
+.rg-einst-text .titel { font-weight: 700; }
+.rg-einst-text .unter { font-size: .8em; color: var(--rg-leise); }
+.rg-einst-pfeil { flex: none; width: 22px; height: 22px; opacity: .6; }
+
+/* ---------- Schriftgröße 3: alles etwas dichter ---------- */
+html[data-size="3"] .rg-text { font-size: .86rem; line-height: 1.36; }
+html[data-size="3"] .rg-huhn-satz { font-size: .72rem; }
+html[data-size="3"] .rg-knopf { font-size: .86rem; padding: 6px 14px; }
+html[data-size="3"] .rg-name { font-size: 1.3rem; }
+html[data-size="3"] .rg-skip { font-size: .62rem; }
+html[data-size="3"] .rg-kopf { margin-right: 60px; }
+html[data-size="3"] .rg-titel { font-size: 17px; }
+html[data-size="1"] .rg-text { font-size: 1rem; }
+
+/* ---------- Ruhige Bewegung ---------- */
+@media (prefers-reduced-motion: reduce) {
+  .rg, .rg *, .rg *::before, .rg *::after { animation: none !important; transition: none !important; }
+  .rg-w { opacity: 1; }
+  .rg-huhn-satz { opacity: 1; transform: none; }
+  .rg-nachklapp, .rg-nachklapp *, .huhn.rg-hopst { animation: none !important; }
+}
+:root[data-motion="ruhig"] .rg *, :root[data-motion="ruhig"] .rg *::after { animation: none !important; transition: none !important; }
+:root[data-motion="ruhig"] .rg-w { opacity: 1; }

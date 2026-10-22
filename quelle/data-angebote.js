@@ -150,7 +150,7 @@ const neu = [
 "kategorie": "Tanz & Musik",
 "wann": "So 13.12.2026, 15:00",
 "wo": "Stadthalle Falkensee, Scharenbergstr. 15, 14612 Falkensee",
-"text": "Die Musik aus den Harry-Potter-Filmen live vom Orchester – nachmittags und nicht weit von Spandau. Danach hast du beim Weiterlesen garantiert den Soundtrack im Ohr.",
+"text": "Die Musik aus den Harry-Potter-Filmen live vom Orchester – nachmittags und nicht weit von Spandau. Danach hast du beim Weiterlesen garantiert den Soundtrack im Ohr. Kleiner Hinweis: Gespielt wird Musik aus allen acht Filmen, die Stücktitel verraten also auch etwas aus den späteren Bänden.",
 "kosten": "ab 49,99 €",
 "wc": null,
 "tel": null,

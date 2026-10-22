@@ -33,7 +33,7 @@ function hpBNorm(x, kap) {
     schublade: HP_TAG.test(b.schublade || "") ? b.schublade : "", frage: fr.ziel != null ? { ziel: hpInt(fr.ziel, 0, kap, 0) } : null, pause: !!b.pause };
 }
 function hpZustand() {
-  const a = S.akte; if (!a || typeof a !== "object" || Array.isArray(a)) return null;
+  hpSkinUmzug(); const a = S.akte; if (!a || typeof a !== "object" || Array.isArray(a)) return null;
   a.v = 1; a.band = hpInt(a.band, 4, 7, 4); if (!hpBandDaten(a.band)) a.band = 4;
   a.du = !!a.du; if (!HP_TAG.test(a.start || "")) a.start = heute(); if (!HP_TAG.test(a.zuletzt || "")) a.zuletzt = a.start;
   if (typeof a.letzterAnruf !== "string" || !(a.letzterAnruf === "" || HP_TAG.test(a.letzterAnruf))) a.letzterAnruf = "";
@@ -115,8 +115,8 @@ function hpSiegelSVG(gr = 84) {
 /* ---------- Kleiderschrank: genau zwei Teile (ohne Figuren, ohne Wappen) ---------- */
 const hpStern = (x, y, r, c) => SP(`M${x} ${y - r} L${x + r * .3} ${y - r * .3} L${x + r} ${y} L${x + r * .3} ${y + r * .3} L${x} ${y + r} L${x - r * .3} ${y + r * .3} L${x - r} ${y} L${x - r * .3} ${y - r * .3}Z`, c, { cls: "skin-funkel" });
 const HP_SKINS = [
-  { id: "r-ballrobe", fuer: "rita", fach: "ganz", name: "Ballrobe", naechst: "die Ballrobe", preis: 160, wenn: () => hpFrei([4, 23]),
-    text: "Dunkelgrün, mit Sternenstaub, der beim Drehen glitzert. Für den großen Ball – und für jeden Walzer im Wohnzimmer.",
+  { id: "r-festumhang", fuer: "rita", fach: "ganz", name: "Festumhang", naechst: "den Festumhang", preis: 160, wenn: () => hpFrei([4, 23]),
+    text: "Dunkelgrün, mit Sternenstaub, der beim Drehen glitzert. Für den Weihnachtsball – und für jeden Walzer im Wohnzimmer.",
     r: { vorn: [SP("M11.6 100 Q13.4 78.6 38.6 75.6 L50 84 L61.4 75.6 Q86.6 78.6 88.4 100Z", "#1F5A3A"),
       SP("M38.6 75.6 L50 84 L61.4 75.6 L58.8 74.4 L50 80.4 L41.2 74.4Z", "#C9CED2"),
       SP("M23 100 Q29 88 40 84 Q33.6 92 32.6 100Z", "#2C7550", { op: .8 }), SP("M77 100 Q71 88 60 84 Q66.4 92 67.4 100Z", "#174A30", { op: .8 }),
@@ -134,6 +134,12 @@ const HP_SKINS = [
       SP("M43.6 47.4 L43 43.8 L45.8 45.8Z M51.4 47.4 L52.2 43.8 L49.4 45.8Z", "#6E4C30"), SC(47.6, 50.6, 4.8, "#8A6240"), SE(48, 51, 3.4, 3, "#E8D6B0"), SC(46.6, 50.4, 1, "#FFFDF5"), SC(49.4, 50.4, 1, "#FFFDF5"), SC(46.8, 50.6, .5, "#1C2620"), SC(49.6, 50.6, .5, "#1C2620")] } }
 ];
 if (typeof D_SKINS !== "undefined" && typeof SKIN_MAP !== "undefined") for (const s of HP_SKINS) if (!SKIN_MAP[s.id]) { D_SKINS.push(s); SKIN_MAP[s.id] = s; }
+/* Umbenennung „Ballrobe“ → „Festumhang“: alte Käufe und Auswahl übernehmen (läuft vor skinsMigrieren und nach jedem Einspielen) */
+function hpSkinUmzug() { try { const k = S && S.skins; if (!k || typeof k !== "object") return; const b = k.besitz;
+  if (b && typeof b === "object") { if (b["r-ballrobe"] && !b["r-festumhang"]) b["r-festumhang"] = b["r-ballrobe"]; delete b["r-ballrobe"]; }
+  if (k.geschenkt && k.geschenkt["r-ballrobe"]) { k.geschenkt["r-festumhang"] = k.geschenkt["r-ballrobe"]; delete k.geschenkt["r-ballrobe"]; }
+  for (const f of ["rita", "ziel", "zielGemeldet"]) if (k[f] === "r-ballrobe") k[f] = "r-festumhang"; } catch (e) { } }
+hpSkinUmzug();
 
 /* ---------- Zugang (Ideen › Lesen und Lesebegleiter) ---------- */
 function hpKnopf(klein) {

@@ -783,7 +783,8 @@ function einstGruppe(id, icon, titel, unter, inhalt) {
   return `<details class="einst-gruppe" data-einst-gruppe="${id}" ${EINST_OFFEN.has(id) ? "open" : ""}><summary>${ic(icon)}<span class="text"><span class="titel">${titel}</span><br><span class="unter">${unter}</span></span>${ic("pfeil", "pfeil")}</summary><div class="einst-inhalt">${inhalt}</div></details>`;
 }
 function einstellungenInhalt() {
-  return einstGruppe("aussehen", "schrift", "Schrift und Farben", "Schriftgröße, hell oder dunkel",
+  return `<button class="rg-einst" data-act="rundgang"><span class="rg-einst-bild">${maxSVG(48)}</span><span class="rg-einst-text"><span class="titel">Rundgang mit Max</span><span class="unter">Einmal durch die App – Hühnchen kommt mit</span></span>${ic("pfeil", "rg-einst-pfeil")}</button>`
+    + einstGruppe("aussehen", "schrift", "Schrift und Farben", "Schriftgröße, hell oder dunkel",
       `<h3>Schriftgröße</h3><div class="chips">${[[1, "Normal"], [2, "Groß"], [3, "Sehr groß"]].map(([v, l]) => chip(S.size === v, l, `data-act="einst" data-k="size" data-v="${v}"`)).join("")}</div>
       <p class="klein" style="margin-top:6px">So sieht dein Text aus. Heute bin ich 4 km gegangen.</p>
       <h3 style="margin-top:16px">Hell oder dunkel</h3><div class="chips">${[["auto", "Wie das Handy"], ["light", "Hell"], ["dark", "Dunkel"]].map(([v, l]) => chip(S.theme === v, l, `data-act="einst" data-k="theme" data-v="${v}"`)).join("")}</div>`)
@@ -881,6 +882,7 @@ function onboardingFertig(still) {
   if (!S.liste.some(x => x.id === "l-start")) { const r = eintragSpeichern({ t: "abgehakt", tag: heute(), notiz: "App eingerichtet", listeId: "l-start" }); S.liste.push({ id: "l-start", text: "App eingerichtet", erledigt: heute(), eintrag: r && r.e.id }); }
   speichern(); if (!still) sheetZu(); render();
   if (!still && !REDUCED()) setTimeout(() => { const wm = $(".wm-haken"); if (wm) wm.classList.add("zeichnen"); }, 350);
+  if (typeof rundgangNachOnboarding === "function") rundgangNachOnboarding(); // Rundgang mit Max (rundgang.js), nur beim ersten Mal
 }
 
 /* Figuren in kleine Leinwände malen (UI) */
