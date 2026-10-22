@@ -1015,3 +1015,13 @@ button.gruss-himmel svg { width: 46px; height: 50px; overflow: visible; }
 .wm-text { font-size: min(2.3em, 9.6vw); word-spacing: .14em; transform: scaleX(1.16); transform-origin: left center; margin-left: 2px; }
 @media (max-width: 370px) { .wm-text { font-size: 8.6vw; transform: scaleX(1.12); } }
 #knopf-einst.nur-icon svg { width: 48px; height: 48px; padding: 9px; overflow: visible; }
+/* Telefon: schlanke Leiste statt großer Karte */
+.tel-leiste { display: flex; align-items: center; gap: 12px; width: 100%; padding: 10px 14px; border: 0; border-radius: 16px; background: var(--bogen); color: var(--tinte); box-shadow: var(--schatten-1, 0 1px 4px rgba(28,38,32,.1)); text-align: left; cursor: pointer; font: inherit; min-height: 60px; }
+.tel-leiste .tel-stapel { display: flex; flex: none; }
+.tel-leiste .tel-stapel > span { width: 34px; height: 34px; border-radius: 50%; margin-left: -12px; box-shadow: 0 0 0 2px var(--bogen); overflow: hidden; display: grid; place-items: center; background: var(--mulde); }
+.tel-leiste .tel-stapel > span:first-child { margin-left: 0; }
+.tel-leiste .text { flex: 1; min-width: 0; display: grid; }
+.tel-leiste .titel { font-weight: 800; }
+.tel-leiste .unter { font-size: .85rem; opacity: .75; }
+.tel-leiste .pfeil { width: 20px; height: 20px; flex: none; opacity: .6; }
+.exkurs-karte, .notfall-leiste, .tel-leiste, .tuer-gross, .tel-karte-knopf, .tel-kontakt { position: relative; }

@@ -200,11 +200,12 @@ function haptik(art) {
   try { if (navigator.vibrate) navigator.vibrate(VIB[art] || 10); } catch (e) { }
 }
 /* iOS: echter Schalter unter einem label erzeugt den System-Tick (ab iOS 18) */
-const HAPSEL = ".tuer-gross,.notfall-leiste,.tel-kontakt,.tel-karte-knopf,.exkurs-karte,.bingo-feld,.huhn-karte,.tuer,.logo-knopf,.knopf,.kachel,.tf,.chip,.liste-zeile,nav.tabs button,.karte:not(.zu),.fach:not(.leer),.schalter-zeile";
+const HAPSEL = ".tel-leiste,.tuer-gross,.notfall-leiste,.tel-kontakt,.tel-karte-knopf,.exkurs-karte,.bingo-feld,.huhn-karte,.tuer,.logo-knopf,.knopf,.kachel,.tf,.chip,.liste-zeile,nav.tabs button,.karte:not(.zu),.fach:not(.leer),.schalter-zeile";
 function armHaptics() {
   if (!IOS || !S.vib) return;
   $$(HAPSEL).forEach(el => {
     if (el.querySelector(":scope>label.hap") || el.disabled) return;
+    if (getComputedStyle(el).position === "static") el.style.position = "relative";
     const l = document.createElement("label"); l.className = "hap"; l.setAttribute("aria-hidden", "true");
     l.addEventListener("click", e => { if (e.target === l) e.stopPropagation(); });
     const i = document.createElement("input"); i.type = "checkbox"; i.setAttribute("switch", ""); i.tabIndex = -1;

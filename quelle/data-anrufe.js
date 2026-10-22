@@ -4,1234 +4,1249 @@ D.anrufe = [
 
 /* ==================== HÜHNCHEN ==================== */
 
-{ id: "huhn-01", wer: "huhn", thema: "Brennofen",
+{ id: "huhn-01", wer: "huhn", thema: "Durchzug",
   knoten: {
-    start: { sagt: "Ich hab heute an den Brennofen gedacht. Da war es gemütlich. Neunhundert Grad, keine Zugluft.", antworten: [
-      { text: "Hast du da drin geschwitzt?", weiter: "k2" },
-      { text: "Erzähl, wer war noch im Ofen?", weiter: "k3" } ] },
-    k2: { sagt: "Ton schwitzt nicht. Ton wird hart. Das ist quasi meine ganze Persönlichkeit.", antworten: [
-      { text: "Hart, aber herzlich, würde ich sagen.", weiter: "k4" },
-      { text: "Bei mir heißt das Stehaufmännchen.", weiter: "k4" } ] },
-    k3: { sagt: "Ein Krug, zwei Teller und ein Lama. Das Lama hat die ganze Zeit von seiner Glasur geredet.", antworten: [
-      { text: "Angeber gibt’s in jedem Ofen.", weiter: "k4" },
-      { text: "Und du? Was hast du geredet?", weiter: "k5" } ] },
-    k4: { sagt: "Jedenfalls bin ich rausgekommen und war fertig. Ein Gefühl wie nach einer abgehakten Liste.", antworten: [
-      { text: "Das Gefühl kenne ich gut.", weiter: null },
-      { text: "Soll ich dich mal abhaken?", weiter: "k6" } ] },
-    k5: { sagt: "Nichts. Ich hatte noch keinen Schnabel. Der kam erst ganz zum Schluss.", antworten: [
-      { text: "Dafür redest du jetzt umso mehr.", weiter: "k4" },
-      { text: "Sehr vernünftige Reihenfolge.", weiter: "k4" } ] },
-    k6: { sagt: "Bitte vorsichtig. Ich bin ockergelb, nicht kugelschreiberfest.", antworten: [
-      { text: "Dann nur ein ganz kleiner Haken.", weiter: null },
-      { text: "Gut, du bleibst unabgehakt.", weiter: null } ] }
+    start: { sagt: "Sag mal, hast du schon wieder das Fenster auf? Ich steh hier genau im Zug.", antworten: [
+      { text: "Nur zehn Minuten, das muss sein.", weiter: "k2" },
+      { text: "Du bist aus Ton, dir ist nie kalt.", weiter: "k3" } ] },
+    k2: { sagt: "Zehn Minuten, sagst du. Ich zähl mit, und ich bin schon bei elf.", antworten: [
+      { text: "Du kannst doch gar nicht zählen.", weiter: "k4" },
+      { text: "Gut, ich mach gleich zu.", weiter: "k4" } ] },
+    k3: { sagt: "Im Ofen in Peru waren es neunhundert Grad. Dagegen ist das hier Nordpol.", antworten: [
+      { text: "Du warst genau einmal im Ofen.", weiter: "k4" },
+      { text: "Soll ich dir einen Schal stricken?", weiter: "k5" } ] },
+    k4: { sagt: "Einmal reicht, das prägt einen. Kannst du mich wenigstens ein Stück Richtung Heizung rücken?", antworten: [
+      { text: "Zwei Zentimeter. Mehr nicht.", weiter: null },
+      { text: "Dann stehst du vorm Hasen.", weiter: "k6" } ] },
+    k5: { sagt: "Einen Schal? Ich hab keinen Hals, Rita. Aber nett, dass du fragst.", antworten: [
+      { text: "Dann ein Deckchen unter den Sockel.", weiter: "k4" },
+      { text: "Irgendwo ist da ein Hals.", weiter: "k4" } ] },
+    k6: { sagt: "Der Hase steht seit Jahren da und kriegt die ganze Wärme ab. Das ist nicht gerecht.", antworten: [
+      { text: "Na gut, ihr tauscht bis Sonntag.", weiter: null },
+      { text: "Der Hase war zuerst da.", weiter: null } ] }
   },
-  schluss: "Ich geh jetzt wieder rumstehen. Das kann ich am besten." },
+  schluss: "Ich sag nichts mehr. Ich frier jetzt still vor mich hin." },
 
-{ id: "huhn-02", wer: "huhn", thema: "Beine",
+{ id: "huhn-02", wer: "huhn", thema: "Der Krimi gestern",
   knoten: {
-    start: { sagt: "Ich hab eine Frage, die mich seit Jahren beschäftigt. Wozu sind Beine eigentlich gut?", antworten: [
-      { text: "Zum Tanzen, ganz klar.", weiter: "k2" },
-      { text: "Zum Weglaufen vor dem Hasen.", weiter: "k3" } ] },
-    k2: { sagt: "Tanzen. Hm. Ich kann mich leicht nach links neigen, wenn jemand am Regal wackelt.", antworten: [
-      { text: "Das ist doch schon ein Schritt!", weiter: "k4" },
-      { text: "Das nennt man Sockel-Walzer.", weiter: "k4" } ] },
-    k3: { sagt: "Der Hase läuft auch nicht. Der ist aus Porzellan. Wir sind hier alle eher Steh-Typen.", antworten: [
-      { text: "Eine Wohngemeinschaft ohne Eile.", weiter: "k5" },
-      { text: "Dann braucht ihr auch keine Beine.", weiter: "k5" } ] },
-    k4: { sagt: "Sockel-Walzer. Ich lass mir das schützen. Dein Tanzschüler darf ihn als Erster lernen.", antworten: [
-      { text: "Er wird begeistert sein.", weiter: null },
-      { text: "Der kann ja nicht mal Walzer.", weiter: "k5" } ] },
-    k5: { sagt: "Weißt du was? Ich behalte meinen Sockel. Er ist grün und er hat noch nie gestolpert.", antworten: [
-      { text: "Ein sehr zuverlässiger Sockel.", weiter: null },
-      { text: "Mein Teppich könnte das nicht.", weiter: null } ] }
+    start: { sagt: "Den Krimi gestern hab ich mitgeguckt. Weggucken ging nicht, meine Augen sind aufgemalt.", antworten: [
+      { text: "War’s dir zu spannend?", weiter: "k2" },
+      { text: "Und, wer war’s deiner Meinung nach?", weiter: "k3" } ] },
+    k2: { sagt: "Bei der Stelle im Keller hab ich mich hinterm Hasen versteckt. Innerlich.", antworten: [
+      { text: "Da hab ich auch geschluckt.", weiter: "k4" },
+      { text: "Der Hase hat nichts gemerkt.", weiter: "k4" } ] },
+    k3: { sagt: "Der Pfarrer. Der hat so geguckt, und mit Gucken kenn ich mich aus.", antworten: [
+      { text: "Falsch. Es war die Schwester.", weiter: "k4" },
+      { text: "Der Pfarrer war’s nicht.", weiter: "k4" } ] },
+    k4: { sagt: "Na ja. Nächstes Mal sagst du mir vorher, wann ich weggucken soll.", antworten: [
+      { text: "Abgemacht. Ich warn dich vorm Keller.", weiter: "k5" },
+      { text: "Aber dann nichts verraten, ja?", weiter: "k6" } ] },
+    k5: { sagt: "Und mach nicht wieder das Licht aus, wenn’s spannend wird. Für mich ist das doppelt dunkel.", antworten: [
+      { text: "Na gut, die Stehlampe bleibt an.", weiter: null },
+      { text: "Dann gucken wir am Nachmittag.", weiter: null } ] },
+    k6: { sagt: "Wem soll ich’s denn verraten? Das Schwein hört eh nie zu.", antworten: [
+      { text: "Das Schwein ist sehr verschwiegen.", weiter: null },
+      { text: "Gut, dann guckst du wieder mit.", weiter: null } ] }
   },
-  schluss: "Ich neige mich jetzt zum Abschied. Nach links. Mehr geht nicht." },
+  schluss: "Heute Abend wieder? Ich steh schon mal Richtung Fernseher." },
 
 { id: "huhn-03", wer: "huhn", thema: "Glücksschwein",
   knoten: {
-    start: { sagt: "Das Glücksschwein hat gesagt, es bringt mehr Glück als ich. Ich bin empört. Leise, aber empört.", antworten: [
-      { text: "Was bringst du denn so?", weiter: "k2" },
+    start: { sagt: "Das Glücksschwein behauptet, es bringt mehr Glück als ich. Seit Silvester redet es von nichts anderem.", antworten: [
+      { text: "Und was bringst du so?", weiter: "k2" },
       { text: "Soll ich mal mit ihm reden?", weiter: "k3" } ] },
-    k2: { sagt: "Ich bringe Ruhe. Und gelegentlich einen Schatten auf die Fensterbank.", antworten: [
-      { text: "Schatten ist im Sommer Gold wert.", weiter: "k4" },
-      { text: "Ruhe ist unterschätzt.", weiter: "k4" } ] },
-    k3: { sagt: "Bitte nicht. Es grunzt dann wieder nicht zurück, und ich muss das aushalten.", antworten: [
-      { text: "Dann schreib ich ihm einen Zettel.", weiter: "k5" },
-      { text: "Ignorier es einfach eine Woche.", weiter: "k4" } ] },
-    k4: { sagt: "Gute Idee. Ich schlage einen Wettbewerb vor: Wer bringt bis Sonntag mehr Glück?", antworten: [
-      { text: "Ich führe eine Strichliste.", weiter: "k6" },
-      { text: "Und der Hase ist Schiedsrichter.", weiter: "k6" } ] },
-    k5: { sagt: "Ein Zettel! Schreib drauf: „Liebes Schwein, Hühner sind auch rosa. Innerlich.“", antworten: [
-      { text: "Das unterschreibe ich sofort.", weiter: "k4" },
-      { text: "Bist du innerlich rosa?", weiter: "k4" } ] },
-    k6: { sagt: "Perfekt. Erster Punkt für mich: Ich hab dich zum Lachen gebracht. Das zählt doppelt.", antworten: [
-      { text: "Einverstanden. Zwei Striche fürs Huhn.", weiter: null },
-      { text: "Das Schwein wird Einspruch erheben.", weiter: null } ] }
+    k2: { sagt: "Ich pass auf. Wenn du deinen Schlüssel suchst, weiß ich immer, wo er liegt.", antworten: [
+      { text: "Und warum sagst du’s nie?", weiter: "k4" },
+      { text: "Das ist tatsächlich was wert.", weiter: "k5" } ] },
+    k3: { sagt: "Bloß nicht, dann fühlt es sich wichtig. Es ist eh schon so rund vor Stolz.", antworten: [
+      { text: "Schweine sind nun mal rund.", weiter: "k5" },
+      { text: "Gut, ich ignorier es eine Woche.", weiter: "k5" } ] },
+    k4: { sagt: "Ich darf ja nichts sagen, ich bin Deko. Aber ich guck dann ganz doll in die Richtung.", antworten: [
+      { text: "Ab jetzt guck ich, wohin du guckst.", weiter: "k5" },
+      { text: "Ganz doll guckst du nie.", weiter: "k5" } ] },
+    k5: { sagt: "Ich schlag vor, wir machen einen Wettbewerb bis Sonntag. Du führst Strichliste, das kannst du ja.", antworten: [
+      { text: "Gut. Ein Strich für den Schlüssel.", weiter: "k6" },
+      { text: "Und wer ist Schiedsrichter?", weiter: "k6" } ] },
+    k6: { sagt: "Der Hase. Der ist neutral, der redet mit keinem von uns.", antworten: [
+      { text: "Dann ist das fair.", weiter: null },
+      { text: "Der schläft doch die ganze Zeit.", weiter: null } ] }
   },
-  schluss: "Ich muss los. Ich hab einen Vorsprung zu verteidigen." },
+  schluss: "So. Ich konzentrier mich jetzt aufs Glück. Das Schwein soll sich warm anziehen." },
 
 { id: "huhn-04", wer: "huhn", thema: "Der grüne Hase",
   knoten: {
-    start: { sagt: "Der grüne Hase redet seit drei Tagen nicht mit mir. Er redet sonst auch nicht. Aber diesmal fühlt es sich absichtlich an.", antworten: [
+    start: { sagt: "Der Hase redet nicht mehr mit mir. Gut, er hat noch nie geredet, aber jetzt merkt man’s.", antworten: [
       { text: "Habt ihr euch gestritten?", weiter: "k2" },
-      { text: "Vielleicht denkt er nur nach.", weiter: "k3" } ] },
-    k2: { sagt: "Ich hab gesagt, Grün ist keine Hasenfarbe. Das war vielleicht unsensibel.", antworten: [
-      { text: "Ockergelb ist auch keine Hühnerfarbe.", weiter: "k4" },
-      { text: "Entschuldige dich mit Schmeichelei.", weiter: "k5" } ] },
-    k3: { sagt: "Worüber denn? Er guckt seit Jahren aus dem Fenster, immer in dieselbe Richtung.", antworten: [
-      { text: "Vielleicht wartet er auf einen Bus.", weiter: "k4" },
-      { text: "Dann denkt er sehr gründlich.", weiter: "k4" } ] },
-    k4: { sagt: "Oh, du hast recht: Wir sind beide farblich mutig. Ich glaub, ich hab ihn falsch verstanden.", antworten: [
-      { text: "Sag ihm, er ist wunderbar grün.", weiter: "k5" },
-      { text: "Zeit für ein Friedensangebot.", weiter: "k5" } ] },
-    k5: { sagt: "Ich hab ihm gerade zugenickt, gedanklich. Er hat zurückgeguckt, ich glaub, wir sind wieder gut.", antworten: [
-      { text: "Na siehst du, geht doch.", weiter: null },
-      { text: "Hat er wirklich geguckt?", weiter: "k6" } ] },
-    k6: { sagt: "Er guckt immer. Aber diesmal war es so ein versöhnliches Gucken.", antworten: [
-      { text: "Das zählt absolut.", weiter: null },
-      { text: "Ich glaub dir jedes Wort.", weiter: null } ] }
+      { text: "Vielleicht hat er schlechte Laune.", weiter: "k3" } ] },
+    k2: { sagt: "Ich hab gesagt, Grün ist keine Farbe für einen Hasen. Das kam vielleicht falsch an.", antworten: [
+      { text: "Und Ocker ist eine fürs Huhn?", weiter: "k4" },
+      { text: "Na, das war auch frech.", weiter: "k4" } ] },
+    k3: { sagt: "Seit du ihn umgestellt hast, guckt er auf die Wand. Da würd ich auch schlechte Laune kriegen.", antworten: [
+      { text: "Oh. Das war beim Staubwischen.", weiter: "k5" },
+      { text: "Die Wand ist frisch gestrichen.", weiter: "k4" } ] },
+    k4: { sagt: "Ja ja, schon gut. Was soll ich jetzt machen, ich kann ja schlecht rübergehen.", antworten: [
+      { text: "Ich dreh ihn ein bisschen zu dir.", weiter: "k6" },
+      { text: "Sag einfach Entschuldigung.", weiter: "k6" } ] },
+    k5: { sagt: "Dann dreh ihn bitte zurück. Am besten zu mir, ich bin die schönere Aussicht.", antworten: [
+      { text: "Bescheiden wie immer.", weiter: "k6" },
+      { text: "Gut, er kriegt dich zu sehen.", weiter: "k6" } ] },
+    k6: { sagt: "Hm. Er guckt. Ich glaub, das wird wieder.", antworten: [
+      { text: "Na siehst du.", weiter: null },
+      { text: "Jetzt vertragt euch aber.", weiter: null } ] }
   },
-  schluss: "Ich steh jetzt ein Stück näher an ihm. Also, theoretisch." },
+  schluss: "Ich sag ihm jetzt, dass Grün doch ganz schön ist. Leise, damit’s keiner hört." },
 
 { id: "huhn-05", wer: "huhn", thema: "Hogwarts",
   knoten: {
-    start: { sagt: "Ich hab heimlich in deinem Harry-Potter-Buch mitgelesen. Über die Schulter. Ich hab ja keine Schultern, aber du weißt, was ich meine.", antworten: [
-      { text: "Und, wie findest du es?", weiter: "k2" },
-      { text: "In welches Haus würdest du kommen?", weiter: "k3" } ] },
-    k2: { sagt: "Sehr spannend. Allerdings kommen viel zu wenig Hühner vor. Eulen, Eulen, Eulen.", antworten: [
-      { text: "Du könntest Post austragen.", weiter: "k4" },
-      { text: "Ein Huhn bei den Eulen? Mutig.", weiter: "k4" } ] },
-    k3: { sagt: "Hufflepuff, ganz klar. Treu, fleißig und gelb. Ich hab mich ja quasi schon gefärbt.", antworten: [
-      { text: "Passt wie angegossen. Gebrannt, meine ich.", weiter: "k5" },
-      { text: "Ich hätte dich für Slytherin gehalten.", weiter: "k6" } ] },
-    k4: { sagt: "Ich könnte Briefe bringen, sehr langsam. Eigentlich müsste man sie bei mir abholen.", antworten: [
-      { text: "Das wäre ein Abholhuhn.", weiter: "k5" },
-      { text: "Dann warte ich gern.", weiter: "k5" } ] },
-    k5: { sagt: "Abholhuhn. Ich schreib das in meine Bewerbung. Gleich nach „hat keine Hände“.", antworten: [
-      { text: "Ehrlichkeit kommt immer gut an.", weiter: null },
-      { text: "Lass das mit den Händen weg.", weiter: null } ] },
-    k6: { sagt: "Slytherin, ich? Ich hab einmal einem Staubkorn mit voller Absicht den Weg versperrt. Vielleicht hast du recht.", antworten: [
-      { text: "Siehst du, ein Huhn mit Ehrgeiz.", weiter: "k5" },
-      { text: "Bleib lieber bei Hufflepuff.", weiter: "k5" } ] }
+    start: { sagt: "Ich les bei dir mit, über die Schulter. Du blätterst übrigens zu schnell um.", antworten: [
+      { text: "Du kannst doch gar nicht lesen.", weiter: "k2" },
+      { text: "Wo bist du denn gerade?", weiter: "k3" } ] },
+    k2: { sagt: "Die Kapitelüberschriften schon, die sind groß. Den Rest denk ich mir.", antworten: [
+      { text: "Und, was denkst du dir so?", weiter: "k4" },
+      { text: "Das machen manche Kritiker auch.", weiter: "k4" } ] },
+    k3: { sagt: "Bei den Drachen. Ehrlich gesagt erinnern die mich an meinen Brennofen.", antworten: [
+      { text: "Keine Sorge, das geht gut aus.", weiter: "k4" },
+      { text: "Dann blätter ich da langsamer.", weiter: "k4" } ] },
+    k4: { sagt: "Sag mal, in welches Haus würd ich eigentlich kommen?", antworten: [
+      { text: "Hufflepuff. Treu und gelb.", weiter: "k5" },
+      { text: "Slytherin, so wie du guckst.", weiter: "k6" } ] },
+    k5: { sagt: "Hab ich mir auch gedacht. Die haben, glaub ich, auch das bessere Essen.", antworten: [
+      { text: "Du isst doch gar nichts.", weiter: null },
+      { text: "Und sie sind nett zueinander.", weiter: null } ] },
+    k6: { sagt: "Ich guck nicht so, das ist die Glasur. Aber ehrgeizig bin ich schon, das stimmt.", antworten: [
+      { text: "Na also. Grün steht dir.", weiter: null },
+      { text: "Gut, dann doch Hufflepuff.", weiter: null } ] }
   },
-  schluss: "Ich lese jetzt weiter. Du musst nur umblättern, wenn ich nicke." },
+  schluss: "Lies ruhig weiter. Ich sag Bescheid, wenn du umblättern darfst." },
 
-{ id: "huhn-06", wer: "huhn", thema: "Hühnchens Liste",
+{ id: "huhn-06", wer: "huhn", thema: "Hühnchen auf die Liste",
   knoten: {
-    start: { sagt: "Ich hab mir von dir abgeguckt, wie man Listen macht. Hier ist meine: Punkt eins, rumstehen.", antworten: [
-      { text: "Und Punkt zwei?", weiter: "k2" },
-      { text: "Schon erledigt?", weiter: "k3" } ] },
-    k2: { sagt: "Punkt zwei: weiter rumstehen. Punkt drei: kurz über Punkt zwei nachdenken.", antworten: [
-      { text: "Eine sehr realistische Liste.", weiter: "k4" },
-      { text: "Da fehlt was Aufregendes.", weiter: "k5" } ] },
-    k3: { sagt: "Ich bin mittendrin. Das ist bei rumstehen so eine Sache. Man weiß nie, wann es fertig ist.", antworten: [
-      { text: "Mach einfach einen Zwischenhaken.", weiter: "k4" },
-      { text: "Wie bei meinem Abwasch.", weiter: "k4" } ] },
-    k4: { sagt: "Ein Zwischenhaken. Du bist ein Genie. Kann ich davon gleich mehrere haben?", antworten: [
-      { text: "So viele du willst.", weiter: null },
-      { text: "Maximal drei pro Tag.", weiter: null } ] },
-    k5: { sagt: "Aufregendes, okay. Punkt vier: einmal anders rum stehen, mit dem Rücken zum Fenster.", antworten: [
-      { text: "Wow. Ganz schön wild.", weiter: "k4" },
-      { text: "Der Hase wird geschockt sein.", weiter: "k4" } ] }
+    start: { sagt: "Ich hab deine Liste am Kühlschrank gesehen. Ich steh da gar nicht drauf.", antworten: [
+      { text: "Was soll ich denn schreiben?", weiter: "k2" },
+      { text: "Das ist meine Einkaufsliste.", weiter: "k3" } ] },
+    k2: { sagt: "„Hühnchen abstauben“ zum Beispiel. Oder „Hühnchen was Nettes sagen“.", antworten: [
+      { text: "Das Zweite mach ich gleich.", weiter: "k4" },
+      { text: "Abgestaubt hab ich doch Montag.", weiter: "k5" } ] },
+    k3: { sagt: "Ach so. Dann will ich da erst recht nicht drauf, zwischen Quark und Klopapier.", antworten: [
+      { text: "Gut, du kriegst eine eigene.", weiter: "k2" },
+      { text: "Quark ist doch was Feines.", weiter: "k2" } ] },
+    k4: { sagt: "Na los, ich warte.", antworten: [
+      { text: "Du bist das hübscheste Huhn hier.", weiter: "k6" },
+      { text: "Deine Glasur glänzt heute so.", weiter: "k6" } ] },
+    k5: { sagt: "Montag ist lange her. Ich spür schon wieder was auf dem Kopf.", antworten: [
+      { text: "Na gut, Freitag wird gewischt.", weiter: "k6" },
+      { text: "Das ist dein Kamm.", weiter: "k6" } ] },
+    k6: { sagt: "Danke. Das kannst du jetzt abhaken.", antworten: [
+      { text: "Abgehakt. Mit Ausrufezeichen.", weiter: null },
+      { text: "Steht nächste Woche wieder drauf.", weiter: null } ] }
   },
-  schluss: "Ich hab gerade Punkt eins abgehakt. Gedanklich. Es war großartig." },
+  schluss: "Ich steh jetzt ein bisschen gerader. Merkt keiner außer mir." },
 
-{ id: "huhn-07", wer: "huhn", thema: "Fensterbank-Wetter",
+{ id: "huhn-07", wer: "huhn", thema: "Die Meise am Fenster",
   knoten: {
-    start: { sagt: "Wetterbericht von der Fensterbank: Die Sonne steht links vom Hasen. Tendenz: weiter nach rechts.", antworten: [
-      { text: "Sehr präzise, danke.", weiter: "k2" },
-      { text: "Und wie wird’s morgen?", weiter: "k3" } ] },
-    k2: { sagt: "Ich bin hier sozusagen die Wetterstation. Ich merke Regen daran, dass du die Gardine zuziehst.", antworten: [
-      { text: "Das ist geschummelt!", weiter: "k4" },
-      { text: "Und Wind?", weiter: "k5" } ] },
-    k3: { sagt: "Morgen wird es wahrscheinlich hell. Dann dunkel. Ich lege mich da ungern weiter fest.", antworten: [
-      { text: "Sicher ist sicher.", weiter: "k4" },
-      { text: "Das kann sogar ich vorhersagen.", weiter: "k4" } ] },
-    k4: { sagt: "Ich nenne es Erfahrungswerte. Ich stehe hier schon länger als manches Wetter.", antworten: [
-      { text: "Da hast du allerdings recht.", weiter: null },
-      { text: "Du bist ein altes Wetterhuhn.", weiter: null } ] },
-    k5: { sagt: "Wind merke ich nicht. Ich wiege zu viel. Das ist mein einziger Vorteil gegenüber Herbstlaub.", antworten: [
-      { text: "Gut, dass du nicht wegfliegst.", weiter: "k4" },
-      { text: "Laub ist trotzdem hübsch.", weiter: "k4" } ] }
+    start: { sagt: "Draußen sitzt wieder diese Meise. Die guckt mich an, als wär ich nicht echt.", antworten: [
+      { text: "Na ja, bist du ja auch nicht.", weiter: "k2" },
+      { text: "Die will bloß ans Futter.", weiter: "k3" } ] },
+    k2: { sagt: "Ich bin echt. Echter Ton aus Peru. Die ist bloß echte Meise.", antworten: [
+      { text: "Da hast du auch wieder recht.", weiter: "k4" },
+      { text: "Sie kann aber fliegen.", weiter: "k5" } ] },
+    k3: { sagt: "Futter? Du fütterst die? Ich krieg nie was.", antworten: [
+      { text: "Du hast keinen Magen, Hühnchen.", weiter: "k4" },
+      { text: "Du kriegst dafür mein Ohr.", weiter: "k4" } ] },
+    k4: { sagt: "Trotzdem. Die soll nicht so tun, die ist ja winzig.", antworten: [
+      { text: "Klein, aber sie kommt jeden Tag.", weiter: "k6" },
+      { text: "Du bist auch nicht riesig.", weiter: "k6" } ] },
+    k5: { sagt: "Fliegen, pff. Dafür kann ich stillstehen, das schafft die keine fünf Sekunden.", antworten: [
+      { text: "Stimmt, die zappelt ständig.", weiter: "k6" },
+      { text: "Das wär ein unfairer Wettkampf.", weiter: "k6" } ] },
+    k6: { sagt: "Weißt du was, sag ihr, sie darf mich angucken. Aber von draußen.", antworten: [
+      { text: "Ich richt’s ihr aus.", weiter: null },
+      { text: "Sehr großzügig von dir.", weiter: null } ] }
   },
-  schluss: "Das war der Wetterbericht. Es folgt: Stille. Ich übernehme das." },
+  schluss: "Sie ist weg. Na also. Der Vogel hier drin bin immer noch ich." },
 
-{ id: "huhn-08", wer: "huhn", thema: "Postkarte aus Peru",
+{ id: "huhn-08", wer: "huhn", thema: "Postkarte nach Peru",
   knoten: {
-    start: { sagt: "Ich überlege, eine Postkarte nach Peru zu schreiben. An die Werkstatt, in der ich gemacht wurde.", antworten: [
+    start: { sagt: "Ich will eine Karte nach Peru schreiben. An die Werkstatt, wo sie mich gemacht haben.", antworten: [
       { text: "Was willst du denn schreiben?", weiter: "k2" },
-      { text: "Wie willst du ohne Hände schreiben?", weiter: "k3" } ] },
-    k2: { sagt: "„Liebe Werkstatt, mir geht es gut, ich stehe in Berlin und die Aussicht ist grün. Bitte keine Beine nachschicken.“", antworten: [
-      { text: "Sehr schön formuliert.", weiter: "k4" },
-      { text: "Schreib noch was über mich.", weiter: "k5" } ] },
-    k3: { sagt: "Ich diktiere. Du schreibst. Du hast doch so schöne Stifte für deine Listen.", antworten: [
-      { text: "Na gut, ich hole den Füller.", weiter: "k2" },
-      { text: "Was zahlst du mir dafür?", weiter: "k6" } ] },
-    k4: { sagt: "Jetzt noch eine Briefmarke. Ich würde ja lecken, aber mein Schnabel ist glasiert.", antworten: [
-      { text: "Ich mach das schon.", weiter: null },
-      { text: "Wir nehmen einen Klebestift.", weiter: null } ] },
-    k5: { sagt: "„PS: Ich wohne bei Rita. Sie macht Listen und lacht viel. Ich hab das beste Regal bekommen.“", antworten: [
-      { text: "Oh, das ist lieb von dir.", weiter: "k4" },
-      { text: "Das beste Regal? Stimmt.", weiter: "k4" } ] },
-    k6: { sagt: "Ich kann dir anbieten: einen Monat lang nicht umfallen. Garantiert.", antworten: [
-      { text: "Abgemacht, das ist ein fairer Lohn.", weiter: "k2" },
-      { text: "Das machst du doch sowieso.", weiter: "k2" } ] }
+      { text: "Und wer schreibt? Du hast keine Hände.", weiter: "k3" } ] },
+    k2: { sagt: "„Mir geht’s gut, ich steh in Berlin, hier ist es kalt, aber ich wohne bei Rita.“", antworten: [
+      { text: "Schreib noch was über mich.", weiter: "k4" },
+      { text: "Kalt ist es nur beim Lüften.", weiter: "k4" } ] },
+    k3: { sagt: "Du. Du hast doch die schönen Stifte, ich diktier.", antworten: [
+      { text: "Na gut, ich hol den Füller.", weiter: "k2" },
+      { text: "Und was krieg ich dafür?", weiter: "k5" } ] },
+    k4: { sagt: "„PS: Sie lacht viel und schreibt Listen. Ich hab den besten Platz im Regal.“", antworten: [
+      { text: "Das ist lieb. Stimmt auch.", weiter: "k6" },
+      { text: "Den Platz hab ich ausgesucht.", weiter: "k6" } ] },
+    k5: { sagt: "Ich guck dich einen Monat lang freundlich an. Ohne Pause.", antworten: [
+      { text: "Das machst du sowieso.", weiter: "k2" },
+      { text: "Abgemacht, das ist ein Lohn.", weiter: "k2" } ] },
+    k6: { sagt: "Jetzt noch die Briefmarke. Ich würd ja lecken, aber ich bin glasiert.", antworten: [
+      { text: "Die klebt von selbst.", weiter: null },
+      { text: "Ich mach das schon.", weiter: null } ] }
   },
-  schluss: "Die Karte geht raus. Irgendwann. Ich hab keine Eile, ich bin aus Ton." },
+  schluss: "Die darf ruhig lange unterwegs sein. Ich hab keine Eile." },
 
 { id: "huhn-09", wer: "huhn", thema: "Eier legen",
   knoten: {
     start: { sagt: "Ich muss dir was gestehen. Ich hab noch nie ein Ei gelegt.", antworten: [
       { text: "Das hat auch keiner erwartet.", weiter: "k2" },
-      { text: "Willst du es mal versuchen?", weiter: "k3" } ] },
-    k2: { sagt: "Doch, das Glücksschwein fragt jeden Morgen. Ich glaube, es will Rührei.", antworten: [
+      { text: "Möchtest du denn eins?", weiter: "k3" } ] },
+    k2: { sagt: "Doch, das Schwein. Das fragt jeden Morgen, ob heute was kommt.", antworten: [
       { text: "Das Schwein soll sich benehmen.", weiter: "k4" },
-      { text: "Sag, du hast frei.", weiter: "k4" } ] },
-    k3: { sagt: "Ich hab mich gerade sehr konzentriert. Es kam aber nur ein leises Knacken. Ich glaube, das war das Regal.", antworten: [
-      { text: "Vielleicht ein Regal-Ei?", weiter: "k5" },
-      { text: "Lass das lieber, bevor was bricht.", weiter: "k4" } ] },
-    k4: { sagt: "Ich hab beschlossen: Ich lege keine Eier, ich lege Wert. Auf Ordnung, auf Ruhe, auf dich.", antworten: [
-      { text: "Das ist das schönste Ei überhaupt.", weiter: null },
-      { text: "Das schreib ich mir auf.", weiter: null } ] },
-    k5: { sagt: "Ein Regal-Ei. Rund, aus Kiefer, mit Schrauben. Ich wäre sehr stolz, aber auch sehr verwirrt.", antworten: [
-      { text: "Ich wäre einfach nur verwirrt.", weiter: "k4" },
-      { text: "Wir nennen es Ikea-Ostern.", weiter: "k4" } ] }
+      { text: "Sag ihm, du hast Urlaub.", weiter: "k4" } ] },
+    k3: { sagt: "Ich hab’s grad mal probiert. Es hat geknackt, aber das war das Regal.", antworten: [
+      { text: "Lass das lieber, bevor was bricht.", weiter: "k4" },
+      { text: "Das Regal knackt immer.", weiter: "k4" } ] },
+    k4: { sagt: "Ich glaub, ich bin einfach kein Ei-Typ. Ich bin mehr zum Angucken.", antworten: [
+      { text: "Und das machst du sehr gut.", weiter: "k5" },
+      { text: "Eier hol ich eh im Hofladen.", weiter: "k6" } ] },
+    k5: { sagt: "Danke. Ich üb ja auch jeden Tag.", antworten: [
+      { text: "Merkt man.", weiter: null },
+      { text: "Morgen wieder, gleiche Zeit.", weiter: null } ] },
+    k6: { sagt: "Im Hofladen? Was gibt’s da sonst noch so?", antworten: [
+      { text: "Kartoffeln. Äpfel. Nichts Besonderes.", weiter: null },
+      { text: "Ach, nur Gemüse. Ganz langweilig.", weiter: null } ] }
   },
-  schluss: "Ich gehe jetzt brüten. Über Gedanken. Die schlüpfen schneller." },
+  schluss: "Na gut. Dann bin ich hier eben die ohne Eier. Steht mir auch." },
 
 { id: "huhn-10", wer: "huhn", thema: "Staubwischen",
   knoten: {
-    start: { sagt: "Ich hab gehört, du wischst heute Staub. Ich hätte gern das volle Programm. Wellness, bitte.", antworten: [
-      { text: "Feuchtes Tuch oder Pinsel?", weiter: "k2" },
-      { text: "Wellness kostet extra.", weiter: "k3" } ] },
-    k2: { sagt: "Pinsel. Feucht macht meinen Kamm so wellig. Und der muss sitzen, ich bin hier das Gesicht des Regals.", antworten: [
-      { text: "Pinsel kommt sofort.", weiter: "k4" },
-      { text: "Du bist ganz schön eitel.", weiter: "k5" } ] },
-    k3: { sagt: "Ich zahle in Bewunderung. Ich gucke dich den ganzen Tag bewundernd an. Das kann ich gut.", antworten: [
-      { text: "Dann mach ich dir einen Sonderpreis.", weiter: "k2" },
-      { text: "Gucken kostet dich doch nichts.", weiter: "k2" } ] },
-    k4: { sagt: "Ahhh, ja. Da hinter dem Sockel war seit Ostern eine Fluse, sie hieß Gerda.", antworten: [
-      { text: "Gerda ist jetzt im Staubsauger.", weiter: "k6" },
-      { text: "Soll ich Gerda zurücklegen?", weiter: "k6" } ] },
-    k5: { sagt: "Eitel? Ich bin gebrannt, glasiert und von Hand bemalt. Ich darf das.", antworten: [
-      { text: "Na gut, das stimmt.", weiter: "k4" },
-      { text: "Ich bin auch handbemalt. Lippenstift.", weiter: "k4" } ] },
-    k6: { sagt: "Nein, lass sie ziehen. Gerda war nie für die Ewigkeit gemacht. Nicht wie ich.", antworten: [
-      { text: "Sehr gefasst, Hühnchen.", weiter: null },
-      { text: "Mach’s gut, Gerda.", weiter: null } ] }
+    start: { sagt: "Ich seh das Tuch, du wischst heute Staub. Bei mir bitte den Pinsel, nicht das nasse Ding.", antworten: [
+      { text: "Warum denn nicht nass?", weiter: "k2" },
+      { text: "Wer sagt, dass du dran bist?", weiter: "k3" } ] },
+    k2: { sagt: "Da krieg ich Streifen auf die Glasur. Und dann guckt der Hase.", antworten: [
+      { text: "Gut, du kriegst den Pinsel.", weiter: "k4" },
+      { text: "Der Hase guckt sowieso.", weiter: "k4" } ] },
+    k3: { sagt: "Ich steh ganz vorne, also bin ich als Erste dran. Das ist Regalordnung.", antworten: [
+      { text: "Die hast du dir ausgedacht.", weiter: "k4" },
+      { text: "Na gut, du zuerst.", weiter: "k4" } ] },
+    k4: { sagt: "Ah, ja, schön. Hinten am Sockel, da, wo’s kitzelt.", antworten: [
+      { text: "Da war ja eine dicke Fluse.", weiter: "k5" },
+      { text: "Halt still. Ganz sanft jetzt.", weiter: "k5" } ] },
+    k5: { sagt: "Die wohnt da seit Ostern. Die hätt ich selber nie weggekriegt.", antworten: [
+      { text: "Jetzt ist sie im Sauger.", weiter: null },
+      { text: "Du hättest was sagen können.", weiter: "k6" } ] },
+    k6: { sagt: "Hab ich doch. Ich hab die ganze Zeit hingeguckt, du hast es nur nicht gemerkt.", antworten: [
+      { text: "Nächstes Mal guckst du lauter.", weiter: null },
+      { text: "Gut, ich guck jetzt öfter hin.", weiter: null } ] }
   },
-  schluss: "Ich glänze. Der Hase guckt neidisch. Endlich passiert hier mal was." },
+  schluss: "So. Ich glänze. Kannst ruhig mal kurz rübergucken." },
 
-{ id: "huhn-11", wer: "huhn", thema: "Was ist ein Huhn?",
+{ id: "huhn-11", wer: "huhn", thema: "Hühnchen im Handy",
   knoten: {
-    start: { sagt: "Philosophische Frage: Bin ich ein Huhn, das eine Figur ist, oder eine Figur, die ein Huhn ist?", antworten: [
-      { text: "Du bist einfach mein Hühnchen.", weiter: "k2" },
-      { text: "Was war zuerst da, Ton oder Huhn?", weiter: "k3" } ] },
-    k2: { sagt: "Oh. Das ist die beste Antwort. Die hat sogar eine Possessivform.", antworten: [
-      { text: "Ich bin halt gut in Grammatik.", weiter: "k4" },
-      { text: "Jetzt werd nicht rührselig.", weiter: "k4" } ] },
-    k3: { sagt: "Der Ton, eindeutig. Der lag schon rum, bevor jemand Huhn zu ihm gesagt hat.", antworten: [
-      { text: "Also bist du uralt.", weiter: "k5" },
-      { text: "Und das Ei?", weiter: "k5" } ] },
-    k4: { sagt: "Ich werde nie rührselig. Ich bin nur ein bisschen gerührt. Wegen der Glasur sieht man’s nicht.", antworten: [
-      { text: "Ich seh es trotzdem.", weiter: null },
-      { text: "Dein Geheimnis ist bei mir sicher.", weiter: null } ] },
-    k5: { sagt: "Das Ei ist ein Thema, über das ich nicht spreche. Da hab ich eine Lücke im Lebenslauf.", antworten: [
-      { text: "Gut, wechseln wir das Thema.", weiter: "k2" },
-      { text: "Lücken machen interessant.", weiter: "k4" } ] }
+    start: { sagt: "Hast du gesehen? Ich bin jetzt in deinem Handy drin. Max hat mich da reingemalt.", antworten: [
+      { text: "Ja, du bist gut getroffen.", weiter: "k2" },
+      { text: "Wie fühlt sich das an?", weiter: "k3" } ] },
+    k2: { sagt: "Findest du? Ich find, er hat mich ein bisschen breiter gemacht.", antworten: [
+      { text: "Das Handy macht alle breiter.", weiter: "k4" },
+      { text: "Du bist eben ein stattliches Huhn.", weiter: "k4" } ] },
+    k3: { sagt: "Komisch. Ich steh hier und bin gleichzeitig da drin, und da drin red ich sogar.", antworten: [
+      { text: "Hier redest du doch auch.", weiter: "k5" },
+      { text: "Und da drin bist du netter.", weiter: "k5" } ] },
+    k4: { sagt: "Hm. Sag Max, er soll das nochmal machen. Von links, da bin ich besser.", antworten: [
+      { text: "Du bist nur vorne bemalt.", weiter: "k6" },
+      { text: "Ich sag’s ihm beim nächsten Anruf.", weiter: "k6" } ] },
+    k5: { sagt: "Frechheit. Da drin hab ich wenigstens Sprechblasen.", antworten: [
+      { text: "Und ganz schön viele.", weiter: "k4" },
+      { text: "Die schreibt aber Max.", weiter: "k4" } ] },
+    k6: { sagt: "Jedenfalls nicht von oben. Von oben seh ich so platt aus.", antworten: [
+      { text: "Ich richt’s ihm aus.", weiter: null },
+      { text: "Du bist ganz schön eitel.", weiter: null } ] }
   },
-  schluss: "Ich denk noch ein bisschen weiter. Ich hab ja Zeit, ich bin Keramik." },
+  schluss: "Und wenn du mich da drin antippst, bitte vorsichtig. Ich bin da auch empfindlich." },
 
-{ id: "huhn-12", wer: "huhn", thema: "Eichhörnchen im Forst",
+{ id: "huhn-12", wer: "huhn", thema: "Ein Blatt aus dem Forst",
   knoten: {
-    start: { sagt: "Du warst im Forst, ich rieche es. Na gut, ich rieche nichts, aber du hast ein Blatt am Ärmel.", antworten: [
-      { text: "Ich hab Eichhörnchen gesehen.", weiter: "k2" },
-      { text: "Das Blatt ist für dich.", weiter: "k3" } ] },
-    k2: { sagt: "Eichhörnchen! Haben sie nach mir gefragt? Ich bin in der Tierwelt bestimmt sehr bekannt.", antworten: [
-      { text: "Eins hat ganz interessiert geguckt.", weiter: "k4" },
-      { text: "Die waren mit Nüssen beschäftigt.", weiter: "k5" } ] },
-    k3: { sagt: "Ein Geschenk! Leg es bitte neben mich, ich werde es mit meinem Leben bewachen. Also, mit meinem Stehen.", antworten: [
-      { text: "Das ist ein Eichenblatt.", weiter: "k6" },
-      { text: "Wird gemacht, Wachhuhn.", weiter: "k6" } ] },
-    k4: { sagt: "Sag ihm beim nächsten Mal: Das Huhn grüßt. Und: Wir sind beide nicht gut im Fliegen.", antworten: [
-      { text: "Eichhörnchen springen doch.", weiter: "k5" },
-      { text: "Ich richte es aus.", weiter: null } ] },
-    k5: { sagt: "Immer nur Nüsse, typisch. Kein Interesse an Kunst.", antworten: [
+    start: { sagt: "Du warst im Forst, oder? Du hast ein Blatt am Ärmel.", antworten: [
+      { text: "Ich hab ein Eichhörnchen gesehen.", weiter: "k2" },
+      { text: "Das Blatt hab ich dir mitgebracht.", weiter: "k3" } ] },
+    k2: { sagt: "Ein echtes? Was hat es gemacht?", antworten: [
+      { text: "Nüsse vergraben und mich ignoriert.", weiter: "k4" },
+      { text: "Mich angeguckt, ganz frech.", weiter: "k5" } ] },
+    k3: { sagt: "Für mich? Leg’s mir hin, bitte. Direkt vor den Sockel.", antworten: [
+      { text: "Da liegt es schön.", weiter: "k6" },
+      { text: "Der Hase kriegt keins.", weiter: "k6" } ] },
+    k4: { sagt: "Typisch. Die denken nur an Nüsse, für Kunst haben die keinen Blick.", antworten: [
       { text: "Du bist ja auch keine Nuss.", weiter: null },
       { text: "Nimm’s nicht persönlich.", weiter: null } ] },
-    k6: { sagt: "Ich nenne es Herbert. Herbert und ich werden zusammen sehr braun und sehr weise.", antworten: [
-      { text: "Herbert hat Glück mit dir.", weiter: null },
-      { text: "Du wirst nicht braun.", weiter: null } ] }
+    k5: { sagt: "Frech gucken kann ich auch. So wie ich jetzt?", antworten: [
+      { text: "Fast. Es hatte mehr Fell.", weiter: "k4" },
+      { text: "Nee, du guckst viel frecher.", weiter: "k4" } ] },
+    k6: { sagt: "Danke. Das ist mein erstes Blatt. Ich pass gut drauf auf.", antworten: [
+      { text: "Wenn’s trocken ist, press ich’s.", weiter: null },
+      { text: "Morgen bring ich noch eins.", weiter: null } ] }
   },
-  schluss: "Grüß den Forst von mir. Ich kann nicht mit, ich muss hier Herbert hüten." },
+  schluss: "Grüß den Forst von mir. Das Eichhörnchen nicht, das hat’s nicht verdient." },
 
-{ id: "huhn-13", wer: "huhn", thema: "Tanzstunde fürs Huhn",
+{ id: "huhn-13", wer: "huhn", thema: "Zuschauen bei der Tanzstunde",
   knoten: {
-    start: { sagt: "Du bringst deinem Nachbarn Tanzen bei. Ich will auch. Ich hab extra den Sockel geputzt.", antworten: [
-      { text: "Gut, wir fangen mit Walzer an.", weiter: "k2" },
-      { text: "Wie wär’s mit Tango?", weiter: "k3" } ] },
-    k2: { sagt: "Eins, zwei, drei, eins, zwei, drei … ich stehe, ich stehe, ich stehe. Wie mache ich mich?", antworten: [
-      { text: "Taktsicher wie ein Metronom.", weiter: "k4" },
-      { text: "Etwas mehr Hüfte, bitte.", weiter: "k5" } ] },
-    k3: { sagt: "Tango! Ich kann sehr dramatisch gucken. Ich gucke immer dramatisch, das war die Pinselführung.", antworten: [
-      { text: "Dann bist du ein Naturtalent.", weiter: "k4" },
-      { text: "Jetzt noch den Kopf werfen.", weiter: "k5" } ] },
-    k4: { sagt: "Ich bin besser als dein Tanzschüler, oder? Du kannst ehrlich sein. Ich bin hart im Nehmen.", antworten: [
-      { text: "Du trittst mir zumindest nie auf.", weiter: "k6" },
-      { text: "Das sag ich ihm lieber nicht.", weiter: "k6" } ] },
-    k5: { sagt: "Ich habe keine Hüfte. Ich habe keinen beweglichen Kopf. Ich habe Ausstrahlung.", antworten: [
-      { text: "Ausstrahlung ist die halbe Miete.", weiter: "k4" },
-      { text: "Na gut, wir tanzen mit Ausstrahlung.", weiter: "k4" } ] },
-    k6: { sagt: "Nächstes Mal stellst du mich auf den Tisch, wenn ihr übt. Ich zähle mit. Lautlos.", antworten: [
-      { text: "Du bist engagiert.", weiter: null },
-      { text: "Aber nicht vorsagen.", weiter: null } ] }
+    start: { sagt: "Du bringst doch dem Nachbarn Tanzen bei. Darf ich nächstes Mal zugucken?", antworten: [
+      { text: "Wenn du still bist, ja.", weiter: "k2" },
+      { text: "Willst du nicht lieber mittanzen?", weiter: "k3" } ] },
+    k2: { sagt: "Ich bin immer still. Ich hab noch nie eine Tanzstunde gestört.", antworten: [
+      { text: "Du warst ja auch nie in einer.", weiter: "k4" },
+      { text: "Gut, du kommst aufs Fensterbrett.", weiter: "k4" } ] },
+    k3: { sagt: "Mittanzen? Ich hab keine Beine, Rita. Das ist beim Tanzen ein Nachteil.", antworten: [
+      { text: "Dann gibst du den Takt vor.", weiter: "k5" },
+      { text: "Du hast Haltung, das reicht.", weiter: "k5" } ] },
+    k4: { sagt: "Und wenn er dir auf den Fuß tritt, sag ich nichts. Ich guck nur.", antworten: [
+      { text: "Das ist schlimmer als was sagen.", weiter: "k6" },
+      { text: "Er tritt kaum noch, ehrlich.", weiter: "k6" } ] },
+    k5: { sagt: "Takt kann ich. Ich steh einfach, und ihr dreht euch um mich rum.", antworten: [
+      { text: "Wie um einen Maibaum.", weiter: "k4" },
+      { text: "Dann bist du die Mitte.", weiter: "k4" } ] },
+    k6: { sagt: "Ich bin halt eine strenge Zuschauerin. Aber gerecht.", antworten: [
+      { text: "Dann bist du ab jetzt Jury.", weiter: null },
+      { text: "Er wird sich anstrengen.", weiter: null } ] }
   },
-  schluss: "Und eins, zwei, drei … Ich bleib in Position. Für immer, wahrscheinlich." },
+  schluss: "Und eins, zwei, drei. Ich bin so weit, wenn ihr so weit seid." },
 
 { id: "huhn-14", wer: "huhn", thema: "Wie das Huhn telefoniert",
   knoten: {
-    start: { sagt: "Du fragst dich bestimmt, wie ich dich ohne Hände angerufen hab.", antworten: [
+    start: { sagt: "Du fragst dich bestimmt, wie ich ohne Hände telefonier.", antworten: [
       { text: "Ehrlich gesagt, ja.", weiter: "k2" },
       { text: "Ich frag lieber nicht.", weiter: "k3" } ] },
-    k2: { sagt: "Ich hab sehr lange auf das Telefon gestarrt. Irgendwann hat es aufgegeben.", antworten: [
-      { text: "Die Methode probiere ich mal.", weiter: "k4" },
-      { text: "Hat der Hase geholfen?", weiter: "k5" } ] },
-    k3: { sagt: "Klug. Manche Geheimnisse sind besser in Ton gebrannt.", antworten: [
+    k2: { sagt: "Ich guck so lange aufs Handy, bis es klingelt. Dauert manchmal.", antworten: [
+      { text: "Wie lange denn?", weiter: "k4" },
+      { text: "Hilft dir der Hase?", weiter: "k5" } ] },
+    k3: { sagt: "Ist auch besser so. Sonst programmiert Max da wieder was.", antworten: [
       { text: "Na gut, sag schon.", weiter: "k2" },
-      { text: "Warum rufst du denn an?", weiter: "k6" } ] },
-    k4: { sagt: "Bei dir dauert das zu lange. Du blinzelst. Ich hab da einen eingebauten Vorteil.", antworten: [
-      { text: "Gut, dann bleib ich bei Tasten.", weiter: "k6" },
-      { text: "Dafür hab ich Daumen.", weiter: "k6" } ] },
-    k5: { sagt: "Der Hase hat die Nummer gewusst. Ich hab sie aus seinen Ohren gelesen. Die stehen manchmal wie eine Vier.", antworten: [
-      { text: "Das ist sehr kompliziert.", weiter: "k6" },
-      { text: "Ein Telefonhase, wie praktisch.", weiter: "k6" } ] },
-    k6: { sagt: "Eigentlich wollte ich nur Hallo sagen. Das hab ich jetzt. Mission erfüllt.", antworten: [
+      { text: "Warum rufst du überhaupt an?", weiter: "k6" } ] },
+    k4: { sagt: "Heute seit halb neun. Ich hab ja keine Termine.", antworten: [
+      { text: "Beneidenswert.", weiter: "k6" },
+      { text: "Ich hab heute drei.", weiter: "k6" } ] },
+    k5: { sagt: "Der Hase hilft nie. Der guckt nur zu und denkt sich seinen Teil.", antworten: [
+      { text: "Das macht er bei mir auch.", weiter: "k6" },
+      { text: "Wenigstens stört er nicht.", weiter: "k6" } ] },
+    k6: { sagt: "Ich wollt eigentlich nur Hallo sagen. Hab ich jetzt.", antworten: [
       { text: "Hallo zurück, mein Hühnchen.", weiter: null },
       { text: "Ruf ruhig öfter an.", weiter: null } ] }
   },
-  schluss: "Ich leg jetzt auf. Also, ich starre so lange, bis es von allein aufhört." },
+  schluss: "So, jetzt guck ich wieder weg. Dann legt es von selbst auf." },
 
 { id: "huhn-15", wer: "huhn", thema: "Kreuzworträtsel",
   knoten: {
-    start: { sagt: "Ich hab ein Kreuzworträtsel gesehen. Auf deinem Tisch. Ich hätte da einen Vorschlag für sieben senkrecht.", antworten: [
-      { text: "Und der wäre?", weiter: "k2" },
-      { text: "Sieben senkrecht hab ich schon.", weiter: "k3" } ] },
-    k2: { sagt: "„Huhn“. Ich schlage für jedes Feld „Huhn“ vor. Statistisch muss es irgendwann passen.", antworten: [
-      { text: "Gesucht ist ein Fluss mit vier Buchstaben.", weiter: "k4" },
-      { text: "Das ist keine Strategie.", weiter: "k5" } ] },
-    k3: { sagt: "Oh. Dann acht waagerecht, da bin ich mir ganz sicher: „Huhn“.", antworten: [
-      { text: "Acht waagerecht hat elf Buchstaben.", weiter: "k5" },
-      { text: "Du bist besessen.", weiter: "k5" } ] },
-    k4: { sagt: "Ein Fluss mit vier Buchstaben? Eindeutig „Huhn“, ein sehr ruhiger Fluss, der nicht fließt.", antworten: [
-      { text: "Es ist die Havel. Fünf Buchstaben.", weiter: "k6" },
-      { text: "Ich geb dir einen Punkt für Mut.", weiter: "k6" } ] },
-    k5: { sagt: "Dann schreib „Hühnchenfigur“. Das sind dreizehn. Du darfst ein bisschen über den Rand schreiben.", antworten: [
-      { text: "Das sag ich der Zeitung.", weiter: "k6" },
-      { text: "Rätselbetrug, Hühnchen!", weiter: "k6" } ] },
-    k6: { sagt: "Gut. Ich ziehe mich als Rätselberaterin zurück. Aber wenn je „Huhn“ gesucht wird, will ich angerufen werden.", antworten: [
-      { text: "Du bist meine erste Wahl.", weiter: null },
-      { text: "Versprochen, ganz bestimmt.", weiter: null } ] }
+    start: { sagt: "Du sitzt schon ewig über dem Rätsel. Lies mal vor, ich helf dir.", antworten: [
+      { text: "Hausvogel, vier Buchstaben.", weiter: "k2" },
+      { text: "Du und Rätsel? Seit wann?", weiter: "k3" } ] },
+    k2: { sagt: "Na? Da muss ich ja nicht lange überlegen.", antworten: [
+      { text: "Huhn. Passt sogar.", weiter: "k4" },
+      { text: "Gans hat auch vier.", weiter: "k5" } ] },
+    k3: { sagt: "Ich steh den ganzen Tag neben deinen Rätseln. Da bleibt was hängen.", antworten: [
+      { text: "Gut. Hausvogel, vier Buchstaben.", weiter: "k2" },
+      { text: "Fluss in Berlin, fünf Buchstaben?", weiter: "k6" } ] },
+    k4: { sagt: "Siehst du. Schreib’s groß, damit der Hase das sieht.", antworten: [
+      { text: "Ganz groß, in Druckbuchstaben.", weiter: null },
+      { text: "Jetzt bild dir nichts ein.", weiter: null } ] },
+    k5: { sagt: "Gans, na toll. Und was steht im zweiten Kästchen?", antworten: [
+      { text: "Ein U. Also doch Huhn.", weiter: "k4" },
+      { text: "Gut, du hast recht.", weiter: "k4" } ] },
+    k6: { sagt: "Spree oder Havel, such dir eins aus. Ich bin aus Peru, ich hab keine Ahnung.", antworten: [
+      { text: "Havel. Das V passt.", weiter: "k4" },
+      { text: "So weit war ich auch.", weiter: "k4" } ] }
   },
-  schluss: "Fünf Buchstaben für „sehr zufriedenes Tier“? H-u-h-n-n. Passt fast." },
+  schluss: "Und wenn mal wieder ein Hausvogel gesucht wird, du weißt, wen du fragst." },
 
-{ id: "huhn-16", wer: "huhn", thema: "Die Regal-Band",
+{ id: "huhn-16", wer: "huhn", thema: "Das Lied im Radio",
   knoten: {
-    start: { sagt: "Ich gründe eine Band. Mit dem Glücksschwein und dem grünen Hasen. Wir heißen „Die Unbeweglichen“.", antworten: [
-      { text: "Wer spielt was?", weiter: "k2" },
-      { text: "Was für Musik macht ihr?", weiter: "k3" } ] },
-    k2: { sagt: "Das Schwein ist die Sparbüchse, es klimpert beim Schütteln. Der Hase ist der Bass: Er sagt nichts, aber tief.", antworten: [
-      { text: "Und du?", weiter: "k4" },
-      { text: "Klingt nach einem Hit.", weiter: "k5" } ] },
-    k3: { sagt: "Stillleben-Rock, sehr leise. Viele sagen, man hört es kaum, das ist Absicht.", antworten: [
-      { text: "Ich bin trotzdem Fan.", weiter: "k5" },
-      { text: "Wer singt?", weiter: "k4" } ] },
-    k4: { sagt: "Ich bin Sängerin. Ich habe einen geöffneten Schnabel. Der Rest passiert im Kopf des Publikums.", antworten: [
-      { text: "Sehr modernes Konzept.", weiter: "k5" },
-      { text: "Ich höre es schon.", weiter: "k5" } ] },
-    k5: { sagt: "Unser erstes Konzert ist Sonntag auf der Fensterbank. Du bist der einzige Gast. Du kriegst den besten Platz.", antworten: [
-      { text: "Ich bring Kekse mit.", weiter: "k6" },
-      { text: "Muss ich Eintritt zahlen?", weiter: "k6" } ] },
-    k6: { sagt: "Kein Eintritt. Nur Applaus. Bitte nicht zu laut, das Schwein ist empfindlich.", antworten: [
-      { text: "Ich klatsche ganz leise.", weiter: null },
-      { text: "Zugabe gibt’s auch?", weiter: null } ] }
+    start: { sagt: "Was war das vorhin im Radio? Das mit der Trompete?", antworten: [
+      { text: "Keine Ahnung, ich hab nur mitgesummt.", weiter: "k2" },
+      { text: "Hat’s dir gefallen?", weiter: "k3" } ] },
+    k2: { sagt: "Du hast gesummt? Ich dachte, das war der Kühlschrank.", antworten: [
+      { text: "Frechheit. Ich summe sehr schön.", weiter: "k4" },
+      { text: "Der summt tiefer als ich.", weiter: "k4" } ] },
+    k3: { sagt: "Ich hab ein bisschen mitgewippt. Innerlich, von außen sieht man das nicht.", antworten: [
+      { text: "Ich hab’s trotzdem gesehen.", weiter: "k4" },
+      { text: "Innerlich wippen zählt auch.", weiter: "k4" } ] },
+    k4: { sagt: "Kannst du das nochmal anmachen? Das Schwein hat’s verschlafen.", antworten: [
+      { text: "Das war Radio, das ist weg.", weiter: "k5" },
+      { text: "Ich such’s dir im Handy raus.", weiter: "k6" } ] },
+    k5: { sagt: "Einfach weg? So wie Wetter?", antworten: [
+      { text: "Morgen kommt was anderes Schönes.", weiter: null },
+      { text: "Ich summ’s dir nochmal vor.", weiter: null } ] },
+    k6: { sagt: "Das kannst du? Hat dir das Max gezeigt?", antworten: [
+      { text: "Das hab ich selbst rausgefunden.", weiter: null },
+      { text: "Bisschen Max, bisschen ich.", weiter: null } ] }
   },
-  schluss: "Probe beginnt jetzt. Bitte nicht stören. Du würdest es sowieso nicht hören." },
+  schluss: "Aber nicht zu laut. Das Schwein ist empfindlich, auch wenn’s das nicht zugibt." },
 
-{ id: "huhn-17", wer: "huhn", thema: "Der Mond",
+{ id: "huhn-17", wer: "huhn", thema: "Mondlicht",
   knoten: {
-    start: { sagt: "Es ist spät, und der Mond guckt durchs Fenster. Ich glaube, er ist auch aus Ton.", antworten: [
-      { text: "Der Mond ist aus Käse.", weiter: "k2" },
-      { text: "Warum glaubst du das?", weiter: "k3" } ] },
-    k2: { sagt: "Käse? Das würde erklären, warum die Maus aus dem Keller immer so sehnsüchtig nach oben guckt.", antworten: [
-      { text: "Wir haben keine Maus.", weiter: "k4" },
-      { text: "Arme Maus, so weit weg.", weiter: "k4" } ] },
-    k3: { sagt: "Er ist rund, blass und steht einfach da. Das ist eindeutig meine Familie.", antworten: [
-      { text: "Dann hast du große Verwandtschaft.", weiter: "k5" },
-      { text: "Der Mond bewegt sich aber.", weiter: "k5" } ] },
-    k4: { sagt: "Dann eben eine ausgedachte Maus. Die sind auch sehr sehnsüchtig. Vielleicht noch mehr.", antworten: [
-      { text: "Gut, wir behalten sie.", weiter: "k5" },
-      { text: "Du bist heut sehr poetisch.", weiter: "k5" } ] },
-    k5: { sagt: "Nachts werde ich immer so. Tagsüber bin ich sachlich. Nachts bin ich ein Gedicht mit Sockel.", antworten: [
-      { text: "Ein schönes Gedicht.", weiter: null },
-      { text: "Reimst du auch?", weiter: "k6" } ] },
-    k6: { sagt: "Huhn auf dem Regal, sieht den Mond, ganz egal. Ich arbeite noch dran.", antworten: [
-      { text: "Das ist schon fast Kaléko.", weiter: null },
-      { text: "Das reicht für heute.", weiter: null } ] }
+    start: { sagt: "Bist du noch wach? Der Mond scheint mir genau auf den Kamm.", antworten: [
+      { text: "Ich les noch ein bisschen.", weiter: "k2" },
+      { text: "Soll ich die Gardine zuziehen?", weiter: "k3" } ] },
+    k2: { sagt: "Gut. Dann bin ich nicht die Einzige, die noch guckt.", antworten: [
+      { text: "Kannst du denn nicht schlafen?", weiter: "k4" },
+      { text: "Du guckst doch immer.", weiter: "k4" } ] },
+    k3: { sagt: "Nein, lass mal. Im Mondlicht seh ich richtig gut aus, so silbrig.", antworten: [
+      { text: "Eitles Huhn.", weiter: "k4" },
+      { text: "Na gut, die bleibt offen.", weiter: "k4" } ] },
+    k4: { sagt: "Ich schlaf nie, ich hab keine Lider. Aber nachts ist es hier am schönsten, so ruhig.", antworten: [
+      { text: "Bis du anrufst.", weiter: "k5" },
+      { text: "Und morgens bin ich wieder da.", weiter: "k6" } ] },
+    k5: { sagt: "Ich red ja leise. Das zählt nicht.", antworten: [
+      { text: "Na gut, gilt nicht.", weiter: null },
+      { text: "Dann flüstern wir weiter.", weiter: null } ] },
+    k6: { sagt: "Weiß ich doch. Dann machst du das Licht an und sagst: Morgen, Hühnchen.", antworten: [
+      { text: "Das sag ich jeden Morgen.", weiter: null },
+      { text: "Und du sagst nie was zurück.", weiter: null } ] }
   },
-  schluss: "Gute Nacht. Ich halte Wache. Ich mache das ja sowieso." },
+  schluss: "Gute Nacht. Ich pass auf, bis es hell wird." },
 
 { id: "huhn-18", wer: "huhn", thema: "Brenntag",
   knoten: {
-    start: { sagt: "Heute ist mein Brenntag. Also, ich hab ihn mir ausgesucht. Es könnte heute sein.", antworten: [
+    start: { sagt: "Weißt du was? Ich glaub, heute ist mein Brenntag. So was wie Geburtstag.", antworten: [
       { text: "Herzlichen Glückwunsch, Hühnchen!", weiter: "k2" },
-      { text: "Wie alt wirst du denn?", weiter: "k3" } ] },
-    k2: { sagt: "Danke! Ich wünsche mir ein Lied. Aber nicht zu viele Strophen, ich will mich nicht verausgaben.", antworten: [
-      { text: "Hoch soll es leben, das Huhn!", weiter: "k4" },
-      { text: "Ich summe dir was.", weiter: "k4" } ] },
-    k3: { sagt: "Ich zähle nicht in Jahren, sondern in Staubschichten. Ich bin etwa vierzig Mal gewischt.", antworten: [
-      { text: "Für vierzig Mal siehst du jung aus.", weiter: "k5" },
-      { text: "Das ist ein stolzes Alter.", weiter: "k5" } ] },
-    k4: { sagt: "Das war wunderschön. Das Schwein hat innerlich mitgegrunzt, ich hab’s gespürt.", antworten: [
-      { text: "Willst du Kuchen?", weiter: "k6" },
-      { text: "Jetzt Geschenke?", weiter: "k6" } ] },
-    k5: { sagt: "Danke, das liegt an der Glasur. Und Falten sind kein Thema, ich habe ja keine Haut.", antworten: [
-      { text: "Darauf ein Lied!", weiter: "k4" },
-      { text: "Darauf ein Stück Kuchen.", weiter: "k6" } ] },
-    k6: { sagt: "Stell mir einfach ein Kuchenkrümelchen hin. Ich gucke es an. Das ist bei mir wie Essen, nur kalorienfrei.", antworten: [
-      { text: "Mit einer Kerze?", weiter: null },
-      { text: "Den Rest esse ich für dich.", weiter: null } ] }
+      { text: "Woher weißt du das denn?", weiter: "k3" } ] },
+    k2: { sagt: "Danke! Singst du mir was? Aber nur eine Strophe, ich will nicht übertreiben.", antworten: [
+      { text: "Zum Geburtstag viel Glück …", weiter: "k4" },
+      { text: "Ich summ dir was.", weiter: "k4" } ] },
+    k3: { sagt: "Gar nicht. Ich hab ihn mir ausgesucht, das darf man, wenn keiner aufgeschrieben hat, wann man aus dem Ofen kam.", antworten: [
+      { text: "Gute Wahl, heute ist schönes Wetter.", weiter: "k2" },
+      { text: "Dann such ich mir auch einen aus.", weiter: "k5" } ] },
+    k4: { sagt: "Schön. Das Schwein hat nicht mitgesungen, aber ich glaub, es hat zugehört.", antworten: [
+      { text: "Willst du ein Stück Kuchen?", weiter: "k6" },
+      { text: "Und jetzt Geschenke?", weiter: "k6" } ] },
+    k5: { sagt: "Nee, du hast doch schon einen. Einer pro Person, sonst wird’s unübersichtlich.", antworten: [
+      { text: "Na gut, dann feiern wir deinen.", weiter: "k2" },
+      { text: "Du bist ganz schön streng.", weiter: "k2" } ] },
+    k6: { sagt: "Stell mir einfach einen Krümel hin. Ich guck ihn an, das reicht mir.", antworten: [
+      { text: "Und den Rest ess ich für dich.", weiter: null },
+      { text: "Mit Kerze?", weiter: null } ] }
   },
-  schluss: "Das war der schönste Brenntag seit dem letzten. Den hab ich mir auch ausgesucht." },
+  schluss: "Das war schön. Nächstes Jahr such ich mir wieder diesen Tag aus." },
 
 /* ==================== MAX ==================== */
 
 { id: "max-01", wer: "max", thema: "Besuch planen",
   knoten: {
-    start: { sagt: "Rita! Ich komm am Wochenende, oder am übernächsten. Auf jeden Fall an einem Wochenende.", antworten: [
-      { text: "Ich schreib’s auf. Welches genau?", weiter: "k2" },
-      { text: "Bring Hunger mit.", weiter: "k3" } ] },
-    k2: { sagt: "Das, an dem der Zug fährt. Ich hab mir drei Verbindungen rausgesucht und alle drei wieder vergessen.", antworten: [
-      { text: "Ich mach dir eine Liste.", weiter: "k4" },
-      { text: "Typisch Max.", weiter: "k4" } ] },
-    k3: { sagt: "Hunger hab ich immer, das ist mein zuverlässigster Charakterzug. Gibt’s was Bestimmtes?", antworten: [
-      { text: "Überraschung.", weiter: "k5" },
-      { text: "Wünsch dir was.", weiter: "k5" } ] },
-    k4: { sagt: "Eine Liste! Mit Häkchen? Dann komm ich bestimmt pünktlich, versprochen.", antworten: [
-      { text: "Mit Häkchen und Uhrzeit.", weiter: "k6" },
-      { text: "Das hast du letztes Mal auch gesagt.", weiter: "k6" } ] },
-    k5: { sagt: "Ich wünsche mir Kartoffelsalat. Und dass du mir den neuen Tanzschritt zeigst, über den alle reden.", antworten: [
-      { text: "Wer redet denn darüber?", weiter: "k6" },
-      { text: "Nur wenn du mittanzt.", weiter: "k6" } ] },
-    k6: { sagt: "Abgemacht. Ich muss jetzt los, die Waschmaschine piept, als hätte sie was zu sagen.", antworten: [
-      { text: "Dann lauf, sonst wird sie sauer.", weiter: null },
-      { text: "Na, dann bis bald.", weiter: null } ] }
+    start: { sagt: "Na? Ich wollt nur sagen, ich komm bald mal vorbei. Am Wochenende oder am übernächsten.", antworten: [
+      { text: "Welches denn nun?", weiter: "k2" },
+      { text: "Dann bring Hunger mit.", weiter: "k3" } ] },
+    k2: { sagt: "Das, wo der Zug fährt. Ich hab drei Verbindungen rausgesucht und alle wieder zugemacht.", antworten: [
+      { text: "Ich schreib dir eine raus.", weiter: "k4" },
+      { text: "Das ist so typisch du.", weiter: "k4" } ] },
+    k3: { sagt: "Hunger hab ich immer. Machst du wieder diesen Kartoffelsalat?", antworten: [
+      { text: "Wenn du pünktlich bist.", weiter: "k4" },
+      { text: "Mal sehen, was der Hofladen hat.", weiter: "k5" } ] },
+    k4: { sagt: "Ich bin pünktlich, versprochen. Und wenn nicht, ist es die Bahn.", antworten: [
+      { text: "Es ist nie die Bahn.", weiter: "k6" },
+      { text: "Ich hab da mal mitgezählt.", weiter: "k6" } ] },
+    k5: { sagt: "Hofladen klingt gut. Fahren wir zusammen hin, wenn ich da bin?", antworten: [
+      { text: "Gerne. Du trägst.", weiter: "k6" },
+      { text: "Wenn du nicht alles probierst.", weiter: "k6" } ] },
+    k6: { sagt: "Abgemacht. Oh, die Waschmaschine piept, ich muss.", antworten: [
+      { text: "Na los, lauf.", weiter: null },
+      { text: "Schreib mir, wann du kommst.", weiter: null } ] }
   },
-  schluss: "Na dann … Tschüss!" },
+  schluss: "Ich schick dir das Datum. Wirklich. Tschüss!" },
 
-{ id: "max-02", wer: "max", thema: "Koch-Experiment",
+{ id: "max-02", wer: "max", thema: "Risotto",
   knoten: {
-    start: { sagt: "Ich hab heute gekocht. Ganz allein. Die Küche steht noch.", antworten: [
-      { text: "Was gab es denn?", weiter: "k2" },
+    start: { sagt: "Ich hab heute selbst gekocht. Die Küche steht noch, keine Sorge.", antworten: [
+      { text: "Was gab’s denn?", weiter: "k2" },
       { text: "Und der Rauchmelder?", weiter: "k3" } ] },
-    k2: { sagt: "Es sollte Risotto werden. Es ist ein Reisziegel geworden. Sehr stabil.", antworten: [
-      { text: "Damit kannst du anbauen.", weiter: "k4" },
-      { text: "Zu wenig Brühe, mein Lieber.", weiter: "k5" } ] },
-    k3: { sagt: "Der Rauchmelder und ich sind jetzt per du. Er hat mich mehrfach beim Namen gerufen.", antworten: [
-      { text: "Was hast du da angestellt?", weiter: "k2" },
-      { text: "Wenigstens funktioniert er.", weiter: "k2" } ] },
-    k4: { sagt: "Ich überlege, eine Garage draus zu machen. Fürs Fahrrad. Halle braucht mehr Stellplätze.", antworten: [
-      { text: "Frag beim nächsten Mal Jane.", weiter: "k6" },
-      { text: "Ich zeig dir, wie es geht.", weiter: "k6" } ] },
-    k5: { sagt: "Brühe! Ich wusste, dass da was fehlt. Ich dachte, es wäre Liebe.", antworten: [
-      { text: "Liebe ist in der Brühe.", weiter: "k6" },
-      { text: "Liebe allein macht nicht satt.", weiter: "k6" } ] },
-    k6: { sagt: "Gut, nächstes Mal kochen wir zusammen. Und jetzt geh ich den Ziegel einweichen.", antworten: [
-      { text: "Viel Glück, du Sternekoch.", weiter: null },
-      { text: "Gib ihn lieber auf.", weiter: null } ] }
+    k2: { sagt: "Risotto. Also, es sollte Risotto werden, jetzt kann man’s schneiden.", antworten: [
+      { text: "Zu wenig Brühe, mein Lieber.", weiter: "k4" },
+      { text: "Hast du zwischendurch umgerührt?", weiter: "k5" } ] },
+    k3: { sagt: "Der hat kurz Bescheid gesagt. Ich hab mit dem Handtuch gewedelt, dann war Ruhe.", antworten: [
+      { text: "Was hast du denn gekocht?", weiter: "k2" },
+      { text: "Die Nachbarn freuen sich bestimmt.", weiter: "k2" } ] },
+    k4: { sagt: "Brühe! Ich hatte so das Gefühl, da fehlt was. Ich dachte, Parmesan.", antworten: [
+      { text: "Parmesan kommt zum Schluss.", weiter: "k6" },
+      { text: "Meistens fehlt beides bei dir.", weiter: "k6" } ] },
+    k5: { sagt: "Zwischendurch? Ich hab’s aufgesetzt und in der Zeit Wäsche aufgehängt.", antworten: [
+      { text: "Na, da haben wir’s ja.", weiter: "k6" },
+      { text: "Risotto will Gesellschaft, Max.", weiter: "k6" } ] },
+    k6: { sagt: "Okay. Nächstes Mal ruf ich dich beim Kochen an, und du sagst, wann ich rühren muss.", antworten: [
+      { text: "Abgemacht. Telefonkochen.", weiter: null },
+      { text: "Dann koch ich gleich mit.", weiter: null } ] }
   },
-  schluss: "Na gut … Tschüss, Rita!" },
+  schluss: "Ich weich jetzt den Topf ein. Tschüss!" },
 
-{ id: "max-03", wer: "max", thema: "Tanzschritt",
+{ id: "max-03", wer: "max", thema: "Tanzschritt in der Küche",
   knoten: {
-    start: { sagt: "Ich hab versucht, den Schritt zu üben, den du mir gezeigt hast. Ich glaube, ich hab einen neuen erfunden.", antworten: [
-      { text: "Zeig mal. Also, beschreib mal.", weiter: "k2" },
-      { text: "War es noch Cha-Cha-Cha?", weiter: "k3" } ] },
-    k2: { sagt: "Vor, zurück, Drehung, dann stolpern über den Teppich. Das Stolpern ist der Clou.", antworten: [
-      { text: "Das Stolpern lassen wir weg.", weiter: "k4" },
-      { text: "Nennen wir ihn Halle-Hopser.", weiter: "k5" } ] },
-    k3: { sagt: "Es war eher Cha-Cha-Chaos. Mit einer sehr gefühlvollen Armbewegung am Ende.", antworten: [
-      { text: "Die Arme waren nie dein Problem.", weiter: "k4" },
-      { text: "Chaos kann man üben.", weiter: "k5" } ] },
-    k4: { sagt: "Ohne Stolpern ist er aber nur halb so lustig. Dein Tanzschüler hat sicher auch eigene Erfindungen.", antworten: [
-      { text: "Der zählt immer nur bis drei.", weiter: "k6" },
-      { text: "Ihr wärt ein tolles Duo.", weiter: "k6" } ] },
-    k5: { sagt: "Halle-Hopser! Ich lass mir das schützen. Du kriegst die Hälfte der Einnahmen.", antworten: [
-      { text: "Die Hälfte von null?", weiter: "k6" },
-      { text: "Ich will Tantiemen in Kuchen.", weiter: "k6" } ] },
-    k6: { sagt: "Okay, ich übe weiter. Nächstes Mal bei dir tanze ich ihn vor, mit Teppich.", antworten: [
-      { text: "Ich räume vorher die Vasen weg.", weiter: null },
-      { text: "Ich freu mich drauf.", weiter: null } ] }
+    start: { sagt: "Ich hab den Schritt geübt, den du mir gezeigt hast. In der Küche.", antworten: [
+      { text: "Und? Wie lief’s?", weiter: "k2" },
+      { text: "In der Küche? Bei dem Platz?", weiter: "k3" } ] },
+    k2: { sagt: "Vor, zurück, Drehung, und dann Kühlschrank. Der Kühlschrank war nicht eingeplant.", antworten: [
+      { text: "Die Drehung ist zu groß.", weiter: "k4" },
+      { text: "Ist was kaputtgegangen?", weiter: "k5" } ] },
+    k3: { sagt: "Ich hab den Tisch an die Wand geschoben. Greta kam rein und ist sofort wieder raus.", antworten: [
+      { text: "Und dann?", weiter: "k2" },
+      { text: "Kluge Frau.", weiter: "k2" } ] },
+    k4: { sagt: "Kleiner drehen, okay. Ich dreh immer mit so viel Schwung, das ist das Problem.", antworten: [
+      { text: "Erst langsam, dann Schwung.", weiter: "k6" },
+      { text: "Schwung kommt aus der Hüfte.", weiter: "k6" } ] },
+    k5: { sagt: "Nur der Magnet von der Ostsee. Und ein bisschen mein Stolz.", antworten: [
+      { text: "Der Stolz wächst nach.", weiter: "k4" },
+      { text: "Den Magnet klebst du wieder.", weiter: "k4" } ] },
+    k6: { sagt: "Zeigst du’s mir nochmal, wenn ich da bin? Bei dir ist mehr Platz.", antworten: [
+      { text: "Ich räum schon mal die Vase weg.", weiter: null },
+      { text: "Gern. Ohne Kühlschrank.", weiter: null } ] }
   },
-  schluss: "So, ich hopse jetzt los … Tschüss!" },
+  schluss: "Ich üb noch ein bisschen. Mit Abstand. Tschüss!" },
 
-{ id: "max-04", wer: "max", thema: "Die Zimmerpflanze",
+{ id: "max-04", wer: "max", thema: "Gisela, die Pflanze",
   knoten: {
-    start: { sagt: "Rita, ich brauch Rat. Meine Pflanze guckt mich so vorwurfsvoll an.", antworten: [
-      { text: "Wann hast du sie gegossen?", weiter: "k2" },
-      { text: "Was für eine Pflanze ist es?", weiter: "k3" } ] },
-    k2: { sagt: "Das kommt drauf an, was du unter „gießen“ verstehst. Ich hab sie mal angeatmet.", antworten: [
-      { text: "Das zählt nicht.", weiter: "k4" },
-      { text: "Gib ihr sofort ein Glas Wasser.", weiter: "k4" } ] },
-    k3: { sagt: "Grün, mit Blättern. Sie heißt Gisela. Mehr weiß ich nicht.", antworten: [
-      { text: "Gisela braucht Wasser.", weiter: "k4" },
-      { text: "Und wie lange hat Gisela schon?", weiter: "k2" } ] },
-    k4: { sagt: "Erledigt. Sie hat sofort weniger vorwurfsvoll geguckt. Kann man Pflanzen auf eine Liste setzen?", antworten: [
-      { text: "Man muss sogar. Jeden Sonntag.", weiter: "k5" },
-      { text: "Ich ruf dich einfach an.", weiter: "k5" } ] },
-    k5: { sagt: "Perfekt, du bist ab sofort Giselas Patentante. Patentante zum Quadrat sozusagen.", antworten: [
-      { text: "Ich nehme die Ehre an.", weiter: null },
-      { text: "Die Taufe machen wir mit Gießkanne.", weiter: null } ] }
+    start: { sagt: "Rita, kurze Frage. Wie oft muss man so eine Pflanze eigentlich gießen?", antworten: [
+      { text: "Was für eine Pflanze denn?", weiter: "k2" },
+      { text: "Wann hast du zuletzt gegossen?", weiter: "k3" } ] },
+    k2: { sagt: "So eine grüne, mit großen Blättern. Greta hat sie mir geschenkt, sie heißt Gisela.", antworten: [
+      { text: "Gisela braucht Wasser, glaub mir.", weiter: "k4" },
+      { text: "Wie sehen die Blätter aus?", weiter: "k5" } ] },
+    k3: { sagt: "Puh. Ich weiß noch, dass draußen Sommer war.", antworten: [
+      { text: "Max! Sofort ein Glas Wasser.", weiter: "k4" },
+      { text: "Und jetzt ist Herbst.", weiter: "k4" } ] },
+    k4: { sagt: "Mach ich. Hängt sie deswegen so?", antworten: [
+      { text: "Ja. Morgen steht sie wieder.", weiter: "k6" },
+      { text: "Die hängt, weil sie dich kennt.", weiter: "k6" } ] },
+    k5: { sagt: "Die hängen ein bisschen. So wie ich montags.", antworten: [
+      { text: "Das ist Durst, Max.", weiter: "k4" },
+      { text: "Dann gieß sie. Und dich auch.", weiter: "k4" } ] },
+    k6: { sagt: "Okay. Ich schreib’s mir auf. Wobei, Zettel verlier ich auch.", antworten: [
+      { text: "Stell dir einen Wecker im Handy.", weiter: null },
+      { text: "Ich frag sonntags nach.", weiter: null } ] }
   },
-  schluss: "Gisela sagt danke. Ich auch. Tschüss!" },
+  schluss: "Gisela sagt Danke. Ich auch. Tschüss!" },
 
-{ id: "max-05", wer: "max", thema: "Neuer Knopf in der App",
+{ id: "max-05", wer: "max", thema: "Ein Knopf für nichts",
   knoten: {
-    start: { sagt: "Ich hab eine geniale Idee für die App: einen Knopf, der gar nichts macht.", antworten: [
+    start: { sagt: "Ich hab ’ne Idee für die App. Ein Knopf, der gar nichts macht.", antworten: [
       { text: "Wozu soll der gut sein?", weiter: "k2" },
-      { text: "Den hab ich schon gefunden.", weiter: "k3" } ] },
-    k2: { sagt: "Zum Drücken! Manchmal will man einfach was drücken, ohne dass gleich was passiert.", antworten: [
-      { text: "Wie der Fahrstuhlknopf, wenn er schon leuchtet.", weiter: "k4" },
-      { text: "Das klingt nach dir.", weiter: "k4" } ] },
-    k3: { sagt: "Was, wo? Ich hab ihn doch noch gar nicht gebaut, oder hab ich?", antworten: [
-      { text: "Unten rechts. Der macht wirklich nichts.", weiter: "k5" },
-      { text: "War nur ein Scherz.", weiter: "k4" } ] },
-    k4: { sagt: "Genau! Ich mach ihn rund und gelb. Wie das Hühnchen, nur flacher.", antworten: [
-      { text: "Frag das Hühnchen um Erlaubnis.", weiter: "k6" },
-      { text: "Mach ihn lieber rot.", weiter: "k6" } ] },
-    k5: { sagt: "Oh nein. Dann ist das ein Fehler. Ich hab aus Versehen meine eigene Idee schon umgesetzt.", antworten: [
-      { text: "Du bist deiner Zeit voraus.", weiter: "k6" },
-      { text: "Lass ihn drin, er ist süß.", weiter: "k6" } ] },
-    k6: { sagt: "Okay, beschlossen: Der Knopf bleibt, und er macht weiter nichts. Ich bin sehr stolz auf uns.", antworten: [
-      { text: "Bestes Team der Welt.", weiter: null },
-      { text: "Ich drück ihn gleich mal.", weiter: null } ] }
+      { text: "Davon hab ich schon ein paar.", weiter: "k3" } ] },
+    k2: { sagt: "Zum Draufdrücken. Manchmal will man einfach was drücken.", antworten: [
+      { text: "Wie beim Fahrstuhl, wenn er schon leuchtet.", weiter: "k4" },
+      { text: "Das klingt sehr nach dir.", weiter: "k4" } ] },
+    k3: { sagt: "Was? Wo denn?", antworten: [
+      { text: "War nur Spaß, alles läuft.", weiter: "k4" },
+      { text: "Auf der Fernbedienung, gleich drei.", weiter: "k5" } ] },
+    k4: { sagt: "Ich mach ihn rund und gelb. Wie das Hühnchen, nur flacher.", antworten: [
+      { text: "Frag das Hühnchen vorher.", weiter: "k6" },
+      { text: "Hauptsache, er ist schön groß.", weiter: "k6" } ] },
+    k5: { sagt: "Ach, die Fernbedienung. Ja, die hat bei jedem so welche, das ist normal.", antworten: [
+      { text: "Siehst du. Gibt’s also schon.", weiter: "k6" },
+      { text: "Dann bau einen schöneren.", weiter: "k6" } ] },
+    k6: { sagt: "Okay, ich bau ihn trotzdem. Du darfst als Erste drücken.", antworten: [
+      { text: "Ich drück ganz vorsichtig.", weiter: null },
+      { text: "Und dann passiert nichts?", weiter: null } ] }
   },
-  schluss: "Ich programmier dann mal weiter nichts … Tschüss!" },
+  schluss: "Ich setz mich dann mal dran. Tschüss!" },
 
 { id: "max-06", wer: "max", thema: "Harry-Potter-Häuser",
   knoten: {
-    start: { sagt: "Wichtige Frage: Wenn wir beide nach Hogwarts kämen, wären wir im selben Haus?", antworten: [
-      { text: "Ich bin klar Gryffindor.", weiter: "k2" },
-      { text: "Du wärst bei den Hauselfen.", weiter: "k3" } ] },
-    k2: { sagt: "Gryffindor, das passt, du bist mutiger als alle, die ich kenne. Und ich? Ich hätte gern Ravenclaw.", antworten: [
-      { text: "Mit deinem Reisziegel? Eher nicht.", weiter: "k4" },
+    start: { sagt: "Wichtige Frage. Wenn wir beide nach Hogwarts kämen, wären wir im selben Haus?", antworten: [
+      { text: "Ich wär Gryffindor.", weiter: "k2" },
+      { text: "Du landest bei den Hauselfen.", weiter: "k3" } ] },
+    k2: { sagt: "Passt. Und ich? Ich hätt gern Ravenclaw, die Schlauen.", antworten: [
+      { text: "Mit deinem Risotto? Eher nicht.", weiter: "k4" },
       { text: "Für dich reicht’s locker.", weiter: "k5" } ] },
-    k3: { sagt: "Hey! Na gut, ich räum nicht gern auf, die würden mich sofort feuern.", antworten: [
+    k3: { sagt: "Hey! Die räumen den ganzen Tag auf, die würden mich nach einem Tag rauswerfen.", antworten: [
       { text: "Dann Hufflepuff, wie das Hühnchen.", weiter: "k5" },
       { text: "Stimmt, die sind ordentlicher.", weiter: "k4" } ] },
-    k4: { sagt: "Okay, ich gebe mich geschlagen. Dafür darf ich der Hut sein, der entscheidet.", antworten: [
-      { text: "Du redest ja auch ständig.", weiter: "k6" },
-      { text: "Ein sprechender Max-Hut.", weiter: "k6" } ] },
-    k5: { sagt: "Dann sehen wir uns zum Essen in der großen Halle. Ich halte dir einen Platz neben dem Pudding frei.", antworten: [
-      { text: "Neben dem Pudding, sehr gut.", weiter: "k6" },
-      { text: "Ich bring meine Liste mit.", weiter: "k6" } ] },
-    k6: { sagt: "Abgemacht. Ich muss jetzt Schluss machen, bevor mich ein Brief per Eule erreicht.", antworten: [
-      { text: "Na, dann flieg mal.", weiter: null },
-      { text: "Grüß die Eule.", weiter: null } ] }
+    k4: { sagt: "Okay, okay. Dann werd ich halt der Hut, der die Häuser verteilt.", antworten: [
+      { text: "Und wohin steckst du mich?", weiter: "k6" },
+      { text: "Der redet auch so viel.", weiter: "k6" } ] },
+    k5: { sagt: "Dann sehen wir uns beim Essen in der großen Halle. Ich halt dir einen Platz frei.", antworten: [
+      { text: "Neben dem Pudding, bitte.", weiter: "k6" },
+      { text: "Aber nicht wieder zu spät kommen.", weiter: "k6" } ] },
+    k6: { sagt: "Du sitzt jedenfalls bei mir am Tisch. Egal, was der Hut sagt.", antworten: [
+      { text: "So muss das sein.", weiter: null },
+      { text: "Das ist Schummelei, Max.", weiter: null } ] }
   },
-  schluss: "Und jetzt … Tschüss, Professorin Rita!" },
+  schluss: "Ich muss los, bevor hier ’ne Eule reinfliegt. Tschüss!" },
 
 { id: "max-07", wer: "max", thema: "Verlaufen in Halle",
   knoten: {
-    start: { sagt: "Ich steh gerade an einer Ecke und weiß nicht genau, welche. Halle ist heute anders als gestern.", antworten: [
-      { text: "Was siehst du?", weiter: "k2" },
-      { text: "Du wohnst da doch!", weiter: "k3" } ] },
-    k2: { sagt: "Eine Taube, ein Schild und einen Mann mit Hut. Der Mann guckt, als wüsste er auch nicht, wo er ist.", antworten: [
-      { text: "Frag die Taube.", weiter: "k4" },
-      { text: "Lies das Schild vor!", weiter: "k5" } ] },
-    k3: { sagt: "Ja, aber nur in einem Teil. Die anderen Teile sind eher Gerüchte.", antworten: [
+    start: { sagt: "Ich steh hier an einer Ecke und weiß nicht genau, an welcher. Das Handy hat noch zwei Prozent.", antworten: [
       { text: "Was siehst du denn?", weiter: "k2" },
-      { text: "Ich male dir eine Karte.", weiter: "k5" } ] },
-    k4: { sagt: "Die Taube ist weggeflogen. Ich glaube, das war ein Hinweis. Ich geh einfach in ihre Richtung.", antworten: [
-      { text: "Gute Navigation, Max.", weiter: "k6" },
-      { text: "Pass auf, Tauben fliegen über Dächer.", weiter: "k6" } ] },
-    k5: { sagt: "Oh. Auf dem Schild steht meine Straße. Ich steh direkt vor meiner Tür.", antworten: [
-      { text: "Herzlichen Glückwunsch, du bist da.", weiter: "k6" },
-      { text: "Das erzähle ich Jane.", weiter: "k6" } ] },
-    k6: { sagt: "Bitte erzähl das nicht weiter. Ich bin ein Mann mit Orientierung, nur heute eben nicht.", antworten: [
-      { text: "Mein Mund ist versiegelt.", weiter: null },
-      { text: "Zu spät, ich schreib’s auf.", weiter: null } ] }
+      { text: "Du wohnst da doch!", weiter: "k3" } ] },
+    k2: { sagt: "Eine Bäckerei, ein Schild, eine Taube. Die Taube guckt, als wüsste sie’s.", antworten: [
+      { text: "Lies das Schild vor.", weiter: "k4" },
+      { text: "Frag in der Bäckerei.", weiter: "k5" } ] },
+    k3: { sagt: "Ja, aber ich bin auf der falschen Seite aus der Bahn raus. Jetzt ist alles spiegelverkehrt.", antworten: [
+      { text: "Was siehst du denn?", weiter: "k2" },
+      { text: "Dreh dich einmal um.", weiter: "k4" } ] },
+    k4: { sagt: "Moment … Das ist meine Straße. Ich steh fast vor der Tür.", antworten: [
+      { text: "Glückwunsch, du bist zu Hause.", weiter: "k6" },
+      { text: "Das erzähl ich Greta.", weiter: "k6" } ] },
+    k5: { sagt: "Gute Idee, dann nehm ich mir gleich ein Brötchen mit. Oder zwei.", antworten: [
+      { text: "Und frag nach dem Weg.", weiter: "k4" },
+      { text: "Erst den Weg, dann Brötchen.", weiter: "k4" } ] },
+    k6: { sagt: "Bitte nicht weitererzählen. Ich hab einen Ruf als Mann mit Orientierung.", antworten: [
+      { text: "Den hattest du nie.", weiter: null },
+      { text: "Bleibt unter uns.", weiter: null } ] }
   },
-  schluss: "So, ich geh jetzt rein … Tschüss!" },
+  schluss: "So, Akku ist gleich alle. Tschüss!" },
 
 { id: "max-08", wer: "max", thema: "Listen lernen",
   knoten: {
-    start: { sagt: "Rita, bring mir bei, wie man Listen macht. Meine sehen aus wie Einkaufszettel nach einem Sturm.", antworten: [
-      { text: "Erste Regel: ein Stift, nicht drei.", weiter: "k2" },
-      { text: "Lies mir deine Liste vor.", weiter: "k3" } ] },
-    k2: { sagt: "Nur einer? Aber dann kann ich ja nicht farbig planen. Ich hab Lila für „vielleicht“.", antworten: [
-      { text: "„Vielleicht“ gehört nicht auf Listen.", weiter: "k4" },
-      { text: "Gut, Lila darf bleiben.", weiter: "k4" } ] },
-    k3: { sagt: "„Milch, Rita anrufen, Dings.“ Das ist alles. Ich weiß nicht mehr, was Dings ist.", antworten: [
-      { text: "Rita anrufen kannst du abhaken.", weiter: "k5" },
-      { text: "Dings ist immer wichtig.", weiter: "k5" } ] },
-    k4: { sagt: "Zweite Regel? Ich hab Stift und Papier bereit, also Papier. Der Stift ist irgendwo.", antworten: [
-      { text: "Zweite Regel: Stift suchen.", weiter: "k5" },
-      { text: "Der Stift liegt hinter deinem Ohr.", weiter: "k5" } ] },
-    k5: { sagt: "Ha! Erster Haken meines Lebens. Das fühlt sich großartig an, ich versteh dich jetzt total.", antworten: [
-      { text: "Willkommen im Club.", weiter: "k6" },
+    start: { sagt: "Rita, wie machst du das mit deinen Listen? Meine sehen aus wie ein Einkaufszettel, der im Regen lag.", antworten: [
+      { text: "Lies mal vor.", weiter: "k2" },
+      { text: "Erste Regel: ein Zettel, nicht fünf.", weiter: "k3" } ] },
+    k2: { sagt: "„Milch, Rita anrufen, Dings.“ Und ich weiß nicht mehr, was Dings ist.", antworten: [
+      { text: "Rita anrufen kannst du abhaken.", weiter: "k4" },
+      { text: "Dings ist meistens wichtig.", weiter: "k5" } ] },
+    k3: { sagt: "Fünf? Ich hab elf, und die Hälfte find ich nicht. Moment, einer liegt hier.", antworten: [
+      { text: "Na, dann lies den vor.", weiter: "k2" },
+      { text: "Den behalten wir. Lies vor.", weiter: "k2" } ] },
+    k4: { sagt: "Abgehakt! Oh, das fühlt sich gut an. Jetzt versteh ich dich.", antworten: [
+      { text: "Siehst du. Das macht süchtig.", weiter: "k6" },
       { text: "Nicht übertreiben, mein Lieber.", weiter: "k6" } ] },
-    k6: { sagt: "Ich schreib jetzt gleich auf: „Auflegen, aber erst nach dem Tschüss.“", antworten: [
-      { text: "Das ist ein guter Punkt.", weiter: null },
-      { text: "Den haken wir zusammen ab.", weiter: null } ] }
+    k5: { sagt: "Ha, ja, warte … Dings war Geschenkpapier, für Mama.", antworten: [
+      { text: "Na bitte. Gleich dazuschreiben.", weiter: "k4" },
+      { text: "Gut, dass wir drüber geredet haben.", weiter: "k4" } ] },
+    k6: { sagt: "Ich schreib gleich noch was drauf: Beim Tschüss nicht wieder verlieren.", antworten: [
+      { text: "Den Punkt hakst du nie ab.", weiter: null },
+      { text: "Viel Glück damit.", weiter: null } ] }
   },
-  schluss: "Punkt eins der Liste: Tschüss!" },
+  schluss: "Punkt eins: Tschüss!" },
 
 { id: "max-09", wer: "max", thema: "Die Ente an der Saale",
   knoten: {
-    start: { sagt: "Ich war an der Saale spazieren und hab eine Ente kennengelernt. Ich glaube, wir sind jetzt befreundet.", antworten: [
-      { text: "Wie heißt sie?", weiter: "k2" },
-      { text: "Hast du sie gefüttert?", weiter: "k3" } ] },
-    k2: { sagt: "Sie hat mir ihren Namen nicht gesagt. Ich nenn sie Frau Quaßmann, sie wirkt sehr seriös.", antworten: [
+    start: { sagt: "Ich war an der Saale, und da war so eine Ente. Die ist mir die ganze Zeit hinterhergeschwommen.", antworten: [
+      { text: "Hattest du was zu essen dabei?", weiter: "k2" },
+      { text: "Wie sah sie denn aus?", weiter: "k3" } ] },
+    k2: { sagt: "Nur ein Pfefferminz. Das hat sie angeguckt und ist weitergeschwommen, sehr kritisch.", antworten: [
+      { text: "Zu Recht, Max.", weiter: "k4" },
+      { text: "Enten mögen keine Bonbons.", weiter: "k4" } ] },
+    k3: { sagt: "Braun, bisschen zerzaust, sehr ernster Blick. Ich hab sie Frau Quaßmann getauft.", antworten: [
       { text: "Grüß Frau Quaßmann von mir.", weiter: "k4" },
-      { text: "Seriöse Enten sind die besten.", weiter: "k4" } ] },
-    k3: { sagt: "Ich hatte nur ein Pfefferminzbonbon. Sie hat es angeguckt wie eine Kritikerin.", antworten: [
-      { text: "Enten mögen keine Bonbons.", weiter: "k2" },
-      { text: "Zu Recht.", weiter: "k2" } ] },
-    k4: { sagt: "Sie hat genickt. Also, sie hat den Kopf ins Wasser gesteckt. Das deute ich als Ja.", antworten: [
-      { text: "Das deute ich auch so.", weiter: "k5" },
-      { text: "Vielleicht hatte sie nur Hunger.", weiter: "k5" } ] },
-    k5: { sagt: "Das Hühnchen und Frau Quaßmann müssen sich unbedingt kennenlernen. Ein Vogel-Gipfeltreffen.", antworten: [
-      { text: "Das Hühnchen redet aber kaum.", weiter: "k6" },
-      { text: "Ich backe Kekse dafür.", weiter: "k6" } ] },
-    k6: { sagt: "Dann passen sie perfekt zusammen. Ich muss los, sie schwimmt gerade weg und ich will winken.", antworten: [
-      { text: "Wink von mir mit.", weiter: null },
-      { text: "Na los, lauf hinterher.", weiter: null } ] }
+      { text: "Das passt zu einer Ente.", weiter: "k4" } ] },
+    k4: { sagt: "Ich glaub, sie mag mich trotzdem. Sie hat kurz den Kopf ins Wasser gesteckt.", antworten: [
+      { text: "Das heißt bei Enten gar nichts.", weiter: "k5" },
+      { text: "Das war ein Knicks.", weiter: "k6" } ] },
+    k5: { sagt: "Für mich heißt es was. Ich nehm, was ich kriegen kann.", antworten: [
+      { text: "Nimm nächstes Mal Haferflocken mit.", weiter: null },
+      { text: "Du bist ein Romantiker.", weiter: null } ] },
+    k6: { sagt: "Siehst du! Ich wusste, du verstehst das. Greta sagt, ich bild mir das ein.", antworten: [
+      { text: "Greta hat meistens recht.", weiter: null },
+      { text: "Ich glaub dir das.", weiter: null } ] }
   },
-  schluss: "Frau Quaßmann und ich sagen … Tschüss!" },
+  schluss: "Frau Quaßmann und ich sagen: Tschüss!" },
 
-{ id: "max-10", wer: "max", thema: "Socken-Rätsel",
+{ id: "max-10", wer: "max", thema: "Die Igelsocke",
   knoten: {
-    start: { sagt: "Rita, die Waschmaschine hat schon wieder eine Socke gefressen. Ich glaube, sie sammelt.", antworten: [
-      { text: "Welche Farbe?", weiter: "k2" },
-      { text: "Bei mir passiert das nie.", weiter: "k3" } ] },
-    k2: { sagt: "Die mit den kleinen Igeln drauf. Meine Glückssocke. Jetzt hab ich nur noch einen halben Glückstag.", antworten: [
-      { text: "Ein halber Glückstag ist doch was.", weiter: "k4" },
-      { text: "Guck mal im Bettbezug.", weiter: "k5" } ] },
-    k3: { sagt: "Wie machst du das? Hast du eine Socken-Liste?", antworten: [
-      { text: "Natürlich hab ich eine Socken-Liste.", weiter: "k4" },
-      { text: "Ich zähle vorher, ganz einfach.", weiter: "k4" } ] },
-    k4: { sagt: "Ich fang auch an zu zählen: eins … zwei … okay, ich hab nur eine.", antworten: [
-      { text: "Dann guck im Bettbezug.", weiter: "k5" },
-      { text: "Ich strick dir eine neue.", weiter: "k6" } ] },
-    k5: { sagt: "Da war sie! Mit drei fremden Socken und einem Kassenbon von 2019.", antworten: [
-      { text: "Das ist ja ein ganzes Nest.", weiter: "k6" },
-      { text: "Die fremden Socken behältst du.", weiter: "k6" } ] },
-    k6: { sagt: "Ich bin heute ein reicher Mann. An Socken jedenfalls. Ich muss das jetzt alles sortieren.", antworten: [
-      { text: "Mach eine Liste.", weiter: null },
-      { text: "Viel Spaß beim Sortieren.", weiter: null } ] }
+    start: { sagt: "Die Waschmaschine hat schon wieder eine Socke gefressen. Ich glaub, die sammelt.", antworten: [
+      { text: "Welche denn?", weiter: "k2" },
+      { text: "Bei mir kommt keine weg.", weiter: "k3" } ] },
+    k2: { sagt: "Die mit den Igeln, die du mir geschenkt hast. Jetzt hab ich nur noch einen Igel.", antworten: [
+      { text: "Guck mal im Bettbezug.", weiter: "k4" },
+      { text: "Ich hab noch Wolle da.", weiter: "k5" } ] },
+    k3: { sagt: "Wie machst du das? Zählst du die vorher?", antworten: [
+      { text: "Paarweise rein, paarweise raus.", weiter: "k6" },
+      { text: "Guck mal im Bettbezug.", weiter: "k4" } ] },
+    k4: { sagt: "Moment … tatsächlich, da ist sie! Und zwei fremde und ein Zehner.", antworten: [
+      { text: "Der Zehner ist Finderlohn.", weiter: "k6" },
+      { text: "Wem gehören die fremden?", weiter: "k6" } ] },
+    k5: { sagt: "Du strickst mir neue? Mit Igeln?", antworten: [
+      { text: "Mit Igeln. Dauert aber.", weiter: "k6" },
+      { text: "Erst guckst du im Bettbezug.", weiter: "k4" } ] },
+    k6: { sagt: "Okay. Ich glaub, ich klammer ab jetzt meine Socken zusammen. Wie ein Erwachsener.", antworten: [
+      { text: "Das wird ja was.", weiter: null },
+      { text: "Ich bin stolz auf dich.", weiter: null } ] }
   },
-  schluss: "So, Sockenpause … Tschüss!" },
+  schluss: "Ich geh jetzt sortieren. Tschüss!" },
 
 { id: "max-11", wer: "max", thema: "Geschenk für Jane",
   knoten: {
-    start: { sagt: "Psst, Geheimauftrag. Ich brauch eine Geschenkidee für Mama. Sie darf nichts merken.", antworten: [
+    start: { sagt: "Psst. Mama hat bald Geburtstag, und ich hab noch nichts. Du kennst sie doch am besten.", antworten: [
       { text: "Was Neues für die Küche?", weiter: "k2" },
-      { text: "Ein Ausflug zu zweit?", weiter: "k3" } ] },
-    k2: { sagt: "Sie hat schon alles für die Küche. Ich glaube, sie hat sogar Geräte, die noch gar nicht erfunden sind.", antworten: [
-      { text: "Dann eine selbstgemalte Schürze.", weiter: "k4" },
-      { text: "Koch du mal für sie.", weiter: "k5" } ] },
-    k3: { sagt: "Gute Idee! Aber wohin? Sie will bestimmt wieder nur über Kuchen reden.", antworten: [
-      { text: "Dann in ein Café.", weiter: "k4" },
-      { text: "Das ist doch das Beste an ihr.", weiter: "k4" } ] },
-    k4: { sagt: "Ich schreib das auf, in Lila, also „vielleicht“. Nein, Quatsch, in Schwarz: Das wird gemacht!", antworten: [
-      { text: "Du lernst schnell.", weiter: "k6" },
-      { text: "Ich sag kein Wort.", weiter: "k6" } ] },
-    k5: { sagt: "Ich soll für sie kochen, nach dem Reisziegel? Das wäre eher eine Strafe als ein Geschenk.", antworten: [
-      { text: "Mit meiner Hilfe klappt das.", weiter: "k4" },
-      { text: "Dann lieber das Café.", weiter: "k4" } ] },
-    k6: { sagt: "Danke, du bist die beste Komplizin. Wenn sie fragt: Wir haben übers Wetter geredet.", antworten: [
-      { text: "Sehr sonnig heute, nicht?", weiter: null },
-      { text: "Übers Wetter, ganz klar.", weiter: null } ] }
+      { text: "Ein Ausflug mit dir?", weiter: "k3" } ] },
+    k2: { sagt: "Die hat schon alles. Die hat sogar so ein Ding, mit dem man Kirschen entkernt.", antworten: [
+      { text: "Dann was Selbstgemachtes.", weiter: "k4" },
+      { text: "Koch du doch mal für sie.", weiter: "k5" } ] },
+    k3: { sagt: "Ausflug ist gut. Aber wohin? Sie will dann eh nur über Kuchen reden.", antworten: [
+      { text: "Dann in ein schönes Café.", weiter: "k4" },
+      { text: "Das ist doch das Schöne an ihr.", weiter: "k4" } ] },
+    k4: { sagt: "Gute Idee, eigentlich. Warum fällt mir so was nie selber ein?", antworten: [
+      { text: "Weil du mich hast.", weiter: "k6" },
+      { text: "Fällt dir doch, nur später.", weiter: "k6" } ] },
+    k5: { sagt: "Für sie kochen? Nach dem Risotto? Das wär eher eine Strafe.", antworten: [
+      { text: "Ich helf dir am Telefon.", weiter: "k4" },
+      { text: "Gut, dann doch das Café.", weiter: "k4" } ] },
+    k6: { sagt: "Danke. Und wenn sie fragt: Wir haben übers Wetter geredet.", antworten: [
+      { text: "Sehr wechselhaft, ganz klar.", weiter: null },
+      { text: "Ich sag kein Wort.", weiter: null } ] }
   },
-  schluss: "Ende der Geheimübertragung … Tschüss!" },
+  schluss: "Ich muss los, sie klopft gerade an. Tschüss!" },
 
 { id: "max-12", wer: "max", thema: "Die Wette",
   knoten: {
-    start: { sagt: "Ich wette mit dir, dass ich heute beim Tschüss gewinne. Ich hab trainiert.", antworten: [
+    start: { sagt: "Heute gewinn ich beim Tschüss. Ich hab geübt.", antworten: [
       { text: "Was ist der Einsatz?", weiter: "k2" },
-      { text: "Du verlierst doch immer.", weiter: "k3" } ] },
-    k2: { sagt: "Wer verliert, muss beim nächsten Besuch den Abwasch machen. Ganz, mit Töpfen.", antworten: [
-      { text: "Dann bring deine Gummihandschuhe mit.", weiter: "k4" },
+      { text: "Das sagst du jedes Mal.", weiter: "k3" } ] },
+    k2: { sagt: "Wer verliert, macht beim nächsten Besuch den Abwasch. Mit Töpfen.", antworten: [
+      { text: "Dann bring Handschuhe mit.", weiter: "k4" },
       { text: "Ich bin dabei.", weiter: "k4" } ] },
-    k3: { sagt: "Das war früher. Ich hab jetzt eine Technik: tief einatmen und mit Gefühl tschüssen.", antworten: [
-      { text: "Tschüssen ist kein Wort.", weiter: "k5" },
-      { text: "Zeig mal deine Technik.", weiter: "k5" } ] },
-    k4: { sagt: "Ich spür schon, wie ich gewinne. Mein Bauchgefühl war nie so stark.", antworten: [
-      { text: "Das ist wahrscheinlich Hunger.", weiter: "k6" },
-      { text: "Warte nur ab.", weiter: "k6" } ] },
-    k5: { sagt: "Ab heute schon. Ich hab’s erfunden, das darf ich. Ich hab ja auch die App erfunden.", antworten: [
-      { text: "Fair genug.", weiter: "k4" },
-      { text: "Na dann zeig, was du kannst.", weiter: "k4" } ] },
-    k6: { sagt: "Okay, ich bin bereit. Ich zähl bis drei, dann geht’s los.", antworten: [
+    k3: { sagt: "Ja, aber diesmal hab ich eine Technik. Ich atme vorher tief durch.", antworten: [
+      { text: "Das hilft dir auch nicht.", weiter: "k4" },
+      { text: "Zeig mal.", weiter: "k5" } ] },
+    k4: { sagt: "Ich spür’s, heute ist mein Tag. Mein Bauch sagt das.", antworten: [
+      { text: "Das ist bloß Hunger.", weiter: "k6" },
+      { text: "Wir werden sehen.", weiter: "k6" } ] },
+    k5: { sagt: "Nee, später. Ich will die Überraschung nicht verderben.", antworten: [
+      { text: "Ach so. Na dann.", weiter: "k4" },
+      { text: "Ich hab keine Angst.", weiter: "k4" } ] },
+    k6: { sagt: "Okay. Bereit? Ich zähl bis drei.", antworten: [
       { text: "Eins, zwei …", weiter: null },
-      { text: "Ich bin auch bereit.", weiter: null } ] }
+      { text: "Ich bin bereit.", weiter: null } ] }
   },
   schluss: "Drei! Tschüss!" },
 
 { id: "max-13", wer: "max", thema: "Der Tanzschüler",
   knoten: {
-    start: { sagt: "Wie läuft’s mit deinem Tanzschüler? Ist er schon bereit für die große Bühne?", antworten: [
-      { text: "Er zählt schon bis vier.", weiter: "k2" },
-      { text: "Er hat letzte Woche gelächelt.", weiter: "k3" } ] },
-    k2: { sagt: "Bis vier! Das ist ein Fortschritt von einer ganzen Zahl. Ich bin stolz auf euch beide.", antworten: [
-      { text: "Nächstes Ziel: Takt halten.", weiter: "k4" },
-      { text: "Nächstes Ziel: nicht auf mich treten.", weiter: "k4" } ] },
-    k3: { sagt: "Beim Tanzen? Das ist großes Kino. Da fängt alles an.", antworten: [
-      { text: "Leider beim Stolpern.", weiter: "k5" },
-      { text: "Mitten im Walzer, ganz plötzlich.", weiter: "k5" } ] },
-    k4: { sagt: "Ich komm mal mit und tanz vor. Dann sieht er, dass es noch schlimmer geht.", antworten: [
-      { text: "Das wäre tatsächlich motivierend.", weiter: "k6" },
-      { text: "Du bringst ihn nur durcheinander.", weiter: "k6" } ] },
-    k5: { sagt: "Stolpern mit Lächeln ist eine ganz eigene Tanzform. Ich beherrsche die schon.", antworten: [
-      { text: "Das weiß ich, du Halle-Hopser.", weiter: "k6" },
-      { text: "Ihr wärt ein gutes Paar.", weiter: "k6" } ] },
-    k6: { sagt: "Abgemacht, ich komm zur nächsten Stunde. Ich bring gute Laune und schlechte Schuhe.", antworten: [
-      { text: "Bring lieber gute Schuhe.", weiter: null },
-      { text: "Ich halte dir einen Platz frei.", weiter: null } ] }
+    start: { sagt: "Und, wie läuft’s mit deinem Tanzschüler?", antworten: [
+      { text: "Er zählt jetzt bis vier.", weiter: "k2" },
+      { text: "Er hat letztes Mal gelacht.", weiter: "k3" } ] },
+    k2: { sagt: "Bis vier! Beim Walzer ist das aber einer zu viel, oder?", antworten: [
+      { text: "Eben. Daran arbeiten wir.", weiter: "k4" },
+      { text: "Er tanzt jetzt Foxtrott.", weiter: "k4" } ] },
+    k3: { sagt: "Gelacht? Über dich oder mit dir?", antworten: [
+      { text: "Über sich selbst. Das ist gut.", weiter: "k5" },
+      { text: "Über meine Musik. Schlager.", weiter: "k5" } ] },
+    k4: { sagt: "Ich könnte mal mitkommen und vortanzen. Dann sieht er, dass es schlimmer geht.", antworten: [
+      { text: "Das wär tatsächlich motivierend.", weiter: "k6" },
+      { text: "Du bringst ihn nur raus.", weiter: "k6" } ] },
+    k5: { sagt: "Das ist doch das Wichtigste. Hast du mir früher auch immer gesagt.", antworten: [
+      { text: "Und es stimmt immer noch.", weiter: "k4" },
+      { text: "Schön, dass du zugehört hast.", weiter: "k4" } ] },
+    k6: { sagt: "Okay, ich komm zur nächsten Stunde. Ich bring Kuchen mit, dann ist er abgelenkt.", antworten: [
+      { text: "Kuchen geht immer.", weiter: null },
+      { text: "Erst tanzen, dann Kuchen.", weiter: null } ] }
   },
-  schluss: "Ich tanz jetzt raus … Tschüss!" },
+  schluss: "Ich muss los, Greta ruft. Tschüss!" },
 
 { id: "max-14", wer: "max", thema: "Das Fahrrad",
   knoten: {
-    start: { sagt: "Ich hab ein neues Fahrrad. Also ein gebrauchtes. Es quietscht bei jedem Tritt, wie ein Akkordeon.", antworten: [
+    start: { sagt: "Ich hab ein Fahrrad gekauft. Gebraucht. Es quietscht bei jedem Tritt.", antworten: [
       { text: "Öl hilft.", weiter: "k2" },
-      { text: "Dann hast du Musik dabei.", weiter: "k3" } ] },
-    k2: { sagt: "Ich hab Salatöl genommen. Jetzt riecht es nach Vinaigrette und quietscht trotzdem.", antworten: [
-      { text: "Max, das war das falsche Öl.", weiter: "k4" },
-      { text: "Dann gibt es Fahrradsalat.", weiter: "k4" } ] },
-    k3: { sagt: "Stimmt. Ich kann bergauf Polka spielen. Die Leute drehen sich schon um.", antworten: [
-      { text: "Spiel mal einen Walzer.", weiter: "k5" },
-      { text: "Wegen der Musik, sicher.", weiter: "k5" } ] },
-    k4: { sagt: "Ich frag am besten Micha. Der weiß sowas, und er redet dabei nicht so viel.", antworten: [
-      { text: "Gute Idee.", weiter: "k6" },
-      { text: "Ich hätte es dir auch gesagt.", weiter: "k6" } ] },
-    k5: { sagt: "Für Walzer muss ich im Dreivierteltakt treten. Das ist auf Kopfsteinpflaster eine Herausforderung.", antworten: [
-      { text: "Du schaffst das.", weiter: "k6" },
-      { text: "Steig lieber ab und schieb.", weiter: "k6" } ] },
-    k6: { sagt: "Ich fahr jetzt eine Proberunde. Wenn du ein Quietschen aus Richtung Halle hörst, das bin ich.", antworten: [
-      { text: "Ich lausche.", weiter: null },
-      { text: "Fahr vorsichtig, du Akkordeonist.", weiter: null } ] }
+      { text: "Wie viel hast du bezahlt?", weiter: "k3" } ] },
+    k2: { sagt: "Hab ich probiert. Olivenöl. Jetzt quietscht es und riecht nach Salat.", antworten: [
+      { text: "Max. Das falsche Öl.", weiter: "k4" },
+      { text: "Frag lieber Micha.", weiter: "k4" } ] },
+    k3: { sagt: "Fünfzig Euro. Der Typ hat gesagt, das Quietschen ist Charakter.", antworten: [
+      { text: "Charakter gab’s gratis dazu.", weiter: "k5" },
+      { text: "Der hat dich übers Ohr gehauen.", weiter: "k5" } ] },
+    k4: { sagt: "Ich hab Micha angerufen. Er hat gesagt: „Kette.“ Dann hat er aufgelegt.", antworten: [
+      { text: "Mehr braucht’s bei Micha nicht.", weiter: "k6" },
+      { text: "Und, war’s die Kette?", weiter: "k6" } ] },
+    k5: { sagt: "Nee, eigentlich fährt es gut. Nur bergauf hören es alle.", antworten: [
+      { text: "Dann fahr nicht bergauf.", weiter: "k4" },
+      { text: "Ruf mal Micha an.", weiter: "k4" } ] },
+    k6: { sagt: "Ich guck mir das morgen an. Wenn’s dann nicht mehr quietscht, kriegst du Bescheid.", antworten: [
+      { text: "Ich warte auf die Meldung.", weiter: null },
+      { text: "Sonst ruf Micha nochmal an.", weiter: null } ] }
   },
-  schluss: "Quietsch, quietsch … Tschüss!" },
+  schluss: "Ich schieb’s jetzt nach Hause. Tschüss!" },
 
 { id: "max-15", wer: "max", thema: "Der Bart",
   knoten: {
-    start: { sagt: "Ich lass mir einen Bart wachsen. Bis jetzt sind es drei Haare, aber sie sind sehr entschlossen.", antworten: [
-      { text: "Drei? Hast du sie gezählt?", weiter: "k2" },
-      { text: "Warum denn ein Bart?", weiter: "k3" } ] },
-    k2: { sagt: "Ich hab ihnen sogar Namen gegeben. Harry, Ron und Hermine.", antworten: [
-      { text: "Hermine wächst bestimmt am schnellsten.", weiter: "k4" },
-      { text: "Wo ist Dumbledore?", weiter: "k5" } ] },
-    k3: { sagt: "Ich will weiser aussehen. Wie ein Professor. Oder wenigstens wie jemand, der weiß, wo seine Schlüssel sind.", antworten: [
-      { text: "Dafür brauchst du eher eine Liste.", weiter: "k4" },
-      { text: "Wie Dumbledore?", weiter: "k5" } ] },
-    k4: { sagt: "Haha, Hermine ist tatsächlich schon die längste. Typisch, die strengt sich immer am meisten an.", antworten: [
-      { text: "Gib Ron noch etwas Zeit.", weiter: "k6" },
-      { text: "Rasier sie lieber nicht ab.", weiter: "k6" } ] },
-    k5: { sagt: "Dumbledore kommt, wenn ich achtzig bin. Dann können wir zusammen weise gucken.", antworten: [
-      { text: "Ich gucke jetzt schon weise.", weiter: "k6" },
-      { text: "Das dauert noch, mein Lieber.", weiter: "k6" } ] },
-    k6: { sagt: "Beim nächsten Besuch zeig ich dir den Bart. Bring eine Lupe mit.", antworten: [
-      { text: "Ich bring die von der Zeitung.", weiter: null },
-      { text: "Ich freu mich auf alle drei.", weiter: null } ] }
+    start: { sagt: "Ich lass mir einen Bart wachsen. Bis jetzt sind’s ein paar Haare, aber die sind entschlossen.", antworten: [
+      { text: "Warum denn ein Bart?", weiter: "k2" },
+      { text: "Was sagt Greta dazu?", weiter: "k3" } ] },
+    k2: { sagt: "Ich will ein bisschen erwachsener aussehen. Beim Bäcker sagen sie immer noch „junger Mann“ zu mir.", antworten: [
+      { text: "Das sagen die zu jedem.", weiter: "k4" },
+      { text: "Freu dich doch drüber.", weiter: "k4" } ] },
+    k3: { sagt: "Sie sagt, es kratzt. Und dass sie es mir zuliebe zwei Wochen aushält.", antworten: [
+      { text: "Zwei Wochen sind fair.", weiter: "k5" },
+      { text: "Kluge Frau, mit Frist.", weiter: "k5" } ] },
+    k4: { sagt: "Ja, aber ich will einmal „der Herr“ hören. Nur einmal.", antworten: [
+      { text: "Dann zieh ein Jackett an.", weiter: "k6" },
+      { text: "Der Herr Max. Na bitte.", weiter: "k6" } ] },
+    k5: { sagt: "Ich zähl schon die Tage. Sie auch, glaub ich.", antworten: [
+      { text: "Ich wett auf Greta.", weiter: "k6" },
+      { text: "Zeig ihn mir vorher noch.", weiter: "k6" } ] },
+    k6: { sagt: "Danke. Beim nächsten Besuch zeig ich ihn dir, bring vorsichtshalber die Lupe mit.", antworten: [
+      { text: "Die liegt eh beim Rätsel.", weiter: null },
+      { text: "Ich freu mich auf jedes Haar.", weiter: null } ] }
   },
-  schluss: "Harry, Ron, Hermine und ich sagen … Tschüss!" },
+  schluss: "Ich geh mal in den Spiegel gucken. Tschüss!" },
 
 { id: "max-16", wer: "max", thema: "Pizza-Verwechslung",
   knoten: {
-    start: { sagt: "Ich hab Pizza bestellt. Gekommen ist ein Salat und ein Mann, der sehr überzeugt war, dass ich Salat bestellt hab.", antworten: [
-      { text: "Und, hast du ihn gegessen?", weiter: "k2" },
-      { text: "Hast du reklamiert?", weiter: "k3" } ] },
-    k2: { sagt: "Ja, und weißt du was? Er war gut. Ich fühl mich verraten von meinem eigenen Magen.", antworten: [
-      { text: "Das nennt man Wachstum.", weiter: "k4" },
-      { text: "Dein Magen weiß, was gut ist.", weiter: "k4" } ] },
-    k3: { sagt: "Ich wollte. Aber er hat so freundlich geguckt. Da hab ich Danke gesagt und Trinkgeld gegeben.", antworten: [
-      { text: "Du bist zu nett.", weiter: "k2" },
-      { text: "Das hätte ich auch gemacht.", weiter: "k2" } ] },
-    k4: { sagt: "Ich glaub, ich bestell nächstes Mal extra Salat. Vielleicht kommt dann ja Pizza.", antworten: [
-      { text: "Raffiniert. Probier es aus.", weiter: "k5" },
-      { text: "Oder du kochst selber.", weiter: "k6" } ] },
-    k5: { sagt: "Ich schreib’s auf meine neue Liste: „Salat bestellen, Pizza bekommen.“ Mit schwarzem Stift.", antworten: [
-      { text: "Das ist mein Junge.", weiter: null },
-      { text: "Ich bin gespannt.", weiter: null } ] },
-    k6: { sagt: "Selber kochen? Ich erinnere an den Reisziegel. Wir wollen ja niemanden gefährden.", antworten: [
-      { text: "Gut, dann bestell weiter.", weiter: "k5" },
-      { text: "Wir kochen zusammen, versprochen.", weiter: null } ] }
+    start: { sagt: "Ich hab Pizza bestellt. Gekommen ist ein Salat, und ein Fahrer, der ganz sicher war, dass ich Salat wollte.", antworten: [
+      { text: "Hast du reklamiert?", weiter: "k2" },
+      { text: "Und, hast du ihn gegessen?", weiter: "k3" } ] },
+    k2: { sagt: "Ich wollte. Aber er war so freundlich, da hab ich Danke gesagt und Trinkgeld gegeben.", antworten: [
+      { text: "Du bist zu nett, Max.", weiter: "k3" },
+      { text: "Das hätt ich auch gemacht.", weiter: "k3" } ] },
+    k3: { sagt: "Ja. Und weißt du was? Der war richtig gut.", antworten: [
+      { text: "Na siehst du.", weiter: "k4" },
+      { text: "Sag das bloß nicht weiter.", weiter: "k4" } ] },
+    k4: { sagt: "Ich bestell nächstes Mal einfach Salat. Vielleicht kommt dann ja Pizza.", antworten: [
+      { text: "Gute Strategie. Probier’s aus.", weiter: "k5" },
+      { text: "Oder du kochst selbst.", weiter: "k6" } ] },
+    k5: { sagt: "Ich erzähl dir, wie’s ausgeht.", antworten: [
+      { text: "Ich bin gespannt.", weiter: null },
+      { text: "Ich tipp auf Suppe.", weiter: null } ] },
+    k6: { sagt: "Selbst kochen? Du weißt, wie das beim letzten Mal war.", antworten: [
+      { text: "Diesmal mit mir am Telefon.", weiter: null },
+      { text: "Gut, bestell weiter.", weiter: null } ] }
   },
-  schluss: "Ich hör die Klingel … Tschüss!" },
+  schluss: "Oh, es klingelt. Vielleicht doch die Pizza. Tschüss!" },
 
-{ id: "max-17", wer: "max", thema: "Rätselhilfe",
+{ id: "max-17", wer: "max", thema: "Fluss mit fünf Buchstaben",
   knoten: {
-    start: { sagt: "Du bist doch Rätselprofi. Ich brauch ein Wort mit fünf Buchstaben für „Telefonat ohne Ende“.", antworten: [
-      { text: "Das sind wir zwei.", weiter: "k2" },
-      { text: "Wo steht das denn?", weiter: "k3" } ] },
-    k2: { sagt: "Haha. Das passt aber nicht in fünf Kästchen. Wir sind mindestens zwölf.", antworten: [
-      { text: "Probier mal „Tschüss“.", weiter: "k4" },
-      { text: "Dann ist das Rätsel falsch.", weiter: "k5" } ] },
-    k3: { sagt: "Nirgendwo, das hab ich mir selbst ausgedacht. Ich wollte nur, dass du anrufst, also, dass ich anrufe.", antworten: [
-      { text: "Du bist ein Schlitzohr.", weiter: "k5" },
-      { text: "Schön, dass du anrufst.", weiter: "k5" } ] },
-    k4: { sagt: "„Tschüss“ hat sieben Buchstaben. Aber gefühlt dauert es unendlich. Du hast es geknackt.", antworten: [
-      { text: "Ich bin halt ein Profi.", weiter: "k6" },
-      { text: "Das war nicht schwer.", weiter: "k6" } ] },
-    k5: { sagt: "Ich hab noch eins: „Was macht man am Ende eines Telefonats?“ Neun Buchstaben.", antworten: [
-      { text: "Auflegen. Acht.", weiter: "k6" },
-      { text: "Gar nicht erst aufhören.", weiter: "k6" } ] },
-    k6: { sagt: "Dann lass uns das Rätsel lieber praktisch lösen. Bist du bereit?", antworten: [
-      { text: "Jederzeit.", weiter: null },
-      { text: "Ich wärme meine Stimme auf.", weiter: null } ] }
+    start: { sagt: "Du machst doch Kreuzworträtsel. Ich hab eins aus der Zeitung und häng fest.", antworten: [
+      { text: "Lies vor.", weiter: "k2" },
+      { text: "Seit wann rätselst du?", weiter: "k3" } ] },
+    k2: { sagt: "Nebenfluss der Elbe, fünf Buchstaben. Ich komm nicht drauf.", antworten: [
+      { text: "Guck mal aus dem Fenster.", weiter: "k4" },
+      { text: "Na, wo wohnst du denn?", weiter: "k4" } ] },
+    k3: { sagt: "Seit heute früh. Im Zug lag eine Zeitung rum.", antworten: [
+      { text: "Na, dann lies mal vor.", weiter: "k2" },
+      { text: "Wie weit bist du?", weiter: "k5" } ] },
+    k4: { sagt: "Ach, die Saale! Oh Mann, da wohn ich seit Jahren dran.", antworten: [
+      { text: "Nicht mehr lange, dann Leipzig.", weiter: "k6" },
+      { text: "Jetzt vergisst du’s nie wieder.", weiter: "k6" } ] },
+    k5: { sagt: "Ein Wort. Und das ist falsch, glaub ich, weil nichts mehr passt.", antworten: [
+      { text: "Mit Kuli? Max.", weiter: "k2" },
+      { text: "Radier es. Was ist das nächste?", weiter: "k2" } ] },
+    k6: { sagt: "Stimmt, in Leipzig ist es dann die Pleiße. Die kann ich mir nie merken.", antworten: [
+      { text: "Die kommt bestimmt auch mal dran.", weiter: null },
+      { text: "Schreib sie dir auf.", weiter: null } ] }
   },
-  schluss: "Na dann … Tschüss!" },
+  schluss: "Ich mach dann weiter, mit Bleistift. Tschüss!" },
 
 { id: "max-18", wer: "max", thema: "Max’ Quiz",
   knoten: {
-    start: { sagt: "Ich hab ein Quiz für dich. Frage eins: Wer ist dein Lieblingspatensohn?", antworten: [
-      { text: "Gibt es da Auswahlmöglichkeiten?", weiter: "k2" },
+    start: { sagt: "Ich hab ein Quiz für dich, drei Fragen. Frage eins: Wer ist dein Lieblingspatensohn?", antworten: [
+      { text: "Gibt’s Antwortmöglichkeiten?", weiter: "k2" },
       { text: "Das Glücksschwein.", weiter: "k3" } ] },
-    k2: { sagt: "Nein. Die Antwort lautet Max, mit großem M. Zehn Punkte für Rita!", antworten: [
-      { text: "Ich hab doch noch gar nichts gesagt.", weiter: "k4" },
-      { text: "Na gut, ich nehm die Punkte.", weiter: "k4" } ] },
-    k3: { sagt: "Das Schwein ist kein Patensohn! Es hat ja nicht mal eine App für dich gebaut.", antworten: [
-      { text: "Na gut, dann eben du.", weiter: "k4" },
-      { text: "Es grunzt aber netter.", weiter: "k5" } ] },
-    k4: { sagt: "Frage zwei: Wer kann besser tanzen, du oder ich?", antworten: [
-      { text: "Das ist keine echte Frage.", weiter: "k6" },
-      { text: "Der Halle-Hopser natürlich.", weiter: "k6" } ] },
-    k5: { sagt: "Es grunzt gar nicht, das sagt das Hühnchen auch immer. Ich lasse die Antwort nicht gelten.", antworten: [
-      { text: "Gut, dann bist du es.", weiter: "k4" },
-      { text: "Du bist so eifersüchtig.", weiter: "k4" } ] },
-    k6: { sagt: "Richtig, du! Ende des Quiz, du hast gewonnen. Der Preis ist ein Besuch von mir.", antworten: [
-      { text: "Den nehm ich gern.", weiter: null },
-      { text: "Gibt’s auch einen zweiten Platz?", weiter: null } ] }
+    k2: { sagt: "Nein. Die Antwort ist Max. Ein Punkt für dich.", antworten: [
+      { text: "Ich hab doch gar nichts gesagt.", weiter: "k4" },
+      { text: "Ich nehm den Punkt.", weiter: "k4" } ] },
+    k3: { sagt: "Das Schwein ist kein Patensohn! Das hat dir auch keine App gebaut.", antworten: [
+      { text: "Aber es ruft nie zu spät an.", weiter: "k4" },
+      { text: "Na gut, dann eben du.", weiter: "k4" } ] },
+    k4: { sagt: "Frage zwei: Wer tanzt besser, du oder ich?", antworten: [
+      { text: "Ist das eine ernste Frage?", weiter: "k5" },
+      { text: "Ich. Mit Abstand.", weiter: "k5" } ] },
+    k5: { sagt: "Richtig. Frage drei: Wer gewinnt gleich beim Tschüss?", antworten: [
+      { text: "Ich, wie immer.", weiter: "k6" },
+      { text: "Das ist eine Fangfrage.", weiter: "k6" } ] },
+    k6: { sagt: "Das klären wir gleich praktisch. Zwei von drei hast du jedenfalls.", antworten: [
+      { text: "Zwei reichen mir.", weiter: null },
+      { text: "Und was ist der Preis?", weiter: null } ] }
   },
-  schluss: "Siegerehrung beendet … Tschüss!" },
+  schluss: "Der Preis ist ein Besuch von mir. Tschüss!" },
 
 /* ==================== JANE ==================== */
 
 { id: "jane-01", wer: "jane", thema: "Sonntagsessen",
   knoten: {
-    start: { sagt: "Rita, Sonntag! Ich plane schon. Braten oder Rouladen, das ist hier die Frage.", antworten: [
-      { text: "Rouladen, eindeutig.", weiter: "k2" },
-      { text: "Warum nicht beides?", weiter: "k3" } ] },
-    k2: { sagt: "Rouladen, hervorragend. Dann muss ich nur noch den Zahnstocher-Vorrat prüfen, Micha baut daraus immer Türmchen.", antworten: [
-      { text: "Ich bring Zahnstocher mit.", weiter: "k4" },
-      { text: "Und was gibt’s dazu?", weiter: "k5" } ] },
-    k3: { sagt: "Beides! Du bist ja mutig. Mein Ofen hat dabei zuletzt so geguckt, als wollte er kündigen.", antworten: [
-      { text: "Dein Ofen schafft das.", weiter: "k5" },
-      { text: "Gut, dann doch nur Rouladen.", weiter: "k2" } ] },
-    k4: { sagt: "Wunderbar. Und Nachtisch? Ich hätte da einen Verdacht, dass du was Bestimmtes willst.", antworten: [
-      { text: "Rote Grütze mit Vanillesoße.", weiter: "k6" },
-      { text: "Überrasch mich.", weiter: "k6" } ] },
-    k5: { sagt: "Rotkohl und Klöße, selbstverständlich. Die Klöße sind diesmal rund, versprochen, nicht wie letztes Mal.", antworten: [
-      { text: "Ich mochte die eckigen.", weiter: "k4" },
-      { text: "Rund ist schön.", weiter: "k4" } ] },
-    k6: { sagt: "Abgemacht. Ich schreib’s mir auf, also auf deine Art, mit Haken. Ich hab das von dir.", antworten: [
-      { text: "Gelernt ist gelernt.", weiter: null },
-      { text: "Ich freu mich auf Sonntag.", weiter: null } ] }
+    start: { sagt: "Rita, ich bin’s. Sag mal, Sonntag, Rouladen oder Braten? Ich kann mich nicht entscheiden.", antworten: [
+      { text: "Rouladen, ganz klar.", weiter: "k2" },
+      { text: "Was sagt denn Micha?", weiter: "k3" } ] },
+    k2: { sagt: "Hab ich mir gedacht. Dann muss ich nur noch Senf holen, wir haben nur noch so einen süßen.", antworten: [
+      { text: "Süßer Senf geht gar nicht.", weiter: "k4" },
+      { text: "Ich bring dir ein Glas mit.", weiter: "k4" } ] },
+    k3: { sagt: "„Mir egal.“ Das sagt er immer, und dann isst er drei Stück.", antworten: [
+      { text: "Dann Rouladen, für Micha.", weiter: "k2" },
+      { text: "Dann mach doch beides.", weiter: "k5" } ] },
+    k4: { sagt: "Und dazu Rotkohl und Klöße. Die Klöße werden diesmal rund, das schwör ich dir.", antworten: [
+      { text: "Ich mochte die letzten.", weiter: "k6" },
+      { text: "Rund ist überbewertet.", weiter: "k6" } ] },
+    k5: { sagt: "Beides? Du bist gut, ich hab einen Ofen und zwei Hände. Na gut, Rouladen.", antworten: [
+      { text: "Gute Entscheidung.", weiter: "k4" },
+      { text: "Siehst du, war doch einfach.", weiter: "k4" } ] },
+    k6: { sagt: "Ach du. Und zum Nachtisch, sag nichts, ich weiß schon: rote Grütze.", antworten: [
+      { text: "Mit Vanillesoße, bitte.", weiter: null },
+      { text: "Du kennst mich zu gut.", weiter: null } ] }
   },
-  schluss: "Bis Sonntag, Rita. Komm hungrig!" },
+  schluss: "Gut, dann schreib ich mir das auf. Bis Sonntag, und komm mit Hunger!" },
 
 { id: "jane-02", wer: "jane", thema: "Der launische Ofen",
   knoten: {
-    start: { sagt: "Mein Ofen hat heute wieder Launen. Er heizt nur, wenn ich nett zu ihm bin.", antworten: [
-      { text: "Was sagst du ihm denn?", weiter: "k2" },
-      { text: "Droh ihm mit dem Elektriker.", weiter: "k3" } ] },
-    k2: { sagt: "„Lieber Ofen, du bist der schönste Ofen der Binger Straße.“ Dann tickt er zufrieden.", antworten: [
-      { text: "Ist er das denn?", weiter: "k4" },
-      { text: "So spreche ich mit dem Hühnchen.", weiter: "k5" } ] },
-    k3: { sagt: "Um Himmels willen, nicht so laut! Das letzte Mal hat er daraufhin den Kuchen absichtlich blass gelassen.", antworten: [
-      { text: "Rachsüchtiger Ofen.", weiter: "k4" },
-      { text: "Entschuldige dich bei ihm.", weiter: "k2" } ] },
-    k4: { sagt: "Er ist der einzige Ofen, den ich kenne, der eine eigene Meinung hat. Aber er backt wie ein Engel.", antworten: [
-      { text: "Wie seine Besitzerin.", weiter: "k6" },
-      { text: "Mit Meinung backt es sich besser.", weiter: "k6" } ] },
-    k5: { sagt: "Siehst du, das Hühnchen versteht das. Unsere Gegenstände haben Gefühle, das weiß jede ordentliche Hausfrau.", antworten: [
-      { text: "Mein Toaster ist eher kühl.", weiter: "k6" },
-      { text: "Mein Teekessel pfeift immer zurück.", weiter: "k6" } ] },
-    k6: { sagt: "Oh, er tickt gerade. Ich glaub, er hat gemerkt, dass wir über ihn reden.", antworten: [
-      { text: "Grüß ihn schön von mir.", weiter: null },
-      { text: "Dann lass ich euch allein.", weiter: null } ] }
+    start: { sagt: "Mein Ofen spinnt wieder. Der heizt, wann er will.", antworten: [
+      { text: "Wie alt ist der denn?", weiter: "k2" },
+      { text: "Hast du Micha gefragt?", weiter: "k3" } ] },
+    k2: { sagt: "Den hab ich, seit wir hier wohnen. Der kennt jeden Kuchen von mir.", antworten: [
+      { text: "Dann ist er einfach launisch.", weiter: "k4" },
+      { text: "Der braucht mal Urlaub.", weiter: "k4" } ] },
+    k3: { sagt: "Micha hat reingeguckt und gesagt: „Der geht doch.“ Und dann war er wieder auf dem Sofa.", antworten: [
+      { text: "Typisch Micha.", weiter: "k4" },
+      { text: "Und, geht er?", weiter: "k4" } ] },
+    k4: { sagt: "Mal so, mal so. Der Marmorkuchen gestern war oben fast schwarz und innen noch feucht.", antworten: [
+      { text: "Oberhitze runter, länger backen.", weiter: "k5" },
+      { text: "Habt ihr ihn trotzdem gegessen?", weiter: "k6" } ] },
+    k5: { sagt: "Ach, du bist gut. Probier ich Sonntag, dann kannst du gleich mitessen.", antworten: [
+      { text: "Ich bring Sahne mit.", weiter: null },
+      { text: "Ich bin gern Testesserin.", weiter: null } ] },
+    k6: { sagt: "Na klar, Micha hat die Mitte rausgelöffelt. Er sagt, das ist jetzt ein Napfkuchen.", antworten: [
+      { text: "Der Mann hat Ideen.", weiter: null },
+      { text: "Recht hat er.", weiter: null } ] }
   },
-  schluss: "Ich muss jetzt nach ihm sehen. Er wird sonst eifersüchtig." },
+  schluss: "Ich muss nach ihm gucken, der tickt schon wieder so komisch." },
 
-{ id: "jane-03", wer: "jane", thema: "Kuchen-Abstimmung",
+{ id: "jane-03", wer: "jane", thema: "Kuchen für Samstag",
   knoten: {
-    start: { sagt: "Ich brauche dein Fachurteil. Für Samstag: Apfelkuchen oder Käsekuchen?", antworten: [
-      { text: "Apfelkuchen mit Streuseln.", weiter: "k2" },
-      { text: "Käsekuchen, ohne Rosinen!", weiter: "k3" } ] },
-    k2: { sagt: "Streusel, gute Wahl. Wie viele Streusel ist für dich „genug“?", antworten: [
+    start: { sagt: "Rita, du musst entscheiden. Samstag: Apfelkuchen oder Käsekuchen?", antworten: [
+      { text: "Apfel mit Streuseln.", weiter: "k2" },
+      { text: "Käsekuchen, aber ohne Rosinen.", weiter: "k3" } ] },
+    k2: { sagt: "Streusel, gut. Wie viel? Ich frag, weil Micha immer sagt, zu wenig.", antworten: [
       { text: "Mehr Streusel als Apfel.", weiter: "k4" },
-      { text: "So viele, dass man staunt.", weiter: "k4" } ] },
-    k3: { sagt: "Ohne Rosinen, natürlich. Ich weiß gar nicht, wer Rosinen jemals eingeladen hat.", antworten: [
-      { text: "Die haben sich reingeschlichen.", weiter: "k5" },
-      { text: "Ich esse sie, um sie loszuwerden.", weiter: "k5" } ] },
-    k4: { sagt: "Ich hab früher mal Streusel in so einer Menge gemacht, dass der Apfel um Hilfe gerufen hat.", antworten: [
-      { text: "Genau so will ich ihn.", weiter: "k6" },
-      { text: "Der Apfel hat’s überlebt?", weiter: "k6" } ] },
-    k5: { sagt: "Dann machen wir den Käsekuchen ganz hoch und fluffig. Er darf nur nicht einsinken, sonst schmollt der Ofen.", antworten: [
-      { text: "Und wenn er doch einsinkt?", weiter: "k6" },
-      { text: "Ich halte die Daumen.", weiter: "k6" } ] },
-    k6: { sagt: "Ach, egal was passiert, es wird gegessen. Das ist das Schöne an Kuchen: Er nimmt nichts übel.", antworten: [
-      { text: "Ganz im Gegensatz zum Ofen.", weiter: null },
-      { text: "Ich bin am Samstag da.", weiter: null } ] }
+      { text: "Da hat Micha mal recht.", weiter: "k4" } ] },
+    k3: { sagt: "Ohne Rosinen, versteht sich. Ich weiß gar nicht, wer die mal eingeladen hat.", antworten: [
+      { text: "Die haben sich reingeschmuggelt.", weiter: "k5" },
+      { text: "Pauli pult die eh raus.", weiter: "k5" } ] },
+    k4: { sagt: "Dann mach ich die doppelte Menge, und der Rest kommt in die Dose, für unter der Woche.", antworten: [
+      { text: "Eine Streuseldose. Das ist Luxus.", weiter: "k6" },
+      { text: "Die ist Montag leer.", weiter: "k6" } ] },
+    k5: { sagt: "Dann wird er schön hoch. Wenn er mir nur nicht wieder einfällt.", antworten: [
+      { text: "Ofen aus, Tür einen Spalt auf.", weiter: "k6" },
+      { text: "Eingefallen schmeckt er genauso.", weiter: "k6" } ] },
+    k6: { sagt: "Ach, gegessen wird er sowieso. Bei uns bleibt nie was übrig.", antworten: [
+      { text: "Ich bin Samstag da.", weiter: null },
+      { text: "Heb mir die Ecke auf.", weiter: null } ] }
   },
-  schluss: "Ich geh jetzt Butter weich werden lassen. Bis Samstag!" },
+  schluss: "So, ich stell schon mal die Butter raus. Bis Samstag!" },
 
 { id: "jane-04", wer: "jane", thema: "Der Kuchendieb",
   knoten: {
-    start: { sagt: "Rita, es gibt einen Kuchendieb in der Binger Straße. Es fehlt ein Stück vom Blech.", antworten: [
-      { text: "Verdächtige?", weiter: "k2" },
-      { text: "War es vielleicht ein Eichhörnchen?", weiter: "k3" } ] },
-    k2: { sagt: "Nur einer. Er sitzt gerade auf dem Sofa und tut so, als würde er Zeitung lesen. Mit Krümeln am Kinn.", antworten: [
-      { text: "Micha, du bist überführt!", weiter: "k4" },
-      { text: "Die Zeitung ist sein Alibi.", weiter: "k5" } ] },
-    k3: { sagt: "Ein Eichhörnchen mit Lesebrille? Ich hab da eher jemand Bestimmten im Verdacht.", antworten: [
+    start: { sagt: "Rita, bei uns fehlt ein Stück vom Blech. Ich hab da einen Verdacht.", antworten: [
       { text: "Micha?", weiter: "k2" },
-      { text: "Vielleicht du selbst, Jane?", weiter: "k6" } ] },
-    k4: { sagt: "Er sagt, er habe nur „probiert, ob er gut ist“. Mit einem ganzen Stück.", antworten: [
-      { text: "Gründlicher Prüfer.", weiter: "k5" },
-      { text: "Das ist Qualitätskontrolle.", weiter: "k5" } ] },
-    k5: { sagt: "Ich verhänge eine Strafe: Er muss den Abwasch machen. Mit Gesang.", antworten: [
-      { text: "Was singt er denn?", weiter: "k7" },
-      { text: "Gerecht, aber hart.", weiter: "k7" } ] },
-    k6: { sagt: "Ich? Na hör mal! Also, es könnte sein, dass ich vorhin ganz kurz die Kante begradigt habe.", antworten: [
-      { text: "Ha, ertappt!", weiter: "k5" },
-      { text: "Kanten begradigen ist erlaubt.", weiter: "k5" } ] },
-    k7: { sagt: "Meistens Schlager, ziemlich falsch. Aber das Geschirr wird trotzdem sauber.", antworten: [
+      { text: "Warst du’s nicht selber?", weiter: "k3" } ] },
+    k2: { sagt: "Der sitzt auf dem Sofa und liest Zeitung. Mit Krümeln am Pullover.", antworten: [
+      { text: "Dann ist der Fall klar.", weiter: "k4" },
+      { text: "Die Zeitung ist kein Alibi.", weiter: "k4" } ] },
+    k3: { sagt: "Ich? Na hör mal. Ich hab nur die Kante gerade geschnitten, die war schief.", antworten: [
+      { text: "Und die Kante hast du gegessen?", weiter: "k5" },
+      { text: "Ha, ertappt.", weiter: "k5" } ] },
+    k4: { sagt: "Er sagt, er hat nur probiert, ob er gut ist. Mit einem ganzen Stück.", antworten: [
+      { text: "Gründlich ist er ja.", weiter: "k6" },
+      { text: "Und, war er gut?", weiter: "k6" } ] },
+    k5: { sagt: "Na ja, eine Kante. Aber das ganze Stück war Micha, da wett ich drauf.", antworten: [
+      { text: "Ich glaub dir. Fast.", weiter: "k6" },
+      { text: "Ihr seid beide verdächtig.", weiter: "k6" } ] },
+    k6: { sagt: "Jedenfalls macht er heute den Abwasch. Da hat er Zeit zum Nachdenken.", antworten: [
       { text: "Spar mir ein Stück auf.", weiter: null },
-      { text: "Sag ihm, ich halte zu ihm.", weiter: null } ] }
+      { text: "Sag ihm, ich halt zu ihm.", weiter: null } ] }
   },
-  schluss: "Ich versteck den Rest jetzt im Ofen. Da traut er sich nicht ran." },
+  schluss: "Ich versteck den Rest jetzt im Ofen. Da guckt er nie rein." },
 
-{ id: "jane-05", wer: "jane", thema: "Geheimrezept",
+{ id: "jane-05", wer: "jane", thema: "Der lockere Gugelhupf",
   knoten: {
-    start: { sagt: "Rita, du wolltest doch immer mein Geheimrezept für den Gugelhupf. Heute verrate ich es dir.", antworten: [
-      { text: "Endlich! Ich hab Stift und Zettel.", weiter: "k2" },
-      { text: "Ich will’s lieber nicht wissen.", weiter: "k3" } ] },
-    k2: { sagt: "Also, Zutat eins: Butter. Zutat zwei: noch mehr Butter. Den Rest erfährst du nach dem nächsten Kaffee.", antworten: [
-      { text: "Das ist kein Geheimnis.", weiter: "k4" },
-      { text: "Kommt Butter an dritter Stelle?", weiter: "k4" } ] },
-    k3: { sagt: "Wie bitte? Du willst es nicht wissen? Das hat noch keiner gesagt!", antworten: [
-      { text: "Dann muss ich ja nie selber backen.", weiter: "k5" },
-      { text: "Na gut, erzähl.", weiter: "k2" } ] },
-    k4: { sagt: "Das Geheimnis ist eigentlich, dass ich mit ihm spreche, während er im Ofen ist. Ganz leise.", antworten: [
-      { text: "Was sagst du ihm?", weiter: "k6" },
-      { text: "Das mach ich mit meinen Pflanzen.", weiter: "k6" } ] },
-    k5: { sagt: "Ach, du bist ja raffiniert. Dann back ich ihn eben weiter für dich. Für immer.", antworten: [
-      { text: "Das war mein Plan.", weiter: null },
-      { text: "Ich lade dafür zum Tanzen ein.", weiter: null } ] },
-    k6: { sagt: "„Geh schön auf, mein Kleiner.“ Und dann geht er auf. Wenn das kein Rezept ist.", antworten: [
-      { text: "Das steht ab jetzt auf meiner Liste.", weiter: null },
-      { text: "Dein Ofen hat’s gut.", weiter: null } ] }
+    start: { sagt: "Rita, du wolltest doch immer wissen, wie ich den Gugelhupf so locker krieg. Heute sag ich’s dir.", antworten: [
+      { text: "Warte, ich hol einen Stift.", weiter: "k2" },
+      { text: "Endlich! Nach all den Jahren.", weiter: "k3" } ] },
+    k2: { sagt: "Also, Eier trennen, das Eiweiß steif schlagen und ganz zum Schluss unterheben.", antworten: [
+      { text: "Und das ist das Geheimnis?", weiter: "k4" },
+      { text: "Unterheben, nicht rühren?", weiter: "k5" } ] },
+    k3: { sagt: "Ich wollte ja immer. Aber dann hätte ich dich nicht mehr damit locken können.", antworten: [
+      { text: "Locken kannst du mich trotzdem.", weiter: "k2" },
+      { text: "Na los, raus damit.", weiter: "k2" } ] },
+    k4: { sagt: "Nee, das ist nur die halbe Wahrheit. Die andere Hälfte ist ein Schuss Rum, aber nicht Micha erzählen.", antworten: [
+      { text: "Warum nicht Micha?", weiter: "k6" },
+      { text: "Ich schweige.", weiter: "k6" } ] },
+    k5: { sagt: "Unterheben! Sonst fällt alles wieder zusammen. Mit dem Teigschaber, ganz sachte von unten nach oben.", antworten: [
+      { text: "Hab’s aufgeschrieben.", weiter: "k4" },
+      { text: "Das hab ich immer falsch gemacht.", weiter: "k4" } ] },
+    k6: { sagt: "Weil die Flasche sonst leer ist, wenn ich backen will.", antworten: [
+      { text: "Dann versteck ich meine auch.", weiter: null },
+      { text: "Verstehe. Bleibt unter uns.", weiter: null } ] }
   },
-  schluss: "Aber verrat’s keinem. Vor allem nicht dem Ofen." },
+  schluss: "Und wenn du keine Lust zum Backen hast, kommst du einfach zu mir." },
 
 { id: "jane-06", wer: "jane", thema: "Übermütiger Hefeteig",
   knoten: {
-    start: { sagt: "Rita, ich hab ein Problem. Mein Hefeteig ist so gut aufgegangen, dass er die Schüssel verlassen will.", antworten: [
-      { text: "Wo ist er jetzt?", weiter: "k2" },
-      { text: "Gib ihm eine größere Schüssel.", weiter: "k3" } ] },
-    k2: { sagt: "Er hat das Handtuch angehoben wie eine Bettdecke und guckt raus. Ich glaub, er ist neugierig.", antworten: [
-      { text: "Zeig ihm die Küche.", weiter: "k4" },
-      { text: "Drück ihn sanft zurück.", weiter: "k5" } ] },
-    k3: { sagt: "Ich hab keine größere mehr. Die größte ist der Bräter, und den hab ich für Sonntag reserviert.", antworten: [
-      { text: "Dann nimm die Badewanne.", weiter: "k4" },
-      { text: "Mach doch einfach zwei Zöpfe draus.", weiter: "k5" } ] },
-    k4: { sagt: "Ha, du bist schlimm. Wenn ich nicht aufpasse, besetzt er noch das Sofa, und das gehört Micha.", antworten: [
-      { text: "Micha kann ja umziehen.", weiter: "k5" },
-      { text: "Teig auf dem Sofa? Gemütlich.", weiter: "k5" } ] },
-    k5: { sagt: "Ich mach jetzt einen Hefezopf, einen großen. Der kriegt dann seinen eigenen Stuhl am Tisch.", antworten: [
+    start: { sagt: "Rita, der Hefeteig geht mir über. Der hebt schon das Handtuch hoch.", antworten: [
+      { text: "Zu viel Hefe genommen?", weiter: "k2" },
+      { text: "Wo steht er denn?", weiter: "k3" } ] },
+    k2: { sagt: "Einen ganzen Würfel, wie immer. Aber in der Küche ist es heute so warm.", antworten: [
+      { text: "Dann stell ihn kühler.", weiter: "k4" },
+      { text: "Schlag ihn einmal zusammen.", weiter: "k4" } ] },
+    k3: { sagt: "Auf der Heizung. Ja, ich weiß. Hab ich nicht nachgedacht.", antworten: [
+      { text: "Na, dann wundert’s mich nicht.", weiter: "k4" },
+      { text: "Runter da, aber schnell.", weiter: "k4" } ] },
+    k4: { sagt: "So, er steht jetzt am Fenster. Er sieht ein bisschen beleidigt aus.", antworten: [
+      { text: "Der kriegt sich wieder.", weiter: "k5" },
+      { text: "Was wird’s denn?", weiter: "k6" } ] },
+    k5: { sagt: "Hoffentlich. Ich will heute noch einen Zopf draus machen.", antworten: [
       { text: "Heb mir ein Stück auf.", weiter: null },
-      { text: "Wie heißt der Gast?", weiter: "k6" } ] },
-    k6: { sagt: "Ich nenne ihn Herr Zopf. Er ist etwas aufgeblasen, aber innerlich ganz weich.", antworten: [
-      { text: "Wie manche Leute, die ich kenne.", weiter: null },
-      { text: "Grüß mir Herrn Zopf.", weiter: null } ] }
+      { text: "Mit Hagelzucker, bitte.", weiter: null } ] },
+    k6: { sagt: "Hefezopf, ein großer. Die Hälfte friere ich ein, für wenn du kommst.", antworten: [
+      { text: "Dann komm ich bald.", weiter: null },
+      { text: "Du denkst immer an alle.", weiter: null } ] }
   },
-  schluss: "Er ist schon wieder gewachsen, ich muss los!" },
+  schluss: "Ich muss los, der kriecht schon wieder hoch. Bis bald!" },
 
-{ id: "jane-07", wer: "jane", thema: "Das Paket",
+{ id: "jane-07", wer: "jane", thema: "Das Paket vom Nachbarn",
   knoten: {
-    start: { sagt: "Bei mir ist ein Paket für den Nachbarn abgegeben worden. Es raschelt, Rita, es raschelt!", antworten: [
+    start: { sagt: "Bei mir ist ein Paket für den Nachbarn abgegeben worden. Und es raschelt, Rita.", antworten: [
       { text: "Schüttel mal vorsichtig.", weiter: "k2" },
-      { text: "Das geht dich doch nichts an.", weiter: "k3" } ] },
-    k2: { sagt: "Ich hab geschüttelt, es klingt wie Nudeln. Oder wie sehr kleine Maracas.", antworten: [
-      { text: "Bestimmt Nudeln, er kocht gern.", weiter: "k4" },
-      { text: "Er gründet eine Band!", weiter: "k5" } ] },
-    k3: { sagt: "Natürlich nicht. Ich gucke es nur an, mit großem Abstand und noch größerem Interesse.", antworten: [
-      { text: "Na gut, schüttel einmal.", weiter: "k2" },
-      { text: "Stell es weg und back was.", weiter: "k6" } ] },
-    k4: { sagt: "Nudeln? Ich hab ihn noch nie kochen gerochen. Und ich rieche alles in diesem Haus.", antworten: [
-      { text: "Vielleicht kocht er heimlich.", weiter: "k6" },
-      { text: "Dann eben Maracas.", weiter: "k5" } ] },
-    k5: { sagt: "Eine Band! Dann bin ich ab sofort deren Catering. Musiker haben immer Hunger.", antworten: [
-      { text: "Und das Hühnchen singt.", weiter: "k6" },
-      { text: "Ich mach die Choreografie.", weiter: "k6" } ] },
-    k6: { sagt: "Oh, er klingelt. Ich geb’s ihm jetzt ganz unschuldig. Ich sag nichts vom Schütteln.", antworten: [
-      { text: "Frag ihn, was drin ist!", weiter: null },
-      { text: "Schau unauffällig.", weiter: null } ] }
+      { text: "Das geht dich nichts an.", weiter: "k3" } ] },
+    k2: { sagt: "Hab ich schon. Klingt wie Nudeln. Oder wie Vogelfutter.", antworten: [
+      { text: "Hat der einen Wellensittich?", weiter: "k4" },
+      { text: "Vielleicht kocht er heimlich.", weiter: "k4" } ] },
+    k3: { sagt: "Weiß ich doch. Ich guck’s ja nur an, es steht halt auf meinem Küchentisch.", antworten: [
+      { text: "Na gut, einmal schütteln.", weiter: "k2" },
+      { text: "Stell’s in den Flur.", weiter: "k5" } ] },
+    k4: { sagt: "Das wüsste ich. Die Wände sind hier so dünn, da piept nichts.", antworten: [
+      { text: "Dann zieht was Neues ein.", weiter: "k6" },
+      { text: "Du hörst durch die Wand?", weiter: "k6" } ] },
+    k5: { sagt: "Im Flur steht es dann und guckt mich an, jedes Mal, wenn ich vorbeigeh.", antworten: [
+      { text: "Back was, dann vergisst du’s.", weiter: "k6" },
+      { text: "Pakete gucken nicht, Jane.", weiter: "k6" } ] },
+    k6: { sagt: "Oh, es klingelt. Das ist er bestimmt, ich frag mal ganz nebenbei, was drin ist.", antworten: [
+      { text: "Ganz nebenbei, natürlich.", weiter: null },
+      { text: "Erzähl mir alles.", weiter: null } ] }
   },
-  schluss: "Ich ruf dich gleich zurück, wenn ich was weiß. Spätestens beim Kuchen." },
+  schluss: "Ich ruf dich nachher an, wenn ich’s weiß. Spätestens Sonntag." },
 
-{ id: "jane-08", wer: "jane", thema: "Der Ofen bekommt einen Namen",
+{ id: "jane-08", wer: "jane", thema: "Der Ofen kriegt einen Namen",
   knoten: {
-    start: { sagt: "Ich hab beschlossen, meinem Ofen endlich einen Namen zu geben. Nach all den Jahren.", antworten: [
+    start: { sagt: "Rita, mein Ofen kriegt einen Namen. Nach all den Jahren hat er sich das verdient.", antworten: [
       { text: "Wie wär’s mit Heinz?", weiter: "k2" },
-      { text: "Etwas Edles, bitte.", weiter: "k3" } ] },
-    k2: { sagt: "Heinz? Oh, er hat gerade empört geklickt. Ich glaube, mein Ofen ist eine Sie.", antworten: [
-      { text: "Verzeihung, gnädige Frau Ofen.", weiter: "k5" },
-      { text: "Dann eben Hildegard.", weiter: "k5" } ] },
-    k3: { sagt: "Edel? Sie ist eher bodenständig. Sie riecht nach Zimt und hat einen Kratzer an der Tür.", antworten: [
-      { text: "Dann Gräfin von Zimt.", weiter: "k5" },
-      { text: "Wie wär’s mit Heinz?", weiter: "k2" } ] },
-    k5: { sagt: "Ich hab „Hildegard“ geflüstert, und sie hat zufrieden gebrummt. Das ist ihr Name, eindeutig.", antworten: [
-      { text: "Hildegard passt wunderbar.", weiter: "k4" },
-      { text: "Gräfin Hildegard von Zimt.", weiter: "k4" } ] },
-    k4: { sagt: "Ich hab ihr gerade einen Zettel mit ihrem Namen drangeklebt. Micha guckt mich komisch an.", antworten: [
-      { text: "Micha versteht nichts von Öfen.", weiter: "k6" },
-      { text: "Kleb Micha auch einen Zettel an.", weiter: "k6" } ] },
-    k6: { sagt: "Jetzt fehlt nur noch eine Taufe. Ich back ihr zu Ehren einen Marmorkuchen.", antworten: [
-      { text: "Ich komm zur Feier.", weiter: null },
-      { text: "Ich schick das Hühnchen als Patin.", weiter: null } ] }
+      { text: "Was Feines, bitte.", weiter: "k3" } ] },
+    k2: { sagt: "Heinz? So hieß doch unser Filialleiter. Weißt du das nicht mehr?", antworten: [
+      { text: "Oh doch. Dann lieber nicht.", weiter: "k4" },
+      { text: "Der musste auch erst warm werden.", weiter: "k5" } ] },
+    k3: { sagt: "Was Feines, hm. Der ist eher bodenständig, der riecht nach Zimt.", antworten: [
+      { text: "Dann Hildegard.", weiter: "k4" },
+      { text: "Gräfin von Zimt.", weiter: "k4" } ] },
+    k4: { sagt: "Hildegard! Ja, das passt, die ist genau so.", antworten: [
+      { text: "Hildegard aus der Binger.", weiter: "k6" },
+      { text: "Kleb ihr einen Zettel dran.", weiter: "k6" } ] },
+    k5: { sagt: "Ha, stimmt! Aber nee, dann denk ich bei jedem Kuchen an Kontoauszüge.", antworten: [
+      { text: "Dann Hildegard.", weiter: "k4" },
+      { text: "Gut, was Feines ohne Bank.", weiter: "k3" } ] },
+    k6: { sagt: "Ich hab’s gerade auf ein Stück Kreppband geschrieben und drangeklebt. Micha guckt, als hätt ich sie nicht alle.", antworten: [
+      { text: "Micha hat keine Ahnung von Öfen.", weiter: null },
+      { text: "Kleb ihm auch eins an.", weiter: null } ] }
   },
-  schluss: "Ich stell euch gleich mal vor. Hildegard, das ist Rita. Rita, das ist Hildegard." },
+  schluss: "Hildegard grüßt dich. Sie tickt, das heißt ja." },
 
 { id: "jane-09", wer: "jane", thema: "Plätzchenzeit",
   knoten: {
-    start: { sagt: "Rita, die Plätzchenzeit hat begonnen. Ich hab den Ausstecher-Karton schon aus dem Keller geholt.", antworten: [
-      { text: "Welche Formen hast du?", weiter: "k2" },
-      { text: "Ist das nicht zu früh?", weiter: "k3" } ] },
-    k2: { sagt: "Sterne, Herzen, Tannen und ein sehr seltsames Tier. Keiner weiß, was es sein soll.", antworten: [
-      { text: "Das ist bestimmt ein Huhn.", weiter: "k4" },
-      { text: "Vielleicht ein grüner Hase.", weiter: "k4" } ] },
-    k3: { sagt: "Zu früh? Für Plätzchen ist es nie zu früh. Nur zu spät, wenn Micha sie gefunden hat.", antworten: [
-      { text: "Da hast du recht.", weiter: "k2" },
-      { text: "Dann versteck sie gut.", weiter: "k5" } ] },
-    k4: { sagt: "Ein Huhn, natürlich! Dann gibt es dieses Jahr Hühnerplätzchen mit gelbem Zuckerguss.", antworten: [
-      { text: "Das Hühnchen wird geschmeichelt sein.", weiter: "k5" },
-      { text: "Mit grünem Sockel, bitte.", weiter: "k5" } ] },
-    k5: { sagt: "Ich backe zuerst Vanillekipferl, dann sehen wir weiter. Kommst du zum Ausstechen?", antworten: [
-      { text: "Ich bring meine Schürze.", weiter: "k6" },
-      { text: "Ich bin Chef-Verkosterin.", weiter: "k6" } ] },
-    k6: { sagt: "Abgemacht. Die ersten Kipferl gehören dir, egal ob sie krumm oder schön werden.", antworten: [
-      { text: "Kipferl sollen ja krumm sein.", weiter: null },
-      { text: "Ich freu mich riesig.", weiter: null } ] }
+    start: { sagt: "Rita, ich hab die Ausstecher aus dem Keller geholt. Ich weiß, es ist noch früh.", antworten: [
+      { text: "Für Plätzchen ist nie zu früh.", weiter: "k2" },
+      { text: "Ist das nicht ein bisschen früh?", weiter: "k3" } ] },
+    k2: { sagt: "Sag ich ja. Micha sagt, ich spinn.", antworten: [
+      { text: "Essen tut er sie trotzdem.", weiter: "k4" },
+      { text: "Was hast du für Formen?", weiter: "k5" } ] },
+    k3: { sagt: "Wenn ich jetzt nicht anfang, isst Micha alles weg, bevor die Dose überhaupt voll ist.", antworten: [
+      { text: "Dann musst du sie verstecken.", weiter: "k4" },
+      { text: "Was hast du für Formen?", weiter: "k5" } ] },
+    k4: { sagt: "Versteckt hab ich die schon überall. Letztes Jahr hab ich im März noch eine Dose gefunden.", antworten: [
+      { text: "Und, waren sie noch gut?", weiter: "k6" },
+      { text: "Wo war die denn?", weiter: "k6" } ] },
+    k5: { sagt: "Sterne, Herzen und so ein Tier, keiner weiß, was das sein soll. Pauli sagt, ein Huhn.", antworten: [
+      { text: "Dann gibt’s Hühnerplätzchen.", weiter: "k4" },
+      { text: "Schick mir mal ein Foto.", weiter: "k4" } ] },
+    k6: { sagt: "Im Wäscheschrank, hinter den Handtüchern. Und die waren noch gut, Vanillekipferl halten ewig.", antworten: [
+      { text: "Ich komm zum Ausstechen.", weiter: null },
+      { text: "Die ersten Kipferl gehören mir.", weiter: null } ] }
   },
-  schluss: "Ich hör schon den Teig rufen. Bis bald, Rita!" },
+  schluss: "Ich fang mit den Kipferln an. Bis bald, Rita!" },
 
 { id: "jane-10", wer: "jane", thema: "Probeessen",
   knoten: {
-    start: { sagt: "Ich hab ein neues Rezept und brauch eine Probeesserin. Du bist die Einzige mit gutem Geschmack.", antworten: [
-      { text: "Was ist es denn?", weiter: "k2" },
-      { text: "Wann soll ich kommen?", weiter: "k3" } ] },
-    k2: { sagt: "Eine Kürbis-Quiche mit Walnüssen. Klingt fein, oder? Ich hab sie schon dreimal in Gedanken gebacken.", antworten: [
-      { text: "In Gedanken schmeckt alles.", weiter: "k4" },
-      { text: "Klingt himmlisch.", weiter: "k4" } ] },
-    k3: { sagt: "Am liebsten sofort, aber ich hab noch nicht angefangen. Sagen wir Donnerstag.", antworten: [
-      { text: "Donnerstag steht auf meiner Liste.", weiter: "k2" },
-      { text: "Was gibt’s denn?", weiter: "k2" } ] },
-    k4: { sagt: "Du musst aber ganz ehrlich sein. Nicht so wie Micha, der sagt zu allem „lecker“.", antworten: [
-      { text: "Ich bin gnadenlos ehrlich.", weiter: "k5" },
-      { text: "Ich vergebe Sterne.", weiter: "k6" } ] },
-    k5: { sagt: "Gnadenlos? Oh. Dann back ich lieber gleich zwei, falls die erste durchfällt.", antworten: [
-      { text: "Bei dir fällt nichts durch.", weiter: null },
-      { text: "Gute Strategie.", weiter: null } ] },
-    k6: { sagt: "Sterne! Wie viele gibt’s maximal? Ich will alle.", antworten: [
-      { text: "Fünf Sterne und ein Hühnchen.", weiter: null },
-      { text: "Das kommt auf den Nachtisch an.", weiter: null } ] }
+    start: { sagt: "Ich hab ein neues Rezept, Kürbis-Quiche mit Walnüssen. Und ich brauch jemanden, der ehrlich ist.", antworten: [
+      { text: "Da bist du bei mir richtig.", weiter: "k2" },
+      { text: "Ist Micha nicht ehrlich?", weiter: "k3" } ] },
+    k2: { sagt: "Weiß ich doch. Kannst du Donnerstag? Dann ist sie noch warm, wenn du kommst.", antworten: [
+      { text: "Donnerstag passt.", weiter: "k4" },
+      { text: "Ich schreib’s mir auf.", weiter: "k4" } ] },
+    k3: { sagt: "Micha sagt zu allem „lecker“. Auch zu dem Auflauf, den ich selber weggeschmissen hätte.", antworten: [
+      { text: "Der Mann ist eben höflich.", weiter: "k2" },
+      { text: "Gut, dann komm ich.", weiter: "k2" } ] },
+    k4: { sagt: "Aber sag mir wirklich, wenn was fehlt. Nicht wie letztes Mal, da hast du nur „interessant“ gesagt.", antworten: [
+      { text: "Das war die Rote-Bete-Torte.", weiter: "k5" },
+      { text: "Interessant ist doch ein Kompliment.", weiter: "k6" } ] },
+    k5: { sagt: "Ja, ja. Die hat keiner gegessen, nicht mal Micha.", antworten: [
+      { text: "Siehst du, ich war ehrlich.", weiter: null },
+      { text: "Die Quiche wird besser.", weiter: null } ] },
+    k6: { sagt: "Bei dir nicht, Rita. Bei dir heißt das: nie wieder.", antworten: [
+      { text: "Na gut, ertappt.", weiter: null },
+      { text: "Diesmal sag ich lecker.", weiter: null } ] }
   },
-  schluss: "Ich fang gleich mal mit der ersten an. Für die Wissenschaft." },
+  schluss: "Gut, dann bis Donnerstag. Ich mach heute schon mal den Teig." },
 
 { id: "jane-11", wer: "jane", thema: "Jane will tanzen",
   knoten: {
-    start: { sagt: "Du bringst deinem Nachbarn Tanzen bei, hab ich gehört. Ich will auch. Aber ich warne dich, ich trete.", antworten: [
-      { text: "Wir fangen ganz einfach an.", weiter: "k2" },
-      { text: "Ich hab Stahlkappenschuhe.", weiter: "k3" } ] },
-    k2: { sagt: "Einfach ist gut. Ich kann sehr gut im Takt umrühren, zählt das?", antworten: [
+    start: { sagt: "Du gibst doch Tanzstunden. Ich will auch mal, aber ich warn dich, ich trete.", antworten: [
+      { text: "Wir fangen ganz langsam an.", weiter: "k2" },
+      { text: "Ich hab festes Schuhwerk.", weiter: "k3" } ] },
+    k2: { sagt: "Langsam ist gut. Ich kann im Takt umrühren, zählt das?", antworten: [
       { text: "Das ist schon halber Walzer.", weiter: "k4" },
-      { text: "Nur mit Kochlöffel als Partner.", weiter: "k5" } ] },
-    k3: { sagt: "Haha! Dann sind wir ja beide geschützt. Ich trage auch immer Topflappen, sicherheitshalber.", antworten: [
-      { text: "Topflappen sind keine Tanzhandschuhe.", weiter: "k2" },
-      { text: "Bring sie ruhig mit.", weiter: "k2" } ] },
-    k4: { sagt: "Walzer in der Küche, das gefällt mir. Hildegard, mein Ofen, macht die Musik mit ihrem Ticken.", antworten: [
-      { text: "Ein sehr rhythmischer Ofen.", weiter: "k6" },
-      { text: "Ich bring lieber Musik mit.", weiter: "k6" } ] },
-    k5: { sagt: "Der Kochlöffel ist ein sehr verlässlicher Partner. Er tritt nie und er widerspricht nicht.", antworten: [
-      { text: "Das kann nicht jeder sagen.", weiter: "k6" },
-      { text: "Dann schlag ich Michas Platz vor.", weiter: "k6" } ] },
-    k6: { sagt: "Abgemacht, wir tanzen nach dem Sonntagsessen. Dann ist der Braten gleich wieder weg.", antworten: [
-      { text: "Ich freu mich auf dich.", weiter: null },
-      { text: "Und eins, zwei, drei!", weiter: null } ] }
+      { text: "Dann rühr mal im Dreiertakt.", weiter: "k4" } ] },
+    k3: { sagt: "Ha! Micha sagt immer, ich tanz, wie ich koche. Mit vollem Einsatz und ohne Rezept.", antworten: [
+      { text: "Das klingt doch gut.", weiter: "k4" },
+      { text: "Ohne Rezept tanzt sich’s freier.", weiter: "k4" } ] },
+    k4: { sagt: "Wann denn? Nach dem Sonntagsessen, da hab ich noch Schwung.", antworten: [
+      { text: "Nach dem Essen schläfst du ein.", weiter: "k5" },
+      { text: "Gut, in der Küche.", weiter: "k6" } ] },
+    k5: { sagt: "Ich schlaf nie ein. Das ist Micha, der schläft ein, und ich räum ab.", antworten: [
+      { text: "Dann tanzen wir beim Abräumen.", weiter: "k6" },
+      { text: "Gut. Erst Kaffee, dann Walzer.", weiter: "k6" } ] },
+    k6: { sagt: "Abgemacht. Ich schieb den Küchentisch zur Seite, dann haben wir Platz.", antworten: [
+      { text: "Und eins, zwei, drei!", weiter: null },
+      { text: "Ich bring Musik mit.", weiter: null } ] }
   },
-  schluss: "Ich übe schon mal mit dem Kochlöffel. Bis bald, Rita!" },
+  schluss: "Ich üb schon mal mit dem Kochlöffel. Bis Sonntag, Rita!" },
 
-{ id: "jane-12", wer: "jane", thema: "Einkaufsliste",
+{ id: "jane-12", wer: "jane", thema: "Zettel vergessen",
   knoten: {
-    start: { sagt: "Rita, hilf mir. Ich steh im Laden und hab meine Einkaufsliste zu Hause liegen lassen.", antworten: [
-      { text: "Was wolltest du backen?", weiter: "k2" },
-      { text: "Ich diktiere dir meine.", weiter: "k3" } ] },
-    k2: { sagt: "Einen Zitronenkuchen, glaub ich, oder war es Mohn? Irgendwas mit Gelb oder Grau.", antworten: [
-      { text: "Kauf beides, sicher ist sicher.", weiter: "k4" },
-      { text: "Zitrone. Mohn ist grau-blau.", weiter: "k4" } ] },
-    k3: { sagt: "Deine Liste? Die ist bestimmt alphabetisch sortiert. Dann fangen wir mit A an.", antworten: [
-      { text: "A wie Äpfel.", weiter: "k5" },
-      { text: "Natürlich alphabetisch.", weiter: "k5" } ] },
-    k4: { sagt: "Ich hab jetzt Zitronen, Mohn und aus Versehen ein Glas Gurken im Korb. Die Gurken hab ich mir nicht erklärt.", antworten: [
-      { text: "Gurkenkuchen? Revolutionär.", weiter: "k6" },
-      { text: "Die sind für Micha.", weiter: "k6" } ] },
-    k5: { sagt: "Äpfel, Butter, Eier … Rita, das ist ja eine Kuchenliste! Du hast heimlich vor zu backen.", antworten: [
-      { text: "Erwischt.", weiter: "k6" },
-      { text: "Die Liste ist für dich.", weiter: "k6" } ] },
-    k6: { sagt: "Weißt du was, ich nehm einfach alles mit. Irgendwas wird schon draus.", antworten: [
-      { text: "Bei dir wird immer was draus.", weiter: null },
-      { text: "Ich freu mich aufs Ergebnis.", weiter: null } ] }
+    start: { sagt: "Rita, ich steh im Laden und hab den Zettel zu Hause liegen lassen. Du musst mir helfen.", antworten: [
+      { text: "Was wolltest du denn backen?", weiter: "k2" },
+      { text: "Wie soll ich das wissen?", weiter: "k3" } ] },
+    k2: { sagt: "Zitronenkuchen. Oder Mohn? Irgendwas mit Puderzucker obendrauf.", antworten: [
+      { text: "Zitronen und Puderzucker, fertig.", weiter: "k4" },
+      { text: "Nimm beides, sicher ist sicher.", weiter: "k4" } ] },
+    k3: { sagt: "Weil du immer alles weißt. Ich hab dir doch gestern erzählt, was ich vorhab.", antworten: [
+      { text: "Zitronenkuchen. Für Sonntag.", weiter: "k4" },
+      { text: "Du hast vom Wetter erzählt.", weiter: "k5" } ] },
+    k4: { sagt: "Gut, dann hab ich Zitronen, Puderzucker und … warum hab ich Gurken im Korb?", antworten: [
+      { text: "Die sind für Micha.", weiter: "k6" },
+      { text: "Gurkenkuchen? Lieber nicht.", weiter: "k6" } ] },
+    k5: { sagt: "Stimmt, das auch. Aber danach hab ich vom Kuchen erzählt, ganz sicher.", antworten: [
+      { text: "Na gut. Zitronenkuchen.", weiter: "k4" },
+      { text: "Dann Zitrone, ich bin fast sicher.", weiter: "k4" } ] },
+    k6: { sagt: "Ach, die nehm ich trotzdem mit. Irgendwer isst die schon.", antworten: [
+      { text: "Bei euch wird alles gegessen.", weiter: null },
+      { text: "Und denk an die Butter.", weiter: null } ] }
   },
-  schluss: "Ich muss an die Kasse. Sie gucken schon, weil ich mit dem Korb telefoniere." },
+  schluss: "Die gucken hier schon, weil ich mit dem Korb telefonier. Tschüss, Rita!" },
 
-{ id: "jane-13", wer: "jane", thema: "Die Geheimzutat in der Soße",
+{ id: "jane-13", wer: "jane", thema: "Was in der Soße ist",
   knoten: {
-    start: { sagt: "Micha sagt, meine Soße hätte eine Geheimzutat. Er hat recht, aber ich sag sie nicht.", antworten: [
-      { text: "Mir sagst du sie doch.", weiter: "k2" },
-      { text: "Ich rate. Ist es Rotwein?", weiter: "k3" } ] },
-    k2: { sagt: "Dir? Na gut, aber nur flüsternd. Komm näher ans Telefon.", antworten: [
+    start: { sagt: "Micha will unbedingt wissen, was in meiner Soße ist. Ich sag’s ihm nicht.", antworten: [
+      { text: "Mir sagst du’s aber.", weiter: "k2" },
+      { text: "Lass mich raten. Rotwein?", weiter: "k3" } ] },
+    k2: { sagt: "Na gut, aber ganz leise. Er sitzt nebenan.", antworten: [
       { text: "Ich bin ganz Ohr.", weiter: "k4" },
-      { text: "Näher geht nicht.", weiter: "k4" } ] },
-    k3: { sagt: "Kalt. Rotwein ist kein Geheimnis, das ist Grundausstattung.", antworten: [
+      { text: "Ich halt den Hörer ganz dicht.", weiter: "k4" } ] },
+    k3: { sagt: "Rotwein ist doch kein Geheimnis, das ist Grundausstattung.", antworten: [
       { text: "Eine Prise Zucker?", weiter: "k5" },
-      { text: "Gib mir einen Tipp.", weiter: "k2" } ] },
-    k4: { sagt: "Die Geheimzutat ist … Geduld. Und ein Löffel Johannisbeergelee.", antworten: [
-      { text: "Johannisbeergelee! Ich wusste es.", weiter: "k6" },
-      { text: "Geduld hab ich nicht im Schrank.", weiter: "k6" } ] },
-    k5: { sagt: "Warm! Sehr warm. Es ist süß und rot und kommt aus einem Glas mit kariertem Deckel.", antworten: [
+      { text: "Gib mir einen Tipp.", weiter: "k5" } ] },
+    k4: { sagt: "Ein Löffel Johannisbeergelee. Und Zeit, viel Zeit.", antworten: [
+      { text: "Das hätt ich nie geraten.", weiter: "k6" },
+      { text: "Darum schmeckt sie so rund.", weiter: "k6" } ] },
+    k5: { sagt: "Warm. Süß und rot, im Glas mit kariertem Deckel.", antworten: [
       { text: "Johannisbeergelee!", weiter: "k6" },
       { text: "Erdbeermarmelade?", weiter: "k4" } ] },
-    k6: { sagt: "Psst! Jetzt bist du eingeweiht. Wenn du es verrätst, gibt es für dich nur noch Kartoffeln ohne Soße.", antworten: [
-      { text: "Ich schweige wie das Hühnchen.", weiter: null },
-      { text: "Das ist eine harte Strafe.", weiter: null } ] }
+    k6: { sagt: "Pssst! Jetzt weißt du’s. Wenn Micha fragt, du hast keine Ahnung.", antworten: [
+      { text: "Ich weiß von nichts.", weiter: null },
+      { text: "Was für eine Soße?", weiter: null } ] }
   },
-  schluss: "Und Micha weiß es immer noch nicht. So soll es bleiben." },
+  schluss: "Und von mir hast du’s nicht. Bis Sonntag!" },
 
 { id: "jane-14", wer: "jane", thema: "Die Küchenwaage",
   knoten: {
-    start: { sagt: "Meine Küchenwaage spinnt. Sie zeigt bei einem Ei 412 Gramm an.", antworten: [
-      { text: "Ein Riesenei!", weiter: "k2" },
-      { text: "Hast du den Daumen drauf?", weiter: "k3" } ] },
-    k2: { sagt: "Ich hab es genau angeschaut. Es ist ein ganz normales Ei, nur die Waage hält es für einen Strauß.", antworten: [
-      { text: "Vielleicht braucht sie Batterien.", weiter: "k4" },
-      { text: "Back ohne Waage, nach Gefühl.", weiter: "k5" } ] },
-    k3: { sagt: "Oh, ja, Daumen weg, jetzt sind es 63 Gramm. Ich hab einen 349-Gramm-Daumen.", antworten: [
-      { text: "Ein sehr kräftiger Daumen.", weiter: "k4" },
-      { text: "Den nehmen wir ins Rezept.", weiter: "k5" } ] },
-    k4: { sagt: "Jedenfalls hab ich heute gelernt, dass man der Waage nicht alles glauben darf.", antworten: [
-      { text: "Und dem Ofen?", weiter: "k6" },
-      { text: "Dafür hast du ja Gefühl.", weiter: "k5" } ] },
-    k5: { sagt: "Nach Gefühl backen kann ich am besten. Meine Kuchen kennen mich und ich kenne sie.", antworten: [
-      { text: "Das ist wahre Freundschaft.", weiter: null },
-      { text: "Und sie gelingen trotzdem.", weiter: null } ] },
-    k6: { sagt: "Dem Ofen glaub ich alles. Aber ich geb ihm auch nicht so viele Gelegenheiten zu lügen.", antworten: [
-      { text: "Kluge Frau.", weiter: null },
-      { text: "Grüß Hildegard von mir.", weiter: null } ] }
+    start: { sagt: "Meine Küchenwaage spinnt. Ich leg ein Ei drauf, und sie sagt vierhundert Gramm.", antworten: [
+      { text: "Hast du den Daumen drauf?", weiter: "k2" },
+      { text: "Dann ist es ein Straußenei.", weiter: "k3" } ] },
+    k2: { sagt: "Oh. Ja. Jetzt sind es sechzig.", antworten: [
+      { text: "Ein schwerer Daumen.", weiter: "k4" },
+      { text: "Siehst du, die Waage kann nichts.", weiter: "k4" } ] },
+    k3: { sagt: "Na, das wär was. Da würd ein Kuchen für die ganze Straße draus.", antworten: [
+      { text: "Guck mal, wo dein Daumen ist.", weiter: "k2" },
+      { text: "Vielleicht ist die Batterie leer.", weiter: "k5" } ] },
+    k4: { sagt: "Ich wieg eigentlich eh nach Gefühl. Die Waage hab ich nur, weil Max sie mir geschenkt hat.", antworten: [
+      { text: "Dann sag’s ihm nicht.", weiter: "k6" },
+      { text: "Nach Gefühl wird’s am besten.", weiter: "k6" } ] },
+    k5: { sagt: "Die hat eine Batterie? Ich dachte, die läuft einfach so.", antworten: [
+      { text: "Hinten ist ein kleines Fach.", weiter: "k4" },
+      { text: "Frag Micha, der weiß das.", weiter: "k4" } ] },
+    k6: { sagt: "Nee, ich sag nichts. Er hat sich so gefreut, als er die ausgesucht hat.", antworten: [
+      { text: "Dann wieg wenigstens ab und zu.", weiter: null },
+      { text: "Das ist lieb von dir.", weiter: null } ] }
   },
-  schluss: "Ich wieg jetzt die Butter. Mit beiden Daumen weg." },
+  schluss: "So, und jetzt die Butter. Ohne Daumen." },
 
-{ id: "jane-15", wer: "jane", thema: "Kürbissuppe",
+{ id: "jane-15", wer: "jane", thema: "Der Riesenkürbis",
   knoten: {
-    start: { sagt: "Oktober, Rita! Kürbiszeit. Ich hab einen Kürbis gekauft, der größer ist als mein Kopf.", antworten: [
-      { text: "Wie willst du den schneiden?", weiter: "k2" },
-      { text: "Mach ein Gesicht rein!", weiter: "k3" } ] },
-    k2: { sagt: "Mit dem großen Messer und viel Entschlossenheit. Und ein bisschen Fluchen, aber das zählt ja nicht.", antworten: [
-      { text: "Fluchen gehört dazu.", weiter: "k4" },
-      { text: "Lass Micha das machen.", weiter: "k4" } ] },
-    k3: { sagt: "Ein Gesicht? Er guckt jetzt schon so gemütlich. Ich glaub, ich bring es nicht übers Herz.", antworten: [
-      { text: "Dann bleibt er Deko.", weiter: "k5" },
-      { text: "Suppe ist auch ein schönes Schicksal.", weiter: "k4" } ] },
-    k4: { sagt: "Gut, Suppe. Mit Ingwer und einem Schuss Sahne, und Kürbiskerne obendrauf.", antworten: [
-      { text: "Ich komm mit einem Löffel.", weiter: "k6" },
-      { text: "Das duftet bis Spandau.", weiter: "k6" } ] },
-    k5: { sagt: "Dann kauf ich mir einen zweiten für die Suppe. Und der erste schaut zu. Das ist vielleicht grausam.", antworten: [
-      { text: "Er ist großzügig.", weiter: "k6" },
-      { text: "Stell ihn ins Wohnzimmer.", weiter: "k6" } ] },
-    k6: { sagt: "Ich koch einen ganzen Topf. Wer Suppe will, muss nur in die Binger Straße kommen.", antworten: [
-      { text: "Ich bin schon unterwegs.", weiter: null },
-      { text: "Heb mir eine Schüssel auf.", weiter: null } ] }
+    start: { sagt: "Rita, ich hab einen Kürbis gekauft, der ist größer als mein Kopf. Ich krieg den nicht auf.", antworten: [
+      { text: "Mit dem großen Messer.", weiter: "k2" },
+      { text: "Lass das Micha machen.", weiter: "k3" } ] },
+    k2: { sagt: "Hab ich versucht. Jetzt steckt das Messer drin und will nicht mehr raus.", antworten: [
+      { text: "Klopf mit dem Nudelholz drauf.", weiter: "k4" },
+      { text: "Jetzt aber Micha holen.", weiter: "k3" } ] },
+    k3: { sagt: "Micha hat gesagt: „Moment.“ Das war vor zwanzig Minuten.", antworten: [
+      { text: "Dann ruf nochmal.", weiter: "k4" },
+      { text: "Ich wart mit dir.", weiter: "k5" } ] },
+    k4: { sagt: "Hat geklappt! Jetzt hab ich zwei Hälften und überall Kerne.", antworten: [
+      { text: "Die Kerne röstest du.", weiter: "k6" },
+      { text: "Und jetzt Suppe?", weiter: "k6" } ] },
+    k5: { sagt: "Oh, da kommt er. Mit der Säge. Ich glaub, er freut sich richtig.", antworten: [
+      { text: "Das ist sein Moment.", weiter: "k4" },
+      { text: "Bloß nicht den Tisch mitsägen.", weiter: "k4" } ] },
+    k6: { sagt: "Suppe mit Ingwer und einem Schuss Sahne. Die Kerne kommen obendrauf.", antworten: [
+      { text: "Heb mir eine Schüssel auf.", weiter: null },
+      { text: "Das riech ich bis Spandau.", weiter: null } ] }
   },
-  schluss: "So, ich geh dem Kürbis jetzt gegenübertreten." },
+  schluss: "So, ich geh schälen. Drück mir die Daumen." },
 
 { id: "jane-16", wer: "jane", thema: "Butterbier",
   knoten: {
-    start: { sagt: "Rita, du liest doch Harry Potter. Was ist eigentlich dieses Butterbier? Ich will es nachkochen.", antworten: [
-      { text: "Es ist süß und wärmt.", weiter: "k2" },
-      { text: "Das ist erfunden, Jane.", weiter: "k3" } ] },
-    k2: { sagt: "Süß und warm, das klingt nach meiner Küche. Ich nehme Karamell, Milch und eine Prise Zauberei.", antworten: [
-      { text: "Woher nimmst du die Zauberei?", weiter: "k4" },
-      { text: "Probier eine Butterflocke dazu.", weiter: "k4" } ] },
-    k3: { sagt: "Erfunden? Das hat mich noch nie aufgehalten. Meine besten Rezepte waren am Anfang auch erfunden.", antworten: [
-      { text: "Na dann, ran an den Topf.", weiter: "k2" },
-      { text: "Wie der Gurkenkuchen?", weiter: "k5" } ] },
-    k4: { sagt: "Die Zauberei kommt vom Umrühren gegen den Uhrzeigersinn. Hab ich gerade beschlossen.", antworten: [
-      { text: "Klingt sehr magisch.", weiter: "k6" },
-      { text: "Wir machen das zusammen.", weiter: "k6" } ] },
-    k5: { sagt: "Gurkenkuchen gibt es nicht! Das war nur so ein Gedanke im Laden.", antworten: [
-      { text: "Noch nicht.", weiter: "k2" },
-      { text: "Gut, dann Butterbier.", weiter: "k2" } ] },
-    k6: { sagt: "Beim nächsten Besuch gibt’s Butterbier aus Omas Tassen. Und du liest mir ein Kapitel vor.", antworten: [
-      { text: "Abgemacht, ich such ein gutes aus.", weiter: null },
-      { text: "Ich bring das Hühnchen mit.", weiter: null } ] }
+    start: { sagt: "Du liest doch Harry Potter. Was ist dieses Butterbier? Ich will das mal machen.", antworten: [
+      { text: "Süß und warm, mehr weiß keiner.", weiter: "k2" },
+      { text: "Das gibt’s nur im Buch, Jane.", weiter: "k3" } ] },
+    k2: { sagt: "Süß und warm, das kann ich. Ich denk an Milch, Karamell und ein Stück Butter.", antworten: [
+      { text: "Und eine Prise Zimt.", weiter: "k4" },
+      { text: "Klingt nach deiner Küche.", weiter: "k4" } ] },
+    k3: { sagt: "Na und? Meine Kürbis-Quiche gab’s auch nur in meinem Kopf, bis ich sie gemacht hab.", antworten: [
+      { text: "Das stimmt allerdings.", weiter: "k2" },
+      { text: "Dann los, ran an den Topf.", weiter: "k2" } ] },
+    k4: { sagt: "Zimt, genau. Ich probier das heute Abend, Micha muss vorkosten.", antworten: [
+      { text: "Der sagt eh lecker.", weiter: "k5" },
+      { text: "Schreib mir, wie’s war.", weiter: "k6" } ] },
+    k5: { sagt: "Eben. Darum ruf ich dich danach an, damit ich die Wahrheit hör.", antworten: [
+      { text: "Die kriegst du.", weiter: null },
+      { text: "Bring mir eine Tasse mit.", weiter: null } ] },
+    k6: { sagt: "Mach ich. Und wenn’s gut wird, gibt’s das Sonntag, und du liest mir ein Kapitel vor.", antworten: [
+      { text: "Abgemacht. Ein spannendes.", weiter: null },
+      { text: "Das mit dem Drachen.", weiter: null } ] }
   },
-  schluss: "Ich rühr dann mal gegen den Uhrzeigersinn. Bis bald!" },
+  schluss: "Ich geh schon mal Karamell kochen. Bis bald!" },
 
-{ id: "jane-17", wer: "jane", thema: "Küchenklatsch",
+{ id: "jane-17", wer: "jane", thema: "Wiedersehen auf dem Markt",
   knoten: {
-    start: { sagt: "Ich hab Neuigkeiten aus meiner Küche. Der Toaster und der Wasserkocher reden nicht mehr miteinander.", antworten: [
-      { text: "Was ist passiert?", weiter: "k2" },
-      { text: "Wer hat angefangen?", weiter: "k3" } ] },
-    k2: { sagt: "Der Wasserkocher war heute Morgen schneller fertig. Der Toaster findet, das war unfair.", antworten: [
-      { text: "Der Toaster ist ein schlechter Verlierer.", weiter: "k4" },
-      { text: "Zum Frühstück zählen beide.", weiter: "k5" } ] },
-    k3: { sagt: "Der Toaster, eindeutig. Er hat eine Scheibe zu früh rausgeworfen, aus Protest.", antworten: [
-      { text: "Was sagt denn Hildegard dazu?", weiter: "k5" },
-      { text: "Ein Toaster mit Temperament.", weiter: "k4" } ] },
-    k4: { sagt: "Er hat immer schon so getan, als wäre er der Wichtigste. Dabei backt er nicht mal Kuchen.", antworten: [
-      { text: "Das kann nur Hildegard.", weiter: "k5" },
-      { text: "Bei mir toastet das Hühnchen.", weiter: "k6" } ] },
-    k5: { sagt: "Hildegard, also der Ofen, hält sich raus. Sie steht über solchen Dingen, wortwörtlich, sie ist höher.", antworten: [
-      { text: "Eine weise Ofendame.", weiter: null },
-      { text: "Hoffentlich vertragen sie sich bald.", weiter: null } ] },
-    k6: { sagt: "Das Hühnchen toastet? Ach, du meinst, es spricht einen Toast aus. Na, dann soll es auf den Frieden in meiner Küche anstoßen.", antworten: [
-      { text: "Auf den Frieden!", weiter: null },
-      { text: "Ich richte es aus.", weiter: null } ] }
+    start: { sagt: "Rita, rate mal, wen ich heute auf dem Markt getroffen hab. Du kommst nie drauf.", antworten: [
+      { text: "Jemand von der Bank?", weiter: "k2" },
+      { text: "Sag schon, ich platz gleich.", weiter: "k3" } ] },
+    k2: { sagt: "Genau! Die Behrendt aus der Kreditabteilung. Weißt du noch, die mit den großen Ohrringen?", antworten: [
+      { text: "Die mit dem Lachen durchs Treppenhaus?", weiter: "k4" },
+      { text: "Die so streng mit dem Kaffee war?", weiter: "k5" } ] },
+    k3: { sagt: "Die Behrendt! Kreditabteilung! Die hat immer so gelacht, dass man’s bis in den Tresorraum gehört hat.", antworten: [
+      { text: "Ach Gott, die Behrendt!", weiter: "k4" },
+      { text: "Wie geht’s ihr denn?", weiter: "k4" } ] },
+    k4: { sagt: "Lacht immer noch genauso. Der halbe Markt hat sich umgedreht.", antworten: [
+      { text: "Hat sie nach mir gefragt?", weiter: "k6" },
+      { text: "Das hätt ich gern gehört.", weiter: "k6" } ] },
+    k5: { sagt: "Die mit dem Kaffee, ja! Wer die letzte Tasse nimmt, setzt neuen auf, das sagt sie heute noch.", antworten: [
+      { text: "Recht hatte sie ja.", weiter: "k4" },
+      { text: "Ich hab immer neuen aufgesetzt.", weiter: "k4" } ] },
+    k6: { sagt: "Klar. Ich soll schön grüßen, und sie sagt, du warst die Einzige, die alle Zahlen im Kopf hatte.", antworten: [
+      { text: "Das stimmt sogar.", weiter: null },
+      { text: "Grüß sie lieb zurück.", weiter: null } ] }
   },
-  schluss: "Ich halte dich auf dem Laufenden. Die Kaffeemaschine hat auch schon was gehört." },
+  schluss: "Den Rest erzähl ich dir Sonntag. Da gibt’s noch mehr." },
 
 { id: "jane-18", wer: "jane", thema: "Ein Blech zu viel",
   knoten: {
-    start: { sagt: "Rita, ich hab ein Blech Pflaumenkuchen zu viel gebacken. Rein zufällig, versteht sich.", antworten: [
-      { text: "Wie viele Bleche hast du gebacken?", weiter: "k2" },
-      { text: "Ganz zufällig, natürlich.", weiter: "k3" } ] },
-    k2: { sagt: "Drei. Eins für uns, eins für die Nachbarn und eins für dich. Das dritte ist das zu viele.", antworten: [
-      { text: "Das dritte ist das wichtigste.", weiter: "k4" },
-      { text: "Willst du, dass ich es hole?", weiter: "k5" } ] },
-    k3: { sagt: "Ja, wirklich. Meine Hand ist einfach noch mal zum Mehl gegangen. Ich konnte nichts tun.", antworten: [
-      { text: "Diese Hand ist großartig.", weiter: "k4" },
-      { text: "Wie viele Bleche denn?", weiter: "k2" } ] },
-    k4: { sagt: "Ich wusste, dass du das sagst. Ich hab schon Sahne geschlagen, ebenfalls zufällig.", antworten: [
-      { text: "Was für ein Zufall!", weiter: "k5" },
+    start: { sagt: "Rita, ich hab aus Versehen ein Blech Pflaumenkuchen zu viel gebacken.", antworten: [
+      { text: "Aus Versehen, ja?", weiter: "k2" },
+      { text: "Wie viele sind es denn?", weiter: "k3" } ] },
+    k2: { sagt: "Ganz aus Versehen. Die Pflaumen waren im Angebot, da hat meine Hand einfach zugegriffen.", antworten: [
+      { text: "Diese Hand kenn ich.", weiter: "k4" },
+      { text: "Und wie viele Bleche?", weiter: "k3" } ] },
+    k3: { sagt: "Drei. Eins für uns, eins für die Nachbarn und eins … tja.", antworten: [
+      { text: "Und eins für mich.", weiter: "k4" },
+      { text: "Das dritte ist das wichtigste.", weiter: "k4" } ] },
+    k4: { sagt: "Genau. Sahne hab ich auch schon geschlagen. Auch aus Versehen.", antworten: [
+      { text: "Was für ein Zufall.", weiter: "k5" },
       { text: "Die Zufälle häufen sich.", weiter: "k5" } ] },
-    k5: { sagt: "Max kommt bald bei dir vorbei, den schick ich mit dem Kuchen los. Er darf ein Stück unterwegs essen, mehr nicht.", antworten: [
-      { text: "Ich zähle die Stücke nach.", weiter: null },
-      { text: "Er schafft bestimmt zwei.", weiter: "k6" } ] },
-    k6: { sagt: "Zwei? Dann back ich vorsichtshalber noch ein viertes Blech. Rein zufällig, versteht sich.", antworten: [
-      { text: "Du bist unverbesserlich.", weiter: null },
-      { text: "Ich freu mich auf alle.", weiter: null } ] }
+    k5: { sagt: "Max kommt doch bald zu dir. Der kommt vorher bei mir vorbei und kriegt den Kuchen mit.", antworten: [
+      { text: "Zähl die Stücke vorher.", weiter: "k6" },
+      { text: "Der kommt nie mit allen an.", weiter: "k6" } ] },
+    k6: { sagt: "Ein Stück darf er unterwegs essen. Hab ich ihm gesagt, er hat nur gegrinst.", antworten: [
+      { text: "Das heißt zwei.", weiter: null },
+      { text: "Ich freu mich auf den Rest.", weiter: null } ] }
   },
   schluss: "Ich hab dich lieb, Rita. Und jetzt such ich die Kuchenbox." }
 ];

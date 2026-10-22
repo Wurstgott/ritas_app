@@ -8,27 +8,27 @@ D.brevvan = [
 { id: "sv-01", thema: "Fika am Freitag", monat: null,
   ord: { sv: "fika", de: "Kaffeepause mit etwas Süßem", tipp: "Geht als Verb und Nomen: „Ska vi fika?“ – „Wollen wir Fika machen?“" },
   knoten: {
-    start: { sagt: "Hej Rita! Här i Vimmerby är det fredag och fikadags. Vad har du till kaffet idag?", de: "Hallo Rita! Hier in Vimmerby ist Freitag und Zeit für Fika. Was gibt’s bei dir heute zum Kaffee?", antworten: [
+    start: { sagt: "Hej Rita! Det är fredag, och jag har just satt på kaffet. Vad har du till kaffet idag?", de: "Hallo Rita! Es ist Freitag, und ich hab gerade Kaffee aufgesetzt. Was gibt’s bei dir heute zum Kaffee?", antworten: [
       { text: "En bit kaka. Och du?", de: "Ein Stück Kuchen. Und bei dir?", weiter: "kaka" },
       { text: "Ingenting. Jag bantar!", de: "Nichts. Ich mach Diät!", weiter: "diet" } ] },
-    kaka: { sagt: "Kanelbullar, förstås. Och Sotis sitter bredvid och tittar på mig som en polis.", de: "Zimtschnecken natürlich. Und Sotis sitzt daneben und guckt mich an wie ein Kommissar.", antworten: [
+    kaka: { sagt: "Kanelbullar, förstås. Och Sotis sitter bredvid och räknar varenda tugga.", de: "Zimtschnecken natürlich. Und Sotis sitzt daneben und zählt jeden Bissen mit.", antworten: [
       { text: "Ge henne ingen bulle!", de: "Gib ihr bloß keine Zimtschnecke!", weiter: "ost" },
       { text: "Vem vinner, du eller Sotis?", de: "Wer gewinnt, du oder Sotis?", weiter: "vinner" } ] },
     diet: { sagt: "Bantar? På en fredag? Det är nästan brottsligt i Sverige.", de: "Diät? An einem Freitag? Das ist in Schweden fast strafbar.", antworten: [
       { text: "Okej, okej. En liten bit, då.", de: "Okay, okay. Dann eben ein kleines Stück.", weiter: "liten" },
       { text: "Det var ett skämt!", de: "Das war ein Witz!", weiter: "skamt" } ] },
-    ost: { sagt: "Nej då. Hon får en bit ost. Hon är lagom bortskämd.", de: "Keine Sorge. Sie kriegt ein Stück Käse. Sie ist genau richtig verwöhnt.", antworten: [
-      { text: "Lagom bortskämd – det låter bra!", de: "Genau richtig verwöhnt – klingt gut!", weiter: null },
+    ost: { sagt: "Nej då. Hon får en bit ost. Hon är lagom bortskämd.", de: "Keine Sorge. Sie kriegt ein Stück Käse. Sie ist lagom verwöhnt.", antworten: [
+      { text: "Lagom bortskämd – det låter bra!", de: "Lagom verwöhnt – klingt gut!", weiter: null },
       { text: "Hälsa Sotis från mig!", de: "Grüß Sotis von mir!", weiter: null } ] },
     vinner: { sagt: "Sotis, alltid. Jag är bara personalen här.", de: "Sotis, immer. Ich bin hier nur das Personal.", antworten: [
       { text: "Så är det med katter.", de: "So ist das mit Katzen.", weiter: null },
-      { text: "Trevlig fika, personalen!", de: "Schöne Fika, liebes Personal!", weiter: null } ] },
+      { text: "Personalen får också en bulle!", de: "Das Personal kriegt auch eine Zimtschnecke!", weiter: null } ] },
     liten: { sagt: "Bra! En liten bit är lagom. På fredagar är två bitar också lagom.", de: "Gut! Ein kleines Stück ist genau richtig. Freitags sind zwei auch genau richtig.", antworten: [
       { text: "Du har alltid en regel.", de: "Du hast immer eine Regel parat.", weiter: null },
       { text: "Då tar jag två!", de: "Dann nehm ich zwei!", weiter: null } ] },
     skamt: { sagt: "Puh! Jag höll på att ringa polisen.", de: "Puh! Fast hätte ich die Polizei gerufen.", antworten: [
       { text: "Ring Wallander, han gillar kaffe.", de: "Ruf Wallander an, der mag Kaffee.", weiter: null },
-      { text: "Jag fikar varje dag!", de: "Ich mach jeden Tag Fika!", weiter: null } ] }
+      { text: "Lugn, jag har redan kakan här.", de: "Keine Sorge, der Kuchen steht schon da.", weiter: null } ] }
   },
   schluss: { sv: "Kram från Vimmerby! /Karin", de: "Umarmung aus Vimmerby! /Karin" } },
 
@@ -47,14 +47,14 @@ D.brevvan = [
     patar: { sagt: "Påtår är kopp nummer två. Ett mycket viktigt ord i Sverige!", de: "„Påtår“ ist Tasse Nummer zwei. Ein sehr wichtiges Wort in Schweden!", antworten: [
       { text: "Då är jag expert på påtår.", de: "Dann bin ich Expertin für „påtår“.", weiter: null },
       { text: "Tack, fröken!", de: "Danke, Frau Lehrerin!", weiter: null } ] },
-    tretar: { sagt: "Rita! Du blir en riktig svensk kommissarie.", de: "Rita! Du wirst noch eine echte schwedische Kommissarin.", antworten: [
+    tretar: { sagt: "Rita! Nu dricker du som en riktig svensk kommissarie.", de: "Rita! Jetzt trinkst du wie eine echte schwedische Kommissarin.", antworten: [
       { text: "Kommissarie Rita från Spandau!", de: "Kommissarin Rita aus Spandau!", weiter: null },
       { text: "Bara om jag får kaka också.", de: "Nur wenn’s Kuchen dazu gibt.", weiter: null } ] },
     ystad: { sagt: "Kom! Vi tar tåget, dricker kaffe och letar efter Wallanders gata. Mariagatan, tror jag.", de: "Komm! Wir nehmen den Zug, trinken Kaffee und suchen Wallanders Straße. Die Mariagatan, glaube ich.", antworten: [
       { text: "Jag packar väskan!", de: "Ich pack schon den Koffer!", weiter: null },
       { text: "Och vi tar med kanelbullar.", de: "Und wir nehmen Zimtschnecken mit.", weiter: null } ] },
-    trott: { sagt: "Ja, stackars Kurt. Han behöver semester och en katt.", de: "Ja, der arme Kurt. Der braucht Urlaub und eine Katze.", antworten: [
-      { text: "Och mer opera!", de: "Und mehr Oper!", weiter: null },
+    trott: { sagt: "Ja, stackars Kurt. Han jobbar för mycket och sover för lite.", de: "Ja, der arme Kurt. Er arbeitet zu viel und schläft zu wenig.", antworten: [
+      { text: "Och dricker för mycket kaffe!", de: "Und trinkt zu viel Kaffee!", weiter: null },
       { text: "Skicka honom till Vimmerby!", de: "Schick ihn nach Vimmerby!", weiter: null } ] }
   },
   schluss: { sv: "En påtår och en kram! /Karin", de: "Eine zweite Tasse und eine Umarmung! /Karin" } },
@@ -62,17 +62,17 @@ D.brevvan = [
 { id: "sv-03", thema: "Ausflug nach Fjällbacka", monat: null,
   ord: { sv: "smultronställe", de: "Lieblingsort (wörtlich: Walderdbeer-Stelle)", tipp: "Ein geheimer, besonderer Ort, an den man gern zurückkehrt." },
   knoten: {
-    start: { sagt: "Hej Rita! Jag har varit i Fjällbacka, där Camilla Läckbergs böcker utspelar sig. Jag letade efter Erica Falck men hittade bara glass.", de: "Hallo Rita! Ich war in Fjällbacka, wo Camilla Läckbergs Bücher spielen. Ich hab Erica Falck gesucht, aber nur Eis gefunden.", antworten: [
+    start: { sagt: "Hej Rita! Nu är jag hemma från Fjällbacka, där Camilla Läckbergs böcker utspelar sig. Jag tittade efter Erica Falck överallt, men jag hittade bara en glasskiosk.", de: "Hallo Rita! Ich bin zurück aus Fjällbacka, wo Camilla Läckbergs Bücher spielen. Ich hab überall nach Erica Falck Ausschau gehalten, aber nur einen Eisstand gefunden.", antworten: [
       { text: "Glass är också bra!", de: "Eis ist auch gut!", weiter: "glass" },
       { text: "Var Patrik där?", de: "War Patrik da?", weiter: "patrik" } ] },
-    glass: { sagt: "Ja, två kulor. Min nya teori: alla detektiver behöver glass.", de: "Ja, zwei Kugeln. Meine neue Theorie: Alle Ermittler brauchen Eis.", antworten: [
-      { text: "Då behöver Wallander mycket glass.", de: "Dann braucht Wallander sehr viel Eis.", weiter: "wall" },
+    glass: { sagt: "Ja, två kulor. Och Erica äter säkert också glass ibland.", de: "Ja, zwei Kugeln. Und Erica isst bestimmt auch mal Eis.", antworten: [
+      { text: "Mellan två mord, ja.", de: "Zwischen zwei Morden, ja.", weiter: "wall" },
       { text: "Vilken smak?", de: "Welche Sorte?", weiter: "smak" } ] },
     patrik: { sagt: "Nej. Han är säkert på jobbet i Tanumshede.", de: "Nein. Der ist bestimmt auf der Wache in Tanumshede.", antworten: [
-      { text: "Synd. Jag har frågor till honom.", de: "Schade. Ich hab Fragen an ihn.", weiter: "fragor" },
+      { text: "Synd. Jag har några frågor till honom.", de: "Schade. Ich hätte ein paar Fragen an ihn.", weiter: "fragor" },
       { text: "Hur var Fjällbacka annars?", de: "Wie war Fjällbacka sonst?", weiter: "smultron" } ] },
-    wall: { sagt: "Då får han en hel liter. Och opera på högsta volym.", de: "Dann kriegt er einen ganzen Liter. Und Oper in voller Lautstärke.", antworten: [
-      { text: "Det låter som en bra kväll.", de: "Klingt nach einem guten Abend.", weiter: null },
+    wall: { sagt: "Ha! Och mellan två barn. Hon har mycket att göra, den kvinnan.", de: "Ha! Und zwischen zwei Kindern. Die Frau hat viel zu tun.", antworten: [
+      { text: "Då behöver hon två kulor.", de: "Dann braucht sie zwei Kugeln.", weiter: null },
       { text: "Och jag tar vaniljglass, tack.", de: "Und ich nehm Vanilleeis, bitte.", weiter: null } ] },
     smak: { sagt: "Lakrits! Nu rynkar du på näsan, eller hur?", de: "Lakritz! Jetzt rümpfst du die Nase, stimmt’s?", antworten: [
       { text: "Ja! Lakrits är ett brott.", de: "Ja! Lakritz ist ein Verbrechen.", weiter: null },
@@ -80,11 +80,11 @@ D.brevvan = [
     fragor: { sagt: "Skriv en lista! Du är ju bra på listor.", de: "Schreib eine Liste! Listen kannst du doch.", antworten: [
       { text: "Fråga ett: var är kaffet?", de: "Frage eins: Wo ist der Kaffee?", weiter: null },
       { text: "Listan är redan klar.", de: "Die Liste ist schon fertig.", weiter: null } ] },
-    smultron: { sagt: "Ett riktigt smultronställe: klippor, havet och små röda hus.", de: "Ein echter Lieblingsort: Felsen, das Meer und kleine rote Häuser.", antworten: [
+    smultron: { sagt: "Ett riktigt smultronställe. Klippor, havet och röda sjöbodar vid vattnet.", de: "Ein echter Lieblingsort. Felsen, das Meer und rote Bootshäuser am Wasser.", antworten: [
       { text: "Dit vill jag också åka!", de: "Da will ich auch hin!", weiter: null },
       { text: "Vilket fint ord: smultronställe!", de: "Was für ein schönes Wort: „smultronställe“!", weiter: null } ] }
   },
-  schluss: { sv: "Hälsningar från västkusten och Vimmerby! /Karin", de: "Grüße von der Westküste und aus Vimmerby! /Karin" } },
+  schluss: { sv: "Hälsningar från Vimmerby – hemma igen! /Karin", de: "Grüße aus Vimmerby – wieder daheim! /Karin" } },
 
 { id: "sv-04", thema: "Martin Beck im Billy-Regal", monat: null,
   ord: { sv: "klart som korvspad", de: "sonnenklar (wörtlich: klar wie Würstchenwasser)", tipp: "Würstchenwasser ist gar nicht klar – genau das ist der Witz." },
@@ -102,10 +102,10 @@ D.brevvan = [
       { text: "Men korvspad är ju inte klart!", de: "Aber Würstchenwasser ist doch gar nicht klar!", weiter: null },
       { text: "Det ska jag säga till Jane.", de: "Das erzähl ich Jane.", weiter: null } ] },
     tva: { sagt: "Två! Du är mer svensk än jag trodde.", de: "Zwei! Du bist schwedischer, als ich dachte.", antworten: [
-      { text: "Hälften svensk, hälften Spandau.", de: "Halb Schwedin, halb Spandau.", weiter: null },
+      { text: "Hälften svensk, hälften Spandau.", de: "Halb Schwedin, halb Spandauerin.", weiter: null },
       { text: "Och snart kommer en tredje.", de: "Und bald kommt ein drittes.", weiter: null } ] },
     jane: { sagt: "Absolut. Han skulle flytta in hos henne direkt.", de: "Auf jeden Fall. Der würde sofort bei ihr einziehen.", antworten: [
-      { text: "Hon har ingen plats för honom!", de: "Sie hat keinen Platz für ihn!", weiter: null },
+      { text: "Det skulle Micha inte gilla!", de: "Da hätte Micha was dagegen!", weiter: null },
       { text: "Jag hälsar henne från dig.", de: "Ich richte ihr Grüße von dir aus.", weiter: null } ] },
     beck: { sagt: "Bra val. Han säger inte mycket, men han tänker hela tiden.", de: "Gute Wahl. Er redet nicht viel, aber er denkt die ganze Zeit.", antworten: [
       { text: "Som Hühnchen!", de: "Wie Hühnchen!", weiter: null },
@@ -119,21 +119,21 @@ D.brevvan = [
     start: { sagt: "Hej Rita! Mina grannar har en ny stor bil, och gardinerna är alltid fördragna. Det är ugglor i mossen!", de: "Hallo Rita! Meine Nachbarn haben ein neues großes Auto, und die Vorhänge sind immer zu. Da ist was faul!", antworten: [
       { text: "Ugglor? I mossen? Vad menar du?", de: "Eulen? Im Moor? Was meinst du?", weiter: "uggla" },
       { text: "Ring Fredrika Bergman genast!", de: "Ruf sofort Fredrika Bergman an!", weiter: "fredrika" } ] },
-    uggla: { sagt: "Det betyder att något är misstänkt. Kanske har jag läst för mycket Kristina Ohlsson.", de: "Das heißt, dass etwas verdächtig ist. Vielleicht hab ich zu viel Kristina Ohlsson gelesen.", antworten: [
+    uggla: { sagt: "Det betyder att något är skumt. Fast jag har kanske läst för mycket Kristina Ohlsson.", de: "Das heißt, dass da was faul ist. Aber vielleicht hab ich auch zu viel Kristina Ohlsson gelesen.", antworten: [
       { text: "Man kan aldrig läsa för mycket.", de: "Zu viel lesen kann man nie.", weiter: "kikare" },
       { text: "Vad gör grannarna egentligen?", de: "Was machen die Nachbarn eigentlich?", weiter: "losning" } ] },
     fredrika: { sagt: "Hon har nog mycket att göra i Stockholm. Jag får lösa fallet själv.", de: "Die hat in Stockholm bestimmt genug zu tun. Ich muss den Fall selbst lösen.", antworten: [
       { text: "Jag hjälper dig från Spandau!", de: "Ich helf dir von Spandau aus!", weiter: "hjalp" },
       { text: "Vad gör grannarna egentligen?", de: "Was machen die Nachbarn eigentlich?", weiter: "losning" } ] },
-    kikare: { sagt: "Precis. Därför sitter jag nu vid fönstret med kikare.", de: "Eben. Darum sitz ich jetzt mit dem Fernglas am Fenster.", antworten: [
-      { text: "Ta med kaffe i termosen!", de: "Nimm Kaffee in der Thermoskanne mit!", weiter: "losning" },
+    kikare: { sagt: "Tack! Då fortsätter jag. Just nu sitter jag vid fönstret med kikare.", de: "Danke! Dann mach ich weiter. Gerade sitz ich mit dem Fernglas am Fenster.", antworten: [
+      { text: "Glöm inte kaffet!", de: "Vergiss den Kaffee nicht!", weiter: "losning" },
       { text: "Karin, du är värre än jag!", de: "Karin, du bist schlimmer als ich!", weiter: "losning" } ] },
     hjalp: { sagt: "Tack! Du tar hand om listan över misstänkta.", de: "Danke! Du kümmerst dich um die Liste der Verdächtigen.", antworten: [
       { text: "Nummer ett: Sotis.", de: "Nummer eins: Sotis.", weiter: "losning" },
       { text: "Listan är redan klar!", de: "Die Liste ist schon fertig!", weiter: "losning" } ] },
-    losning: { sagt: "Fallet är löst! De bygger en bastu och vill överraska hela gatan.", de: "Der Fall ist gelöst! Die bauen eine Sauna und wollen die ganze Straße überraschen.", antworten: [
-      { text: "Ett perfekt slut!", de: "Ein perfektes Ende!", weiter: null },
-      { text: "Får jag också bada bastu?", de: "Darf ich auch in die Sauna?", weiter: null } ] }
+    losning: { sagt: "Fallet är löst! Barnbarnen är på besök. Bilen är deras, och de sover till lunch.", de: "Der Fall ist gelöst! Die Enkel sind zu Besuch. Das Auto gehört ihnen, und sie schlafen bis mittags.", antworten: [
+      { text: "Till lunch? Det är också misstänkt!", de: "Bis mittags? Das ist auch verdächtig!", weiter: null },
+      { text: "Synd. Jag ville ha en riktig deckare.", de: "Schade. Ich wollte einen echten Krimi.", weiter: null } ] }
   },
   schluss: { sv: "Hälsningar från detektivbyrån Sjöberg! /Karin", de: "Grüße vom Detektivbüro Sjöberg! /Karin" } },
 
@@ -145,46 +145,46 @@ D.brevvan = [
       { text: "Spinner hon i tröjan?", de: "Schnurrt sie im Pulli?", weiter: "spinner" } ] },
     ny: { sagt: "Det har jag gjort. Nu sover hon på den nya.", de: "Hab ich schon. Jetzt schläft sie auf dem neuen.", antworten: [
       { text: "Ha! Sotis vinner alltid.", de: "Ha! Sotis gewinnt immer.", weiter: "vinner" },
-      { text: "Sticka en tröja till Sotis!", de: "Strick doch Sotis einen Pulli!", weiter: "sticka" } ] },
-    spinner: { sagt: "Hon spinner som en liten Volvo. Fint verb, va? På tyska betyder det något helt annat.", de: "Sie schnurrt wie ein kleiner Volvo. Schönes Verb, oder? Auf Deutsch bedeutet es ja was ganz anderes.", antworten: [
+      { text: "Sticka en tröja åt Sotis!", de: "Strick doch Sotis einen Pulli!", weiter: "sticka" } ] },
+    spinner: { sagt: "Hon spinner som en traktor. Fint verb, va? På tyska betyder det ju något helt annat.", de: "Sie schnurrt wie ein Traktor. Schönes Verb, oder? Auf Deutsch heißt das ja was ganz anderes.", antworten: [
       { text: "Ja, på tyska betyder det galen!", de: "Ja, auf Deutsch heißt das verrückt!", weiter: "galen" },
-      { text: "En Volvo? Det låter högt!", de: "Ein Volvo? Das klingt laut!", weiter: "hogt" } ] },
+      { text: "En traktor? Det låter högt!", de: "Ein Traktor? Das klingt laut!", weiter: "hogt" } ] },
     vinner: { sagt: "Alltid. Jag har bara en tröja kvar, och den har jag på mig nu.", de: "Immer. Ich hab nur noch einen Pulli, und den hab ich gerade an.", antworten: [
       { text: "Ta inte av den!", de: "Zieh ihn bloß nicht aus!", weiter: null },
       { text: "Sotis tittar redan på den, va?", de: "Sotis guckt ihn schon an, oder?", weiter: null } ] },
-    sticka: { sagt: "Bra idé! Randig, förstås – för en liten diva.", de: "Gute Idee! Gestreift natürlich – für eine kleine Diva.", antworten: [
-      { text: "Och en till Hühnchen!", de: "Und einen für Hühnchen!", weiter: null },
-      { text: "Skicka mig en bild!", de: "Schick mir ein Foto!", weiter: null } ] },
+    sticka: { sagt: "Sotis i tröja? Det skulle hon aldrig förlåta mig.", de: "Sotis im Pulli? Das würde sie mir nie verzeihen.", antworten: [
+      { text: "Hon vill ju bara ha din.", de: "Sie will eben nur deinen.", weiter: null },
+      { text: "Då stickar du en till dig själv.", de: "Dann strickst du eben einen für dich.", weiter: null } ] },
     galen: { sagt: "Ibland stämmer båda. Klockan tre på natten springer hon runt i hela huset.", de: "Manchmal passt beides. Um drei Uhr nachts rast sie durchs ganze Haus.", antworten: [
       { text: "Katter har ingen klocka.", de: "Katzen haben keine Uhr.", weiter: null },
-      { text: "Min granne gör samma sak.", de: "Mein Nachbar macht das auch.", weiter: null } ] },
-    hogt: { sagt: "Inte så högt. Men lika pålitlig!", de: "Nicht so laut. Aber genauso zuverlässig!", antworten: [
-      { text: "En katt med garanti!", de: "Eine Katze mit Garantie!", weiter: null },
-      { text: "Hälsa den lilla Volvon!", de: "Grüß den kleinen Volvo!", weiter: null } ] }
+      { text: "Då spinner hon på båda språken!", de: "Dann spinnt sie in beiden Sprachen!", weiter: null } ] },
+    hogt: { sagt: "Hon är liten, men motorn är stor. Särskilt klockan fem på morgonen.", de: "Sie ist klein, aber der Motor ist groß. Besonders um fünf Uhr morgens.", antworten: [
+      { text: "En väckarklocka med päls!", de: "Ein Wecker mit Fell!", weiter: null },
+      { text: "Hälsa den lilla traktorn!", de: "Grüß den kleinen Traktor!", weiter: null } ] }
   },
   schluss: { sv: "Mjau och kram! /Karin och Sotis", de: "Miau und eine Umarmung! /Karin und Sotis" } },
 
 { id: "sv-07", thema: "Elch im Garten", monat: null,
   ord: { sv: "en älg", de: "ein Elch", tipp: "Mehrzahl: „älgar“. Achtung: „elg“ ist Norwegisch." },
   knoten: {
-    start: { sagt: "Hej Rita! I morse stod en älg i min trädgård och åt mina äpplen. Han såg inte alls ledsen ut.", de: "Hallo Rita! Heute früh stand ein Elch in meinem Garten und hat meine Äpfel gefressen. Er sah kein bisschen zerknirscht aus.", antworten: [
+    start: { sagt: "Hej Rita! I morse stod en älg i min trädgård och åt mina äpplen. Han skämdes inte ett dugg.", de: "Hallo Rita! Heute früh stand ein Elch in meinem Garten und hat meine Äpfel gefressen. Er hat sich kein bisschen geschämt.", antworten: [
       { text: "Fick han betala?", de: "Musste er bezahlen?", weiter: "betala" },
       { text: "Hur stor var han?", de: "Wie groß war er?", weiter: "stor" } ] },
     betala: { sagt: "Nej, han hade glömt plånboken. Typiskt älgar.", de: "Nein, er hatte sein Portemonnaie vergessen. Typisch Elche.", antworten: [
       { text: "Skicka räkningen till skogen!", de: "Schick die Rechnung in den Wald!", weiter: "rakning" },
       { text: "Ge honom ett namn!", de: "Gib ihm einen Namen!", weiter: "namn" } ] },
-    stor: { sagt: "Större än min Volvo, och hornen såg ut som en hatthylla.", de: "Größer als mein Volvo, und das Geweih sah aus wie eine Hutablage.", antworten: [
-      { text: "Hängde du din hatt där?", de: "Hast du deinen Hut drangehängt?", weiter: "hatt" },
+    stor: { sagt: "Högre än min Volvo. Och hornen var breda som en hatthylla.", de: "Höher als mein Volvo. Und das Geweih war so breit wie eine Hutablage.", antworten: [
+      { text: "Hängde du upp din hatt?", de: "Hast du deinen Hut drangehängt?", weiter: "hatt" },
       { text: "Ge honom ett namn!", de: "Gib ihm einen Namen!", weiter: "namn" } ] },
-    namn: { sagt: "Han heter Bosse nu. Bosse kommer säkert tillbaka i morgon.", de: "Er heißt jetzt Bosse. Bosse kommt bestimmt morgen wieder.", antworten: [
+    namn: { sagt: "Han heter Bosse nu. Och Bosse kommer säkert tillbaka i morgon – det finns äpplen kvar.", de: "Er heißt jetzt Bosse. Und Bosse kommt bestimmt morgen wieder – es sind noch Äpfel übrig.", antworten: [
       { text: "Hälsa Bosse från Spandau!", de: "Grüß Bosse aus Spandau!", weiter: null },
       { text: "Spara några äpplen åt honom.", de: "Heb ihm ein paar Äpfel auf.", weiter: null } ] },
     rakning: { sagt: "Bra idé. Adress: Stora skogen, utan nummer.", de: "Gute Idee. Adresse: Großer Wald, ohne Hausnummer.", antworten: [
       { text: "Han betalar säkert aldrig.", de: "Der zahlt bestimmt nie.", weiter: null },
-      { text: "Med frimärke från Spandau!", de: "Mit Briefmarke aus Spandau!", weiter: null } ] },
-    hatt: { sagt: "Nej, jag stod bakom gardinen. Med kaffe och kamera.", de: "Nein, ich stand hinter der Gardine. Mit Kaffee und Kamera.", antworten: [
-      { text: "Skicka bilden!", de: "Schick das Foto!", weiter: null },
-      { text: "En riktig kommissarie!", de: "Eine echte Kommissarin!", weiter: null } ] }
+      { text: "Skriv ”sista påminnelsen”!", de: "Schreib „letzte Mahnung“ drauf!", weiter: null } ] },
+    hatt: { sagt: "Nej då, jag stod bakom gardinen med kaffet. Man går inte ut till en älg.", de: "Nein, nein, ich stand mit meinem Kaffee hinter der Gardine. Zu einem Elch geht man nicht raus.", antworten: [
+      { text: "Klokt! Han var ju större.", de: "Klug! Er war ja größer.", weiter: null },
+      { text: "Och han fick äpplena ändå.", de: "Und die Äpfel hat er trotzdem gekriegt.", weiter: null } ] }
   },
   schluss: { sv: "Kram från mig och Bosse! /Karin", de: "Umarmung von mir und Bosse! /Karin" } },
 
@@ -197,20 +197,20 @@ D.brevvan = [
     lagom: { sagt: "Fyrtio koppar är lagom för en dam med många gäster. Och Sotis knuffar ner en ibland.", de: "Vierzig Tassen sind lagom für eine Dame mit vielen Gästen. Und Sotis schubst ab und zu eine runter.", antworten: [
       { text: "Då behöver du fyrtio till!", de: "Dann brauchst du noch vierzig!", weiter: "fyrtio" },
       { text: "Vad säljer man mer på loppis?", de: "Was gibt’s sonst noch auf dem Flohmarkt?", weiter: "saljer" } ] },
-    till: { sagt: "Gärna! Blå eller blommig? Jag skickar den med posten.", de: "Gern! Blau oder geblümt? Ich schick sie dir mit der Post.", antworten: [
+    till: { sagt: "Gärna! Blå eller blommig? Jag sparar den åt dig.", de: "Gern! Blau oder geblümt? Ich heb sie dir auf.", antworten: [
       { text: "Blommig, tack!", de: "Geblümt, bitte!", weiter: "blommig" },
       { text: "Vad säljer man mer på loppis?", de: "Was gibt’s sonst noch auf dem Flohmarkt?", weiter: "saljer" } ] },
     fyrtio: { sagt: "Nu pratar du som en riktig loppisdrottning!", de: "Jetzt redest du wie eine echte Flohmarktkönigin!", antworten: [
       { text: "Det är jag i Spandau också.", de: "Das bin ich in Spandau auch.", weiter: null },
       { text: "Kom ihåg: koppar med fat!", de: "Denk dran: Tassen mit Untertasse!", weiter: null } ] },
-    blommig: { sagt: "Klart! Med små gula blommor. Den passar till din fika.", de: "Klar! Mit kleinen gelben Blumen. Die passt zu deiner Fika.", antworten: [
+    blommig: { sagt: "Klart! Med små gula blommor. Den står i mitt skåp och väntar på dig.", de: "Klar! Mit kleinen gelben Blumen. Die steht in meinem Schrank und wartet auf dich.", antworten: [
       { text: "Tusen tack, Karin!", de: "Tausend Dank, Karin!", weiter: null },
       { text: "Ur den dricker jag påtår!", de: "Daraus trink ich meine zweite Tasse!", weiter: null } ] },
-    saljer: { sagt: "Allt! Gamla skivor, Volvodelar, kristallvaser och tusen deckare för fem kronor styck.", de: "Alles! Alte Platten, Volvo-Ersatzteile, Kristallvasen und tausend Krimis für fünf Kronen das Stück.", antworten: [
-      { text: "Tusen deckare? Jag kommer!", de: "Tausend Krimis? Ich komme!", weiter: null },
+    saljer: { sagt: "Allt möjligt! Men bäst är lådorna med gamla deckare. Tio kronor styck.", de: "Alles Mögliche! Aber am besten sind die Kisten mit alten Krimis. Zehn Kronen das Stück.", antworten: [
+      { text: "Lådor med deckare? Jag kommer!", de: "Kisten voller Krimis? Ich komme!", weiter: null },
       { text: "Köp alla deckare åt mig!", de: "Kauf alle Krimis für mich!", weiter: null } ] }
   },
-  schluss: { sv: "Fynda lagom! /Karin", de: "Mach lagom viele Schnäppchen! /Karin" } },
+  schluss: { sv: "Hälsningar från loppisdrottningen! /Karin", de: "Grüße von der Flohmarktkönigin! /Karin" } },
 
 { id: "sv-09", thema: "IKEA-Namen", monat: null,
   ord: { sv: "en poäng", de: "ein Punkt (im Spiel, im Quiz)", tipp: "„Du får en poäng!“ – „Du kriegst einen Punkt!“ Und ein IKEA-Sessel heißt so." },
@@ -248,17 +248,17 @@ D.brevvan = [
     namn: { sagt: "Gustav. Han är röd, stark och lite envis. Som jag.", de: "Gustav. Er ist rot, stark und ein bisschen stur. Wie ich.", antworten: [
       { text: "Och som jag!", de: "Und wie ich!", weiter: "envis" },
       { text: "Vet du vad Volvo betyder?", de: "Weißt du, was Volvo heißt?", weiter: "betyder" } ] },
-    ko: { sagt: "Ha! Det betyder: inga problem, ingen fara. Ingen ko, ingen is.", de: "Ha! Das heißt: kein Problem, keine Gefahr. Keine Kuh, kein Eis.", antworten: [
+    ko: { sagt: "Ha! Det betyder: ingen fara. Hela uttrycket är: ingen ko på isen, så länge rumpan är på land.", de: "Ha! Das heißt: keine Gefahr. Ganz heißt es: keine Kuh auf dem Eis, solange der Hintern an Land ist.", antworten: [
       { text: "Då har jag lärt mig något idag.", de: "Dann hab ich heute was gelernt.", weiter: null },
-      { text: "I Spandau finns inga kor heller.", de: "In Spandau gibt’s auch keine Kühe.", weiter: null } ] },
+      { text: "Så länge rumpan är på land!", de: "Solange der Hintern an Land ist!", weiter: null } ] },
     betyder: { sagt: "Jag rullar – på latin. Gustav rullar, men långsamt.", de: "„Ich rolle“ – auf Latein. Gustav rollt, aber langsam.", antworten: [
       { text: "Lagom snabbt, alltså!", de: "Also lagom schnell!", weiter: null },
-      { text: "Jag rullar på cykel.", de: "Ich roll mit dem Fahrrad.", weiter: null } ] },
+      { text: "Jag rullar på elsparkcykel!", de: "Ich roll mit dem E-Roller!", weiter: null } ] },
     envis: { sagt: "Då är vi tre envisa. Ett bra team!", de: "Dann sind wir drei Sturköpfe. Ein gutes Team!", antworten: [
       { text: "Gustav kör, vi bestämmer!", de: "Gustav fährt, wir bestimmen!", weiter: null },
       { text: "Och Hühnchen är nummer fyra!", de: "Und Hühnchen ist Nummer vier!", weiter: null } ] }
   },
-  schluss: { sv: "Hälsningar från Karin och Gustav /Karin", de: "Grüße von Karin und Gustav /Karin" } },
+  schluss: { sv: "Hälsningar från mig och Gustav! /Karin", de: "Grüße von mir und Gustav! /Karin" } },
 
 { id: "sv-11", thema: "Allemansrätten", monat: null,
   ord: { sv: "allemansrätten", de: "das Jedermannsrecht", tipp: "Wandern, pflücken, eine Nacht zelten – mit Rücksicht. Motto: „Inte störa, inte förstöra.“" },
@@ -269,7 +269,7 @@ D.brevvan = [
     talta: { sagt: "Ja, en natt. Men inte precis framför någons hus.", de: "Ja, eine Nacht. Aber nicht direkt vor jemandes Haus.", antworten: [
       { text: "Jag tältar framför ditt hus!", de: "Ich zelte vor deinem Haus!", weiter: "framfor" },
       { text: "Jag sover hellre i en säng.", de: "Ich schlaf lieber in einem Bett.", weiter: "sang" } ] },
-    tradgard: { sagt: "Nej! Trädgården räknas inte. Det tror bara älgen.", de: "Nein! Der Garten zählt nicht. Das glaubt nur der Elch.", antworten: [
+    tradgard: { sagt: "Nej! Trädgården räknas inte. Fast älgen tycker annorlunda.", de: "Nein! Der Garten zählt nicht. Auch wenn der Elch das anders sieht.", antworten: [
       { text: "Älgen har inte läst reglerna.", de: "Der Elch hat die Regeln nicht gelesen.", weiter: "regler" },
       { text: "Var finns de bästa blåbären?", de: "Wo gibt’s die besten Blaubeeren?", weiter: "hemlig" } ] },
     framfor: { sagt: "Då får du kaffe i tältet varje morgon. Det är Karinsrätten.", de: "Dann kriegst du jeden Morgen Kaffee ins Zelt. Das ist das Karinsrecht.", antworten: [
@@ -278,14 +278,14 @@ D.brevvan = [
     sang: { sagt: "Klokt. Mitt gästrum har en säng och inga myggor.", de: "Klug. Mein Gästezimmer hat ein Bett und keine Mücken.", antworten: [
       { text: "Inga myggor? Då kommer jag!", de: "Keine Mücken? Dann komm ich!", weiter: null },
       { text: "Boka rummet åt mig i juni!", de: "Reservier mir das Zimmer im Juni!", weiter: null } ] },
-    regler: { sagt: "Nej, han läser bara äppelmenyn.", de: "Nein, der liest nur die Apfelkarte.", antworten: [
-      { text: "Ha! En gourmetälg.", de: "Ha! Ein Feinschmecker-Elch.", weiter: null },
+    regler: { sagt: "Nej, och det tänker han inte göra heller.", de: "Nein, und das hat er auch nicht vor.", antworten: [
+      { text: "Typiskt älgar!", de: "Typisch Elch!", weiter: null },
       { text: "Sätt upp en skylt!", de: "Stell ein Schild auf!", weiter: null } ] },
-    hemlig: { sagt: "Det är hemligt! Sitt bästa blåbärsställe berättar man inte om.", de: "Geheim! Von seiner besten Blaubeerstelle erzählt man nicht.", antworten: [
+    hemlig: { sagt: "Det är hemligt! Sitt bästa blåbärsställe berättar man inte för någon.", de: "Geheim! Seine beste Blaubeerstelle verrät man niemandem.", antworten: [
       { text: "Inte ens för mig?", de: "Nicht mal mir?", weiter: null },
       { text: "Jag hittar det ändå!", de: "Ich find sie trotzdem!", weiter: null } ] }
   },
-  schluss: { sv: "Blåa hälsningar från skogen! /Karin", de: "Blaue Grüße aus dem Wald! /Karin" } },
+  schluss: { sv: "Hälsningar med blå fingrar! /Karin", de: "Grüße mit blauen Fingern! /Karin" } },
 
 { id: "sv-12", thema: "Vier Wetter vor elf", monat: null,
   ord: { sv: "Det finns inget dåligt väder, bara dåliga kläder.", de: "Es gibt kein schlechtes Wetter, nur schlechte Kleidung.", tipp: "Lieblingsspruch aller Schweden – meistens im Regen gesagt." },
@@ -293,7 +293,7 @@ D.brevvan = [
     start: { sagt: "Hej Rita! Idag har vi haft sol, regn, hagel och sol igen. Och klockan är bara elva.", de: "Hallo Rita! Heute hatten wir Sonne, Regen, Hagel und wieder Sonne. Und es ist erst elf.", antworten: [
       { text: "Här i Spandau är det bara grått.", de: "Hier in Spandau ist es einfach nur grau.", weiter: "gratt" },
       { text: "Vad har du på dig då?", de: "Und was ziehst du da an?", weiter: "klader" } ] },
-    gratt: { sagt: "Grått är också ett väder. Man kan fika i grått.", de: "Grau ist auch ein Wetter. Bei Grau kann man Fika machen.", antworten: [
+    gratt: { sagt: "Grått är inte så illa. Då kan man fika inne med gott samvete.", de: "Grau ist gar nicht so schlecht. Dann kann man mit gutem Gewissen drinnen Fika machen.", antworten: [
       { text: "Man kan fika i alla väder.", de: "Fika geht bei jedem Wetter.", weiter: "allt" },
       { text: "Hos dig är det i alla fall spännande.", de: "Bei dir ist’s wenigstens spannend.", weiter: "spannande" } ] },
     klader: { sagt: "Allt! Regnjacka, solglasögon och mössa. Det finns inget dåligt väder, bara dåliga kläder.", de: "Alles! Regenjacke, Sonnenbrille und Mütze. Es gibt kein schlechtes Wetter, nur schlechte Kleidung.", antworten: [
@@ -302,9 +302,9 @@ D.brevvan = [
     allt: { sagt: "Rätt! Du är nästan svensk nu.", de: "Richtig! Du bist schon fast Schwedin.", antworten: [
       { text: "Nästan? Jag är redan svensk!", de: "Fast? Ich bin längst Schwedin!", weiter: null },
       { text: "Då tar jag en kanelbulle.", de: "Dann nehm ich eine Zimtschnecke.", weiter: null } ] },
-    spannande: { sagt: "Spännande, ja. Jag har gjort en lista: tio sätt att torka en blöt katt.", de: "Spannend, ja. Ich hab eine Liste gemacht: zehn Arten, eine nasse Katze zu trocknen.", antworten: [
-      { text: "Skicka listan! Jag samlar listor.", de: "Schick die Liste! Ich sammle Listen.", weiter: null },
-      { text: "Sotis tycker inte om hagel, va?", de: "Sotis mag keinen Hagel, oder?", weiter: null } ] },
+    spannande: { sagt: "Spännande, ja. Sotis gick ut i solen och kom hem i hagel. Nu pratar hon inte med mig.", de: "Spannend, ja. Sotis ist bei Sonne rausgegangen und im Hagel heimgekommen. Jetzt redet sie nicht mehr mit mir.", antworten: [
+      { text: "Det är ju inte ditt fel!", de: "Das ist doch nicht deine Schuld!", weiter: null },
+      { text: "Ge henne en bit ost.", de: "Gib ihr ein Stück Käse.", weiter: null } ] },
     alla: { sagt: "Ja, det är vår andra nationalsång.", de: "Ja, das ist unsere zweite Nationalhymne.", antworten: [
       { text: "Jag lär mig texten!", de: "Ich lerne den Text!", weiter: null },
       { text: "Och fika är nummer tre?", de: "Und Fika ist Nummer drei?", weiter: null } ] },
@@ -323,10 +323,10 @@ D.brevvan = [
     hur: { sagt: "En tesked. Eller lagom – det betyder: lite mer än receptet säger.", de: "Einen Teelöffel. Oder lagom – das heißt: ein bisschen mehr, als im Rezept steht.", antworten: [
       { text: "Och smöret? Också lagom?", de: "Und die Butter? Auch lagom?", weiter: "smor" },
       { text: "Hur länge i ugnen?", de: "Wie lange in den Ofen?", weiter: "ugn" } ] },
-    kopa: { sagt: "Rita! Det hörde jag inte. Försök en gång, sedan pratar vi.", de: "Rita! Das hab ich nicht gehört. Versuch’s einmal, dann reden wir.", antworten: [
+    kopa: { sagt: "Rita! Det låtsas jag att jag inte hörde. Baka en gång själv, sedan pratar vi.", de: "Rita! Das hab ich jetzt mal überhört. Back einmal selbst, dann reden wir.", antworten: [
       { text: "Okej, jag bakar på lördag.", de: "Okay, am Samstag back ich.", weiter: "lordag" },
       { text: "Jane kan baka åt mig!", de: "Jane kann für mich backen!", weiter: "jane" } ] },
-    smor: { sagt: "Smör är aldrig lagom. Smör är mycket.", de: "Butter ist nie lagom. Butter ist viel.", antworten: [
+    smor: { sagt: "Nej. Med smör snålar man inte.", de: "Nein. Mit Butter wird nicht gespart.", antworten: [
       { text: "Det är en bra regel.", de: "Das ist eine gute Regel.", weiter: null },
       { text: "Det skriver jag i dagboken.", de: "Das schreib ich ins Tagebuch.", weiter: null } ] },
     ugn: { sagt: "Pensla med ägg, strö pärlsocker och in i ugnen: åtta minuter, 225 grader.", de: "Mit Ei bepinseln, Hagelzucker drauf und ab in den Ofen: acht Minuten, 225 Grad.", antworten: [
@@ -345,22 +345,22 @@ D.brevvan = [
   ord: { sv: "rolig", de: "lustig, unterhaltsam (nicht: ruhig!)", tipp: "Ruhig heißt „lugn“. „Det var roligt!“ – „Das hat Spaß gemacht!“" },
   knoten: {
     start: { sagt: "Hej Rita! Hur var din helg? Var den lugn eller rolig?", de: "Hallo Rita! Wie war dein Wochenende? Ruhig oder lustig?", antworten: [
-      { text: "Den var rolig. Jag läste hela dagen.", de: "Es war ruhig. Ich hab den ganzen Tag gelesen.", weiter: "fel" },
+      { text: "Rolig eller lugn? Jag blandar ihop dem!", de: "Rolig oder lugn? Die verwechsle ich immer!", weiter: "fel" },
       { text: "Rolig! Jane och jag spelade kort.", de: "Lustig! Jane und ich haben Karten gespielt.", weiter: "kort" } ] },
-    fel: { sagt: "Ha! Läsa är skönt – men rolig betyder lustig. Ruhig heter lugn på svenska.", de: "Ha! Lesen ist schön – aber „rolig“ heißt lustig. Ruhig heißt auf Schwedisch „lugn“.", antworten: [
-      { text: "Oj! Då var helgen lugn.", de: "Hoppla! Dann war das Wochenende ruhig.", weiter: "lugn" },
-      { text: "Men boken var faktiskt rolig!", de: "Aber das Buch war wirklich lustig!", weiter: "boken" } ] },
-    kort: { sagt: "Vem vann? Jag gissar att det var du.", de: "Wer hat gewonnen? Ich tippe auf dich.", antworten: [
+    fel: { sagt: "Det gör alla tyskar! Rolig betyder lustig. Ruhig heter lugn på svenska.", de: "Das machen alle Deutschen! „Rolig“ heißt lustig. Ruhig heißt auf Schwedisch „lugn“.", antworten: [
+      { text: "Då var den lugn. Jag läste hela dagen.", de: "Dann war es ruhig. Ich hab den ganzen Tag gelesen.", weiter: "lugn" },
+      { text: "Lugn. Men boken var rolig!", de: "Ruhig. Aber das Buch war lustig!", weiter: "boken" } ] },
+    kort: { sagt: "Vem vann? Jag gissar på dig.", de: "Wer hat gewonnen? Ich tippe auf dich.", antworten: [
       { text: "Självklart jag!", de: "Natürlich ich!", weiter: "vann" },
       { text: "Jane. Jag tror att hon fuskar.", de: "Jane. Ich glaube, sie schummelt.", weiter: "fusk" } ] },
-    lugn: { sagt: "Precis. Och nu vet du: en lugn helg kan också vara rolig.", de: "Genau. Und jetzt weißt du: Ein ruhiges Wochenende kann auch lustig sein.", antworten: [
+    lugn: { sagt: "Låter skönt. Och en lugn helg kan ju också vara rolig.", de: "Klingt schön. Und ein ruhiges Wochenende kann ja auch lustig sein.", antworten: [
       { text: "Lugn och rolig – som jag!", de: "Ruhig und lustig – wie ich!", weiter: null },
       { text: "Tack för lektionen, Karin!", de: "Danke für die Nachhilfe, Karin!", weiter: null } ] },
     boken: { sagt: "Då var helgen både lugn och rolig. Perfekt!", de: "Dann war das Wochenende ruhig und lustig. Perfekt!", antworten: [
       { text: "Ja, och nu är jag på sidan 300!", de: "Ja, und jetzt bin ich auf Seite 300!", weiter: null },
       { text: "Lugn och rolig – som jag!", de: "Ruhig und lustig – wie ich!", weiter: null } ] },
     vann: { sagt: "Klart. Du har ett pokeransikte som Martin Beck.", de: "Klar. Du hast ein Pokerface wie Martin Beck.", antworten: [
-      { text: "Och ett leende som Pippi!", de: "Und ein Grinsen wie Pippi!", weiter: null },
+      { text: "Och Jane har inget alls!", de: "Und Jane hat gar keins!", weiter: null },
       { text: "Nästa gång spelar vi tre.", de: "Nächstes Mal spielen wir zu dritt.", weiter: null } ] },
     fusk: { sagt: "Ugglor i mossen! Du får titta noga nästa gång.", de: "Da ist was faul! Nächstes Mal musst du genau hinsehen.", antworten: [
       { text: "Jag tar med kikaren.", de: "Ich bring das Fernglas mit.", weiter: null },
@@ -371,7 +371,7 @@ D.brevvan = [
 { id: "sv-15", thema: "Falsche Freunde", monat: null,
   ord: { sv: "gift", de: "verheiratet (und ja, auch: Gift)", tipp: "„Är du gift?“ heißt „Bist du verheiratet?“ – kein Grund zur Panik." },
   knoten: {
-    start: { sagt: "Hej Rita! En tysk turist hörde ordet gift och blev alldeles blek. På svenska är gift ju bara en ring på fingret!", de: "Hallo Rita! Ein deutscher Tourist hat das Wort „gift“ gehört und wurde ganz blass. Auf Schwedisch ist „gift“ doch nur ein Ring am Finger!", antworten: [
+    start: { sagt: "Hej Rita! Min granne sa till en tysk turist: ”Jag har varit gift i fyrtio år.” Stackarn blev alldeles blek.", de: "Hallo Rita! Meine Nachbarin hat zu einem deutschen Touristen gesagt: „Ich bin seit vierzig Jahren gift.“ Der Arme wurde ganz blass.", antworten: [
       { text: "Ha! Har du fler falska vänner?", de: "Ha! Hast du noch mehr falsche Freunde?", weiter: "fler" },
       { text: "Det är ett farligt språk!", de: "Das ist eine gefährliche Sprache!", weiter: "farligt" } ] },
     fler: { sagt: "Massor! Semester betyder Urlaub. Och glass är Eis, inte Glas.", de: "Massenhaft! „Semester“ heißt Urlaub. Und „glass“ ist Eis, nicht Glas.", antworten: [
@@ -383,14 +383,14 @@ D.brevvan = [
     glass: { sagt: "Kom i juli! Då har vi båda.", de: "Komm im Juli! Dann gibt’s beides.", antworten: [
       { text: "Jag packar redan!", de: "Ich pack schon!", weiter: null },
       { text: "Två kulor, tack!", de: "Zwei Kugeln, bitte!", weiter: null } ] },
-    slut: { sagt: "Slut! Det betyder Ende. Och så är lektionen slut.", de: "„Slut“! Das heißt Ende. Und damit ist die Stunde zu Ende.", antworten: [
-      { text: "Vilket fint slut!", de: "Was für ein schönes Ende!", weiter: null },
-      { text: "Inte slut! Mer i morgon!", de: "Nicht Ende! Morgen mehr!", weiter: null } ] },
+    slut: { sagt: "Okej, ett sista: en rock är en Mantel. Så om en svensk herre har rock på sig, är allt i ordning.", de: "Okay, ein letzter: „rock“ ist ein Mantel. Wenn ein schwedischer Herr also „rock“ trägt, ist alles in Ordnung.", antworten: [
+      { text: "Puh, tur att jag frågade!", de: "Puh, gut, dass ich gefragt hab!", weiter: null },
+      { text: "Det skriver jag på listan.", de: "Das kommt auf meine Liste.", weiter: null } ] },
     bra: { sagt: "Den bästa! Skål, Rita.", de: "Der beste! Prost, Rita.", antworten: [
       { text: "Skål, Karin!", de: "Prost, Karin!", weiter: null },
       { text: "Jag dricker hellre kaffe.", de: "Ich trink lieber Kaffee.", weiter: null } ] }
   },
-  schluss: { sv: "Hälsningar från din riktiga vän! /Karin", de: "Grüße von deiner echten Freundin! /Karin" } },
+  schluss: { sv: "Hälsningar från en äkta vän! /Karin", de: "Grüße von einer echten Freundin! /Karin" } },
 
 { id: "sv-16", thema: "Lagom", monat: null,
   ord: { sv: "lagom", de: "genau richtig – nicht zu viel, nicht zu wenig", tipp: "Kaum zu übersetzen. In Schweden sagt man: „Lagom är bäst.“" },
@@ -401,14 +401,14 @@ D.brevvan = [
     hur: { sagt: "Det vet ingen. Men alla vet när det inte är lagom.", de: "Das weiß keiner. Aber jeder merkt, wenn’s nicht lagom ist.", antworten: [
       { text: "Som mina listor – de är aldrig lagom.", de: "Wie meine Listen – die sind nie lagom.", weiter: "lista" },
       { text: "Är jag lagom, Karin?", de: "Bin ich lagom, Karin?", weiter: "ar" } ] },
-    ordentligt: { sagt: "Ordentligt! Det låter tyskt och bra. Kanske lite mer än lagom?", de: "Ordentlich! Das klingt deutsch und gut. Vielleicht ein bisschen mehr als lagom?", antworten: [
+    ordentligt: { sagt: "Ordentligt! Det låter väldigt tyskt. Och lite mer än lagom, va?", de: "Ordentlich! Das klingt sehr deutsch. Und ein bisschen mehr als lagom, oder?", antworten: [
       { text: "Mycket mer! Och med grädde.", de: "Viel mehr! Und mit Sahne.", weiter: "gradde" },
       { text: "Är jag lagom, Karin?", de: "Bin ich lagom, Karin?", weiter: "ar" } ] },
     lista: { sagt: "En lista ska vara lång. Det är regel nummer ett.", de: "Eine Liste muss lang sein. Das ist Regel Nummer eins.", antworten: [
       { text: "Då gör jag allt rätt!", de: "Dann mach ich alles richtig!", weiter: null },
       { text: "Det skriver jag upp!", de: "Das schreib ich mir auf!", weiter: null } ] },
-    ar: { sagt: "Nej, du är mer än lagom. Du är en hel tårta.", de: "Nein, du bist mehr als lagom. Du bist eine ganze Torte.", antworten: [
-      { text: "Med grädde, hoppas jag!", de: "Mit Sahne, hoffe ich!", weiter: null },
+    ar: { sagt: "Nej. Du är mer än lagom – och det är bra.", de: "Nein. Du bist mehr als lagom – und das ist gut so.", antworten: [
+      { text: "Det vet jag!", de: "Weiß ich doch!", weiter: null },
       { text: "Tack! Du också, Karin.", de: "Danke! Du auch, Karin.", weiter: null } ] },
     gradde: { sagt: "Ha! Nästa gång säger jag: Rita-mycket.", de: "Ha! Nächstes Mal sag ich: Rita-viel.", antworten: [
       { text: "Det blir ett nytt svenskt ord!", de: "Das wird ein neues schwedisches Wort!", weiter: null },
@@ -422,7 +422,7 @@ D.brevvan = [
     start: { sagt: "Hej Rita! Idag gick jag förbi Astrid Lindgrens barndomshem på Näs. Här i Vimmerby är alla lite Emil och lite Pippi.", de: "Hallo Rita! Heute bin ich an Astrid Lindgrens Elternhaus in Näs vorbeigegangen. Hier in Vimmerby sind alle ein bisschen Michel und ein bisschen Pippi.", antworten: [
       { text: "Är du mer Emil eller Pippi?", de: "Bist du mehr Michel oder Pippi?", weiter: "vem" },
       { text: "Jag läste Pippi på tyska som barn.", de: "Ich hab Pippi als Kind auf Deutsch gelesen.", weiter: "tyska" } ] },
-    vem: { sagt: "Emil. Jag hittar på hyss och sedan sitter jag i snickerboa – fast min heter köket.", de: "Michel. Ich hecke Streiche aus und sitze dann im Tischlerschuppen – nur dass meiner Küche heißt.", antworten: [
+    vem: { sagt: "Emil. Jag hittar på hyss, och sedan får jag sitta i snickerboa. Fast min snickerboa är köket.", de: "Michel. Ich hecke Streiche aus und muss dann in den Tischlerschuppen. Nur ist mein Tischlerschuppen die Küche.", antworten: [
       { text: "Snickerboa? Vad är det?", de: "„Snickerboa“? Was ist das?", weiter: "boa" },
       { text: "Och vad täljer du där?", de: "Und was schnitzt du da?", weiter: "talja" } ] },
     tyska: { sagt: "Pippi Langstrumpf! Det låter så strängt på tyska.", de: "Pippi Langstrumpf! Das klingt auf Deutsch so streng.", antworten: [
@@ -448,24 +448,24 @@ D.brevvan = [
   knoten: {
     start: { sagt: "Hej Rita! Läser du fortfarande Harry Potter? På svenska heter bok fyra Harry Potter och den flammande bägaren.", de: "Hallo Rita! Liest du noch Harry Potter? Auf Schwedisch heißt Band vier „Harry Potter och den flammande bägaren“.", antworten: [
       { text: "Ja! Vad betyder bägaren?", de: "Ja! Was heißt „bägaren“?", weiter: "bagare" },
-      { text: "Ja! Är du en mugglare, Karin?", de: "Ja! Bist du eine Muggel, Karin?", weiter: "muggel" } ] },
+      { text: "Ja! Är du en mugglare, Karin?", de: "Ja! Bist du ein Muggel, Karin?", weiter: "muggel" } ] },
     bagare: { sagt: "En bägare är en stor kopp, nästan en pokal. Inte en bagare – han bakar bröd!", de: "„Bägare“ ist ein großer Becher, fast ein Pokal. Nicht „bagare“ – der backt Brot!", antworten: [
-      { text: "Ha! Feuerbäcker – det vore en bra bok.", de: "Ha! Feuerbäcker – das wär ein gutes Buch.", weiter: "bok" },
+      { text: "Ha! Den flammande bagaren – bra bok!", de: "Ha! Der flammende Bäcker – gutes Buch!", weiter: "bok" },
       { text: "Har du också läst den?", de: "Hast du das auch gelesen?", weiter: "ocksa" } ] },
-    muggel: { sagt: "Ja, en mugglare med katt. Sotis är nog en häxa.", de: "Ja, eine Muggel mit Katze. Sotis ist bestimmt eine Hexe.", antworten: [
+    muggel: { sagt: "Ja, en mugglare med katt. Men Sotis är nog en häxa.", de: "Ja, ein Muggel mit Katze. Aber Sotis ist bestimmt eine Hexe.", antworten: [
       { text: "Och Hühnchen kan säkert trolla.", de: "Und Hühnchen kann bestimmt zaubern.", weiter: "trolla" },
       { text: "Har du också läst boken?", de: "Hast du das Buch auch gelesen?", weiter: "ocksa" } ] },
-    bok: { sagt: "Harry Potter och den flammande bagaren. Om en trollkarl som bakar kanelbullar!", de: "Harry Potter und der flammende Bäcker. Über einen Zauberer, der Zimtschnecken backt!", antworten: [
+    bok: { sagt: "Ja! Om en trollkarl som bränner alla sina kanelbullar.", de: "Ja! Über einen Zauberer, dem alle Zimtschnecken anbrennen.", antworten: [
       { text: "Den köper jag direkt!", de: "Das kauf ich sofort!", weiter: null },
       { text: "Skriv den, Karin!", de: "Schreib es, Karin!", weiter: null } ] },
     ocksa: { sagt: "Ja, två gånger. Men jag säger inget om slutet – jag lovar!", de: "Ja, zweimal. Aber vom Ende verrate ich nichts – versprochen!", antworten: [
-      { text: "Tack! Jag är bara på sidan 200.", de: "Danke! Ich bin erst auf Seite 200.", weiter: null },
+      { text: "Tack! Jag har bara kommit till sidan 200.", de: "Danke! Ich bin erst auf Seite 200.", weiter: null },
       { text: "Inte ett ord, Karin!", de: "Kein Wort, Karin!", weiter: null } ] },
-    trolla: { sagt: "Säkert. Fråga om hon kan trolla fram kaffe.", de: "Bestimmt. Frag sie, ob sie Kaffee herzaubern kann.", antworten: [
-      { text: "Hon försöker varje morgon.", de: "Sie versucht’s jeden Morgen.", weiter: null },
+    trolla: { sagt: "Säkert. Fråga om Hühnchen kan trolla fram kaffe.", de: "Bestimmt. Frag Hühnchen, ob es Kaffee herzaubern kann.", antworten: [
+      { text: "Hühnchen försöker varje morgon.", de: "Hühnchen versucht’s jeden Morgen.", weiter: null },
       { text: "Det kan bara Jane.", de: "Das kann nur Jane.", weiter: null } ] }
   },
-  schluss: { sv: "Magiska hälsningar från en mugglare! /Karin", de: "Magische Grüße von einer Muggel! /Karin" } },
+  schluss: { sv: "Magiska hälsningar från en mugglare! /Karin", de: "Magische Grüße von einem Muggel! /Karin" } },
 
 { id: "sv-19", thema: "Grüße an Hühnchen", monat: null,
   ord: { sv: "Hälsa … från mig!", de: "Grüß … von mir!", tipp: "„Hälsa Hühnchen från mig!“ – und schon ist der Gruß unterwegs." },
@@ -473,17 +473,17 @@ D.brevvan = [
     start: { sagt: "Hej Rita! Hur mår Hühnchen? Håller Hühnchen fortfarande koll på Spandau från fönstret?", de: "Hallo Rita! Wie geht’s Hühnchen? Behält Hühnchen Spandau immer noch vom Fenster aus im Blick?", antworten: [
       { text: "Ja, Hühnchen ser allt!", de: "Ja, Hühnchen sieht alles!", weiter: "ser" },
       { text: "Hühnchen vill lära sig svenska.", de: "Hühnchen will Schwedisch lernen.", weiter: "svenska" } ] },
-    ser: { sagt: "Bra. En polis i fönstret – en sådan har inte ens Wallander.", de: "Gut. Eine Wache am Fenster – so eine hat nicht mal Wallander.", antworten: [
+    ser: { sagt: "Bra. En vakt i fönstret är guld värd.", de: "Gut. Eine Wache am Fenster ist Gold wert.", antworten: [
       { text: "Hühnchen löser alla fall.", de: "Hühnchen löst jeden Fall.", weiter: "fall" },
       { text: "Hühnchen hälsar till Sotis!", de: "Hühnchen lässt Sotis grüßen!", weiter: "sotis" } ] },
     svenska: { sagt: "Toppen! Första ordet: kyckling. Det betyder Hühnchen.", de: "Super! Erstes Wort: „kyckling“. Das heißt Hühnchen.", antworten: [
       { text: "Hühnchen säger: tack, Karin!", de: "Hühnchen sagt: Danke, Karin!", weiter: "tack" },
       { text: "Hühnchen hälsar till Sotis!", de: "Hühnchen lässt Sotis grüßen!", weiter: "sotis" } ] },
-    fall: { sagt: "Utan att röra sig! Det är riktig talang.", de: "Ohne sich zu bewegen! Das ist echtes Talent.", antworten: [
-      { text: "Hühnchen är av lera. Lugn och klok.", de: "Hühnchen ist aus Ton. Ruhig und klug.", weiter: null },
+    fall: { sagt: "Och utan att lämna fönsterbrädan. Det kallar jag talang.", de: "Und ohne die Fensterbank zu verlassen. Das nenn ich Talent.", antworten: [
+      { text: "Hühnchen är av lera. Alltid lugn.", de: "Hühnchen ist aus Ton. Immer gelassen.", weiter: null },
       { text: "Och Hühnchen vill inte ha någon lön.", de: "Und Gehalt will Hühnchen auch keins.", weiter: null } ] },
-    sotis: { sagt: "Sotis säger mjau tillbaka. Hon är lite avundsjuk – Hühnchen behöver aldrig mat.", de: "Sotis sagt miau zurück. Sie ist ein bisschen neidisch – Hühnchen braucht nie Futter.", antworten: [
-      { text: "Men Hühnchen får heller ingen ost!", de: "Aber Hühnchen kriegt auch keinen Käse!", weiter: null },
+    sotis: { sagt: "Sotis säger mjau tillbaka. Fast hon undrar nog om man kan äta Hühnchen.", de: "Sotis sagt miau zurück. Wobei sie sich wohl fragt, ob man Hühnchen fressen kann.", antworten: [
+      { text: "Säg att Hühnchen är av lera!", de: "Sag ihr, Hühnchen ist aus Ton!", weiter: null },
       { text: "Mjau från Spandau!", de: "Miau aus Spandau!", weiter: null } ] },
     tack: { sagt: "Varsågod, lilla kyckling! Vi hörs i nästa brev.", de: "Gern geschehen, kleines Hühnchen! Bis zum nächsten Brief.", antworten: [
       { text: "Hühnchen bugar.", de: "Hühnchen verbeugt sich.", weiter: null },
@@ -505,12 +505,12 @@ D.brevvan = [
       { text: "Jag kikar i hennes kylskåp.", de: "Ich guck in ihren Kühlschrank.", weiter: "kyl" } ] },
     ikea: { sagt: "Perfekt. Då är söndagsmiddagen nästan svensk.", de: "Perfekt. Dann ist das Sonntagsessen fast schwedisch.", antworten: [
       { text: "Nästan svensk och helt god.", de: "Fast schwedisch und total lecker.", weiter: null },
-      { text: "Jag sparar en bit åt dig.", de: "Ich heb dir ein Stück auf.", weiter: null } ] },
+      { text: "Jag sparar en kåldolme åt dig.", de: "Ich heb dir eine Kohlroulade auf.", weiter: null } ] },
     allt: { sagt: "Nej, nej. Där går gränsen – även för en svensk.", de: "Nein, nein. Da ist Schluss – sogar für eine Schwedin.", antworten: [
       { text: "Bra att veta!", de: "Gut zu wissen!", weiter: null },
       { text: "Det säger jag till Jane.", de: "Das sag ich Jane.", weiter: null } ] },
-    gissa: { sagt: "Jag gissar på något med potatis. Det är alltid potatis.", de: "Ich tippe auf irgendwas mit Kartoffeln. Es gibt immer Kartoffeln.", antworten: [
-      { text: "Du känner Jane bra!", de: "Du kennst Jane gut!", weiter: null },
+    gissa: { sagt: "Jag gissar på något med potatis. Det blir nästan alltid potatis.", de: "Ich tippe auf irgendwas mit Kartoffeln. Kartoffeln gibt’s fast immer.", antworten: [
+      { text: "Ha! Du känner Jane bättre än jag.", de: "Ha! Du kennst Jane besser als ich.", weiter: null },
       { text: "Jag hör av mig efter söndag!", de: "Ich melde mich nach Sonntag!", weiter: null } ] },
     kyl: { sagt: "Ha! Kommissarie Rita på hemligt uppdrag. Rapportera i nästa brev!", de: "Ha! Kommissarin Rita im Geheimeinsatz. Bericht im nächsten Brief!", antworten: [
       { text: "Rapporten blir lång!", de: "Der Bericht wird lang!", weiter: null },
@@ -537,7 +537,7 @@ D.brevvan = [
       { text: "Jag sjunger med i Spandau!", de: "Ich sing in Spandau mit!", weiter: null } ] },
     sotis: { sagt: "Hon är lättad. Hon vill vara den enda katten här.", de: "Sie ist erleichtert. Sie will hier die einzige Katze sein.", antworten: [
       { text: "En katt är lagom.", de: "Eine Katze ist lagom.", weiter: null },
-      { text: "Önska Sotis en fin Lucia!", de: "Wünsch Sotis ein schönes Luciafest!", weiter: null } ] },
+      { text: "Glad Lucia, Sotis!", de: "Schönes Luciafest, Sotis!", weiter: null } ] },
     recept: { sagt: "Det kommer! Och glöm inte russinen.", de: "Kommt! Und vergiss die Rosinen nicht.", antworten: [
       { text: "Jag bakar dem med Jane.", de: "Ich back sie mit Jane.", weiter: null },
       { text: "Russin? Det skriver jag upp.", de: "Rosinen? Schreib ich mir auf.", weiter: null } ] }
@@ -556,13 +556,13 @@ D.brevvan = [
     julbord: { sagt: "Julbord! Sill, skinka, köttbullar och Janssons frestelse. Och sedan ris à la Malta.", de: "Julbord! Hering, Schinken, Fleischbällchen und Janssons Versuchung. Und danach Milchreis mit Sahne.", antworten: [
       { text: "Janssons frestelse? Vem är Jansson?", de: "Janssons Versuchung? Wer ist Jansson?", weiter: "jansson" },
       { text: "Det är för mycket för en dag!", de: "Das ist zu viel für einen Tag!", weiter: "mycket" } ] },
-    fem: { sagt: "Perfekt. Då har jag ätit och är på bra humör.", de: "Perfekt. Dann hab ich gegessen und bin gut gelaunt.", antworten: [
+    fem: { sagt: "Perfekt. Då är Kalle Anka slut och jag är på bra humör.", de: "Perfekt. Dann ist Donald Duck vorbei und ich bin gut gelaunt.", antworten: [
       { text: "Jag ringer klockan fem prick!", de: "Ich ruf Punkt fünf an!", weiter: null },
       { text: "God jul, Karin!", de: "Frohe Weihnachten, Karin!", weiter: null } ] },
-    jansson: { sagt: "Ingen vet säkert. Men han hade gott om potatis och ansjovis.", de: "Das weiß keiner genau. Aber er hatte reichlich Kartoffeln und Sprotten.", antworten: [
-      { text: "Det låter som Janes mat!", de: "Klingt nach Janes Küche!", weiter: null },
+    jansson: { sagt: "Ingen vet säkert. Det sägs att det var en operasångare.", de: "Das weiß keiner genau. Es heißt, es war ein Opernsänger.", antworten: [
+      { text: "Då gillar Wallander den säkert!", de: "Dann mag Wallander den bestimmt!", weiter: null },
       { text: "God jul till dig och Sotis!", de: "Frohe Weihnachten dir und Sotis!", weiter: null } ] },
-    mycket: { sagt: "Julbord ska inte vara lagom. Det är meningen.", de: "Julbord soll nicht lagom sein. Das ist ja der Sinn.", antworten: [
+    mycket: { sagt: "Julbord ska inte vara lagom. Det är hela poängen.", de: "Julbord soll nicht lagom sein. Das ist ja der Witz daran.", antworten: [
       { text: "Då gör jag ett undantag.", de: "Dann mach ich eine Ausnahme.", weiter: null },
       { text: "God jul och smaklig måltid!", de: "Frohe Weihnachten und guten Appetit!", weiter: null } ] }
   },
@@ -604,14 +604,14 @@ D.brevvan = [
     haxor: { sagt: "Häxor? Våra häxor flyger till Blåkulla redan i påsk.", de: "Hexen? Unsere fliegen schon zu Ostern zum Blocksberg.", antworten: [
       { text: "Då är de hos oss nu!", de: "Dann sind die jetzt bei uns!", weiter: "hos" },
       { text: "Ta på dig mössan vid brasan!", de: "Setz am Feuer die Mütze auf!", weiter: "mossa" } ] },
-    hogre: { sagt: "Okej, jag sjunger för två. Våren hör mig nog i Spandau också.", de: "Okay, ich sing für zwei. Der Frühling hört mich bestimmt auch in Spandau.", antworten: [
+    hogre: { sagt: "Okej, jag sjunger för två. Då hör våren mig kanske ända till Spandau.", de: "Okay, ich sing für zwei. Dann hört mich der Frühling vielleicht bis nach Spandau.", antworten: [
       { text: "Jag öppnar fönstret!", de: "Ich mach das Fenster auf!", weiter: null },
       { text: "Trevlig Valborg, Karin!", de: "Schöne Walpurgisnacht, Karin!", weiter: null } ] },
-    mossa: { sagt: "Mössa, vantar och termos. Svensk vår är en kall vår.", de: "Mütze, Fäustlinge und Thermoskanne. Schwedischer Frühling ist ein kalter Frühling.", antworten: [
+    mossa: { sagt: "Mössa och vantar, ja. Svensk vår kan vara kall.", de: "Mütze und Handschuhe, ja. Der schwedische Frühling kann kalt sein.", antworten: [
       { text: "Med kaffe i termosen, hoppas jag.", de: "Mit Kaffee in der Thermoskanne, hoffe ich.", weiter: null },
       { text: "Trevlig Valborg, Karin!", de: "Schöne Walpurgisnacht, Karin!", weiter: null } ] },
     hos: { sagt: "Hälsa dem! Och säg att de ska ta med sig vårvädret.", de: "Grüß sie! Und sag ihnen, sie sollen das Frühlingswetter mitbringen.", antworten: [
-      { text: "Jag säger det i Spandauer Forst.", de: "Ich sag’s ihnen im Spandauer Forst.", weiter: null },
+      { text: "Jag säger till dem!", de: "Ich sag’s ihnen!", weiter: null },
       { text: "Trevlig Valborg, Karin!", de: "Schöne Walpurgisnacht, Karin!", weiter: null } ] }
   },
   schluss: { sv: "Varma hälsningar från brasan! /Karin", de: "Warme Grüße vom Feuer! /Karin" } },
@@ -628,8 +628,8 @@ D.brevvan = [
     mat: { sagt: "Sill, färskpotatis, gräddfil och jordgubbar. Och en liten nubbe.", de: "Hering, neue Kartoffeln, Sauerrahm und Erdbeeren. Und ein kleines Schnäpschen.", antworten: [
       { text: "Nubbe? Vad är det?", de: "„Nubbe“? Was ist das?", weiter: "nubbe" },
       { text: "Jordgubbar ja, sill nej tack.", de: "Erdbeeren ja, Hering nein danke.", weiter: "sill" } ] },
-    hoppa: { sagt: "Bra! Ta bilder. Jane får vara stången.", de: "Gut! Mach Fotos. Jane darf die Stange sein.", antworten: [
-      { text: "Jane vill hellre hoppa.", de: "Jane will lieber hüpfen.", weiter: null },
+    hoppa: { sagt: "Bra! Ta med Jane och Micha. Micha får vara stången.", de: "Gut! Nimm Jane und Micha mit. Micha darf die Stange sein.", antworten: [
+      { text: "Micha står gärna still.", de: "Micha steht gern still.", weiter: null },
       { text: "Glad midsommar, Karin!", de: "Schönen Midsommar, Karin!", weiter: null } ] },
     sotis: { sagt: "Nej, hon tittar från verandan och tycker att vi är galna.", de: "Nein, sie guckt von der Veranda zu und findet, wir spinnen.", antworten: [
       { text: "Kanske har Sotis rätt.", de: "Vielleicht hat Sotis recht.", weiter: null },
@@ -649,7 +649,7 @@ D.brevvan = [
     start: { sagt: "Hej Rita! På lördag har vi kräftskiva hos grannen. Lyktor i trädgården, roliga hattar och massor av kräftor.", de: "Hallo Rita! Am Samstag ist Krebsfest beim Nachbarn. Laternen im Garten, lustige Hütchen und jede Menge Krebse.", antworten: [
       { text: "Roliga hattar? Hur roliga?", de: "Lustige Hütchen? Wie lustig?", weiter: "hattar" },
       { text: "Hur äter man en kräfta?", de: "Wie isst man einen Krebs?", weiter: "ata" } ] },
-    hattar: { sagt: "Mycket! Min har en kräfta på toppen. Jag ser ut som en tårta.", de: "Sehr! Auf meinem sitzt oben ein Krebs. Ich seh aus wie eine Torte.", antworten: [
+    hattar: { sagt: "Mycket! Min har en stor kräfta på toppen. Grannarna skrattar varje år.", de: "Sehr! Auf meinem sitzt oben ein großer Krebs. Die Nachbarn lachen jedes Jahr.", antworten: [
       { text: "Skicka en bild, snälla!", de: "Schick bitte ein Foto!", weiter: "bild" },
       { text: "Sjunger ni också?", de: "Singt ihr auch?", weiter: "sjunga" } ] },
     ata: { sagt: "Med fingrarna och mycket ljud. Man suger på skalet – det är helt okej.", de: "Mit den Fingern und viel Geräusch. Man lutscht an der Schale – das ist völlig in Ordnung.", antworten: [
@@ -661,14 +661,14 @@ D.brevvan = [
     sjunga: { sagt: "Hela tiden! Helan går, sjung hopp faderallan lallan lej … Lär dig den!", de: "Die ganze Zeit! „Helan går, sjung hopp faderallan lallan lej“ … Lern das!", antworten: [
       { text: "Lallan lej? Det kan jag!", de: "Lallan lej? Das kann ich!", weiter: null },
       { text: "Jag övar med Hühnchen.", de: "Ich üb mit Hühnchen.", weiter: null } ] },
-    spandau: { sagt: "Då blir du förvånad. På kräftskiva får alla vara lite busiga.", de: "Dann wirst du staunen. Beim Krebsfest dürfen alle ein bisschen frech sein.", antworten: [
-      { text: "Busig kan jag vara!", de: "Frech sein kann ich!", weiter: null },
+    spandau: { sagt: "I Vimmerby gör man det – men bara i augusti. Sedan är vi fina igen.", de: "In Vimmerby schon – aber nur im August. Danach benehmen wir uns wieder.", antworten: [
+      { text: "En gång om året? Det klarar jag!", de: "Einmal im Jahr? Das schaff ich!", weiter: null },
       { text: "Jag tar med en extra servett.", de: "Ich bring eine extra Serviette mit.", weiter: null } ] }
   },
   schluss: { sv: "Skål och kram! /Karin", de: "Prost und Umarmung! /Karin" } },
 
 { id: "sv-27", thema: "Surströmming beim Nachbarn", monat: [8, 9],
-  ord: { sv: "surströmming", de: "gesäuerter Ostseehering aus der Dose", tipp: "Die Dose wird draußen geöffnet. Immer. Wirklich." },
+  ord: { sv: "surströmming", de: "vergorener Ostseehering aus der Dose", tipp: "Die Dose wird draußen geöffnet. Immer. Wirklich." },
   knoten: {
     start: { sagt: "Hej Rita! Min granne har köpt surströmming. Han öppnar burken ute – och jag stänger alla fönster.", de: "Hallo Rita! Mein Nachbar hat Surströmming gekauft. Er macht die Dose draußen auf – und ich mach alle Fenster zu.", antworten: [
       { text: "Luktar den så illa?", de: "Riecht der so schlimm?", weiter: "lukt" },
@@ -676,10 +676,10 @@ D.brevvan = [
     lukt: { sagt: "Värre! Igår sprang älgen till skogen.", de: "Schlimmer! Gestern ist der Elch in den Wald geflüchtet.", antworten: [
       { text: "Då fungerar den mot älgar!", de: "Dann hilft er ja gegen Elche!", weiter: "alg" },
       { text: "Varför äter folk det?", de: "Warum essen Leute das?", weiter: "varfor" } ] },
-    smaka: { sagt: "Modigt! Man äter den i tunnbröd med potatis och lök. Och med stängd näsa.", de: "Mutig! Man isst ihn im Fladenbrot mit Kartoffeln und Zwiebeln. Und mit zugehaltener Nase.", antworten: [
+    smaka: { sagt: "Modigt! Man äter den i tunnbröd med potatis och lök. Och helst utomhus.", de: "Mutig! Man isst ihn in Fladenbrot mit Kartoffeln und Zwiebeln. Und am besten draußen.", antworten: [
       { text: "Okej, kanske bara potatisen.", de: "Okay, vielleicht nur die Kartoffeln.", weiter: "potatis" },
       { text: "Varför äter folk det?", de: "Warum essen Leute das?", weiter: "varfor" } ] },
-    alg: { sagt: "Ha! Jag ska sälja burkar till alla trädgårdar i Småland.", de: "Ha! Ich verkaufe Dosen an alle Gärten in Småland.", antworten: [
+    alg: { sagt: "Ha! Då säljer jag burkar till alla i Småland som har äppelträd.", de: "Ha! Dann verkauf ich Dosen an alle in Småland, die Apfelbäume haben.", antworten: [
       { text: "Du blir rik, Karin!", de: "Du wirst reich, Karin!", weiter: null },
       { text: "Men då luktar äpplena också.", de: "Aber dann riechen auch die Äpfel.", weiter: null } ] },
     varfor: { sagt: "Tradition. Och för att man kan skryta efteråt.", de: "Tradition. Und weil man hinterher angeben kann.", antworten: [
@@ -689,7 +689,7 @@ D.brevvan = [
       { text: "Lagom modig, alltså.", de: "Also lagom mutig.", weiter: null },
       { text: "Och en kanelbulle efteråt!", de: "Und danach eine Zimtschnecke!", weiter: null } ] }
   },
-  schluss: { sv: "Hälsningar från en stängd veranda! /Karin", de: "Grüße von einer verriegelten Veranda! /Karin" } },
+  schluss: { sv: "Hälsningar bakom stängda fönster! /Karin", de: "Grüße hinter geschlossenen Fenstern! /Karin" } },
 
 { id: "sv-28", thema: "Pfifferlinge", monat: [9],
   ord: { sv: "inte för allt smör i Småland", de: "nicht für alles Geld der Welt (wörtlich: nicht für alle Butter in Småland)", tipp: "Karins Heimat-Redewendung – passt perfekt zu jedem Pilzgeheimnis." },
@@ -698,11 +698,11 @@ D.brevvan = [
       { text: "Inte ens för mig?", de: "Nicht mal mir?", weiter: "ens" },
       { text: "Hur lagar du dem?", de: "Wie machst du sie?", weiter: "laga" } ] },
     ens: { sagt: "Kanske. Om du kommer hit och har ögonbindel på dig.", de: "Vielleicht. Wenn du herkommst und eine Augenbinde trägst.", antworten: [
-      { text: "Avtal! Jag tar med korgen.", de: "Abgemacht! Ich bring den Korb mit.", weiter: "korg" },
+      { text: "Okej! Jag tar med korgen.", de: "Abgemacht! Ich bring den Korb mit.", weiter: "korg" },
       { text: "Jag hittar egna i Spandau!", de: "Ich find meine eigenen in Spandau!", weiter: "spandau" } ] },
     laga: { sagt: "I smör, med lite salt. Sedan på en smörgås. Enkelt och gott.", de: "In Butter, mit etwas Salz. Dann aufs Brot. Einfach und lecker.", antworten: [
       { text: "Bara smör? Ingen grädde?", de: "Nur Butter? Keine Sahne?", weiter: "gradde" },
-      { text: "Mmm, det låter mysigt.", de: "Mmm, das klingt gemütlich.", weiter: "mysig" } ] },
+      { text: "Mmm, det låter gott!", de: "Mmm, das klingt lecker!", weiter: "mysig" } ] },
     korg: { sagt: "Bra. Och kaffe i termosen – utan fika plockar man ingen svamp.", de: "Gut. Und Kaffee in die Thermoskanne – ohne Fika sammelt man keine Pilze.", antworten: [
       { text: "Termosen är redan packad!", de: "Die Thermoskanne ist schon gepackt!", weiter: null },
       { text: "Och kanelbullar i fickan.", de: "Und Zimtschnecken in der Jackentasche.", weiter: null } ] },
@@ -712,7 +712,7 @@ D.brevvan = [
     gradde: { sagt: "Okej, lite grädde. Det är fortfarande lagom.", de: "Okay, ein bisschen Sahne. Das ist immer noch lagom.", antworten: [
       { text: "Lagom – ditt favoritord!", de: "Lagom – dein Lieblingswort!", weiter: null },
       { text: "Jag tar mycket grädde.", de: "Ich nehm viel Sahne.", weiter: null } ] },
-    mysig: { sagt: "Mycket mysigt. September är svampmånad och mysmånad.", de: "Sehr gemütlich. September ist Pilzmonat und Gemütlichkeitsmonat.", antworten: [
+    mysig: { sagt: "Det är det! Med en kopp te efteråt. September är min bästa månad.", de: "Ist es auch! Mit einer Tasse Tee danach. September ist mein liebster Monat.", antworten: [
       { text: "Jag älskar september!", de: "Ich liebe den September!", weiter: null },
       { text: "Smaklig måltid, Karin!", de: "Guten Appetit, Karin!", weiter: null } ] }
   },
@@ -722,7 +722,7 @@ D.brevvan = [
   ord: { sv: "mysig", de: "gemütlich", tipp: "Das Verb dazu: „mysa“ – es sich gemütlich machen. „Fredagsmys“ ist der gemütliche Freitagabend." },
   knoten: {
     start: { sagt: "Hej Rita! Nu blir det mörkt redan klockan fyra. Jag tänder ljus i alla fönster och gör det mysigt.", de: "Hallo Rita! Jetzt wird’s schon um vier dunkel. Ich zünde in allen Fenstern Kerzen an und mach’s mir gemütlich.", antworten: [
-      { text: "Vad gör du när det är mysigt?", de: "Was machst du, wenn’s gemütlich ist?", weiter: "gor" },
+      { text: "Och vad gör du sedan?", de: "Und was machst du dann?", weiter: "gor" },
       { text: "Mörkt klockan fyra? Som i en deckare!", de: "Um vier dunkel? Wie in einem Krimi!", weiter: "deckare" } ] },
     gor: { sagt: "Filt, te, Sotis i knät och en deckare. Det kallas mys.", de: "Decke, Tee, Sotis auf dem Schoß und ein Krimi. Das nennt man „mys“.", antworten: [
       { text: "Samma här! Fast med Harry Potter.", de: "Genau wie bei mir! Nur mit Harry Potter.", weiter: "harry" },
@@ -763,7 +763,7 @@ D.brevvan = [
     svart: { sagt: "Jag vet. Men jag har ett helt år på mig.", de: "Ich weiß. Aber ich hab ein ganzes Jahr Zeit.", antworten: [
       { text: "Lycka till! Gott nytt år!", de: "Viel Glück! Frohes neues Jahr!", weiter: null },
       { text: "Börja med en fika!", de: "Fang mit einer Fika an!", weiter: null } ] },
-    riktigt: { sagt: "Att äntligen lära Sotis att inte sitta på tangentbordet.", de: "Sotis endlich beizubringen, nicht auf der Tastatur zu sitzen.", antworten: [
+    riktigt: { sagt: "Att lära Sotis att inte sova på mina brev.", de: "Sotis beizubringen, nicht auf meinen Briefen zu schlafen.", antworten: [
       { text: "Det klarar inte ens Wallander.", de: "Das schafft nicht mal Wallander.", weiter: null },
       { text: "Gott nytt år, Karin och Sotis!", de: "Frohes neues Jahr, Karin und Sotis!", weiter: null } ] }
   },

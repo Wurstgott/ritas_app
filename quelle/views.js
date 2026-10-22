@@ -46,10 +46,8 @@ function grussHimmel() {
   return `<button class="gruss-himmel ${nacht ? "mond" : "sonne"}" data-act="wetter" aria-label="Wetter ansehen"><svg viewBox="0 0 60 64" aria-hidden="true">${svg}</svg>${W ? `<span class="gruss-temp">${Math.round(W.temp)}°</span>` : ""}</button>`;
 }
 function telKarteHTML() {
-  const alle = D.anrufe || [], wer = TEL_REIHE.filter(w => alle.some(a => a.wer === w)).map(w => [w, TEL_WER[w]]), gef = S.anrufeGefuehrt || {};
-  const neu = w => alle.filter(a => a.wer === w && !gef[a.id]).length;
-  return `<section class="abschnitt"><div class="tel-karte"><div class="zeile zwischen" style="align-items:baseline"><h2 style="margin:0">Kurz plaudern?</h2><span class="klein">zum Spaß, niemand wird wirklich angerufen</span></div>
-    <div class="tel-karte-reihe">${wer.map(([w, n]) => `<button class="tel-karte-knopf" data-act="tel-ruf" data-wer="${w}" aria-label="${n} anrufen"><span class="tel-karte-bild fig-idle">${w === "huhn" ? huhnFrontSVG(66) : telBild(w, 66)}</span><span class="tel-karte-name">${n}</span>${neu(w) ? `<span class="tel-karte-neu">${neu(w)} neu</span>` : ""}<span class="tel-karte-hoerer">${ic("telefon")}</span></button>`).join("")}</div></div></section>`;
+  const alle = D.anrufe || [], wer = TEL_REIHE.filter(w => alle.some(a => a.wer === w));
+  return `<section class="abschnitt"><button class="tel-leiste" data-act="tel-auf"><span class="tel-stapel" aria-hidden="true">${wer.map(w => `<span>${w === "huhn" ? huhnFrontSVG(34) : telBild(w, 34)}</span>`).join("")}</span><span class="text"><span class="titel">Kurz plaudern</span><span class="unter">zum Spaß – mit Hühnchen, Max, Jane und Co.</span></span>${ic("pfeil", "pfeil")}</button></section>`;
 }
 function viewHeute() {
   const h = heute(), tf = S.tf[h];
@@ -89,7 +87,6 @@ function viewHeute() {
     : `<section class="abschnitt"><button class="umschlag" data-act="post-auf" aria-label="Post von ${von} – zum Öffnen antippen">${umschlagSVG(von)}<span class="umschlag-hinweis">Post von ${von} · zum Öffnen antippen</span></button></section>`; }
   html += zettelHTML();
   html += raetselHTML();
-  html += telKarteHTML();
   html += tvHeuteHTML();
   html += abendkarteHTML(tf);
   if (jetzt().getHours() >= 18 && !eintraegeAm(heute()).some(e => e.t === "tagebuch") && (S.tf[heute()] !== "D")) html += tagebuchKarte(heute());
@@ -115,8 +112,9 @@ function viewHeute() {
   // App aufs Handy legen
   if (!istInstalliert() && S.onboard && h !== S.start && S.installKarte !== "nie" && (!S.installKarte || S.installKarte <= h) && S.eintraege.length >= 1)
     html += `<section class="abschnitt"><div class="bogen streifen"><h3>Die App aufs Handy legen</h3><p class="klein">Dann findest du sie wie jede andere App auf dem Startbildschirm.</p><div class="zeile"><button class="knopf klein zweit" data-act="install">Anleitung zeigen</button><button class="knopf klein leise" data-act="install-spaeter">Später</button></div></div></section>`;
+  html += telKarteHTML();
   html += `<p style="text-align:center;margin:18px 0 6px"><button class="link-knopf" data-act="wunsch-auf">Wunsch oder Idee für die App? Schreib Maxi!</button></p>`;
-  html += `<p class="ersteller-fuss">Mit Liebe gemacht von Carlo Maximilian Engeländer für Rita · © 2026</p>`;
+  html += `<p class="ersteller-fuss">Mit Liebe ausgedacht von Carlo Maximilian Engeländer für seine Patentante Rita</p>`;
   return html;
 }
 function zuletztText(id) {
@@ -729,7 +727,7 @@ function einstellungenInhalt() {
       `<div class="liste">${zeileBtn("frage", "So funktioniert’s", "Liste, Bild, Taler – kurz erklärt", `data-act="erklaerung"`)}
       ${zeileBtn("lichtung", "App aufs Handy legen", "Anleitung mit Bildern", `data-act="install"`)}
       ${zeileBtn("frage", "Über die App", "Von Max, für Rita", `data-act="ueber"`)}</div>`)
-    + `<div class="ersteller"><span class="fig-idle">${maxSVG(48)}</span><p>Diese App hat <b>Carlo Maximilian Engeländer</b> gemacht – für seine tolle Rita.<br><span class="klein">Idee, Texte, Figuren und Gestaltung © 2026 Carlo Maximilian Engeländer. Alle Rechte vorbehalten.</span></p></div>`
+    + `<div class="ersteller"><span class="fig-idle">${maxSVG(48)}</span><p>Ausgedacht und gebaut von <b>Carlo Maximilian Engeländer</b> – für seine tolle Patentante Rita.<br><span class="klein">Idee und Konzept: Carlo Maximilian Engeländer, umgesetzt mit Unterstützung von Claude (KI). © 2026</span></p></div>`
     + einstGruppe("daten", "kiste", "Daten und Neustart", "Sicherung, Technik, alles zurücksetzen",
       `<div class="liste">${zeileBtn("hand", "Technik & Sicherung", "Für Max: Sicherung, Wiederherstellen, Schnell-Kacheln, Geburtstag", `data-act="helfer"`)}</div>
       <button class="knopf zweit voll rand warn" style="margin-top:12px" data-act="reset-1">Alles zurücksetzen und neu anfangen</button>`)
@@ -869,26 +867,32 @@ function tfFrageSatz() {
 
 /* Umschlag für „Post von Max“ (Briefmarke mit Max) */
 function umschlagSVG(von = "Max") {
-  const mon = ["JAN", "FEB", "MÄR", "APR", "MAI", "JUN", "JUL", "AUG", "SEP", "OKT", "NOV", "DEZ"][jetzt().getMonth()], tag = jetzt().getDate();
+  const mon = ["JAN", "FEB", "MÄR", "APR", "MAI", "JUN", "JUL", "AUG", "SEP", "OKT", "NOV", "DEZ"][jetzt().getMonth()], tag = jetzt().getDate(), jahr = String(jetzt().getFullYear()).slice(2);
+  const ort = /max/i.test(von) ? "HALLE (SAALE)" : /christiane|jane|micha/i.test(von) ? "BERLIN" : "SPANDAU";
+  const absOrt = /max/i.test(von) ? "06108 Halle (Saale)" : /christiane|jane|micha/i.test(von) ? "Binger Straße, Berlin" : "Fensterbrett, Spandauer Forst";
+  const stempel = (x, y, r, dreh, deckung) => `<g transform="translate(${x} ${y}) rotate(${dreh})" opacity="${deckung}" fill="none" stroke="#5A3A5E" stroke-width="1.4" stroke-dasharray="14 1.6 6 1.2">
+      <circle r="${r}"/><circle r="${r - 4.5}" stroke-width=".7" stroke-dasharray="9 1.4"/>
+      <path id="pm${x}" d="M${-r + 6} 0 A${r - 6} ${r - 6} 0 0 1 ${r - 6} 0" stroke="none"/>
+      <text font-family="Nunito, system-ui, sans-serif" font-size="5" font-weight="800" fill="#5A3A5E" stroke="none" letter-spacing=".6"><textPath href="#pm${x}" startOffset="50%" text-anchor="middle">${ort}</textPath></text>
+      <text y="5" text-anchor="middle" font-family="Nunito, system-ui, sans-serif" font-size="6.4" font-weight="800" fill="#5A3A5E" stroke="none">${tag}.${mon}.${jahr}</text>
+      <text y="12" text-anchor="middle" font-family="Nunito, system-ui, sans-serif" font-size="4.6" font-weight="700" fill="#5A3A5E" stroke="none">12-14</text></g>`;
   return `<svg class="umschlag-bild" viewBox="0 0 300 150" aria-hidden="true">
-    <rect x="3" y="3" width="294" height="144" rx="8" fill="var(--umschlag)" stroke="var(--umschlag-rand)" stroke-width="2"/>
-    <path d="M10 140 L150 70 L290 140" fill="none" stroke="var(--umschlag-rand)" stroke-width="1.5" opacity=".5"/>
-    <text x="18" y="30" font-family="Fraunces, Georgia, serif" font-size="13" font-style="italic" fill="var(--tinte-2)">Absender: ${esc(von)}</text>
-    <g transform="translate(232 14) rotate(4)">
+    <rect x="3" y="3" width="294" height="144" rx="6" fill="var(--umschlag)" stroke="var(--umschlag-rand)" stroke-width="1.6"/>
+    <text x="18" y="27" font-family="Fraunces, Georgia, serif" font-size="11.5" font-style="italic" fill="var(--tinte-2)">${esc(von)}</text>
+    <text x="18" y="40" font-family="Fraunces, Georgia, serif" font-size="9" font-style="italic" fill="var(--tinte-2)" opacity=".85">${esc(absOrt)}</text>
+    <g transform="translate(234 13) rotate(3)">
       <rect x="0" y="0" width="52" height="62" rx="2" fill="#FFFDF5" stroke="#FFFDF5" stroke-width="6" stroke-dasharray="3 3"/>
       <rect x="4" y="4" width="44" height="54" fill="#CFE3DA"/>
       <svg x="4" y="10" width="44" height="48" viewBox="8 2 92 98">${huhnSVG({ gr: 10 }).replace(/^<svg[^>]*>/, "").replace(/<\/svg>\s*$/, "")}${markenWitz()}</svg>
       <text x="26" y="11" text-anchor="middle" font-family="Nunito, sans-serif" font-size="6.5" font-weight="800" fill="#1F4A34">1 KUSS</text>
     </g>
-    <g transform="translate(206 66)" opacity=".7" fill="none" stroke="var(--ziegel)" stroke-width="1.6">
-      <circle cx="0" cy="0" r="20"/><circle cx="0" cy="0" r="15" stroke-width=".8"/>
-      <path d="M22 -6 q8 -5 16 0 t16 0 t16 0 M22 2 q8 -5 16 0 t16 0 t16 0 M22 10 q8 -5 16 0 t16 0 t16 0"/>
-      <text x="0" y="-4" text-anchor="middle" font-family="Nunito, system-ui, sans-serif" font-size="4.8" font-weight="800" fill="var(--ziegel)" stroke="none">SPANDAU</text>
-      <text x="0" y="6" text-anchor="middle" font-family="Nunito, system-ui, sans-serif" font-size="7" font-weight="700" fill="var(--ziegel)" stroke="none">${tag}. ${mon}</text>
+    <g opacity=".62" fill="none" stroke="#5A3A5E" stroke-width="1.5" stroke-linecap="round" stroke-dasharray="22 2 9 1.5">
+      <path d="M178 34 q7 -5 14 0 t14 0 t14 0 t14 0 t14 0 t14 0 t14 0"/><path d="M178 43 q7 -5 14 0 t14 0 t14 0 t14 0 t14 0 t14 0 t14 0"/><path d="M178 52 q7 -5 14 0 t14 0 t14 0 t14 0 t14 0 t14 0 t14 0"/><path d="M178 61 q7 -5 14 0 t14 0 t14 0 t14 0 t14 0 t14 0 t14 0"/>
     </g>
+    ${stempel(226, 62, 21, -12, .78)}${stempel(206, 30, 17, 9, .32)}
     <text x="70" y="104" font-family="Fraunces, Georgia, serif" font-size="19" font-style="italic" fill="var(--tinte)">An ${esc(S.name)}</text>
-    <text x="70" y="126" font-family="Fraunces, Georgia, serif" font-size="13" font-style="italic" fill="var(--tinte-2)">Im Spandauer Forst</text>
-    <path d="M70 110 H230 M70 132 H200" stroke="var(--umschlag-rand)" stroke-width="1" opacity=".6"/>
+    <text x="70" y="126" font-family="Fraunces, Georgia, serif" font-size="13" font-style="italic" fill="var(--tinte-2)">Am Spandauer Forst, Berlin</text>
+    <path d="M70 110 H230 M70 132 H210" stroke="var(--umschlag-rand)" stroke-width="1" opacity=".6"/>
   </svg>`;
 }
 

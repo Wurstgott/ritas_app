@@ -16,4 +16,4 @@ Gebaut von Max für Rita.
 
 ---
 
-Ritas App – Idee, Texte, Figuren und Gestaltung © 2026 Carlo Maximilian Engeländer. Alle Rechte vorbehalten. Gemacht für Rita.
+Ritas App – ausgedacht von Carlo Maximilian Engeländer für seine Patentante Rita, umgesetzt mit Unterstützung von Claude (KI). © 2026
