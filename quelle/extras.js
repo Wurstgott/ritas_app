@@ -112,7 +112,7 @@ function postLaden() {
     gross.innerHTML = ritaSVG(170);
     gross.style.left = Math.min(innerWidth - 186, r.right + 14) + "px"; gross.style.top = (r.bottom + 10) + "px";
     if ((window._ritaGewunken || 0) < 2 || Math.random() < .6) { window._ritaGewunken = (window._ritaGewunken || 0) + 1; gross._bis = Date.now() + 2300; const verz = (180 + Math.random() * 250) / 1000;
-      const arm = `<defs><clipPath id="pg-clip"><rect x="0" y="0" width="100" height="100"/></clipPath></defs><g clip-path="url(#pg-clip)"><g class="winkarm" style="animation-delay:${verz}s"><path d="M80 93 Q86 99 88 110" stroke="#22304A" stroke-width="12" stroke-linecap="round" fill="none"/><g class="winkunter" style="animation-delay:${verz + .25}s"><path d="M88 110 Q84 92 89 71" stroke="#22304A" stroke-width="10" stroke-linecap="round" fill="none"/><path d="M84.4 71.5 Q89 69.6 93.6 71.5" stroke="#3A4B6B" stroke-width="2.4" stroke-linecap="round" fill="none"/><g class="winkhand" style="animation-delay:${verz + .25}s"><g transform="translate(7 5) translate(166 0) scale(-1 1)"><path d="M78 66 Q76 60 77 54 Q77.5 52 79 53 L79.6 58 L79.5 50 Q80 48 81.4 49 L81.8 57 L82.4 48.6 Q83.2 47 84.4 48.4 L84.2 57 L85.4 51 Q86.6 49.8 87.4 51.2 L86.6 60 Q88.6 57.6 90 58.6 Q90.6 60 88.6 62.6 Q86 67 82 67.6 Q79.6 67.8 78 66Z" fill="#F0C9AA" stroke="#D49A7C" stroke-width=".5"/></g></g></g></g></g>`;
+      const arm = `<defs><clipPath id="pg-clip"><rect x="0" y="0" width="100" height="100"/></clipPath></defs><g clip-path="url(#pg-clip)"><g class="winkarm" style="animation-delay:${verz}s"><g class="winkunter" style="animation-delay:${verz + .25}s"><path d="M78 108 Q79 90 82 73" stroke="#141D30" stroke-width="11.6" stroke-linecap="round" fill="none"/><path d="M78 108 Q79 90 82 73" stroke="#22304A" stroke-width="10" stroke-linecap="round" fill="none"/><path d="M77.6 73.6 Q82 71.6 86.4 73.6" stroke="#3A4B6B" stroke-width="2.4" stroke-linecap="round" fill="none"/><g class="winkhand" style="animation-delay:${verz + .25}s"><g transform="translate(-2 4) translate(166 0) scale(-1 1)"><path d="M78 66 Q76 60 77 54 Q77.5 52 79 53 L79.6 58 L79.5 50 Q80 48 81.4 49 L81.8 57 L82.4 48.6 Q83.2 47 84.4 48.4 L84.2 57 L85.4 51 Q86.6 49.8 87.4 51.2 L86.6 60 Q88.6 57.6 90 58.6 Q90.6 60 88.6 62.6 Q86 67 82 67.6 Q79.6 67.8 78 66Z" fill="#F0C9AA" stroke="#D49A7C" stroke-width=".5"/></g></g></g></g></g>`;
       gross.innerHTML = gross.innerHTML.replace("</svg>", arm + "</svg>"); }
     document.body.appendChild(gross); lange = true; haptik("auswahl");
   };
@@ -127,6 +127,22 @@ function postLaden() {
   document.addEventListener("click", ev => { if (lange && ev.target.closest("#logo")) { ev.stopImmediatePropagation(); lange = false; } }, true);
 }
 
+const HG_EMOJI = [
+  { art: "emo-froh", zeichen: ["✨", "⭐", "✨"], n: 5, flug: "steigen", sprueche: ["Ich glitzere heute. Einfach so.", "Sternstunde! Meine.", "Funkel, funkel, Hühnchen."] },
+  { art: "emo-froh", zeichen: ["🍰", "☕"], n: 4, flug: "steigen", sprueche: ["Hab ich da Kuchen gehört?", "Kaffee? Kuchen? Kaffee UND Kuchen?", "Ich nehm das Stück mit der Kirsche."] },
+  { art: "emo-zu", zeichen: ["💤", "z", "Z"], n: 4, flug: "steigen", sprueche: ["Bin wach! … Fast.", "Ich hab nur kurz die Augen geschont.", "Mittagsschlaf ist auch Sport."] },
+  { art: "emo-froh", zeichen: ["🎉", "🎊", "✨"], n: 6, flug: "steigen", sprueche: ["Party! Warum? Darum!", "Ich feier dich. Einfach so.", "Konfetti ist mein Lieblingswetter."] },
+  { art: "emo-froh", zeichen: ["🌸", "🌼", "🌷"], n: 5, flug: "fall", sprueche: ["Blumen für dich. Hab ich selbst … gefunden.", "Riecht nach Frühling hier. Oder nach dir."] },
+  { art: "emo-schreck", zeichen: ["❗", "❓"], n: 3, flug: "steigen", sprueche: ["Huch! Du schon wieder!", "Ich hab dich gar nicht kommen sehen!", "Erschreck mich doch nicht so, ich bin aus Ton!"] },
+  { art: "emo-froh", zeichen: ["📚", "🔍"], n: 3, flug: "steigen", sprueche: ["Ich lese gerade. Krimi. Der Gärtner war’s nicht.", "Ich ermittle. Verdächtig: alle."] },
+  { art: "emo-froh", zeichen: ["☀️", "🌤️"], n: 3, flug: "steigen", sprueche: ["Wetterbericht: Hühnchen sonnig.", "Ich hab die Sonne bestellt. Gern geschehen."] },
+  { art: "emo-froh", zeichen: ["❄️", "❄"], n: 7, flug: "fall", sprueche: ["Mir ist kalt. Ich bin aus Peru!", "Schneeflocken! Darf man die essen?"] },
+  { art: "emo-froh", zeichen: ["💪"], n: 2, flug: "steigen", sprueche: ["Guck mal, mein Bizeps. … Okay, ich hab keinen.", "Training! Ich hab heute zweimal genickt."] },
+  { art: "emo-schreck", zeichen: ["🌽"], n: 2, flug: "steigen", sprueche: ["Wer hat hier Mais gesagt? Ich frag nur.", "Ich hab da so ein Gefühl wegen dem Hofladen …"] },
+  { art: "emo-froh", zeichen: ["🎵", "🎶"], n: 5, flug: "steigen", sprueche: ["La-la-laaa! Ich hab Talent. Glaub ich.", "Ich übe für den Chor. Der weiß nur noch nichts davon."] },
+  { art: "emo-froh", zeichen: ["🌈"], n: 1, flug: "steigen", sprueche: ["Regenbogen. Für dich hingestellt.", "Ich kann auch bunt."] },
+  { art: "emo-froh", zeichen: ["🥚"], n: 1, flug: "steigen", sprueche: ["Nein, das war ich nicht.", "Kein Kommentar."] }
+];
 /* ---------- Hühnchen: Finger drauf halten = großer Kopf daneben; oft antippen = Feder fliegt ---------- */
 { let zeitH = 0, grossH = null, langH = false, taps = [];
   let mal = [];
@@ -143,13 +159,15 @@ function postLaden() {
     if (n === 2) art = zuf(["rot", "cool", "frech"]);
     else if (n === 3) art = zuf(["frage", "frech", "cool"]);
     else if (n >= 4) art = "weg";
-    else art = zuf(["zwinkern", "kamm", "noten", "herz", "nicken", "cool", "frech"]);
+    else art = zuf(["zwinkern", "kamm", "noten", "herz", "nicken", "cool", "frech", "emoji", "emoji", "emoji"]);
+    if (art === "emoji") { const E = zuf(HG_EMOJI); art = E.art; blase(zuf(E.sprueche)); grossH._emoji = E; }
     if (art === "rot" && Math.random() < .5) blase(zuf(["Guck nicht so.", "Oh. Du schon wieder.", "Ich werd ja ganz verlegen."]));
     if (art === "frage") blase(zuf(["Ist was?", "Hab ich was im Gesicht?", "Ich hab Körner gezählt. Was gibt's?"]));
     if (art === "weg") blase(zuf(["Hmpf. Ich guck jetzt woandershin.", "Bin nicht da.", "Pause. Hühnerpause."]));
-    if (art === "cool") blase(zuf(["Läuft bei mir.", "Sonnenbrille. Weil ich’s kann.", "Ich bin aus Peru. Ich bin cool geboren.", "Autogramme gibt’s später."]));
-    if (art === "frech") blase(zuf(["Na, auch hier?", "Was guckst du? Ich bin handgemacht.", "Erst die Liste, dann das Hühnchen!", "Ich hab dich zuerst gesehen.", "Schon wieder du? Ich fühl mich geehrt."]));
+    if (art === "cool") blase(zuf(["Läuft bei mir.", "Sonnenbrille. Weil ich’s kann.", "Ich bin aus Peru. Ich bin cool geboren.", "Autogramme gibt’s später.", "Chillen ist auch eine Tätigkeit.", "Ich mach heute auf Sparflamme. Stylisch."]));
+    if (art === "frech") blase(zuf(["Na, auch hier?", "Was guckst du? Ich bin handgemacht.", "Erst die Liste, dann das Hühnchen!", "Ich hab dich zuerst gesehen.", "Schon wieder du? Ich fühl mich geehrt.", "Finger weg, ich bin frisch glasiert!", "Ich bin klein, aber ich hab Meinungen.", "Huhn sein ist ein Vollzeitjob.", "Du hast da was. … Reingefallen!", "Ich bin nicht neugierig. Ich bin informiert."]));
     grossH.classList.add("hg-" + art);
+    if (grossH._emoji) { const E = grossH._emoji; for (let i = 0; i < E.n; i++) { const z = document.createElement("span"); z.className = "hg-flug hg-emo hg-" + E.flug; z.textContent = E.zeichen[i % E.zeichen.length]; z.style.left = (70 + Math.random() * 70) + "px"; z.style.top = (E.flug === "fall" ? 0 : 50) + "px"; z.style.animationDelay = (1900 + i * 140) + "ms"; z.style.setProperty("--dx", ((Math.random() - .5) * 90) + "px"); grossH.appendChild(z); } }
     if (art === "noten" || art === "herz") for (let i = 0; i < 3; i++) { const z = document.createElement("span"); z.className = "hg-flug"; z.textContent = art === "noten" ? ["♪", "♫", "♪"][i] : "♥"; z.style.left = (95 + i * 14) + "px"; z.style.top = "40px"; z.style.animationDelay = (1950 + i * 160) + "ms"; z.style.setProperty("--dx", (8 + i * 10) + "px"); grossH.appendChild(z); }
     document.body.appendChild(grossH); langH = true; haptik("auswahl");
   };

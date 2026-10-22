@@ -887,3 +887,24 @@ h2, h3 { font-weight: 620; }
 .wm-kap { font-size: 1.22em; margin-right: 0; }
 @media (max-width: 370px) { .wm-text { font-size: 7.2vw; } }
 .portrait.greta .augen { animation-delay: 1.8s; } .portrait.pauli .augen { animation-delay: 2.6s; }
+/* Hühnchen: Emoji-Vielfalt */
+.hg-emo { font-size: 24px; color: inherit; }
+.hg-emo.hg-fall { animation: hg-emo-fall 1.8s ease-in forwards; }
+@keyframes hg-emo-fall { 0% { opacity: 0; transform: translate(0, -10px) rotate(0); } 15% { opacity: 1; } 100% { opacity: 0; transform: translate(var(--dx), 140px) rotate(220deg); } }
+.hg-emo.hg-steigen { animation: hg-flug 1.6s ease-out forwards; }
+.huhn-gross.hg-emo-froh .hg-vorn svg { animation: hg-plopp .5s cubic-bezier(.3,1.6,.5,1) 1.25s both, hg-wipp .45s ease-in-out 1.9s 4 alternate; }
+.huhn-gross.hg-emo-froh .hg-vorn .froh { opacity: 0; animation: hg-an 0s linear 1.9s forwards; }
+.huhn-gross.hg-emo-froh .hg-vorn .pupillen, .huhn-gross.hg-emo-froh .hg-vorn .huhn-augen > ellipse { animation: hg-aus 0s linear 1.9s forwards !important; }
+.huhn-gross.hg-emo-froh .hg-vorn .froh { display: inline !important; }
+.huhn-gross.hg-emo-zu .hg-vorn .lider { opacity: 0; animation: hg-an .4s ease-in 1.8s forwards; }
+.huhn-gross.hg-emo-zu .hg-vorn svg { animation: hg-plopp .5s cubic-bezier(.3,1.6,.5,1) 1.25s both, hg-doesen 1.2s ease-in-out 1.9s 2 alternate; }
+@keyframes hg-doesen { to { transform: rotate(10deg) translateY(2px); } }
+.huhn-gross.hg-emo-schreck .hg-vorn svg { animation: hg-plopp .5s cubic-bezier(.3,1.6,.5,1) 1.25s both, hg-schreck .5s cubic-bezier(.3,1.8,.5,1) 1.8s both; }
+@keyframes hg-schreck { 0% { transform: scale(1); } 30% { transform: scale(1.12, .9) translateY(-10px); } 100% { transform: scale(1); } }
+.huhn-gross.hg-emo-schreck .hg-vorn .pupillen { animation: hg-gross-pupille2 1.4s ease-out 1.3s both, hg-pupille-klein .3s ease-out 1.8s forwards !important; }
+@keyframes hg-pupille-klein { to { transform: scale(.6); } }
+.huhn-gross.hg-emo-schreck .hg-vorn .hg-brauen { animation: hg-brauen-hoch 1.2s ease-out 1.8s both; }
+.portrait-gross .winkarm { transform-origin: 78px 108px; }
+.portrait-gross .winkunter { transform-origin: 78px 108px; animation-name: unterarm-wink3; }
+@keyframes unterarm-wink3 { from { transform: rotate(-5deg); } to { transform: rotate(8deg); } }
+.portrait-gross .winkhand { transform-origin: 82px 72px; }
