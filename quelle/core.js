@@ -241,8 +241,9 @@ function toast(text, opt = {}) {
   const t = document.createElement("div"); t.className = "toast"; t.setAttribute("role", "status");
   const haken = opt.erfolg ? `<svg class="haken-svg" viewBox="0 0 30 30" aria-hidden="true"><circle cx="15" cy="15" r="13" fill="none" stroke="currentColor" stroke-width="2" opacity=".35"/><path d="M8.5 15.5l4.2 4.2 8.8-9.4" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"/></svg>` : "";
   const [kopf, ...weiter] = String(text).split("\n");
-  t.innerHTML = `${haken}<div class="text">${esc(kopf)}${weiter.filter(Boolean).map(z => `<small>${esc(z)}</small>`).join("")}</div><div class="toast-knoepfe">${opt.rueck ? `<button class="knopf rueck-mini" data-act="toast-rueck">Rückgängig</button>` : ""}<button class="knopf zu" data-act="toast-zu">Schließen</button>${opt.rueck ? `<button class="knopf daumen" data-act="toast-daumen" aria-label="Daumen hoch">${DAUMEN_SVG}</button>` : ""}${opt.knopf ? `<button class="knopf" data-act="${opt.knopf.act}">${esc(opt.knopf.text)}</button>` : ""}</div>`;
+  t.innerHTML = `${haken}<div class="text">${esc(kopf)}${weiter.filter(Boolean).map(z => `<small>${esc(z)}</small>`).join("")}</div>${opt.rueck || opt.knopf ? `<div class="toast-knoepfe">` : `<div class="toast-knoepfe" hidden>`}${opt.rueck ? `<button class="knopf rueck-mini" data-act="toast-rueck">Rückgängig</button>` : ""}<button class="knopf zu" data-act="toast-zu" aria-label="Schließen" hidden>Schließen</button>${opt.rueck ? `<button class="knopf daumen" data-act="toast-daumen" aria-label="Daumen hoch">${DAUMEN_SVG}</button>` : ""}${opt.knopf ? `<button class="knopf" data-act="${opt.knopf.act}">${esc(opt.knopf.text)}</button>` : ""}</div>`;
   t._rueck = opt.rueck;
+  t.addEventListener("click", ev => { if (!ev.target.closest("button")) { t.classList.add("weg"); setTimeout(() => t.remove(), 250); } });
   document.body.appendChild(t);
   hebeToast();
   armHaptics();

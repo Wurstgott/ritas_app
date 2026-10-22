@@ -323,8 +323,8 @@ function zeichneSzene(canvas, opt = {}) {
       const q = new Path2D(); poly(q, [[m(ya) - wa, ya], [m(yb) - wb, yb], [m(yb) + wb, yb], [m(ya) + wa, ya]], null); ctx.fill(q); }
     // Parkbuchten (Linien zum Fluchtpunkt)
     ctx.strokeStyle = "rgba(255,253,245,.55)"; ctx.lineWidth = 1.4;
-    for (let k = 0; k < 6; k++) { const x = 488 + k * 48, y1 = 668, y0 = yh + 3; ctx.beginPath(); ctx.moveTo(x, y1); ctx.lineTo(x + (FP - x) * (y1 - y0) / (y1 - HORIZONT), y0); ctx.stroke(); }
-    for (let k = 0; k < 7; k++) { const x = 440 + k * 56, y1 = yv - 2, y0 = 696; ctx.beginPath(); ctx.moveTo(x, y1); ctx.lineTo(x + (FP - x) * (y1 - y0) / (y1 - HORIZONT), y0); ctx.stroke(); }
+    for (let k = 0; k < 5; k++) { const x = 488 + k * 48, y1 = 670, y0 = yh + 3; ctx.beginPath(); ctx.moveTo(x, y1); ctx.lineTo(x + (FP - x) * (y1 - y0) / (y1 - HORIZONT), y0); ctx.stroke(); }
+    for (let k = 0; k < 7; k++) { const x = 440 + k * 56, y1 = yv - 2, y0 = 690; ctx.beginPath(); ctx.moveTo(x, y1); ctx.lineTo(x + (FP - x) * (y1 - y0) / (y1 - HORIZONT), y0); ctx.stroke(); }
     ctx.restore();
     // Bordstein der Stadtrandstraße, an der Einfahrt abgesenkt
     const bord = new Path2D(); poly(bord, [[-60, VH - 9], [STR.l - 24, VH - 9], [STR.l - 18, VH + 6], [-60, VH + 6]], null); poly(bord, [[STR.r + 24, VH - 9], [VW + 60, VH - 9], [VW + 60, VH + 6], [STR.r + 18, VH + 6]], null);
@@ -493,6 +493,15 @@ function zeichneSzene(canvas, opt = {}) {
     { const k = new Path2D(); ellipse(k, 606, 646, 6.5, 3.6); kreis(k, 612, 643, 2.8); poly(k, [[610.2, 641.5], [611, 638.4], [612.6, 641]], null); poly(k, [[613, 641], [614.4, 638.2], [615, 641.6]], null);
       papier(ctx, k, "#3A3530", 1); ctx.strokeStyle = "#3A3530"; ctx.lineWidth = 1.6; ctx.beginPath(); ctx.moveTo(600, 647); ctx.quadraticCurveTo(594, 650, 597, 642); ctx.stroke();
       if (nacht > .3) { ctx.fillStyle = "#E8E07A"; ctx.fillRect(612.4, 642.4, 1.1, 1.1); ctx.fillRect(614.2, 642.4, 1.1, 1.1); } SZ.anker.katze = [606, 642]; }
+    // Grünstreifen mit Büschen und einem kleinen Baum teilt den Parkplatz zwischen den Reihen
+    { const g0 = 452, g1 = 724, gy = 678, gr = R("gruenstreifen" ), gruen = schnee ? "#E8E8E0" : SA.wiese2;
+      const bord = new Path2D(); rr(bord, g0 - 3, gy - 7, g1 - g0 + 6, 15, 7); papier(ctx, bord, schnee ? "#E4E4DE" : "#C9C3B4", 1.5);
+      const st = new Path2D(); rr(st, g0, gy - 5, g1 - g0, 10, 5); papier(ctx, st, gruen, 0);
+      const bx = 598, by = gy; // kleiner Baum (Feldahorn), Krone je nach Jahreszeit
+      const stamm = new Path2D(); poly(stamm, [[bx - 2, by], [bx - 1.4, by - 30], [bx + 1.4, by - 30], [bx + 2, by]], null); papier(ctx, stamm, "#6A4A36", 1.5);
+      if (SA.laub) krone(ctx, bx, by - 40, 20, 7, gr, mix(SA.laub[1], "#4E6B40", .25), 2); else aeste(ctx, bx, by - 28, 60, gr, "#5C4B3A", 1.5);
+      const bu = new Path2D(); for (const x of [474, 500, 540, 652, 690, 708]) fetzen(bu, x, gy - 4, 9 + gr() * 4, 6.5 + gr() * 2, gr, 10);
+      papier(ctx, bu, schnee ? "#E8E8E0" : saison === "herbst" ? "#66773F" : "#4E6B40", 1.5, { saum: true }); }
     // Laterne an der Einfahrt
     { const lx = 404, ly = PARK.vorn + 6, p = new Path2D(); poly(p, [[lx - 2, ly], [lx - 1.4, ly - 92], [lx + 1.4, ly - 92], [lx + 2, ly]], null); poly(p, [[lx - 9, ly - 92], [lx + 9, ly - 92], [lx + 5, ly - 100], [lx - 5, ly - 100]], null); papier(ctx, p, "#4A4A48", 1.5);
       ctx.fillStyle = nacht > .2 || gold > .5 ? "#FFE3A0" : "#E8E2D2"; ctx.fillRect(lx - 6, ly - 92, 12, 3); if (nacht > .2) gluehen(ctx, lx, ly - 88, 46, nacht); SZ.anker.laterne = [lx, ly - 92]; }
@@ -645,6 +654,9 @@ function zeichneSzene(canvas, opt = {}) {
   { const r = R("portal");
     kiefer(ctx, 14, VH + 30, 900, r, mix("#2E4733", "#000000", .05), "#5B3B2A", 6);
     kiefer(ctx, 986, VH + 30, 860, r, mix("#2E4733", "#000000", .05), "#5B3B2A", 6);
+    if (nacht >= .3) { // nachts: Kobel (Eichhörnchennest) in der Kiefer, darin schläft es
+      ctx.save(); ctx.fillStyle = "#3A2E24"; ctx.beginPath(); ctx.ellipse(966, 688, 11, 8, 0, 0, TAU); ctx.fill(); ctx.strokeStyle = "#4A3A2C"; ctx.lineWidth = 1.2; for (let i = 0; i < 5; i++) { ctx.beginPath(); ctx.moveTo(956 + i * 5, 682); ctx.lineTo(958 + i * 4, 694); ctx.stroke(); } ctx.restore();
+      SZ.anker.eich2 = [966, 688]; }
     if (nacht < .3) { // zweites Eichhörnchen klettert die große Kiefer rechts hoch
       ctx.save(); ctx.translate(968, 690); ctx.fillStyle = "#A8562A";
       ctx.beginPath(); ctx.ellipse(0, 0, 4.2, 8, -.15, 0, TAU); ctx.fill();
@@ -862,7 +874,7 @@ function bildBeschreibung(M) {
    ============================================================ */
 const ENTDECKEN = [
   { id: "eichhoernchen", name: "Eichhörnchen", nacht: false, anker: "eiche", x: 122, y: 520, r: 60, text: "Wer hat da geraschelt?", mal: vEichhoernchen },
-  { id: "eich2", name: "Noch ein Eichhörnchen", nacht: false, anker: "eich2", x: 0, y: 0, r: 34, text: "Noch eins! Das hier saust die Kiefer hoch.", mal: vEichKletter, wenn: () => !!(SZ.anker && SZ.anker.eich2) },
+  { id: "eich2", name: "Eichhörnchen in der Kiefer", nacht: "egal", anker: "eich2", x: 0, y: 0, r: 34, text: n => n ? "Psst – im Kobel schläft das Eichhörnchen, zusammengerollt unter seinem Schwanz." : "Noch eins! Das hier saust die Kiefer hoch.", mal: vEichKletter, wenn: () => !!(SZ.anker && SZ.anker.eich2) },
   { id: "uhu", name: "Uhu", nacht: true, anker: "eiche", x: 122, y: 520, r: 60, text: "Der Uhu hält Nachtwache in der Eiche.", mal: vUhu },
   { id: "nest", name: "Vogelnest", nacht: false, anker: "nest", x: 886, y: 416, r: 46, text: () => jahreszeit(jetzt()) === "winter" ? "Ein leeres Nest. Im Frühling ist hier wieder Betrieb." : "Drei Schnäbel, ein Gedanke: Hunger!", mal: vNest },
   { id: "spatzen", name: "Spatzen", nacht: false, anker: "spatzen", x: 388, y: 450, r: 46, text: "Die Spatzen halten Dachkonferenz.", mal: vSpatzen },
@@ -1017,7 +1029,13 @@ function vSpatzen(g) {
     g.strokeStyle = "#3A2E22"; g.lineWidth = 1; g.beginPath(); g.moveTo(x - 2, y + 8 * s); g.lineTo(x - 2, y + 12 * s); g.moveTo(x + 3, y + 8 * s); g.lineTo(x + 3, y + 12 * s); g.stroke(); };
   spatz(28, 56, 1, 1); spatz(64, 52, 1.1, -1); spatz(96, 56, .95, -1);
 }
-function vEichKletter(g) {
+function vEichKletter(g, n) {
+  if (n) { vHimmel(g, true); vSterne(g); vP(g, p => { rr(p, 58, -10, 34, 140, 6); }, "#3E2C20", 2);
+    vP(g, p => { ellipse(p, 60, 66, 30, 22); }, "#4A3A2C", 2);
+    g.strokeStyle = "rgba(0,0,0,.3)"; g.lineWidth = 2; for (let i = 0; i < 7; i++) { g.beginPath(); g.moveTo(34 + i * 8, 52); g.lineTo(38 + i * 7, 82); g.stroke(); }
+    vP(g, p => { ellipse(p, 60, 70, 15, 10); }, "#8E4A24", 0); vP(g, p => { p.moveTo(46, 72); p.quadraticCurveTo(52, 52, 74, 62); p.quadraticCurveTo(64, 70, 50, 76); p.closePath(); }, "#A8562A", 0);
+    g.strokeStyle = "#1C2620"; g.lineWidth = 1.4; g.beginPath(); g.arc(66, 70, 2, 0, Math.PI); g.stroke();
+    g.fillStyle = "rgba(255,246,220,.85)"; g.font = "bold 13px Nunito, sans-serif"; g.fillText("z", 80, 52); g.font = "bold 10px Nunito, sans-serif"; g.fillText("z", 88, 42); return; }
   vHimmel(g, false); vP(g, p => { rr(p, 58, -10, 34, 140, 6); }, "#5B3B2A", 2);
   for (let i = 0; i < 6; i++) { g.strokeStyle = "rgba(0,0,0,.18)"; g.lineWidth = 2; g.beginPath(); g.moveTo(62, 8 + i * 20); g.lineTo(86, 14 + i * 20); g.stroke(); }
   g.save(); g.translate(64, 66); g.rotate(-.1);

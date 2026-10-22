@@ -103,19 +103,24 @@ function erPasst(e) {
   if (e.selten && (hash32('sel' + e.id + heute()) % 100) / 100 > e.selten) return false;
   return true;
 }
-function ereignisPruefen() {
+if (typeof D !== "undefined" && Array.isArray(D.ereignisse2)) EREIGNISSE.push(...D.ereignisse2.filter(e => e && e.id && !EREIGNISSE.some(x => x.id === e.id)));
+/* Wann kommt jemand vorbei? Zufällig, nicht immer: beim Öffnen und beim Zurückwechseln auf „Heute“.
+   Höchstens 2 am Tag, mindestens 25 Minuten Abstand. Datierte Anlässe (z. B. Lucia) haben Vorrang. */
+function ereignisPruefen(anlass = "start") {
   if (S.eierAus || !S.onboard || SHEETS.length || $(".ereignis") || S.timer) return;
   const h = heute(); S.ereignisse = S.ereignisse || {};
-  if (h === S.start || S.ereignisTag === h || S.tf[h] === "D") return;
+  if (h === S.start || S.tf[h] === "D") return;
+  if (!S.erHeute || S.erHeute.tag !== h) S.erHeute = { tag: h, n: 0, zuletzt: 0 };
+  if (S.erHeute.n >= 2 || Date.now() - S.erHeute.zuletzt < 25 * 60e3) return;
   const kand = EREIGNISSE.filter(e => erPasst(e) && !(S.ereignisse[e.id] && (tagDatum(h) - tagDatum(S.ereignisse[e.id])) / 864e5 < 45));
   if (!kand.length) return;
   const datiert = kand.filter(e => e.wann && (e.wann.tag || e.wann.wochentag != null));
-  const chance = datiert.length ? .8 : .35;
-  if ((hash32("er" + h + S.seed) % 1000) / 1000 > chance) { S.ereignisTag = h; speichern(); return; }
-  const pool = datiert.length ? datiert : kand;
-  const e = pool[hash32("erw" + h + S.seed) % pool.length];
-  S.ereignisTag = h; S.ereignisse[e.id] = h; speichern();
-  setTimeout(() => ereignisZeigen(e), 1400);
+  const chance = datiert.length && !S.erHeute.n ? .7 : anlass === "tab" ? (S.erHeute.n ? .06 : .14) : anlass === "eintrag" ? (S.erHeute.n ? .1 : .2) : (S.erHeute.n ? .08 : .3);
+  if (Math.random() > chance) return;
+  const pool = datiert.length && !S.erHeute.n ? datiert : kand;
+  const e = pool[Math.floor(Math.random() * pool.length)];
+  S.erHeute.n++; S.erHeute.zuletzt = Date.now(); S.ereignisse[e.id] = h; speichern();
+  setTimeout(() => { if (!SHEETS.length && !$(".ereignis")) ereignisZeigen(e); }, anlass === "tab" ? 900 + Math.random() * 1600 : anlass === "eintrag" ? 4200 + Math.random() * 1500 : 1400);
 }
 function ereignisZeigen(e) {
   if (typeof e === "string") e = EREIGNISSE.find(x => x.id === e); if (!e || $(".ereignis")) return;
@@ -151,8 +156,13 @@ function ereignisWeg(el) { el.classList.add("weg"); setTimeout(() => el.remove()
 function sprechen(ziel, text, fig, fertig) {
   ziel.textContent = ""; if (fig) fig.classList.add("spricht");
   if (REDUCED()) { ziel.textContent = text; if (fig) setTimeout(() => fig.classList.remove("spricht"), 400); if (fertig) setTimeout(fertig, 500); return; }
-  let n = 0; const tick = () => { n++; ziel.textContent = text.slice(0, n); if (n < text.length) setTimeout(tick, /[.,!?…–]/.test(text[n - 1]) ? 160 : 32); else { if (fig) fig.classList.remove("spricht"); if (fertig) fertig(); } };
-  tick();
+  // Platz für den ganzen Satz gleich reservieren, damit nichts springt
+  const sicht = document.createElement("span"), rest = document.createElement("span"); rest.className = "rest"; rest.textContent = text; ziel.textContent = ""; ziel.append(sicht, rest);
+  let n = 0, letzt = 0, warte = 0;
+  const schritt = t => { if (!letzt) letzt = t; const dt = t - letzt;
+    if (dt >= warte) { letzt = t; n++; sicht.textContent = text.slice(0, n); rest.textContent = text.slice(n); warte = /[.,!?…–]/.test(text[n - 1]) ? 170 : 34; }
+    if (n < text.length) requestAnimationFrame(schritt); else { if (fig) fig.classList.remove("spricht"); if (fertig) fertig(); } };
+  requestAnimationFrame(schritt);
 }
 function erEffekt(art, fig) {
   const r = fig.getBoundingClientRect(), zeichen = { konfetti: ["✦", "●", "▲", "■"], herzen: ["♥"], noten: ["♪", "♫"], schnee: ["❄", "✻", "•"], sonne: ["☀"] }[art] || ["✦"];

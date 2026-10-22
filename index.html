@@ -937,6 +937,75 @@ h2, h3 { font-weight: 620; }
 .tb-merk-zeile { display: flex; align-items: center; justify-content: space-between; gap: 8px; padding: 4px 0; border-bottom: 1px dashed var(--mulde); }
 .tb-merk-zeile span { min-width: 0; overflow-wrap: anywhere; }
 .tb-karte .chips .chip { min-height: 36px; padding: 4px 12px; font-size: .85rem; }
+/* Gruß mit Mond (abends/nachts) oder Sonne (morgens) */
+.gruss { position: relative; }
+.gruss-himmel { position: absolute; right: 0; top: -4px; width: 56px; height: 56px; pointer-events: none; }
+.gruss-himmel.mond { animation: mond-schweben 6s ease-in-out infinite; }
+@keyframes mond-schweben { 0%, 100% { transform: translateY(0) rotate(-4deg); } 50% { transform: translateY(-4px) rotate(3deg); } }
+.gruss-himmel .sterne path { transform-box: fill-box; transform-origin: center; animation: stern-funkeln 2.4s ease-in-out infinite; }
+.gruss-himmel .st2 { animation-delay: .8s !important; } .gruss-himmel .st3 { animation-delay: 1.6s !important; }
+@keyframes stern-funkeln { 0%, 100% { opacity: .3; transform: scale(.6); } 50% { opacity: 1; transform: scale(1.1); } }
+.gruss-himmel.sonne .strahlen { transform-origin: 30px 30px; animation: sonne-dreh 24s linear infinite; }
+@keyframes sonne-dreh { to { transform: rotate(360deg); } }
+.gruss h1 { padding-right: 58px; }
+/* Kopfzeile: Schriftzug breiter, Einstellungen als runder Knopf mit kleinem Schild */
+.wm-text { font-size: min(2.35em, 10.2vw); }
+#knopf-einst.nur-icon { width: 58px; min-height: 0; height: auto; padding: 0; background: none; box-shadow: none; border: 0; display: flex; flex-direction: column; align-items: center; gap: 3px; color: var(--moos); }
+#knopf-einst.nur-icon svg { width: 46px; height: 46px; padding: 11px; border-radius: 50%; background: color-mix(in srgb, var(--moos) 12%, var(--bogen)); box-shadow: 0 2px 6px rgba(28,38,32,.14), inset 0 0 0 1.5px color-mix(in srgb, var(--moos) 25%, transparent); transition: transform .3s; }
+#knopf-einst.nur-icon:active svg { transform: rotate(60deg) scale(.95); }
+#knopf-einst.nur-icon span { font-size: 11px; font-weight: 700; letter-spacing: .02em; }
+@media (max-width: 370px) { .wm-text { font-size: 9vw; } }
+/* Ereignisse flüssiger */
+.er-figur, .er-flug, .portrait .mund, .fig-idle { will-change: transform; }
+.er-blase .rest { color: transparent; }
+#knopf-einst.nur-icon { width: auto; min-width: 58px; overflow: visible; }
+#knopf-einst.nur-icon span { white-space: nowrap; }
+.gruss-himmel { width: 46px; height: 46px; top: 0; } .gruss h1 { padding-right: 48px; }
+/* Sonne/Mond als Wetter-Knopf */
+button.gruss-himmel { pointer-events: auto; border: 0; background: none; padding: 0; cursor: pointer; width: 52px; height: 58px; display: grid; justify-items: center; }
+button.gruss-himmel svg { width: 46px; height: 50px; overflow: visible; }
+.gruss-temp { position: absolute; right: -2px; bottom: -4px; font: 800 13px/1 Nunito, sans-serif; color: var(--tinte); background: var(--bogen); padding: 2px 5px; border-radius: 999px; box-shadow: 0 1px 3px rgba(0,0,0,.15); }
+.gruss-himmel .wolke { animation: wolke-zieh 7s ease-in-out infinite; }
+@keyframes wolke-zieh { 0%, 100% { transform: translateX(0); } 50% { transform: translateX(3px); } }
+.gruss-himmel .tropfen path { animation: tropfen-fall 1.1s linear infinite; } .gruss-himmel .tropfen path:nth-child(2) { animation-delay: .35s; } .gruss-himmel .tropfen path:nth-child(3) { animation-delay: .7s; }
+@keyframes tropfen-fall { from { transform: translateY(-3px); opacity: 0; } 30% { opacity: 1; } to { transform: translateY(5px); opacity: 0; } }
+.wetter-jetzt { display: flex; gap: 14px; align-items: center; }
+.wetter-grad { font-size: 3rem; font-weight: 800; line-height: 1; color: var(--moos); }
+.wetter-tage { display: grid; gap: 6px; margin: 12px 0; }
+.wetter-tag { display: grid; grid-template-columns: 4.5em 1fr auto; gap: 2px 10px; align-items: baseline; padding: 6px 0; border-bottom: 1px solid var(--mulde); }
+.wetter-tag .klein { grid-column: 2 / -1; margin: 0; }
+/* Schriftzug füllt den Platz bis zum Einstellungsknopf */
+.wortmarke { flex: 1; }
+.wm-text { font-size: min(2.85em, 12vw); }
+@media (max-width: 370px) { .wm-text { font-size: 10.2vw; } }
+/* Rita: Kuss beim zweiten Mal */
+.portrait-gross .kuss-mund, .portrait-gross .kuss-zwinker { opacity: 0; }
+.portrait-gross.pg-kuss .mund { animation: pg-mund-weg .2s ease-out .35s forwards !important; }
+@keyframes pg-mund-weg { to { opacity: 0; } }
+.portrait-gross.pg-kuss .kuss-mund { transform-box: fill-box; transform-origin: center; animation: pg-kuss .9s cubic-bezier(.3,1.6,.5,1) .4s forwards; }
+@keyframes pg-kuss { 0% { opacity: 1; transform: scale(.4); } 40% { opacity: 1; transform: scale(1.25); } 60% { transform: scale(.95); } 100% { opacity: 1; transform: scale(1.05); } }
+.portrait-gross.pg-kuss .auge-r { animation: pg-zu-r .2s ease-out .4s forwards !important; }
+@keyframes pg-zu-r { to { opacity: 0; } }
+.portrait-gross.pg-kuss .kuss-zwinker { animation: hg-an 0s linear .45s forwards; }
+.kuss-herz { position: absolute; font-size: 22px; color: #D2342C; opacity: 0; animation: hg-flug 1.6s ease-out forwards; pointer-events: none; }
+/* Toast entschlackt: kein „Schließen“ (antippen oder warten), Rückgängig klein, Daumen rund */
+.toast { cursor: pointer; padding: 14px 16px 12px; border-radius: 18px; gap: 4px 12px; }
+.toast .text { font-size: 1.02rem; }
+.toast .text small { margin-top: 4px; }
+.toast .toast-knoepfe[hidden] { display: none !important; }
+.toast .toast-knoepfe { align-items: center; margin-top: 8px; }
+.toast .knopf.zu[hidden] { display: none !important; }
+.toast .knopf.rueck-mini { min-height: 40px; font-size: .8rem; opacity: .65; margin-right: auto; padding: 4px 2px; }
+.toast .knopf.daumen { min-width: 0; width: 48px; height: 48px; min-height: 48px; padding: 0; border-radius: 50%; display: grid; place-items: center; background: color-mix(in srgb, var(--papier) 92%, #2F7A4F); }
+.toast .knopf.daumen svg { width: 24px; height: 24px; }
+.toast .knopf:not(.rueck-mini):not(.daumen):not(.zu) { min-height: 44px; border-radius: 999px; padding: 6px 16px; }
+.exkurs-karte { display: flex; gap: 14px; align-items: center; width: 100%; text-align: left; border: 0; cursor: pointer; padding: 14px 16px; border-radius: 18px; color: var(--tinte); background: linear-gradient(135deg, color-mix(in srgb, #2F5E8E 14%, var(--bogen)), color-mix(in srgb, #F2C230 12%, var(--bogen))); box-shadow: 0 2px 8px rgba(28,38,32,.1); }
+.exkurs-karte .text { display: grid; gap: 2px; min-width: 0; }
+.exkurs-karte .titel { font-family: Fraunces, Georgia, serif; font-weight: 700; font-size: 1.1rem; }
+.exkurs-karte .unter { font-size: .9rem; opacity: .85; }
+.ersteller { display: flex; gap: 12px; align-items: center; margin: 16px 0 8px; padding: 12px 14px; border-radius: 16px; background: color-mix(in srgb, var(--moos) 8%, var(--bogen)); }
+.ersteller p { margin: 0; }
+.ersteller-fuss { text-align: center; font-size: .78rem; opacity: .6; margin: 4px 0 18px; }
 </style>
 <div id="app">
   <header class="kopf">
@@ -8050,6 +8119,103 @@ D.brevvan = [
 
 ];
 
+/* Weitere Zufallsereignisse (werden in ereignisse.js an EREIGNISSE angehängt) */
+D.ereignisse2 = [
+  /* ---------- Hühnchen ---------- */
+  { id: "e2-huhn-morgen", wer: "huhn", wann: { von: 6, bis: 9 }, zeilen: ["Guten Morgen! Ich bin schon seit fünf wach.", "Ich bin ein Huhn. Das gehört zum Job."],
+    antworten: [{ text: "Erst mal Kaffee", sagt: "Verständlich. Ich warte ganz still. Fast." }, { text: "Kikeriki!", sagt: "Das ist Hahn-Sprache! Aber ich verzeih dir.", effekt: "noten" }] },
+  { id: "e2-huhn-nacht", wer: "huhn", wann: { von: 22, bis: 24 }, zeilen: ["Psst. Bist du noch wach?", "Ich auch. Ich zähle Kekse statt Schafe."],
+    antworten: [{ text: "Wie viele bisher?", sagt: "Zwölf. Davon sind elf schon weg." }, { text: "Ab ins Bett!", sagt: "Jawohl. Gute Nacht, Rita!", effekt: "herzen" }] },
+  { id: "e2-huhn-handy", wer: "huhn", zeilen: ["Ich hab versucht, dein Handy zu bedienen. Ohne Hände.", "Mit dem Schnabel hab ich aus Versehen was gewünscht."],
+    antworten: [{ text: "Was denn?", sagt: "Kuchen. Schau selbst.", aktion: "wunsch-auf" }, { text: "Hühnchen!", sagt: "Es war ein Unfall. Ein sehr leckerer Unfall." }] },
+  { id: "e2-huhn-advent", wer: "huhn", wann: { monat: 12, tag: 1 }, zeilen: ["Erster Dezember! Ich hab das Türchen schon aufgemacht.", "Mit dem Schnabel. Das Türchen ist jetzt … etwas größer."],
+    antworten: [{ text: "Was war drin?", sagt: "Schokolade. War. Vergangenheitsform.", effekt: "konfetti" }, { text: "Das war meins!", sagt: "Ich hab’s nur vorgekostet. Aus Fürsorge." }] },
+  { id: "e2-huhn-silvester", wer: "huhn", wann: { monat: 12, tag: 31 }, zeilen: ["Heute Nacht wird’s laut, hab ich gehört.", "Ich versteck mich unterm Sofakissen. Mit Proviant."],
+    antworten: [{ text: "Ich halt dir die Ohren zu", sagt: "Du bist die Beste. Wo sind eigentlich meine Ohren?", effekt: "herzen" }, { text: "Guten Rutsch!", sagt: "Rutsch? Wohin? Ich bleib schön hier!", effekt: "konfetti" }] },
+  { id: "e2-huhn-peru", wer: "huhn", wann: { monate: [9, 10, 11] }, zeilen: ["In Peru wär jetzt Frühling.", "Hier ist Herbst. Ich hab noch nicht entschieden, was besser ist."],
+    antworten: [{ text: "Herbst – wegen Kuchen", sagt: "Pflaumenkuchen! Überzeugt. Herbst gewinnt.", effekt: "konfetti" }, { text: "Erzähl von Peru", sagt: "Lamas. Berge. Aber kein Fensterbrett war so schön wie deins.", effekt: "herzen" }] },
+  { id: "e2-huhn-schwedisch", wer: "huhn", zeilen: ["Ich lerne jetzt auch Schwedisch!", "Pass auf: Kanelbulle. Kladdkaka. Prinsesstårta."],
+    antworten: [{ text: "Nur Kuchenwörter?", sagt: "Gibt’s denn noch andere?" }, { text: "Imponerande!", sagt: "Ich weiß nicht, was das heißt. Aber ich fühl mich geehrt.", effekt: "konfetti" }] },
+  { id: "e2-huhn-tagebuch", wer: "huhn", zeilen: ["Ich hab gesehen, dass du Tagebuch schreibst.", "Komm ich da drin vor? Ehrlich jetzt."],
+    antworten: [{ text: "Jeden Tag", sagt: "Ich wusste es! Ich bin eine Berühmtheit.", effekt: "herzen" }, { text: "Das ist geheim", sagt: "Dann tippe ich auf: Hauptrolle." }] },
+  { id: "e2-huhn-butter", wer: "huhn", zeilen: ["Ich hab im Prospekt Butter im Angebot gesehen.", "Butter heißt Kuchen. Kuchen heißt: Ich bin dabei."],
+    antworten: [{ text: "Zeig mal!", sagt: "Hier. Ich hab sie schon markiert. Mit Schnabel.", aktion: "angebote" }, { text: "Ich backe heute nicht", sagt: "Dann … kauf einfach Kuchen? Nur ein Vorschlag." }] },
+  { id: "e2-huhn-korb", wer: "huhn", selten: .5, zeilen: ["Du warst heute früh weg. Mit Korb.", "Wo warst du? Ich frag nur aus … Neugier."],
+    antworten: [{ text: "Nur Gemüse holen", sagt: "Gemüse. Aha. Ich glaub dir. Ein bisschen." }, { text: "Geheimmission", sagt: "Ohne mich?! Nächstes Mal komm ich mit." }] },
+
+  /* ---------- Max ---------- */
+  { id: "e2-max-kisten", wer: "max", zeilen: ["Ich hab eben vierzehn Kisten gepackt.", "Zwölf davon sind Bücher. Weiß gar nicht, von wem ich das hab."],
+    antworten: [{ text: "Von mir natürlich!", sagt: "Eben. Danke für den Rücken. Und für die Bücher.", effekt: "herzen" }, { text: "Hol dir Hilfe!", sagt: "Micha kommt Samstag. Mit Bohrmaschine und Sprüchen." }] },
+  { id: "e2-max-vorlesen", wer: "max", zeilen: ["Wusstest du, dass dein Handy dir Texte vorlesen kann?", "Ich zeig’s dir beim nächsten Telefonat. Falls wir es schaffen aufzulegen."],
+    antworten: [{ text: "Klingt spannend!", sagt: "Ich schreib’s dir auf, damit wir’s nicht vergessen.", aktion: "liste:Max fragen: Handy liest vor" }, { text: "Ruf gleich an!", sagt: "Okay. Aber wer zuerst auflegt, verliert.", aktion: "tel:max" }] },
+  { id: "e2-max-abend", wer: "max", wann: { von: 18, bis: 21 }, zeilen: ["Feierabend! Greta kocht, ich decke den Tisch.", "Und was gibt’s heute bei dir?"],
+    antworten: [{ text: "Was Feines", sagt: "Wusste ich. Bei dir gibt’s nichts Halbes." }, { text: "Brot mit Käse", sagt: "Klassiker. Schmeckt bei dir trotzdem besser als überall." }] },
+  { id: "e2-max-bingo", wer: "max", zeilen: ["Ich hab heute mein Bingo voll!", "Und du? Wie steht’s bei dir?"],
+    antworten: [{ text: "Schau selbst", sagt: "Spannung! Ich will Zahlen sehen.", aktion: "bingo-auf" }, { text: "Kein Wettkampf!", sagt: "Sagt die, die beim Mensch-ärgere-dich-nicht nie verliert." }] },
+  { id: "e2-max-rekord", wer: "max", zeilen: ["Neuer Rekord: Unser letztes Tschüss hat elf Minuten gedauert.", "Greta hat mitgestoppt."],
+    antworten: [{ text: "Revanche!", sagt: "Ich wärm mich schon auf. Tschü… nein, noch nicht!", aktion: "tel:max" }, { text: "Das war Absicht", sagt: "Ich weiß. Meinerseits auch.", effekt: "herzen" }] },
+  { id: "e2-max-klausur", wer: "max", selten: .4, zeilen: ["Beim Ausräumen hab ich meine alte Matheklausur gefunden.", "Die Nachschreibklausur, für die du mit mir gepaukt hast. Eine Zwei!"],
+    antworten: [{ text: "Ich weiß noch!", sagt: "Ich auch. Du hattest mehr Geduld als mein Taschenrechner.", effekt: "herzen" }, { text: "Rahm sie ein!", sagt: "Kommt in Leipzig an die Wand. Ehrenplatz." }] },
+  { id: "e2-max-advent", wer: "max", wann: { monat: 12, wochentag: 0 }, zeilen: ["Welcher Advent ist heute? Ich hab den Überblick verloren.", "Greta hat einen Kranz gebastelt. Aus Zweigen vom Wegesrand."],
+    antworten: [{ text: "Zähl die Kerzen!", sagt: "Bei uns brennen alle vier. Aus Versehen.", effekt: "schnee" }, { text: "Schick ein Foto", sagt: "Mach ich. Der Kranz ist schöner als ich, sagt Greta." }] },
+
+  /* ---------- Jane ---------- */
+  { id: "e2-jane-bank", wer: "jane", zeilen: ["Weißt du noch, als in der Bank die Kasse nicht stimmte?", "Vierzig Pfennig! Eine Stunde haben wir gesucht."],
+    antworten: [{ text: "Lagen unterm Stuhl!", sagt: "Genau! Ich lach heute noch.", effekt: "konfetti" }, { text: "Du warst schuld!", sagt: "Niemals. Ich war die Ordentliche. Du die Mutige.", effekt: "herzen" }] },
+  { id: "e2-jane-kipferl", wer: "jane", wann: { monate: [11, 12] }, zeilen: ["In der Binger riecht’s nach Vanillekipferln.", "Die erste Fuhre ist schon weg. Micha behauptet, er war’s nicht."],
+    antworten: [{ text: "Heb mir welche auf!", sagt: "Dose mit deinem Namen drauf. Diesmal mit Versteck.", effekt: "herzen" }, { text: "Rezept, bitte!", sagt: "Das ist geheim. Aber dir verrat ich’s.", aktion: "liste:Jane nach dem Kipferl-Rezept fragen" }] },
+  { id: "e2-jane-morgen", wer: "jane", wann: { von: 7, bis: 10 }, zeilen: ["Guten Morgen! Ich hab schon Brötchen geholt.", "Und Micha ist noch nicht mal wach."],
+    antworten: [{ text: "Weck ihn!", sagt: "Hab ich. Er sagt, er meditiert. Mit Schnarchen." }, { text: "Ich bin auch schon fit", sagt: "Natürlich. Du warst schon immer die Erste im Büro.", effekt: "herzen" }] },
+  { id: "e2-jane-hofladen", wer: "jane", wann: { monate: [4, 5, 6, 7, 8, 9, 10] }, zeilen: ["Micha will am Samstag raus zum Hofladen.", "Kommst du mit? Kaffee gibt’s draußen am Stehtisch, ich lad dich ein."],
+    antworten: [{ text: "Bin dabei!", sagt: "Schön! Ich schreib’s dir auf.", aktion: "liste:Mit Jane und Micha zum Hofladen", effekt: "herzen" }, { text: "Wie wird das Wetter?", sagt: "Schau mal nach. Decken pack ich sowieso ein.", aktion: "wetter" }] },
+  { id: "e2-jane-lila", wer: "jane", zeilen: ["Ich muss dich was fragen, und du musst ehrlich sein:", "Steht mir Lila?"],
+    antworten: [{ text: "Hervorragend!", sagt: "Dann kauf ich den Schal. Du bist schuld.", effekt: "konfetti" }, { text: "Nimm lieber Grün", sagt: "Grün! Genau das hat Greta auch gesagt. Ihr steckt unter einer Decke." }] },
+
+  /* ---------- Greta ---------- */
+  { id: "e2-greta-pilze", wer: "greta", wann: { monate: [9, 10, 11] }, zeilen: ["Ich war heute Pilze sammeln. Max hat einen Stein mitgebracht.", "Er sagt, der sah aus wie ein Steinpilz."],
+    antworten: [{ text: "Ist doch nah dran", sagt: "Das hat er auch gesagt. Wort für Wort." }, { text: "Im Forst gibt’s welche", sagt: "Echt? Zeigst du mir mal deine Stellen? Ich verrat sie niemandem.", effekt: "herzen" }] },
+  { id: "e2-greta-malen", wer: "greta", zeilen: ["Max hat mir dein Bild gezeigt, das bei ihm hängt.", "Wie fängst du eigentlich an – mit Farbe oder mit einer Idee?"],
+    antworten: [{ text: "Mit einer Idee", sagt: "Schön. Ich fang immer mit Kaffee an." }, { text: "Mit Farbe!", sagt: "Einfach los. Mutig. Das gefällt mir.", effekt: "konfetti" }] },
+  { id: "e2-greta-tomaten", wer: "greta", wann: { monate: [3, 4] }, zeilen: ["Ich hab die ersten Tomaten ausgesät.", "Auf der Fensterbank. Neben Max’ Kaffeetassen."],
+    antworten: [{ text: "Viel Glück!", sagt: "Danke! Die ersten reifen bring ich dir im Sommer.", effekt: "sonne" }, { text: "Gib ihnen Namen", sagt: "Gute Idee. Die Kleinste heißt ab jetzt Rita.", effekt: "herzen" }] },
+  { id: "e2-greta-drei", wer: "greta", wann: { von: 20, bis: 23 }, zeilen: ["Weißt du, was ich abends gern mache?", "Drei schöne Dinge vom Tag aufschreiben. Max findet das kitschig – und macht’s heimlich mit."],
+    antworten: [{ text: "Mach ich auch!", sagt: "Im Tagebuch, oder? Hab ich mir gedacht.", effekt: "herzen" }, { text: "Was war heute schön?", sagt: "Die Linsensuppe. Ein Rotkehlchen. Und jetzt: du." }] },
+  { id: "e2-greta-hofladen", wer: "greta", zeilen: ["Kennst du bei dir einen guten Hofladen?", "Ich schau mir so was immer gern an – mit Studienblick."],
+    antworten: [{ text: "Den allerbesten!", sagt: "Nimmst du mich mal mit, wenn wir in Berlin sind? Ich bring den Korb.", aktion: "liste:Mit Greta zum Hofladen", effekt: "herzen" }, { text: "Mit Maishähnchen!", sagt: "Pssst! Nicht so laut. Das Hühnchen hört mit." }] },
+
+  /* ---------- Pauli ---------- */
+  { id: "e2-pauli-schild", wer: "pauli", zeilen: ["Ich male gerade Schilder für Samstag.", "Hast du einen guten Spruch? Du kannst doch so schön malen."],
+    antworten: [{ text: "Mut steht uns gut", sagt: "Notiert. Und in Rot unterstrichen.", effekt: "konfetti" }, { text: "Ich mal dir eins", sagt: "Echt? Das wird das schönste auf der ganzen Demo.", effekt: "herzen" }] },
+  { id: "e2-pauli-frauentag", wer: "pauli", wann: { monat: 3, tag: 8 }, zeilen: ["Alles Gute zum Frauentag, Rita!", "Du hast ja schon dein eigenes Geld verwaltet, als das noch lange nicht normal war. Respekt."],
+    antworten: [{ text: "Danke, Pauli!", sagt: "Ich schick dir Blumen. Erst mal digitale.", effekt: "herzen" }, { text: "Heute wird gefeiert!", sagt: "Mit Kuchen. Ganz klassisch feministisch.", effekt: "konfetti" }] },
+  { id: "e2-pauli-mutig", wer: "pauli", zeilen: ["Darf ich dich was fragen?", "Was war das Mutigste, was du je gemacht hast?"],
+    antworten: [{ text: "Erzähl ich persönlich", sagt: "Deal. Ich bring Kekse und viel Zeit mit.", aktion: "liste:Pauli die Mut-Geschichte erzählen" }, { text: "Jeden Tag was Neues", sagt: "Das ist die beste Antwort überhaupt.", effekt: "konfetti" }] },
+  { id: "e2-pauli-platten", wer: "pauli", zeilen: ["Ich hör gerade alte Platten von Mama.", "Kennst du Nina Hagen? Ach, natürlich kennst du Nina Hagen."],
+    antworten: [{ text: "Und wie!", sagt: "Wusste ich. Du warst schon immer ein bisschen Punk.", effekt: "noten" }, { text: "Ich bin eher Abba", sagt: "Auch Kult. Schweden ist bei dir halt überall.", effekt: "noten" }] },
+  { id: "e2-pauli-warnung", wer: "pauli", zeilen: ["Max übt heimlich Tschüss-Sagen. Vor dem Spiegel.", "Ich dachte, das solltest du wissen."],
+    antworten: [{ text: "Danke für die Warnung!", sagt: "Gern. Wir Frauen müssen zusammenhalten.", effekt: "konfetti" }, { text: "Ich bin vorbereitet", sagt: "Gut. Sein neuer Trick: Er sagt „bis gleich“ und legt nicht auf." }] },
+
+  /* ---------- Micha ---------- */
+  { id: "e2-micha-laub", wer: "micha", wann: { monate: [10, 11] }, zeilen: ["Ich hab heute Laub gerecht.", "Dann kam der Wind und hat alles neu verteilt. Wir sind quitt."],
+    antworten: [{ text: "Wer hat gewonnen?", sagt: "Der Wind. Aber nur knapp nach Punkten." }, { text: "Lass es liegen", sagt: "Für die Igel. Genau so verkauf ich das Jane auch.", effekt: "herzen" }] },
+  { id: "e2-micha-ueberwintern", wer: "micha", wann: { monate: [11, 12, 1, 2] }, zeilen: ["Meine Chilis überwintern jetzt im Wohnzimmer.", "Jane sagt: sie oder die Chilis. Ich überlege noch."],
+    antworten: [{ text: "Die Chilis!", sagt: "Hab ich ihr auch gesagt. Seitdem koche ich selbst.", effekt: "konfetti" }, { text: "Jane natürlich!", sagt: "Klar. Aber das müssen die Chilis ja nicht wissen." }] },
+  { id: "e2-micha-raketen", wer: "micha", wann: { monat: 12, tag: 31 }, zeilen: ["Ich hab Raketen gekauft. Jane sagt: zu viele.", "Ich sag: Es gibt kein zu viel. Nur zu wenig Himmel."],
+    antworten: [{ text: "Guten Rutsch!", sagt: "Dir auch, Rita! Eine zünd ich extra für dich.", effekt: "konfetti" }, { text: "Ich schau vom Fenster", sagt: "Bester Platz. Ich wink um Mitternacht Richtung Spandau.", effekt: "herzen" }] },
+  { id: "e2-micha-regal", wer: "micha", zeilen: ["Ich hab ein Regal gebaut. Es steht.", "Ein bisschen schief. Jane nennt es „Charakter“."],
+    antworten: [{ text: "Ich brauch auch eins!", sagt: "Bau ich dir. Gerade. Wahrscheinlich.", aktion: "liste:Micha wegen Regal fragen" }, { text: "Schief ist modern", sagt: "Siehste. Ich war meiner Zeit voraus." }] },
+
+  /* ---------- Karin ---------- */
+  { id: "e2-karin-midsommar", wer: "karin", wann: { monat: 6 }, zeilen: ["Hej Rita! Bald ist Midsommar, ich binde schon Blumenkränze.", "Sotis trägt ihren nicht. Sie findet das unter ihrer Würde."],
+    antworten: [{ text: "Glad midsommar!", sagt: "Tack! Wir tanzen wieder wie die kleinen Frösche.", effekt: "noten" }, { text: "Sotis hat recht", sagt: "Säg inte det! Sonst wird sie noch eingebildeter." }] },
+  { id: "e2-karin-mysig", wer: "karin", wann: { monate: [10, 11, 12, 1] }, zeilen: ["Hier wird es jetzt früh dunkel. Wir nennen das „mysig“.", "Kerzen, Decke, Krimi. Und was machst du heute Abend?"],
+    antworten: [{ text: "Genau das!", sagt: "Då är vi tvillingar – Zwillinge im Herzen!", effekt: "herzen" }, { text: "Ich schau Fernsehen", sagt: "Vielleicht läuft ja was aus Schweden. Schau mal!", aktion: "tv-auf" }] },
+  { id: "e2-karin-tinte", wer: "karin", zeilen: ["Ich hab dir mit Füller geschrieben!", "Sotis ist durch die Tinte gelaufen. Sie hat also mit unterschrieben."],
+    antworten: [{ text: "Zeig her!", sagt: "Varsågod! Die Pfötchen sind echt.", aktion: "bv-auf" }, { text: "Ich schreib zurück", sagt: "Underbart! Ich freu mich jetzt schon.", aktion: "liste:Karin zurückschreiben" }] },
+  { id: "e2-karin-smultron", wer: "karin", zeilen: ["Ein schwedisches Wort für dich: „smultronställe“.", "Wörtlich Walderdbeerstelle – ein Lieblingsort, den man nicht jedem verrät."],
+    antworten: [{ text: "Ich hab so einen!", sagt: "Im Forst, oder? Ich frag nicht weiter. Versprochen.", effekt: "herzen" }, { text: "Was für ein Wort!", sagt: "Ja! Schwedisch kann sehr zärtlich sein. Und sehr lang." }] },
+];
+
 /* Feinschliff: Tanzen kleiner – nur noch als eine Sache unter vielen, und immer drinnen. */
 (() => {
   const ohneTanzPlan = x => x.t !== "tanzplanen" && x.id !== "SD124";
@@ -8112,6 +8278,9 @@ D.tbFrueher = [
   "Was würdest du der zehnjährigen Rita heute gern sagen?"
 ];
 
+/* Erfundene Erinnerungen vermeiden */
+if (D.ereignisse2) D.ereignisse2 = D.ereignisse2.filter(e => !["e2-max-klausur", "e2-max-bingo"].includes(e.id));
+
 /* TV-Tipps aus tv.json */
 D.tv={"stand": "2026-10-22", "mediathek": [{"titel": "Kommissar Beck – Vilhelm", "sender": "ZDF", "art": "Film", "genre": "Krimi", "text": "Ein Überfall auf einen Steuerberater in Stockholm, bei dem es angeblich nur um teure Uhren geht, und doch steckt viel mehr dahinter. Die neuesten Beck-Fälle sind ruhig erzählt und klug gebaut, ganz in der Tradition von Sjöwall und Wahlöö.", "laenge": "88 Min. (Staffel 10 mit 4 Filmen)", "bis": "2027-05-17", "link": "https://www.zdf.de/video/serien/kommissar-beck-104/vilhelm-nach-den-romanfiguren-von-maj-sjoewall-und-per-wahloeoe-100"}, {"titel": "Kommissar Beck – Der unsichtbare Mann", "sender": "ZDF", "art": "Film", "genre": "Krimi", "text": "Ein Podcaster liegt tot in seiner Wohnung in Vasastan, und das Team um Beck stürzt sich in die Arbeit. Schwedischer geht's kaum: viel Stockholm, wenig Getöse, und am Ende möchte man sofort den nächsten Fall sehen.", "laenge": "90 Min.", "bis": "2027-05-17", "link": "https://www.zdf.de/video/serien/kommissar-beck-104/der-unsichtbare-mann-nach-den-romanfiguren-von-maj-sjoewall-und-per-wahloeoe-100"}, {"titel": "Mord im Mittsommer – Gefährliche Verbindungen", "sender": "ZDF", "art": "Film", "genre": "Krimi", "text": "Schärengarten, Holzstege, helle Nächte, und mittendrin ein junger Polizist, der einem Dealer auf die Schliche kommen will. Nach Viveca Sten: Schwedenkrimi wie ein kleiner Kurzurlaub, nur mit Leiche.", "laenge": "89 Min.", "bis": "2027-05-10", "link": "https://www.zdf.de/video/serien/mord-im-mittsommer-106/gefaehrliche-verbindungen-nach-den-charakteren-von-viveca-steen-100"}, {"titel": "Der Kommissar und das Meer – Lichterfest", "sender": "ZDF", "art": "Film", "genre": "Krimi", "text": "Walter Sittler als Robert Anders auf Gotland: Ausgerechnet beim Luciafest kurz vor Weihnachten geschieht ein Unglück. Gotland, Kerzenschein und ein Kommissar mit Herz, schöner kann man den dunklen Herbst nicht beginnen.", "laenge": "89 Min.", "bis": "2026-12-17", "link": "https://www.zdf.de/video/serien/der-kommissar-und-das-meer-104/lichterfest-100"}, {"titel": "Agatha Christies Hjerson", "sender": "ZDF", "art": "Miniserie", "genre": "Krimi", "text": "Agatha Christie trifft Schweden: Der schrullige Ex-Ermittler Sven Hjerson soll für eine True-Crime-Show vor die Kamera und löst dabei echte Mordfälle. Augenzwinkernd, elegant und mit einem herrlich eigenwilligen Helden.", "laenge": "4 Folgen à ca. 87 Min.", "bis": "2027-04-02", "link": "https://www.zdf.de/video/serien/agatha-christies-hjerson-102/agatha-christies-hjerson-1-100"}, {"titel": "Dan Sommerdahl – Die Enttäuschung", "sender": "ZDF", "art": "Film", "genre": "Krimi", "text": "Ein Forscher wird im Marineinstitut von Helsingør erstochen, kurz nachdem er ein wertvolles Patent nach Amerika verkauft hat. Dänische Idylle mit Hamlet-Schloss im Hintergrund, und ein Ermittler, der darüber gern sein Privatleben vergisst.", "laenge": "89 Min.", "bis": "2027-03-10", "link": "https://www.zdf.de/video/serien/dan-sommerdahl-toedliche-idylle-100/die-enttaeuschung-frei-nach-den-romanen-von-anna-grue-100"}, {"titel": "Oxen", "sender": "ZDF", "art": "Serie", "genre": "Krimi", "text": "Ein unbequemer dänischer Elitesoldat zieht sich in den Wald zurück und gerät dann in eine Verschwörung um einen geheimen Bund. Nach den Bestsellern von Jens Henrik Jensen: spannend wie ein guter Pageturner, bei dem man nur noch ein Kapitel lesen will.", "laenge": "Folgen à 45 Min.", "bis": "2027-02-25", "link": "https://www.zdf.de/video/serien/oxen-102/angriff-aus-dem-dunkeln-100"}, {"titel": "Countdown Copenhagen", "sender": "ZDF", "art": "Serie", "genre": "Krimi", "text": "Eine Kopenhagener U-Bahn wird mitten im Tunnel gestoppt, und eine Journalistin muss zwischen Geiselnehmern und Einsatzleitung vermitteln. Dänischer Nervenkitzel vom Feinsten. Nicht wundern, wenn der Tee dabei kalt wird.", "laenge": "2 Staffeln, Folgen à 44 Min.", "bis": "2027-02-05", "link": "https://www.zdf.de/video/serien/countdown-copenhagen-102/countdown-copenhagen-114"}, {"titel": "Under Salt Marsh – Tod in den Salzwiesen", "sender": "ZDF", "art": "Miniserie", "genre": "Krimi", "text": "Ein walisisches Küstendorf, ein Jahrhundertsturm im Anmarsch, und ein Mordfall, der an ein altes ungelöstes Verbrechen rührt. Herrlich atmosphärisch, mit Nebel, Wind und lauter Leuten, die mehr wissen, als sie sagen.", "laenge": "4 Folgen à ca. 52 Min.", "bis": "2027-10-16", "link": "https://www.zdf.de/video/serien/under-salt-marsh-tod-in-den-salzwiesen-100/under-salt-marsh---tod-in-den-salzwiesen-ein-grauenhafter-fund-100"}, {"titel": "Karen Pirie – Echo einer Mordnacht", "sender": "ZDF", "art": "Miniserie", "genre": "Krimi", "text": "Eine junge schottische Ermittlerin rollt in St. Andrews einen jahrzehntealten Mordfall neu auf, mit ihren direkten Fragen eckt sie überall an. Nach Val McDermid, klug und mit trockenem Humor. Schnell anschauen, es ist nur noch bis Anfang November online!", "laenge": "3 Teile à ca. 87 Min.", "bis": "2026-11-06", "link": "https://www.zdf.de/video/serien/karen-pirie-echo-einer-mordnacht-100/der-fall-rosie-duff-nach-dem-roman-von-val-mcdermid-echo-einer-winternacht-100"}, {"titel": "Tatort – Verborgen", "sender": "NDR", "art": "Film", "genre": "Krimi", "text": "Falke und Grosz suchen einen verschwundenen Jungen, dessen Eltern ohne Papiere in Deutschland leben und mit dem Gang zur Polizei alles riskieren. Ein leiser, sehr menschlicher Tatort. Liegt in der ZDF-Mediathek, die viele ARD-Krimis mit anbietet.", "laenge": "89 Min.", "bis": "2027-04-20", "link": "https://www.zdf.de/video/serien/collection-index-page-ard-collection-ard-dxjuomfyzdpzag93oji0ytqxodqzy2q5mtlmyjg-770/page-video-ard-verborgen-118"}, {"titel": "Polizeiruf 110 – Wolfsland", "sender": "rbb", "art": "Film", "genre": "Krimi", "text": "Olga Lenski und der unvergleichliche Horst Krause ermitteln im brandenburgischen Kaskow, sozusagen fast vor deiner Haustür. Märkische Landschaft, viel Lakonie und ein Fall mit Biss.", "laenge": "89 Min.", "bis": "2027-10-26", "link": "https://www.zdf.de/video/filme/collection-index-page-ard-collection-ard-dxjuomfyzdpzag93ojqxmzc1njhmyjrizgninwe-220/page-video-ard-wolfsland-102"}, {"titel": "Havelland-Krimi – Hinter der Fassade", "sender": "ZDF", "art": "Film", "genre": "Krimi", "text": "Eine Restaurierungsstudentin aus Potsdam wird tot am Havelufer gefunden, und Staatsanwältin Dena Paulos (Dennenesch Zoudé) übernimmt. Ganz neue Reihe aus der Nachbarschaft, die Havel kennst du ja bestens.", "laenge": "89 Min.", "bis": null, "link": "https://www.zdf.de/video/serien/havelland-krimi-100/havelland-krimi---hinter-der-fassade-102"}, {"titel": "Rechtsanwalt Vernau – Der schwarze Schwan", "sender": "ZDF", "art": "Film", "genre": "Krimi", "text": "Jan Josef Liefers als Berliner Anwalt, der neben einem Toten aufwacht und plötzlich selbst unter Mordverdacht steht. Nach Elisabeth Herrmann: Berlin-Krimi mit Witz und genau der richtigen Prise Selbstironie.", "laenge": "89 Min.", "bis": "2026-12-30", "link": "https://www.zdf.de/video/serien/rechtsanwalt-vernau-104/der-schwarze-schwan-102"}, {"titel": "Unter Verdacht – Verdecktes Spiel", "sender": "ZDF", "art": "Film", "genre": "Krimi", "text": "Der allererste Fall von Senta Berger als Kriminalrätin Prohacek: In München ermittelt sie gegen Kollegen, die es mit dem Gesetz nicht so genau nehmen. Ein Klassiker, der kein bisschen Staub angesetzt hat.", "laenge": "91 Min.", "bis": "2027-04-10", "link": "https://www.zdf.de/video/serien/unter-verdacht-104/unter-verdacht-180"}, {"titel": "Der letzte Zeuge", "sender": "ZDF", "art": "Serie", "genre": "Krimi", "text": "Ulrich Mühe als Berliner Gerichtsmediziner Dr. Kolmaar, der Mordfälle mit Präzision und feiner Ironie löst. Eine der klügsten deutschen Krimiserien, wunderbar zum Wiedersehen.", "laenge": "9 Staffeln, Folgen à ca. 46 Min.", "bis": "2027-02-18", "link": "https://www.zdf.de/video/serien/der-letzte-zeuge-274/das-dreieck-des-todes-100"}, {"titel": "Babylon Berlin", "sender": "ARD", "art": "Serie", "genre": "Krimi", "text": "Berlin 1929: Kommissar Gereon Rath und die patente Charlotte Ritter ermitteln zwischen Tanzpalästen, Unterwelt und politischem Umbruch. Opulent, spannend, voller Zeitgeschichte. Alle Staffeln am Stück, ideal für lange Herbstabende.", "laenge": "5 Staffeln, Folgen à ca. 45 Min.", "bis": "2027-09-09", "link": "https://www.zdf.de/video/serien/collection-index-page-ard-collection-ard-dxjuomfyzdpzag93omvmzje3nteymtu3oda5y2e-160/page-video-ard-folge-1--staffel-1---babylon-berlin-100"}, {"titel": "Ku'damm 56", "sender": "ZDF", "art": "Miniserie", "genre": "Drama", "text": "Berlin 1956: Monika Schöllack rebelliert in der Tanzschule ihrer strengen Mutter gegen die Konventionen der Zeit, mit Rock 'n' Roll. Westberliner Fünfziger zum Wiedererkennen, und danach warten noch Ku'damm 59, 63 und 77.", "laenge": "3 Teile à ca. 90 Min.", "bis": null, "link": "https://www.zdf.de/video/serien/kudamm-104/kudamm-56-teil-1-102"}, {"titel": "Der Palast (Staffel 2)", "sender": "ZDF", "art": "Miniserie", "genre": "Drama", "text": "Berlin 1990: Das Ensemble des Friedrichstadt-Palasts kämpft im frisch vereinten Berlin um seine Zukunft, und die berühmte Kickline wird neu aufgestellt. Glitzer, Wendezeit und Berliner Schnauze, aber nur noch bis 2. November online.", "laenge": "6 Folgen à 45 Min.", "bis": "2026-11-02", "link": "https://www.zdf.de/video/serien/der-palast-100/1-aufbruch-ins-ungewisse-zweite-staffel-der-sechsteiligen-event-serie-100"}, {"titel": "Unterleuten – Das zerrissene Dorf", "sender": "ZDF", "art": "Miniserie", "genre": "Drama", "text": "Ein geplanter Windpark spaltet ein brandenburgisches Dorf, und plötzlich werden Freunde zu Feinden. Nach Juli Zehs Bestseller, mit Thomas Thieme, Charly Hübner, Dagmar Manzel und Christine Schorn. Großes Ensemble, große Lust am Zuschauen.", "laenge": "3 Teile à ca. 94 Min.", "bis": null, "link": "https://www.zdf.de/video/serien/unterleuten-102/unterleuten---das-zerrissene-dorf-1-100"}, {"titel": "Altes Land", "sender": "ZDF", "art": "Miniserie", "genre": "Drama", "text": "Iris Berben als eigensinnige Vera auf ihrem alten Bauernhof bei Hamburg, wo über Jahrzehnte zwei Frauen Zuflucht finden. Nach Dörte Hansens Roman: herb, warm und mit viel norddeutschem Humor.", "laenge": "2 Teile à ca. 90 Min.", "bis": "2027-04-03", "link": "https://www.zdf.de/video/filme/altes-land-106/altes-land-ankommen-1-100"}, {"titel": "Neues Land", "sender": "ZDF", "art": "Film", "genre": "Drama", "text": "Jördis Triebel kehrt als Geologin in ihr Thüringer Heimatdorf zurück, das sich gerade vom Braunkohlerevier zum Ferienort wandelt, und stößt auf ein altes Familiengeheimnis. Der Fernsehfilm läuft erst am Montag im ZDF, in der Mediathek kannst du ihn schon jetzt sehen.", "laenge": "89 Min.", "bis": "2027-11-22", "link": "https://www.zdf.de/filme/neues-land-100"}, {"titel": "Berlin – Schicksalsjahre einer Stadt: 1990", "sender": "rbb", "art": "Doku", "genre": "Geschichte", "text": "Das Jahr nach dem Mauerfall: besetzte Häuser in Mitte, die Stasi-Zentrale wird gestürmt, die D-Mark kommt. Viele Bilder, die du vielleicht selbst noch im Kopf hast, und die ganze Reihe von 1945 bis 2019 gibt es gleich dazu.", "laenge": "89 Min. pro Jahr (Reihe)", "bis": null, "link": "https://www.zdf.de/video/dokus/collection-index-page-ard-collection-ard-dxjuomfyzdpzag93oja4ntcwmjqzzwzmmdvhmmi-144/page-video-ard-berlin---schicksalsjahre-einer-stadt-1990-102"}, {"titel": "Geheimnisvolle Orte – Rheinsberg: Strahlende Zukunft", "sender": "rbb", "art": "Doku", "genre": "Geschichte", "text": "1966 ging am Stechlinsee bei Rheinsberg das erste Atomkraftwerk der DDR ans Netz, eine Geschichte, die die wenigsten kennen. Das rbb führt zu verborgenen Kapiteln in Berlin und Brandenburg, weitere Folgen inklusive.", "laenge": "45 Min.", "bis": "2027-10-07", "link": "https://www.zdf.de/video/dokus/collection-index-page-ard-collection-ard-dxjuomfyzdpzag93ojgzm2fhnwmznmi2zmnlyzm-188/page-video-ard-rheinsberg-strahlende-zukunft---atomkraft-in-der-ddr-100"}, {"titel": "Das Geheimnis der Meister – Gustav Klimt", "sender": "3sat", "art": "Dokuserie", "genre": "Kultur", "text": "Wie ist Klimts goldene „Judith I“ entstanden? Die Reihe erzählt die Geschichte hinter berühmten Gemälden, und am Ende wird das Bild sogar nachgemalt. Kunstgeschichte zum Mitfiebern, und noch mehr Meister warten.", "laenge": "38 Min. pro Folge", "bis": "2027-06-30", "link": "https://www.zdf.de/video/dokus/das-geheimnis-der-meister-112/gustav-klimt-104"}, {"titel": "Die großen Frauen der Kunst", "sender": "ZDF", "art": "Dokuserie", "genre": "Kultur", "text": "Zwei Künstler gehen auf Spurensuche nach den Malerinnen, die die Kunstgeschichte gern unterschlagen hat, los geht's mit Angelika Kauffmann, der „Beyoncé ihrer Zeit“. Lehrreich, frisch und ohne erhobenen Zeigefinger.", "laenge": "2 Folgen à ca. 37 Min.", "bis": "2030-02-21", "link": "https://www.zdf.de/video/dokus/die-grossen-frauen-der-kunst-110/kuenstlerinnen-renaissance-abstraktion-102"}, {"titel": "Erlebnis Erde – Kaktus Hotel", "sender": "ARD", "art": "Doku", "genre": "Natur", "text": "Ein riesiger Saguaro-Kaktus in der Wüste Arizonas als Luxushotel für Spechte, Eulen und allerlei Gäste, die ein- und auschecken. Wunderschöne Naturbilder, und hinterher siehst du jede Topfpflanze mit anderen Augen.", "laenge": "44 Min.", "bis": "2028-10-14", "link": "https://www.zdf.de/video/dokus/collection-index-page-ard-collection-ard-dxjuomfyzdpzag93ojizogvmzwfmmwjlmja1njk-226/page-video-ard-kaktus-hotel-104"}], "fernsehen": [{"titel": "Portobello – Unschuldig verurteilt", "sender": "arte", "datum": "2026-10-22", "zeit": "21:45", "art": "Miniserie", "genre": "Drama", "text": "Italiens berühmtester Justizskandal: Der beliebte TV-Moderator Enzo Tortora wird aufgrund falscher Aussagen von Camorra-Kronzeugen angeklagt. Heute laufen die letzten drei Folgen am Stück, große Erzählkunst aus Italien.", "link": "https://www.prisma.de/tv-programm/Portobello-Unschuldig-verurteilt,58045679"}, {"titel": "Ein unmöglicher Zufall", "sender": "arte", "datum": "2026-10-23", "zeit": "20:15", "art": "Film", "genre": "Krimi", "text": "In den französischen Alpen stürzt ein Wanderer ab, und der einzige Zeuge war vor 40 Jahren sein bester Freund. Ein Untersuchungsrichter glaubt nicht an Zufälle. Nach Erri De Luca: ein Psychokrimi, der lange nachhallt.", "link": "https://www.prisma.de/tv-programm/Ein-unmoeglicher-Zufall,58052815"}, {"titel": "Das weiße Haus am Rhein", "sender": "3sat", "datum": "2026-10-23", "zeit": "20:15", "art": "Film", "genre": "Geschichte", "text": "Das Hotel Dreesen in Bad Godesberg in den Zwanziger- und Dreißigerjahren: Eine Hoteliersfamilie zerstreitet sich, während Hitlers Gefolge das Haus zu seinem Quartier macht. Packendes Zeitgeschichtsdrama nach wahren Begebenheiten.", "link": "https://www.prisma.de/tv-programm/Das-weisse-Haus-am-Rhein,58052614"}, {"titel": "Das Vergessen – Spurlos im Moor", "sender": "ARD", "datum": "2026-10-24", "zeit": "20:15", "art": "Miniserie", "genre": "Krimi", "text": "Julia Koschitz als Polizistin, die monatelang ihre verschwundene Nichte sucht, bis im Moor ein blutiger Turnschuh auftaucht. Österreichischer Thriller in sechs Teilen: vier heute Abend, die letzten zwei am Sonntag nach dem Tatort.", "link": "https://www.prisma.de/tv-programm/Das-Vergessen-Spurlos-im-Moor,58064097"}, {"titel": "Auf den Spuren der ersten Amerikaner", "sender": "arte", "datum": "2026-10-24", "zeit": "20:15", "art": "Doku", "genre": "Geschichte", "text": "Kamen die ersten Menschen schon vor 30.000 Jahren nach Amerika, also viel früher als gedacht? Archäologie wie ein Kriminalfall. Danach um 21:45 gleich noch Amerigo Vespucci, der Mann, der Amerika seinen Namen gab.", "link": "https://www.prisma.de/tv-programm/Auf-den-Spuren-der-ersten-Amerikaner,58060969"}, {"titel": "Die lange Welle hinterm Kiel", "sender": "3sat", "datum": "2026-10-24", "zeit": "21:40", "art": "Film", "genre": "Drama", "text": "Christiane Hörbiger erkennt auf einer Kreuzfahrt in Mario Adorf den Mann wieder, der bei Kriegsende ihren Ehemann hinrichten ließ. Zwei große Schauspieler, ein Schiff und ein Kapitel Vergangenheit, das nicht vergehen will. Nach Pavel Kohout.", "link": "https://www.prisma.de/tv-programm/Die-lange-Welle-hinterm-Kiel,58060799"}, {"titel": "Tatort – Gottesgarten", "sender": "ARD", "datum": "2026-10-25", "zeit": "20:15", "art": "Film", "genre": "Krimi", "text": "Neuer Franken-Tatort und der erste Fall für Rosalie Thomass an der Seite von Fabian Hinrichs: Ein Mordfall in Nürnberg führt in ein Dorf namens Gottesgarten, wo die Eltern des Opfers sehr unterschiedlich trauern. Erstausstrahlung!", "link": "https://www.prisma.de/tv-programm/Tatort,58069467"}, {"titel": "Ich kämpfe um dich (Spellbound)", "sender": "arte", "datum": "2026-10-25", "zeit": "20:15", "art": "Film", "genre": "Krimi", "text": "Hitchcock 1945 mit Ingrid Bergman und Gregory Peck: Eine Psychiaterin ahnt, dass der neue Klinikchef ein Hochstapler ist, und verliebt sich ausgerechnet in ihn. Mit der berühmten Traumsequenz von Salvador Dalí und Oscar-prämierter Musik.", "link": "https://www.prisma.de/tv-programm/Ich-kaempfe-um-dich,58066547"}, {"titel": "Terra X: Ozeane – Eine Menschheitsgeschichte", "sender": "ZDF", "datum": "2026-10-25", "zeit": "19:30", "art": "Dokuserie", "genre": "Geschichte", "text": "Letzte Folge: Polynesische Seefahrer, die nach Sternen, Wellen und Wolken navigieren, von Hawaii bis Neuseeland. Das Meer nicht als Grenze, sondern als Verbindung, eine schöne Einstimmung auf den Sonntagabend.", "link": "https://www.prisma.de/tv-programm/Ozeane-Eine-Menschheitsgeschichte,58065696"}, {"titel": "Agatha Christies Poirot", "sender": "ONE", "datum": "2026-10-25", "zeit": "20:15", "art": "Film", "genre": "Krimi", "text": "David Suchet als belgischer Meisterdetektiv mit den kleinen grauen Zellen, unschlagbar stilvoll und gemütlich. Die Alternative, falls dir am Sonntag nach Klassik statt Tatort ist.", "link": "https://www.prisma.de/tv-programm/Agatha-Christies-Poirot,58067475"}, {"titel": "Neues Land", "sender": "ZDF", "datum": "2026-10-26", "zeit": "20:15", "art": "Film", "genre": "Drama", "text": "Der Fernsehfilm der Woche mit Jördis Triebel, Jörg Schüttauf und Ronald Zehrfeld: Heimkehr in ein Thüringer Dorf im Wandel, mit einem Familiengeheimnis. Steht auch schon in der Mediathek.", "link": "https://www.prisma.de/tv-programm/Neues-Land,58070826"}, {"titel": "Der Mann aus dem Westen", "sender": "arte", "datum": "2026-10-26", "zeit": "20:15", "art": "Film", "genre": "Drama", "text": "Gary Cooper als Ex-Bandit, der nach einem Zugüberfall wieder unter seine alte Bande gerät. Anthony Manns Western von 1958 gilt als einer der besten der Fünfziger. Danach um 21:50 ein Porträt über Gary Cooper.", "link": "https://www.prisma.de/tv-programm/Der-Mann-aus-dem-Westen,58071784"}, {"titel": "Vienna Blood – Die letzte Séance", "sender": "3sat", "datum": "2026-10-27", "zeit": "20:15", "art": "Film", "genre": "Krimi", "text": "Wien um 1900: Ein junger Psychoanalytiker und ein Inspektor untersuchen den Tod eines Mediums in einem von innen verschlossenen Zimmer. Kaffeehaus-Eleganz, Freud-Zeitalter und ein echtes Rätsel. Krimi mit Stil.", "link": "https://www.prisma.de/tv-programm/Vienna-Blood-Die-letzte-Seance,58078054"}, {"titel": "Die Bücher, die Hitler nicht verbrannte", "sender": "arte", "datum": "2026-10-27", "zeit": "23:40", "art": "Doku", "genre": "Geschichte", "text": "Rund 16.000 Bücher besaß Hitler, und was sie über ihn verraten, ist erstaunlich. Ein ungewöhnlicher Blick in eine Privatbibliothek, spät am Abend, also lieber aufnehmen.", "link": "https://www.prisma.de/tv-programm/Die-Buecher-die-Hitler-nicht-verbrannte,58078247"}, {"titel": "The Game", "sender": "arte", "datum": "2026-10-28", "zeit": "20:15", "art": "Film", "genre": "Krimi", "text": "Michael Douglas bekommt zum Geburtstag ein mysteriöses „Spiel“ geschenkt, und bald weiß er nicht mehr, was echt ist. David Finchers Thriller ist ein raffiniertes Verwirrspiel, bei dem du bis zum Schluss miträtselst.", "link": "https://www.prisma.de/tv-programm/The-Game,58086809"}, {"titel": "Zwingli – Der Reformator", "sender": "3sat", "datum": "2026-10-30", "zeit": "20:15", "art": "Film", "genre": "Geschichte", "text": "Passend zum Reformationstag: Zürich 1519, Huldrych Zwingli predigt im Grossmünster und stellt Kirche und Gesellschaft auf den Kopf, auch aus Liebe zur jungen Witwe Anna. Prächtig ausgestattetes Historienkino. Danach um 22:15 „Luther“.", "link": "https://www.prisma.de/tv-programm/Zwingli-Der-Reformator,58100018"}, {"titel": "Dracula – Die wahre Geschichte", "sender": "arte", "datum": "2026-10-31", "zeit": "20:15", "art": "Doku", "genre": "Geschichte", "text": "Zu Halloween die Geschichte hinter dem Mythos: Wer war Vlad III. wirklich, und was ist Legende? Historiker trennen Fakten von Gruselmärchen, spannender als jeder Vampirfilm.", "link": "https://www.prisma.de/tv-programm/Dracula-Die-wahre-Geschichte,58108194"}, {"titel": "Stralsund – Dunkle Tiefen", "sender": "ZDF", "datum": "2026-10-31", "zeit": "20:15", "art": "Film", "genre": "Krimi", "text": "Zwei Tote im Netz eines Fischereibetriebs, und die Spur führt zu einer alten Fehde zwischen zwei Familien. Ostsee-Krimi mit Alexander Held, der hier zum letzten Mal als Karl Hidde ermittelt.", "link": "https://www.prisma.de/tv-programm/Stralsund-Dunkle-Tiefen,58107310"}, {"titel": "Polizeiruf 110 (Rostock)", "sender": "ARD", "datum": "2026-11-01", "zeit": "20:15", "art": "Film", "genre": "Krimi", "text": "Neuer Fall für die Rostocker Kommissarinnen König und Böwe: Eine junge Tote führt sie in ein Geflecht aus Ausbeutung und einer Ferienanlage an der Küste. Die Rostocker gehören zum Besten, was der Sonntagskrimi zu bieten hat.", "link": "https://www.prisma.de/tv-programm/Polizeiruf-110,58117065"}, {"titel": "Breitscheidplatz 19/12", "sender": "ARD", "datum": "2026-11-01", "zeit": "21:45", "art": "Miniserie", "genre": "Drama", "text": "Neue Dramaserie über die Vorgeschichte des Anschlags auf den Weihnachtsmarkt an der Gedächtniskirche: übersehene Warnzeichen, Behörden im Kompetenzgerangel. Ein Berliner Thema, ernst und sorgfältig erzählt. Zwei Folgen hintereinander.", "link": "https://www.prisma.de/tv-programm/Breitscheidplatz-1912,58117068"}, {"titel": "Rebecca", "sender": "arte", "datum": "2026-11-01", "zeit": "20:15", "art": "Film", "genre": "Krimi", "text": "Hitchcocks Meisterwerk von 1940 mit Laurence Olivier und Joan Fontaine: Eine junge Braut auf Manderley und der übermächtige Schatten der ersten Ehefrau. Danach um 22:20 „Mr. und Mrs. Hitchcock“ über die Frau hinter dem Meister.", "link": "https://www.prisma.de/tv-programm/Rebecca,58114053"}, {"titel": "Eine Dame verschwindet – The Lady Vanishes", "sender": "3sat", "datum": "2026-11-01", "zeit": "20:15", "art": "Film", "genre": "Krimi", "text": "Im Zug durch den Balkan verschwindet eine freundliche ältere Engländerin, und alle Mitreisenden behaupten, es habe sie nie gegeben. Charmante BBC-Neuverfilmung des Hitchcock-Klassikers, ein Fest für Rätselfreundinnen.", "link": "https://www.prisma.de/tv-programm/Eine-Dame-verschwindet-The-Lady-Vanishes,58113897"}]};
 
@@ -8122,10 +8291,10 @@ D.tv={"stand": "2026-10-22", "mediathek": [{"titel": "Kommissar Beck – Vilhelm
 <script>
 /* ============================================================
    Lichtung – Kern: Zustand, Rechnen, Rückmeldung, Bausteine
-   Build: 2026-10-22 03:19
+   Build: 2026-10-22 03:33
    ============================================================ */
 "use strict";
-const BUILD = "2026-10-22 03:19";
+const BUILD = "2026-10-22 03:33";
 const KEY = "lichtung-v1";
 const GV = 2;            // Zustandsversion (Migrationen)
 const RV = 1;            // Regelversion (wird je Eintrag festgeschrieben)
@@ -8363,8 +8532,9 @@ function toast(text, opt = {}) {
   const t = document.createElement("div"); t.className = "toast"; t.setAttribute("role", "status");
   const haken = opt.erfolg ? `<svg class="haken-svg" viewBox="0 0 30 30" aria-hidden="true"><circle cx="15" cy="15" r="13" fill="none" stroke="currentColor" stroke-width="2" opacity=".35"/><path d="M8.5 15.5l4.2 4.2 8.8-9.4" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"/></svg>` : "";
   const [kopf, ...weiter] = String(text).split("\n");
-  t.innerHTML = `${haken}<div class="text">${esc(kopf)}${weiter.filter(Boolean).map(z => `<small>${esc(z)}</small>`).join("")}</div><div class="toast-knoepfe">${opt.rueck ? `<button class="knopf rueck-mini" data-act="toast-rueck">Rückgängig</button>` : ""}<button class="knopf zu" data-act="toast-zu">Schließen</button>${opt.rueck ? `<button class="knopf daumen" data-act="toast-daumen" aria-label="Daumen hoch">${DAUMEN_SVG}</button>` : ""}${opt.knopf ? `<button class="knopf" data-act="${opt.knopf.act}">${esc(opt.knopf.text)}</button>` : ""}</div>`;
+  t.innerHTML = `${haken}<div class="text">${esc(kopf)}${weiter.filter(Boolean).map(z => `<small>${esc(z)}</small>`).join("")}</div>${opt.rueck || opt.knopf ? `<div class="toast-knoepfe">` : `<div class="toast-knoepfe" hidden>`}${opt.rueck ? `<button class="knopf rueck-mini" data-act="toast-rueck">Rückgängig</button>` : ""}<button class="knopf zu" data-act="toast-zu" aria-label="Schließen" hidden>Schließen</button>${opt.rueck ? `<button class="knopf daumen" data-act="toast-daumen" aria-label="Daumen hoch">${DAUMEN_SVG}</button>` : ""}${opt.knopf ? `<button class="knopf" data-act="${opt.knopf.act}">${esc(opt.knopf.text)}</button>` : ""}</div>`;
   t._rueck = opt.rueck;
+  t.addEventListener("click", ev => { if (!ev.target.closest("button")) { t.classList.add("weg"); setTimeout(() => t.remove(), 250); } });
   document.body.appendChild(t);
   hebeToast();
   armHaptics();
@@ -9107,8 +9277,8 @@ function zeichneSzene(canvas, opt = {}) {
       const q = new Path2D(); poly(q, [[m(ya) - wa, ya], [m(yb) - wb, yb], [m(yb) + wb, yb], [m(ya) + wa, ya]], null); ctx.fill(q); }
     // Parkbuchten (Linien zum Fluchtpunkt)
     ctx.strokeStyle = "rgba(255,253,245,.55)"; ctx.lineWidth = 1.4;
-    for (let k = 0; k < 6; k++) { const x = 488 + k * 48, y1 = 668, y0 = yh + 3; ctx.beginPath(); ctx.moveTo(x, y1); ctx.lineTo(x + (FP - x) * (y1 - y0) / (y1 - HORIZONT), y0); ctx.stroke(); }
-    for (let k = 0; k < 7; k++) { const x = 440 + k * 56, y1 = yv - 2, y0 = 696; ctx.beginPath(); ctx.moveTo(x, y1); ctx.lineTo(x + (FP - x) * (y1 - y0) / (y1 - HORIZONT), y0); ctx.stroke(); }
+    for (let k = 0; k < 5; k++) { const x = 488 + k * 48, y1 = 670, y0 = yh + 3; ctx.beginPath(); ctx.moveTo(x, y1); ctx.lineTo(x + (FP - x) * (y1 - y0) / (y1 - HORIZONT), y0); ctx.stroke(); }
+    for (let k = 0; k < 7; k++) { const x = 440 + k * 56, y1 = yv - 2, y0 = 690; ctx.beginPath(); ctx.moveTo(x, y1); ctx.lineTo(x + (FP - x) * (y1 - y0) / (y1 - HORIZONT), y0); ctx.stroke(); }
     ctx.restore();
     // Bordstein der Stadtrandstraße, an der Einfahrt abgesenkt
     const bord = new Path2D(); poly(bord, [[-60, VH - 9], [STR.l - 24, VH - 9], [STR.l - 18, VH + 6], [-60, VH + 6]], null); poly(bord, [[STR.r + 24, VH - 9], [VW + 60, VH - 9], [VW + 60, VH + 6], [STR.r + 18, VH + 6]], null);
@@ -9277,6 +9447,15 @@ function zeichneSzene(canvas, opt = {}) {
     { const k = new Path2D(); ellipse(k, 606, 646, 6.5, 3.6); kreis(k, 612, 643, 2.8); poly(k, [[610.2, 641.5], [611, 638.4], [612.6, 641]], null); poly(k, [[613, 641], [614.4, 638.2], [615, 641.6]], null);
       papier(ctx, k, "#3A3530", 1); ctx.strokeStyle = "#3A3530"; ctx.lineWidth = 1.6; ctx.beginPath(); ctx.moveTo(600, 647); ctx.quadraticCurveTo(594, 650, 597, 642); ctx.stroke();
       if (nacht > .3) { ctx.fillStyle = "#E8E07A"; ctx.fillRect(612.4, 642.4, 1.1, 1.1); ctx.fillRect(614.2, 642.4, 1.1, 1.1); } SZ.anker.katze = [606, 642]; }
+    // Grünstreifen mit Büschen und einem kleinen Baum teilt den Parkplatz zwischen den Reihen
+    { const g0 = 452, g1 = 724, gy = 678, gr = R("gruenstreifen" ), gruen = schnee ? "#E8E8E0" : SA.wiese2;
+      const bord = new Path2D(); rr(bord, g0 - 3, gy - 7, g1 - g0 + 6, 15, 7); papier(ctx, bord, schnee ? "#E4E4DE" : "#C9C3B4", 1.5);
+      const st = new Path2D(); rr(st, g0, gy - 5, g1 - g0, 10, 5); papier(ctx, st, gruen, 0);
+      const bx = 598, by = gy; // kleiner Baum (Feldahorn), Krone je nach Jahreszeit
+      const stamm = new Path2D(); poly(stamm, [[bx - 2, by], [bx - 1.4, by - 30], [bx + 1.4, by - 30], [bx + 2, by]], null); papier(ctx, stamm, "#6A4A36", 1.5);
+      if (SA.laub) krone(ctx, bx, by - 40, 20, 7, gr, mix(SA.laub[1], "#4E6B40", .25), 2); else aeste(ctx, bx, by - 28, 60, gr, "#5C4B3A", 1.5);
+      const bu = new Path2D(); for (const x of [474, 500, 540, 652, 690, 708]) fetzen(bu, x, gy - 4, 9 + gr() * 4, 6.5 + gr() * 2, gr, 10);
+      papier(ctx, bu, schnee ? "#E8E8E0" : saison === "herbst" ? "#66773F" : "#4E6B40", 1.5, { saum: true }); }
     // Laterne an der Einfahrt
     { const lx = 404, ly = PARK.vorn + 6, p = new Path2D(); poly(p, [[lx - 2, ly], [lx - 1.4, ly - 92], [lx + 1.4, ly - 92], [lx + 2, ly]], null); poly(p, [[lx - 9, ly - 92], [lx + 9, ly - 92], [lx + 5, ly - 100], [lx - 5, ly - 100]], null); papier(ctx, p, "#4A4A48", 1.5);
       ctx.fillStyle = nacht > .2 || gold > .5 ? "#FFE3A0" : "#E8E2D2"; ctx.fillRect(lx - 6, ly - 92, 12, 3); if (nacht > .2) gluehen(ctx, lx, ly - 88, 46, nacht); SZ.anker.laterne = [lx, ly - 92]; }
@@ -9429,6 +9608,9 @@ function zeichneSzene(canvas, opt = {}) {
   { const r = R("portal");
     kiefer(ctx, 14, VH + 30, 900, r, mix("#2E4733", "#000000", .05), "#5B3B2A", 6);
     kiefer(ctx, 986, VH + 30, 860, r, mix("#2E4733", "#000000", .05), "#5B3B2A", 6);
+    if (nacht >= .3) { // nachts: Kobel (Eichhörnchennest) in der Kiefer, darin schläft es
+      ctx.save(); ctx.fillStyle = "#3A2E24"; ctx.beginPath(); ctx.ellipse(966, 688, 11, 8, 0, 0, TAU); ctx.fill(); ctx.strokeStyle = "#4A3A2C"; ctx.lineWidth = 1.2; for (let i = 0; i < 5; i++) { ctx.beginPath(); ctx.moveTo(956 + i * 5, 682); ctx.lineTo(958 + i * 4, 694); ctx.stroke(); } ctx.restore();
+      SZ.anker.eich2 = [966, 688]; }
     if (nacht < .3) { // zweites Eichhörnchen klettert die große Kiefer rechts hoch
       ctx.save(); ctx.translate(968, 690); ctx.fillStyle = "#A8562A";
       ctx.beginPath(); ctx.ellipse(0, 0, 4.2, 8, -.15, 0, TAU); ctx.fill();
@@ -9646,7 +9828,7 @@ function bildBeschreibung(M) {
    ============================================================ */
 const ENTDECKEN = [
   { id: "eichhoernchen", name: "Eichhörnchen", nacht: false, anker: "eiche", x: 122, y: 520, r: 60, text: "Wer hat da geraschelt?", mal: vEichhoernchen },
-  { id: "eich2", name: "Noch ein Eichhörnchen", nacht: false, anker: "eich2", x: 0, y: 0, r: 34, text: "Noch eins! Das hier saust die Kiefer hoch.", mal: vEichKletter, wenn: () => !!(SZ.anker && SZ.anker.eich2) },
+  { id: "eich2", name: "Eichhörnchen in der Kiefer", nacht: "egal", anker: "eich2", x: 0, y: 0, r: 34, text: n => n ? "Psst – im Kobel schläft das Eichhörnchen, zusammengerollt unter seinem Schwanz." : "Noch eins! Das hier saust die Kiefer hoch.", mal: vEichKletter, wenn: () => !!(SZ.anker && SZ.anker.eich2) },
   { id: "uhu", name: "Uhu", nacht: true, anker: "eiche", x: 122, y: 520, r: 60, text: "Der Uhu hält Nachtwache in der Eiche.", mal: vUhu },
   { id: "nest", name: "Vogelnest", nacht: false, anker: "nest", x: 886, y: 416, r: 46, text: () => jahreszeit(jetzt()) === "winter" ? "Ein leeres Nest. Im Frühling ist hier wieder Betrieb." : "Drei Schnäbel, ein Gedanke: Hunger!", mal: vNest },
   { id: "spatzen", name: "Spatzen", nacht: false, anker: "spatzen", x: 388, y: 450, r: 46, text: "Die Spatzen halten Dachkonferenz.", mal: vSpatzen },
@@ -9801,7 +9983,13 @@ function vSpatzen(g) {
     g.strokeStyle = "#3A2E22"; g.lineWidth = 1; g.beginPath(); g.moveTo(x - 2, y + 8 * s); g.lineTo(x - 2, y + 12 * s); g.moveTo(x + 3, y + 8 * s); g.lineTo(x + 3, y + 12 * s); g.stroke(); };
   spatz(28, 56, 1, 1); spatz(64, 52, 1.1, -1); spatz(96, 56, .95, -1);
 }
-function vEichKletter(g) {
+function vEichKletter(g, n) {
+  if (n) { vHimmel(g, true); vSterne(g); vP(g, p => { rr(p, 58, -10, 34, 140, 6); }, "#3E2C20", 2);
+    vP(g, p => { ellipse(p, 60, 66, 30, 22); }, "#4A3A2C", 2);
+    g.strokeStyle = "rgba(0,0,0,.3)"; g.lineWidth = 2; for (let i = 0; i < 7; i++) { g.beginPath(); g.moveTo(34 + i * 8, 52); g.lineTo(38 + i * 7, 82); g.stroke(); }
+    vP(g, p => { ellipse(p, 60, 70, 15, 10); }, "#8E4A24", 0); vP(g, p => { p.moveTo(46, 72); p.quadraticCurveTo(52, 52, 74, 62); p.quadraticCurveTo(64, 70, 50, 76); p.closePath(); }, "#A8562A", 0);
+    g.strokeStyle = "#1C2620"; g.lineWidth = 1.4; g.beginPath(); g.arc(66, 70, 2, 0, Math.PI); g.stroke();
+    g.fillStyle = "rgba(255,246,220,.85)"; g.font = "bold 13px Nunito, sans-serif"; g.fillText("z", 80, 52); g.font = "bold 10px Nunito, sans-serif"; g.fillText("z", 88, 42); return; }
   vHimmel(g, false); vP(g, p => { rr(p, 58, -10, 34, 140, 6); }, "#5B3B2A", 2);
   for (let i = 0; i < 6; i++) { g.strokeStyle = "rgba(0,0,0,.18)"; g.lineWidth = 2; g.beginPath(); g.moveTo(62, 8 + i * 20); g.lineTo(86, 14 + i * 20); g.stroke(); }
   g.save(); g.translate(64, 66); g.rotate(-.1);
@@ -9963,11 +10151,22 @@ function iconVon(e) { return e.t === "ausflug" || e.t === "planung" ? "rucksack"
 /* ============================================================
    HEUTE
    ============================================================ */
+function grussHimmel() {
+  const st = jetzt().getHours(), nacht = st >= 18 || st < 6, W = S.wetter && S.wetter.code != null && Date.now() - S.wetter.zeit < 3 * 3600e3 ? S.wetter : null;
+  const art = W ? wetterArt(W.code) : "klar";
+  let svg;
+  if (nacht) svg = `<path d="M38 8 A22 22 0 1 0 52 40 A17 17 0 1 1 38 8Z" fill="#F2D27A"/><circle cx="30" cy="24" r="2.4" fill="#E2BF5E" opacity=".6"/><circle cx="24" cy="36" r="1.6" fill="#E2BF5E" opacity=".5"/>${art === "klar" ? `<g class="sterne" fill="#F2D27A"><path class="st1" d="M52 12 l1 2.6 2.6 1 -2.6 1 -1 2.6 -1 -2.6 -2.6 -1 2.6 -1Z"/><path class="st2" d="M10 8 l.8 2 2 .8 -2 .8 -.8 2 -.8 -2 -2 -.8 2 -.8Z"/><path class="st3" d="M56 30 l.6 1.5 1.5 .6 -1.5 .6 -.6 1.5 -.6 -1.5 -1.5 -.6 1.5 -.6Z"/></g>` : ""}`;
+  else svg = `<g class="strahlen" stroke="#E8A93A" stroke-width="3" stroke-linecap="round">${[0, 45, 90, 135, 180, 225, 270, 315].map(w => `<path d="M30 6 L30 12" transform="rotate(${w} 30 30)"/>`).join("")}</g><circle cx="30" cy="30" r="12" fill="#F2C14E"/>`;
+  if (art !== "klar") svg += `<g class="wolke"><path d="M18 50 Q10 50 10 43 Q10 36 18 36 Q20 28 29 28 Q38 28 40 36 Q49 35 50 43 Q50 50 42 50Z" fill="${nacht ? "#9AA6B8" : "#E4E8EE"}" stroke="${nacht ? "#7C889A" : "#C5CCD6"}" stroke-width="1.2"/></g>`;
+  if (art === "regen") svg += `<g class="tropfen" stroke="#5E8EC8" stroke-width="2" stroke-linecap="round"><path d="M20 54 l-2 5"/><path d="M30 54 l-2 5"/><path d="M40 54 l-2 5"/></g>`;
+  if (art === "schnee") svg += `<g class="flocken" fill="#9FC2E6"><circle cx="20" cy="56" r="1.8"/><circle cx="30" cy="58" r="1.8"/><circle cx="40" cy="56" r="1.8"/></g>`;
+  return `<button class="gruss-himmel ${nacht ? "mond" : "sonne"}" data-act="wetter" aria-label="Wetter ansehen"><svg viewBox="0 0 60 64" aria-hidden="true">${svg}</svg>${W ? `<span class="gruss-temp">${Math.round(W.temp)}°</span>` : ""}</button>`;
+}
 function viewHeute() {
   const h = heute(), tf = S.tf[h];
   const liste = eintraegeAm(h);
   const name = S.anrede === "sie" ? (S.nachname ? `Frau ${S.nachname}` : S.name) : S.name;
-  let html = `<div class="gruss"><h1>${tageszeitGruss()}, ${esc(name)}.</h1><div class="datum">${datumLang(h)}</div></div>`;
+  let html = `<div class="gruss">${grussHimmel()}<h1>${tageszeitGruss()}, ${esc(name)}.</h1><div class="datum">${datumLang(h)}</div></div>`;
 
   // laufender Timer / Ausflug unterwegs
   if (S.timer) html += timerKarte();
@@ -10026,7 +10225,8 @@ function viewHeute() {
   // App aufs Handy legen
   if (!istInstalliert() && S.onboard && h !== S.start && S.installKarte !== "nie" && (!S.installKarte || S.installKarte <= h) && S.eintraege.length >= 1)
     html += `<section class="abschnitt"><div class="bogen streifen"><h3>Die App aufs Handy legen</h3><p class="klein">Dann findest du sie wie jede andere App auf dem Startbildschirm.</p><div class="zeile"><button class="knopf klein zweit" data-act="install">Anleitung zeigen</button><button class="knopf klein leise" data-act="install-spaeter">Später</button></div></div></section>`;
-  html += `<p style="text-align:center;margin:18px 0 6px"><button class="link-knopf" data-act="wunsch-auf">Wunsch oder Idee für die App? Schreib Max!</button></p>`;
+  html += `<p style="text-align:center;margin:18px 0 6px"><button class="link-knopf" data-act="wunsch-auf">Wunsch oder Idee für die App? Schreib Maxi!</button></p>`;
+  html += `<p class="ersteller-fuss">Mit Liebe gemacht von Carlo Maximilian Engeländer für Rita · © 2026</p>`;
   return html;
 }
 function zuletztText(id) {
@@ -10082,6 +10282,7 @@ function viewIdeen() {
   const vorschl = vorschlaege(tf, 3, "ideen" + heute() + (S._mischen || 0));
   html += `<section class="abschnitt"><h2>Jetzt vielleicht</h2><div class="liste">${vorschl.map(v => zeileBtn(katIcon(v.kat, v), v.titel, `${v.text} · ${v.min ? v.min + " Min." : "kurz"}`, `data-act="idee" data-id="${v.id}"`, "k-geist")).join("")}</div>
     <button class="knopf leise" data-act="mischen">Andere Ideen zeigen</button></section>`;
+  html += `<section class="abschnitt"><button class="exkurs-karte" data-act="bv-auf"><span class="fig-idle">${karinKopfSVG(72)}</span><span class="text"><span class="klein" style="font-weight:700;letter-spacing:.04em">AUSFLUG NACH SMÅLAND</span><span class="titel">Post von Karin aus Vimmerby</span><span class="unter">${bvHeuteNeu() ? "Ein neuer Brief wartet – auf Schwedisch, mit Übersetzung zum Aufklappen." : "Eine ausgedachte Brieffreundin zum Schwedisch-Auffrischen: Krimis, Fika und Katze Sotis."}</span></span></button></section>`;
   const hp = D.hp && D.hp.baende ? D.hp.baende.find(b => b.nr === S.hp.band) : null;
   html += `<section class="abschnitt"><div class="tueren">
     <button class="tuer k-geist" data-act="tuer" data-v="drinnen">${ic("lampe")}<span class="titel">Drinnen</span><span class="unter">Timer, Lesen &amp; Bücherregal, Vorhaben, Patience</span></button>
@@ -10628,15 +10829,16 @@ function einstellungenInhalt() {
     + einstGruppe("menschen", "tassen", "Herzensmenschen", `${S.menschen.length} in der Auswahl`,
       `<div class="liste">${S.menschen.map((m, i) => `<div class="liste-zeile" style="cursor:default"><span style="width:28px;height:28px;border-radius:4px;background:${m.farbe};flex:none"></span><span class="text"><span class="titel">${esc(m.name)}</span><br><span class="unter">${esc(m.rolle || "")}</span></span><button class="knopf klein leise" data-act="mensch-weg" data-i="${i}" aria-label="${esc(m.name)} entfernen">Entfernen</button></div>`).join("")}</div>
       <div class="zeile" style="margin-top:10px"><input id="neu-mensch" class="text" placeholder="Name" aria-label="Neuer Herzensmensch"><button class="knopf zweit" data-act="mensch-neu">Dazu</button></div>`)
-    + einstGruppe("spiel", "karten", "Waldpatience", S.spiel.an ? `${S.spiel.limitNeu ?? S.spiel.limit} Spielmarken pro Tag` : "ausgeblendet",
+    + einstGruppe("spiel", "karten", "Waldpatience", S.spiel.an ? `${S.spiel.limitNeu ?? S.spiel.limit} Runden à 10 Minuten pro Tag` : "ausgeblendet",
       `${schalter(S.spiel.an, "Spiel anzeigen", `data-act="spiel-an"`)}
-      ${S.spiel.an ? `<label class="feld">Spielmarken pro Tag (je 10 Minuten)</label><div class="chips">${[0, 1, 2, 3, 4, 5, 6].map(n => chip((S.spiel.limitNeu ?? S.spiel.limit) === n, String(n), `data-act="spiel-limit" data-v="${n}" aria-label="${n} Spielmarken pro Tag"`)).join("")}</div><p class="klein">${S.spiel.limitNeu != null && S.spiel.limitNeu !== S.spiel.limit ? "Gilt ab morgen." : "Änderungen gelten ab dem nächsten Tag."}</p>` : ""}`)
+      ${S.spiel.an ? `<label class="feld">Runden pro Tag (je 10 Minuten)</label><div class="chips">${[0, 1, 2, 3, 4, 5, 6].map(n => chip((S.spiel.limitNeu ?? S.spiel.limit) === n, String(n), `data-act="spiel-limit" data-v="${n}" aria-label="${n} Spielmarken pro Tag"`)).join("")}</div><p class="klein">${S.spiel.limitNeu != null && S.spiel.limitNeu !== S.spiel.limit ? "Gilt ab morgen." : "Änderungen gelten ab dem nächsten Tag."}</p>` : ""}`)
     + einstGruppe("musik", "kopfhoerer", "Musik und Podcasts", S.spotify ? "Mit Spotify" : "Über YouTube und ARD Sounds",
       `${schalter(!!S.spotify, "Ich habe Spotify", `data-act="spotify-an"`, "Dann gibt es bei Musik- und Hörtipps zusätzlich einen Spotify-Knopf.")}${S.spotify ? "" : `<button class="knopf klein leise" data-act="spotify-info">Was hätte ich davon?</button>`}`)
     + einstGruppe("hilfe", "frage", "Hilfe und Infos", "So funktioniert’s, aufs Handy legen",
       `<div class="liste">${zeileBtn("frage", "So funktioniert’s", "Liste, Bild, Taler – kurz erklärt", `data-act="erklaerung"`)}
       ${zeileBtn("lichtung", "App aufs Handy legen", "Anleitung mit Bildern", `data-act="install"`)}
       ${zeileBtn("frage", "Über die App", "Von Max, für Rita", `data-act="ueber"`)}</div>`)
+    + `<div class="ersteller"><span class="fig-idle">${maxSVG(48)}</span><p>Diese App hat <b>Carlo Maximilian Engeländer</b> gemacht – für seine tolle Rita.<br><span class="klein">Idee, Texte, Figuren und Gestaltung © 2026 Carlo Maximilian Engeländer. Alle Rechte vorbehalten.</span></p></div>`
     + einstGruppe("daten", "kiste", "Daten und Neustart", "Sicherung, Technik, alles zurücksetzen",
       `<div class="liste">${zeileBtn("hand", "Technik & Sicherung", "Für Max: Sicherung, Wiederherstellen, Schnell-Kacheln, Geburtstag", `data-act="helfer"`)}</div>
       <button class="knopf zweit voll rand warn" style="margin-top:12px" data-act="reset-1">Alles zurücksetzen und neu anfangen</button>`)
@@ -10751,7 +10953,7 @@ function erklaerungSheet() {
     <div class="bogen"><h3>Stufen</h3><p style="margin:0">Mit der Zeit kommen neue Dinge dazu: eine Bank, ein Steg, eine Lichterkette, ein Hochsitz … Was als Nächstes kommt, steht unter „Bild“.</p></div>
     <div class="bogen"><h3>Taler</h3><p style="margin:0">Für jeden Eintrag gibt es ein paar Taler. Damit kannst du im Kramladen Dinge freischalten: Gedichte, Rezepte, den Tanz-Taktgeber, Schönes fürs Bild. Taler verfallen nie.</p></div>
     <div class="bogen"><h3>Der Stern ✱</h3><p style="margin:0">Ein Stern heißt: ruhiger Tag – und trotzdem was geschafft. Er ist nur am selben Tag zu sehen.</p></div>
-    <div class="bogen"><h3>Spielmarken</h3><p style="margin:0">Eine Marke reicht für 10 Minuten Waldpatience. An ruhigen Tagen ist das Spiel ohne Marken frei.</p></div>
+    <div class="bogen"><h3>Patience</h3><p style="margin:0">Eine Runde dauert 10 Minuten und kostet 10 Taler. An ruhigen Tagen ist das Spiel kostenlos.</p></div>
     <div class="bogen"><h3>Hühnchen</h3><p style="margin:0">Hühnchen fragt morgens nach deiner Energie, sagt ab und zu was dazu und steht im Bild immer da, wo du zuletzt etwas getan hast. Wenn’s nervt: oben rechts aufs Zahnrad, dann „Hühnchen zeigen“ ausschalten.</p></div>
     <div class="bogen"><h3>Notfallplan</h3><p style="margin:0">Unter „Ideen“ und bei „Ablenkung?“ liegt dein Notfallplan: für Momente, in denen es eng wird. Was drinsteht, bestimmst du. Ab und zu üben, dann sitzt er.</p></div>` });
 }
@@ -11396,7 +11598,12 @@ function postLaden() {
     gross = document.createElement("div"); gross.className = "portrait-gross"; gross.setAttribute("aria-hidden", "true");
     gross.innerHTML = ritaSVG(170);
     gross.style.left = Math.min(innerWidth - 186, r.right + 14) + "px"; gross.style.top = (r.bottom + 10) + "px";
-    if ((window._ritaGewunken || 0) < 2 || Math.random() < .6) { window._ritaGewunken = (window._ritaGewunken || 0) + 1; gross._bis = Date.now() + 2300; const verz = (180 + Math.random() * 250) / 1000;
+    const jetztMs = Date.now(); window._ritaMal = (window._ritaMal || []).filter(t => jetztMs - t < 10000).concat(jetztMs);
+    if (window._ritaMal.length === 2) { gross.classList.add("pg-kuss");
+      gross.innerHTML = gross.innerHTML.replace("</svg>", `<g class="kuss-mund"><path d="M46.6 63.4 Q48.4 61.2 50 62.6 Q51.6 61.2 53.4 63.4 Q51.8 66.4 50 66.2 Q48.2 66.4 46.6 63.4Z" fill="#B23A35"/><path d="M47.4 63.8 Q50 64.6 52.6 63.8" stroke="#7E2420" stroke-width=".6" fill="none"/></g><path class="kuss-zwinker" d="M53.4 47.8 Q56.5 49.6 59.6 47.8" stroke="#3A2A22" stroke-width="1.2" fill="none" stroke-linecap="round"/></svg>`);
+      gross._bis = Date.now() + 2200;
+      for (let i = 0; i < 3; i++) { const h = document.createElement("span"); h.className = "kuss-herz"; h.textContent = "♥"; h.style.left = (100 + i * 14) + "px"; h.style.top = (98 - i * 4) + "px"; h.style.animationDelay = (500 + i * 220) + "ms"; h.style.setProperty("--dx", (24 + i * 16) + "px"); gross.appendChild(h); }
+    } else if ((window._ritaGewunken || 0) < 2 || Math.random() < .6) { window._ritaGewunken = (window._ritaGewunken || 0) + 1; gross._bis = Date.now() + 2300; const verz = (180 + Math.random() * 250) / 1000;
       const arm = `<defs><clipPath id="pg-clip"><rect x="0" y="0" width="100" height="100"/></clipPath></defs><g clip-path="url(#pg-clip)"><g class="winkarm" style="animation-delay:${verz}s"><g class="winkunter" style="animation-delay:${verz + .25}s"><path d="M78 108 Q79 90 82 73" stroke="#141D30" stroke-width="11.6" stroke-linecap="round" fill="none"/><path d="M78 108 Q79 90 82 73" stroke="#22304A" stroke-width="10" stroke-linecap="round" fill="none"/><path d="M77.6 73.6 Q82 71.6 86.4 73.6" stroke="#3A4B6B" stroke-width="2.4" stroke-linecap="round" fill="none"/><g class="winkhand" style="animation-delay:${verz + .25}s"><g transform="translate(-2 4) translate(166 0) scale(-1 1)"><path d="M78 66 Q76 60 77 54 Q77.5 52 79 53 L79.6 58 L79.5 50 Q80 48 81.4 49 L81.8 57 L82.4 48.6 Q83.2 47 84.4 48.4 L84.2 57 L85.4 51 Q86.6 49.8 87.4 51.2 L86.6 60 Q88.6 57.6 90 58.6 Q90.6 60 88.6 62.6 Q86 67 82 67.6 Q79.6 67.8 78 66Z" fill="#F0C9AA" stroke="#D49A7C" stroke-width=".5"/></g></g></g></g></g>`;
       gross.innerHTML = gross.innerHTML.replace("</svg>", arm + "</svg>"); }
     document.body.appendChild(gross); lange = true; haptik("auswahl");
@@ -11970,19 +12177,24 @@ function erPasst(e) {
   if (e.selten && (hash32('sel' + e.id + heute()) % 100) / 100 > e.selten) return false;
   return true;
 }
-function ereignisPruefen() {
+if (typeof D !== "undefined" && Array.isArray(D.ereignisse2)) EREIGNISSE.push(...D.ereignisse2.filter(e => e && e.id && !EREIGNISSE.some(x => x.id === e.id)));
+/* Wann kommt jemand vorbei? Zufällig, nicht immer: beim Öffnen und beim Zurückwechseln auf „Heute“.
+   Höchstens 2 am Tag, mindestens 25 Minuten Abstand. Datierte Anlässe (z. B. Lucia) haben Vorrang. */
+function ereignisPruefen(anlass = "start") {
   if (S.eierAus || !S.onboard || SHEETS.length || $(".ereignis") || S.timer) return;
   const h = heute(); S.ereignisse = S.ereignisse || {};
-  if (h === S.start || S.ereignisTag === h || S.tf[h] === "D") return;
+  if (h === S.start || S.tf[h] === "D") return;
+  if (!S.erHeute || S.erHeute.tag !== h) S.erHeute = { tag: h, n: 0, zuletzt: 0 };
+  if (S.erHeute.n >= 2 || Date.now() - S.erHeute.zuletzt < 25 * 60e3) return;
   const kand = EREIGNISSE.filter(e => erPasst(e) && !(S.ereignisse[e.id] && (tagDatum(h) - tagDatum(S.ereignisse[e.id])) / 864e5 < 45));
   if (!kand.length) return;
   const datiert = kand.filter(e => e.wann && (e.wann.tag || e.wann.wochentag != null));
-  const chance = datiert.length ? .8 : .35;
-  if ((hash32("er" + h + S.seed) % 1000) / 1000 > chance) { S.ereignisTag = h; speichern(); return; }
-  const pool = datiert.length ? datiert : kand;
-  const e = pool[hash32("erw" + h + S.seed) % pool.length];
-  S.ereignisTag = h; S.ereignisse[e.id] = h; speichern();
-  setTimeout(() => ereignisZeigen(e), 1400);
+  const chance = datiert.length && !S.erHeute.n ? .7 : anlass === "tab" ? (S.erHeute.n ? .06 : .14) : anlass === "eintrag" ? (S.erHeute.n ? .1 : .2) : (S.erHeute.n ? .08 : .3);
+  if (Math.random() > chance) return;
+  const pool = datiert.length && !S.erHeute.n ? datiert : kand;
+  const e = pool[Math.floor(Math.random() * pool.length)];
+  S.erHeute.n++; S.erHeute.zuletzt = Date.now(); S.ereignisse[e.id] = h; speichern();
+  setTimeout(() => { if (!SHEETS.length && !$(".ereignis")) ereignisZeigen(e); }, anlass === "tab" ? 900 + Math.random() * 1600 : anlass === "eintrag" ? 4200 + Math.random() * 1500 : 1400);
 }
 function ereignisZeigen(e) {
   if (typeof e === "string") e = EREIGNISSE.find(x => x.id === e); if (!e || $(".ereignis")) return;
@@ -12018,8 +12230,13 @@ function ereignisWeg(el) { el.classList.add("weg"); setTimeout(() => el.remove()
 function sprechen(ziel, text, fig, fertig) {
   ziel.textContent = ""; if (fig) fig.classList.add("spricht");
   if (REDUCED()) { ziel.textContent = text; if (fig) setTimeout(() => fig.classList.remove("spricht"), 400); if (fertig) setTimeout(fertig, 500); return; }
-  let n = 0; const tick = () => { n++; ziel.textContent = text.slice(0, n); if (n < text.length) setTimeout(tick, /[.,!?…–]/.test(text[n - 1]) ? 160 : 32); else { if (fig) fig.classList.remove("spricht"); if (fertig) fertig(); } };
-  tick();
+  // Platz für den ganzen Satz gleich reservieren, damit nichts springt
+  const sicht = document.createElement("span"), rest = document.createElement("span"); rest.className = "rest"; rest.textContent = text; ziel.textContent = ""; ziel.append(sicht, rest);
+  let n = 0, letzt = 0, warte = 0;
+  const schritt = t => { if (!letzt) letzt = t; const dt = t - letzt;
+    if (dt >= warte) { letzt = t; n++; sicht.textContent = text.slice(0, n); rest.textContent = text.slice(n); warte = /[.,!?…–]/.test(text[n - 1]) ? 170 : 34; }
+    if (n < text.length) requestAnimationFrame(schritt); else { if (fig) fig.classList.remove("spricht"); if (fertig) fertig(); } };
+  requestAnimationFrame(schritt);
 }
 function erEffekt(art, fig) {
   const r = fig.getBoundingClientRect(), zeichen = { konfetti: ["✦", "●", "▲", "■"], herzen: ["♥"], noten: ["♪", "♫"], schnee: ["❄", "✻", "•"], sonne: ["☀"] }[art] || ["✦"];
@@ -12070,6 +12287,50 @@ function wunschAktion(a, d) {
     window.open(`https://wa.me/${MAX_WA}?text=${encodeURIComponent(text)}`, "_blank");
     WUNSCH = ""; sheetZu(); toast("Danke! Max freut sich.", { erfolg: true });
   }
+}
+
+/* ============================================================
+   Wetter im Spandauer Forst (Open-Meteo, ohne Konto): Antippen von
+   Sonne/Mond auf „Heute“. Plus Wege zur eigenen Wetter-App.
+   ============================================================ */
+const WETTER_ORT = { lat: 52.566, lon: 13.165, name: "Spandauer Forst" };
+function wetterArt(c) { return c <= 1 ? "klar" : c <= 3 || c === 45 || c === 48 ? "wolkig" : (c >= 71 && c <= 77) || c === 85 || c === 86 ? "schnee" : "regen"; }
+const WETTER_TEXT = { 0: "Klarer Himmel", 1: "Überwiegend klar", 2: "Teils bewölkt", 3: "Bedeckt", 45: "Nebel", 48: "Raureif-Nebel", 51: "Leichter Nieselregen", 53: "Nieselregen", 55: "Starker Nieselregen", 61: "Leichter Regen", 63: "Regen", 65: "Starker Regen", 66: "Gefrierender Regen", 67: "Gefrierender Regen", 71: "Leichter Schneefall", 73: "Schneefall", 75: "Starker Schneefall", 77: "Schneegriesel", 80: "Regenschauer", 81: "Regenschauer", 82: "Heftige Schauer", 85: "Schneeschauer", 86: "Schneeschauer", 95: "Gewitter", 96: "Gewitter mit Hagel", 99: "Gewitter mit Hagel" };
+function wetterLaden(erzwingen) {
+  if (!erzwingen && S.wetter && Date.now() - S.wetter.zeit < 30 * 60e3) return Promise.resolve(S.wetter);
+  const u = `https://api.open-meteo.com/v1/forecast?latitude=${WETTER_ORT.lat}&longitude=${WETTER_ORT.lon}&current=temperature_2m,apparent_temperature,relative_humidity_2m,weather_code,wind_speed_10m&daily=temperature_2m_max,temperature_2m_min,precipitation_probability_max,weather_code,sunrise,sunset&timezone=Europe%2FBerlin&forecast_days=3`;
+  return fetch(u).then(r => r.ok ? r.json() : null).then(j => {
+    if (!j || !j.current) return null;
+    S.wetter = { zeit: Date.now(), temp: j.current.temperature_2m, gefuehlt: j.current.apparent_temperature, feuchte: j.current.relative_humidity_2m, code: j.current.weather_code, wind: j.current.wind_speed_10m,
+      tage: (j.daily.time || []).map((t, i) => ({ t, max: j.daily.temperature_2m_max[i], min: j.daily.temperature_2m_min[i], regen: j.daily.precipitation_probability_max[i], code: j.daily.weather_code[i], auf: j.daily.sunrise[i], unter: j.daily.sunset[i] })) };
+    speichern(); return S.wetter;
+  }).catch(() => null);
+}
+function wetterTipp(W) {
+  const t = W.temp, c = W.code;
+  if (wetterArt(c) === "regen") return "Regenwetter: gut für ein Kapitel, einen Tee – oder mit Schirm eine kleine Runde, danach schmeckt der Tee doppelt.";
+  if (wetterArt(c) === "schnee") return "Schnee! Wenn’s glatt ist: lieber vom Fenster aus genießen oder mit guten Schuhen und Stock.";
+  if (t < 3) return "Richtig kalt: Schal vor Mund und Nase, dann atmet sich die Kälte leichter.";
+  if (t > 26) return "Warm heute: viel trinken, und raus lieber am Morgen oder Abend.";
+  if (c <= 1) return "Schönes Wetter für eine Runde im Forst – oder eine Bank in der Sonne.";
+  return "Ein ganz normaler Tag zum Draußensein. Jacke mit, dann passt’s.";
+}
+function wetterInhalt() {
+  const W = S.wetter;
+  const links = `<h3 style="margin-top:18px">Mit deiner Wetter-App</h3><p class="klein" style="margin-top:0">Ritas App kann nicht direkt in andere Apps hineinschauen. Aber mit einem Tipp bist du drüben:</p>
+    <div class="stapel"><a class="knopf zweit voll" href="https://www.dwd.de/DE/wetter/wetterundklima_vorort/berlin_brandenburg/berlin_brandenburg_node.html" target="_blank" rel="noopener">Deutscher Wetterdienst: Berlin ↗</a><a class="knopf zweit voll" href="https://play.google.com/store/apps/details?id=de.dwd.warnapp" target="_blank" rel="noopener">WarnWetter-App (DWD) im Play Store ↗</a><a class="knopf leise voll" href="https://www.google.com/search?q=wetter+spandau" target="_blank" rel="noopener">Google-Wetter für Spandau ↗</a></div>
+    <p class="klein">Tipp: Das Wetter-Widget lässt sich auch direkt auf den Startbildschirm legen – lange auf eine freie Stelle drücken → „Widgets“ → „Wetter“.</p>`;
+  if (!W) return `<p>Das Wetter wird gerade geladen …</p>${links}`;
+  const tage = (W.tage || []).map((d, i) => `<div class="wetter-tag"><span style="font-weight:700">${i === 0 ? "Heute" : i === 1 ? "Morgen" : datumLang(d.t).split(",")[0]}</span><span>${esc(WETTER_TEXT[d.code] || "")}</span><span class="zahl">${Math.round(d.min)}° / ${Math.round(d.max)}°</span><span class="klein">${d.regen != null ? `Regen ${d.regen} %` : ""}</span></div>`).join("");
+  const h0 = W.tage && W.tage[0];
+  return `<div class="wetter-jetzt"><span class="wetter-grad zahl">${Math.round(W.temp)}°</span><div><p style="margin:0;font-weight:700">${esc(WETTER_TEXT[W.code] || "")}</p><p class="klein" style="margin:2px 0 0">gefühlt ${Math.round(W.gefuehlt)}° · Wind ${Math.round(W.wind)} km/h · Luftfeuchte ${W.feuchte} %</p>${h0 ? `<p class="klein" style="margin:2px 0 0">Sonne ${h0.auf.slice(11)} – ${h0.unter.slice(11)} Uhr</p>` : ""}</div></div>
+    <div class="bogen mulde" style="margin-top:12px"><p style="margin:0">${esc(wetterTipp(W))}</p></div>
+    <div class="wetter-tage">${tage}</div>
+    <p class="klein">Für den ${WETTER_ORT.name} · Stand ${new Date(W.zeit).toLocaleTimeString("de-DE", { hour: "2-digit", minute: "2-digit" })} Uhr · Daten: Open-Meteo</p>${links}`;
+}
+function wetterSheet() {
+  sheet({ titel: "Wetter", id: "wetter", inhalt: wetterInhalt() });
+  wetterLaden(true).then(W => { const sh = aktuellesSheet(); if (sh && sh.dataset.id === "wetter") sheetInhalt(W || S.wetter ? (W ? "" : "<p class=\"klein\">Gerade kein Internet – das ist der letzte Stand.</p>") + wetterInhalt() : "<p>Das Wetter lässt sich gerade nicht laden – vielleicht kein Internet.</p>" + wetterInhalt().split("</p>").slice(1).join("</p>")); render({ halteScroll: true, ohneAnim: true }); });
 }
 
 /* ============================================================
@@ -12181,10 +12442,10 @@ function spielStarten() {
     return;
   }
   const t = talerStand();
-  const html = `<p>Eine Spielmarke reicht für <span style="font-weight:700">10 Minuten</span>. Die laufende Runde ${A("darfst du", "dürfen Sie")} danach in Ruhe zu Ende legen.</p>
-    <div class="bogen mulde"><p style="margin:0">Heute: ${sp.genutzt} von ${sp.limit} Marken genutzt.${sp.geschenkt ? ` ${sp.geschenkt} ${sp.geschenkt === 1 ? "Marke ist" : "Marken sind"} heute geschenkt.` : ""}${sp.marken ? ` ${sp.marken} gekaufte ${sp.marken === 1 ? "Marke liegt" : "Marken liegen"} bereit.` : ""}</p></div>`;
-  const knopf = sp.geschenkt || sp.marken ? `<button class="knopf haupt voll" data-act="marke-nutzen">${ic("karten")} Marke einlösen und spielen</button>`
-    : `<button class="knopf haupt voll" data-act="marke-kaufen" ${t >= 10 ? "" : "disabled"}>${ic("karten")} Marke für 10 Taler</button>${t < 10 ? `<p class="klein">Noch ${10 - t} Taler bis zur nächsten Marke.</p>` : ""}`;
+  const html = `<p>Eine Runde Patience dauert <span style="font-weight:700">10 Minuten</span>. Ist die Zeit um, ${A("darfst du", "dürfen Sie")} die Karten noch in Ruhe fertig legen. So bleibt das Spiel ein Vergnügen und frisst nicht den Tag.</p>
+    <div class="bogen mulde"><p style="margin:0">Heute schon gespielt: ${sp.genutzt}-mal von ${sp.limit}.${sp.geschenkt ? ` ${sp.geschenkt === 1 ? "Eine Runde ist" : sp.geschenkt + " Runden sind"} heute geschenkt.` : ""}${sp.marken ? ` ${sp.marken === 1 ? "Eine bezahlte Runde liegt" : sp.marken + " bezahlte Runden liegen"} bereit.` : ""}</p></div>`;
+  const knopf = sp.geschenkt || sp.marken ? `<button class="knopf haupt voll" data-act="marke-nutzen">${ic("karten")} Jetzt spielen</button>`
+    : `<button class="knopf haupt voll" data-act="marke-kaufen" ${t >= 10 ? "" : "disabled"}>${ic("karten")} ${t >= 10 ? "Für 10 Taler spielen" : `Noch ${10 - t} Taler sammeln`}</button><p class="klein">Eine Runde kostet 10 Taler (du hast ${t}). Taler gibt’s für alles, was du einträgst – zum Beispiel einen Spaziergang oder ein Kapitel.</p>`;
   sheet({ titel: "Waldpatience", inhalt: html, fuss: knopf });
 }
 function markeEinloesen(kaufen) {
@@ -12375,6 +12636,7 @@ function nachEintrag(r, text) {
   const ort = e.t === "ausflug" ? "horizont" : e.t === "tagebuch" ? "tagebuch" : e.t === "abgehakt" ? "abgehakt" : e.t === "ruheuebung" ? "ruhe" : (e.mut ? "mut" : tat(e.t).bild);
   const huhn = S.huhn ? (e.t === "hofladen" ? huehnchenReagiert("hofladen") : huehnchenReagiert(ort)) : "";
   try { eierEintrag(e); } catch (err) { }
+  try { ereignisPruefen("eintrag"); } catch (err) { }
   const taler = Math.round(e.taler * 10) / 10;
   alleSheetsZu();
   haptik("erfolg"); ton("erfolg");
@@ -12439,7 +12701,7 @@ function dateiSpeichern() {
 document.addEventListener("click", ev => {
   const el = ev.target.closest("[data-act],[data-tab]"); if (!el) return;
   if (el.disabled || gesperrt(el)) return;
-  if (el.dataset.tab) { wechsleTab(el.dataset.tab); return; }
+  if (el.dataset.tab) { wechsleTab(el.dataset.tab); if (el.dataset.tab === "heute") try { ereignisPruefen("tab"); } catch (e) { } return; }
   const a = el.dataset.act, d = el.dataset;
   // Füllung vom Fingerpunkt bei Auswahl
   if ((el.classList.contains("tf") || el.classList.contains("chip")) && !REDUCED()) { const r = el.getBoundingClientRect(); el.style.setProperty("--x", (ev.clientX - r.left) + "px"); el.style.setProperty("--y", (ev.clientY - r.top) + "px"); }
@@ -12683,6 +12945,7 @@ function aktion(a, d, el, ev) {
     case "spotify-an": S.spotify = !S.spotify; speichern(); sheetInhalt(einstellungenInhalt()); break;
     case "spotify-an-info": S.spotify = true; speichern(); sheetZu(); toast("Spotify eingeschaltet. Bei Hörtipps gibt’s jetzt einen Spotify-Knopf.", { erfolg: true }); break;
     case "spotify-info": spotifyInfoSheet(); break;
+    case "wetter": wetterSheet(); break;
     case "ang-luft": S.angLuft = !!el.checked; speichern(); sheetInhalt(angeboteInhalt()); break;
     case "angebot-kat": ANG_KAT = d.v; haptik("auswahl"); sheetInhalt(angeboteInhalt()); aktuellesSheet().querySelector(".sheet-inhalt").scrollTop = 0; break;
     case "angebot-liste": { const x = D.angebote.find(y => y.id === d.id); if (!x) break; S.liste = S.liste || []; const text = angebotKurz(x); if (!S.liste.some(y => !y.erledigt && (y.angebot === x.id || y.text === text))) S.liste.push({ id: "l" + Date.now().toString(36), text, angebot: x.id }); speichern(); haptik("auswahl"); toast(`Steht auf ${A("deiner", "Ihrer")} Liste.`, { erfolg: true, dauer: 4000 }); el.outerHTML = `<p class="klein" style="margin:6px 0 0">${ic("haken")} Steht auf ${A("deiner", "Ihrer")} Liste.</p>`; render({ halteScroll: true, ohneAnim: true }); break; }
@@ -12746,7 +13009,7 @@ function start() {
   if (q.get("zeit")) { const z = new Date(q.get("zeit")); if (!isNaN(z)) ZEITVERSATZ = z - Date.now(); }
   try { eierTag(); render(); } catch (err) { notfall(err); return; }
   try { ereignisPruefen(); } catch (e) { }
-  postLaden(); try { angeboteAnwenden(); } catch (e) { } angeboteLaden(); tvLaden();
+  postLaden(); try { angeboteAnwenden(); } catch (e) { } angeboteLaden(); tvLaden(); wetterLaden().then(W => { if (W) render({ halteScroll: true, ohneAnim: true }); });
   if (!S.onboard) setTimeout(onboardingSheet, 300);
   else if (S.timer) setTimeout(() => { if (timerRest() <= 0) timerSheet(); }, 400);
   addEventListener("resize", () => { clearTimeout(window._rs); window._rs = setTimeout(() => bilderZeichnen(), 150); });

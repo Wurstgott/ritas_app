@@ -93,6 +93,7 @@ function nachEintrag(r, text) {
   const ort = e.t === "ausflug" ? "horizont" : e.t === "tagebuch" ? "tagebuch" : e.t === "abgehakt" ? "abgehakt" : e.t === "ruheuebung" ? "ruhe" : (e.mut ? "mut" : tat(e.t).bild);
   const huhn = S.huhn ? (e.t === "hofladen" ? huehnchenReagiert("hofladen") : huehnchenReagiert(ort)) : "";
   try { eierEintrag(e); } catch (err) { }
+  try { ereignisPruefen("eintrag"); } catch (err) { }
   const taler = Math.round(e.taler * 10) / 10;
   alleSheetsZu();
   haptik("erfolg"); ton("erfolg");
@@ -157,7 +158,7 @@ function dateiSpeichern() {
 document.addEventListener("click", ev => {
   const el = ev.target.closest("[data-act],[data-tab]"); if (!el) return;
   if (el.disabled || gesperrt(el)) return;
-  if (el.dataset.tab) { wechsleTab(el.dataset.tab); return; }
+  if (el.dataset.tab) { wechsleTab(el.dataset.tab); if (el.dataset.tab === "heute") try { ereignisPruefen("tab"); } catch (e) { } return; }
   const a = el.dataset.act, d = el.dataset;
   // Füllung vom Fingerpunkt bei Auswahl
   if ((el.classList.contains("tf") || el.classList.contains("chip")) && !REDUCED()) { const r = el.getBoundingClientRect(); el.style.setProperty("--x", (ev.clientX - r.left) + "px"); el.style.setProperty("--y", (ev.clientY - r.top) + "px"); }
@@ -401,6 +402,7 @@ function aktion(a, d, el, ev) {
     case "spotify-an": S.spotify = !S.spotify; speichern(); sheetInhalt(einstellungenInhalt()); break;
     case "spotify-an-info": S.spotify = true; speichern(); sheetZu(); toast("Spotify eingeschaltet. Bei Hörtipps gibt’s jetzt einen Spotify-Knopf.", { erfolg: true }); break;
     case "spotify-info": spotifyInfoSheet(); break;
+    case "wetter": wetterSheet(); break;
     case "ang-luft": S.angLuft = !!el.checked; speichern(); sheetInhalt(angeboteInhalt()); break;
     case "angebot-kat": ANG_KAT = d.v; haptik("auswahl"); sheetInhalt(angeboteInhalt()); aktuellesSheet().querySelector(".sheet-inhalt").scrollTop = 0; break;
     case "angebot-liste": { const x = D.angebote.find(y => y.id === d.id); if (!x) break; S.liste = S.liste || []; const text = angebotKurz(x); if (!S.liste.some(y => !y.erledigt && (y.angebot === x.id || y.text === text))) S.liste.push({ id: "l" + Date.now().toString(36), text, angebot: x.id }); speichern(); haptik("auswahl"); toast(`Steht auf ${A("deiner", "Ihrer")} Liste.`, { erfolg: true, dauer: 4000 }); el.outerHTML = `<p class="klein" style="margin:6px 0 0">${ic("haken")} Steht auf ${A("deiner", "Ihrer")} Liste.</p>`; render({ halteScroll: true, ohneAnim: true }); break; }
@@ -464,7 +466,7 @@ function start() {
   if (q.get("zeit")) { const z = new Date(q.get("zeit")); if (!isNaN(z)) ZEITVERSATZ = z - Date.now(); }
   try { eierTag(); render(); } catch (err) { notfall(err); return; }
   try { ereignisPruefen(); } catch (e) { }
-  postLaden(); try { angeboteAnwenden(); } catch (e) { } angeboteLaden(); tvLaden();
+  postLaden(); try { angeboteAnwenden(); } catch (e) { } angeboteLaden(); tvLaden(); wetterLaden().then(W => { if (W) render({ halteScroll: true, ohneAnim: true }); });
   if (!S.onboard) setTimeout(onboardingSheet, 300);
   else if (S.timer) setTimeout(() => { if (timerRest() <= 0) timerSheet(); }, 400);
   addEventListener("resize", () => { clearTimeout(window._rs); window._rs = setTimeout(() => bilderZeichnen(), 150); });

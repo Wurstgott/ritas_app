@@ -13,3 +13,7 @@ Gebaut von Max für Rita.
 - `index.html` – die fertige App (eine Datei), wird von GitHub Pages ausgeliefert.
 - `manifest.json`, `sw.js`, `icon-*.png` – zum Installieren und für den Offline-Betrieb.
 - `quelle/` – Quelltexte. `python3 quelle/build.py` baut daraus die App (Ausgabe in `quelle/repo/index.html`).
+
+---
+
+Ritas App – Idee, Texte, Figuren und Gestaltung © 2026 Carlo Maximilian Engeländer. Alle Rechte vorbehalten. Gemacht für Rita.

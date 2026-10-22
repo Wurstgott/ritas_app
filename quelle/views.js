@@ -34,11 +34,22 @@ function iconVon(e) { return e.t === "ausflug" || e.t === "planung" ? "rucksack"
 /* ============================================================
    HEUTE
    ============================================================ */
+function grussHimmel() {
+  const st = jetzt().getHours(), nacht = st >= 18 || st < 6, W = S.wetter && S.wetter.code != null && Date.now() - S.wetter.zeit < 3 * 3600e3 ? S.wetter : null;
+  const art = W ? wetterArt(W.code) : "klar";
+  let svg;
+  if (nacht) svg = `<path d="M38 8 A22 22 0 1 0 52 40 A17 17 0 1 1 38 8Z" fill="#F2D27A"/><circle cx="30" cy="24" r="2.4" fill="#E2BF5E" opacity=".6"/><circle cx="24" cy="36" r="1.6" fill="#E2BF5E" opacity=".5"/>${art === "klar" ? `<g class="sterne" fill="#F2D27A"><path class="st1" d="M52 12 l1 2.6 2.6 1 -2.6 1 -1 2.6 -1 -2.6 -2.6 -1 2.6 -1Z"/><path class="st2" d="M10 8 l.8 2 2 .8 -2 .8 -.8 2 -.8 -2 -2 -.8 2 -.8Z"/><path class="st3" d="M56 30 l.6 1.5 1.5 .6 -1.5 .6 -.6 1.5 -.6 -1.5 -1.5 -.6 1.5 -.6Z"/></g>` : ""}`;
+  else svg = `<g class="strahlen" stroke="#E8A93A" stroke-width="3" stroke-linecap="round">${[0, 45, 90, 135, 180, 225, 270, 315].map(w => `<path d="M30 6 L30 12" transform="rotate(${w} 30 30)"/>`).join("")}</g><circle cx="30" cy="30" r="12" fill="#F2C14E"/>`;
+  if (art !== "klar") svg += `<g class="wolke"><path d="M18 50 Q10 50 10 43 Q10 36 18 36 Q20 28 29 28 Q38 28 40 36 Q49 35 50 43 Q50 50 42 50Z" fill="${nacht ? "#9AA6B8" : "#E4E8EE"}" stroke="${nacht ? "#7C889A" : "#C5CCD6"}" stroke-width="1.2"/></g>`;
+  if (art === "regen") svg += `<g class="tropfen" stroke="#5E8EC8" stroke-width="2" stroke-linecap="round"><path d="M20 54 l-2 5"/><path d="M30 54 l-2 5"/><path d="M40 54 l-2 5"/></g>`;
+  if (art === "schnee") svg += `<g class="flocken" fill="#9FC2E6"><circle cx="20" cy="56" r="1.8"/><circle cx="30" cy="58" r="1.8"/><circle cx="40" cy="56" r="1.8"/></g>`;
+  return `<button class="gruss-himmel ${nacht ? "mond" : "sonne"}" data-act="wetter" aria-label="Wetter ansehen"><svg viewBox="0 0 60 64" aria-hidden="true">${svg}</svg>${W ? `<span class="gruss-temp">${Math.round(W.temp)}°</span>` : ""}</button>`;
+}
 function viewHeute() {
   const h = heute(), tf = S.tf[h];
   const liste = eintraegeAm(h);
   const name = S.anrede === "sie" ? (S.nachname ? `Frau ${S.nachname}` : S.name) : S.name;
-  let html = `<div class="gruss"><h1>${tageszeitGruss()}, ${esc(name)}.</h1><div class="datum">${datumLang(h)}</div></div>`;
+  let html = `<div class="gruss">${grussHimmel()}<h1>${tageszeitGruss()}, ${esc(name)}.</h1><div class="datum">${datumLang(h)}</div></div>`;
 
   // laufender Timer / Ausflug unterwegs
   if (S.timer) html += timerKarte();
@@ -97,7 +108,8 @@ function viewHeute() {
   // App aufs Handy legen
   if (!istInstalliert() && S.onboard && h !== S.start && S.installKarte !== "nie" && (!S.installKarte || S.installKarte <= h) && S.eintraege.length >= 1)
     html += `<section class="abschnitt"><div class="bogen streifen"><h3>Die App aufs Handy legen</h3><p class="klein">Dann findest du sie wie jede andere App auf dem Startbildschirm.</p><div class="zeile"><button class="knopf klein zweit" data-act="install">Anleitung zeigen</button><button class="knopf klein leise" data-act="install-spaeter">Später</button></div></div></section>`;
-  html += `<p style="text-align:center;margin:18px 0 6px"><button class="link-knopf" data-act="wunsch-auf">Wunsch oder Idee für die App? Schreib Max!</button></p>`;
+  html += `<p style="text-align:center;margin:18px 0 6px"><button class="link-knopf" data-act="wunsch-auf">Wunsch oder Idee für die App? Schreib Maxi!</button></p>`;
+  html += `<p class="ersteller-fuss">Mit Liebe gemacht von Carlo Maximilian Engeländer für Rita · © 2026</p>`;
   return html;
 }
 function zuletztText(id) {
@@ -153,6 +165,7 @@ function viewIdeen() {
   const vorschl = vorschlaege(tf, 3, "ideen" + heute() + (S._mischen || 0));
   html += `<section class="abschnitt"><h2>Jetzt vielleicht</h2><div class="liste">${vorschl.map(v => zeileBtn(katIcon(v.kat, v), v.titel, `${v.text} · ${v.min ? v.min + " Min." : "kurz"}`, `data-act="idee" data-id="${v.id}"`, "k-geist")).join("")}</div>
     <button class="knopf leise" data-act="mischen">Andere Ideen zeigen</button></section>`;
+  html += `<section class="abschnitt"><button class="exkurs-karte" data-act="bv-auf"><span class="fig-idle">${karinKopfSVG(72)}</span><span class="text"><span class="klein" style="font-weight:700;letter-spacing:.04em">AUSFLUG NACH SMÅLAND</span><span class="titel">Post von Karin aus Vimmerby</span><span class="unter">${bvHeuteNeu() ? "Ein neuer Brief wartet – auf Schwedisch, mit Übersetzung zum Aufklappen." : "Eine ausgedachte Brieffreundin zum Schwedisch-Auffrischen: Krimis, Fika und Katze Sotis."}</span></span></button></section>`;
   const hp = D.hp && D.hp.baende ? D.hp.baende.find(b => b.nr === S.hp.band) : null;
   html += `<section class="abschnitt"><div class="tueren">
     <button class="tuer k-geist" data-act="tuer" data-v="drinnen">${ic("lampe")}<span class="titel">Drinnen</span><span class="unter">Timer, Lesen &amp; Bücherregal, Vorhaben, Patience</span></button>
@@ -699,15 +712,16 @@ function einstellungenInhalt() {
     + einstGruppe("menschen", "tassen", "Herzensmenschen", `${S.menschen.length} in der Auswahl`,
       `<div class="liste">${S.menschen.map((m, i) => `<div class="liste-zeile" style="cursor:default"><span style="width:28px;height:28px;border-radius:4px;background:${m.farbe};flex:none"></span><span class="text"><span class="titel">${esc(m.name)}</span><br><span class="unter">${esc(m.rolle || "")}</span></span><button class="knopf klein leise" data-act="mensch-weg" data-i="${i}" aria-label="${esc(m.name)} entfernen">Entfernen</button></div>`).join("")}</div>
       <div class="zeile" style="margin-top:10px"><input id="neu-mensch" class="text" placeholder="Name" aria-label="Neuer Herzensmensch"><button class="knopf zweit" data-act="mensch-neu">Dazu</button></div>`)
-    + einstGruppe("spiel", "karten", "Waldpatience", S.spiel.an ? `${S.spiel.limitNeu ?? S.spiel.limit} Spielmarken pro Tag` : "ausgeblendet",
+    + einstGruppe("spiel", "karten", "Waldpatience", S.spiel.an ? `${S.spiel.limitNeu ?? S.spiel.limit} Runden à 10 Minuten pro Tag` : "ausgeblendet",
       `${schalter(S.spiel.an, "Spiel anzeigen", `data-act="spiel-an"`)}
-      ${S.spiel.an ? `<label class="feld">Spielmarken pro Tag (je 10 Minuten)</label><div class="chips">${[0, 1, 2, 3, 4, 5, 6].map(n => chip((S.spiel.limitNeu ?? S.spiel.limit) === n, String(n), `data-act="spiel-limit" data-v="${n}" aria-label="${n} Spielmarken pro Tag"`)).join("")}</div><p class="klein">${S.spiel.limitNeu != null && S.spiel.limitNeu !== S.spiel.limit ? "Gilt ab morgen." : "Änderungen gelten ab dem nächsten Tag."}</p>` : ""}`)
+      ${S.spiel.an ? `<label class="feld">Runden pro Tag (je 10 Minuten)</label><div class="chips">${[0, 1, 2, 3, 4, 5, 6].map(n => chip((S.spiel.limitNeu ?? S.spiel.limit) === n, String(n), `data-act="spiel-limit" data-v="${n}" aria-label="${n} Spielmarken pro Tag"`)).join("")}</div><p class="klein">${S.spiel.limitNeu != null && S.spiel.limitNeu !== S.spiel.limit ? "Gilt ab morgen." : "Änderungen gelten ab dem nächsten Tag."}</p>` : ""}`)
     + einstGruppe("musik", "kopfhoerer", "Musik und Podcasts", S.spotify ? "Mit Spotify" : "Über YouTube und ARD Sounds",
       `${schalter(!!S.spotify, "Ich habe Spotify", `data-act="spotify-an"`, "Dann gibt es bei Musik- und Hörtipps zusätzlich einen Spotify-Knopf.")}${S.spotify ? "" : `<button class="knopf klein leise" data-act="spotify-info">Was hätte ich davon?</button>`}`)
     + einstGruppe("hilfe", "frage", "Hilfe und Infos", "So funktioniert’s, aufs Handy legen",
       `<div class="liste">${zeileBtn("frage", "So funktioniert’s", "Liste, Bild, Taler – kurz erklärt", `data-act="erklaerung"`)}
       ${zeileBtn("lichtung", "App aufs Handy legen", "Anleitung mit Bildern", `data-act="install"`)}
       ${zeileBtn("frage", "Über die App", "Von Max, für Rita", `data-act="ueber"`)}</div>`)
+    + `<div class="ersteller"><span class="fig-idle">${maxSVG(48)}</span><p>Diese App hat <b>Carlo Maximilian Engeländer</b> gemacht – für seine tolle Rita.<br><span class="klein">Idee, Texte, Figuren und Gestaltung © 2026 Carlo Maximilian Engeländer. Alle Rechte vorbehalten.</span></p></div>`
     + einstGruppe("daten", "kiste", "Daten und Neustart", "Sicherung, Technik, alles zurücksetzen",
       `<div class="liste">${zeileBtn("hand", "Technik & Sicherung", "Für Max: Sicherung, Wiederherstellen, Schnell-Kacheln, Geburtstag", `data-act="helfer"`)}</div>
       <button class="knopf zweit voll rand warn" style="margin-top:12px" data-act="reset-1">Alles zurücksetzen und neu anfangen</button>`)
@@ -822,7 +836,7 @@ function erklaerungSheet() {
     <div class="bogen"><h3>Stufen</h3><p style="margin:0">Mit der Zeit kommen neue Dinge dazu: eine Bank, ein Steg, eine Lichterkette, ein Hochsitz … Was als Nächstes kommt, steht unter „Bild“.</p></div>
     <div class="bogen"><h3>Taler</h3><p style="margin:0">Für jeden Eintrag gibt es ein paar Taler. Damit kannst du im Kramladen Dinge freischalten: Gedichte, Rezepte, den Tanz-Taktgeber, Schönes fürs Bild. Taler verfallen nie.</p></div>
     <div class="bogen"><h3>Der Stern ✱</h3><p style="margin:0">Ein Stern heißt: ruhiger Tag – und trotzdem was geschafft. Er ist nur am selben Tag zu sehen.</p></div>
-    <div class="bogen"><h3>Spielmarken</h3><p style="margin:0">Eine Marke reicht für 10 Minuten Waldpatience. An ruhigen Tagen ist das Spiel ohne Marken frei.</p></div>
+    <div class="bogen"><h3>Patience</h3><p style="margin:0">Eine Runde dauert 10 Minuten und kostet 10 Taler. An ruhigen Tagen ist das Spiel kostenlos.</p></div>
     <div class="bogen"><h3>Hühnchen</h3><p style="margin:0">Hühnchen fragt morgens nach deiner Energie, sagt ab und zu was dazu und steht im Bild immer da, wo du zuletzt etwas getan hast. Wenn’s nervt: oben rechts aufs Zahnrad, dann „Hühnchen zeigen“ ausschalten.</p></div>
     <div class="bogen"><h3>Notfallplan</h3><p style="margin:0">Unter „Ideen“ und bei „Ablenkung?“ liegt dein Notfallplan: für Momente, in denen es eng wird. Was drinsteht, bestimmst du. Ab und zu üben, dann sitzt er.</p></div>` });
 }

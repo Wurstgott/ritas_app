@@ -59,3 +59,6 @@ D.tbFrueher = [
   "Welches Kleidungsstück aus deiner Kindheit siehst du noch genau vor dir?",
   "Was würdest du der zehnjährigen Rita heute gern sagen?"
 ];
+
+/* Erfundene Erinnerungen vermeiden */
+if (D.ereignisse2) D.ereignisse2 = D.ereignisse2.filter(e => !["e2-max-klausur", "e2-max-bingo"].includes(e.id));

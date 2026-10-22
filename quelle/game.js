@@ -107,10 +107,10 @@ function spielStarten() {
     return;
   }
   const t = talerStand();
-  const html = `<p>Eine Spielmarke reicht für <span style="font-weight:700">10 Minuten</span>. Die laufende Runde ${A("darfst du", "dürfen Sie")} danach in Ruhe zu Ende legen.</p>
-    <div class="bogen mulde"><p style="margin:0">Heute: ${sp.genutzt} von ${sp.limit} Marken genutzt.${sp.geschenkt ? ` ${sp.geschenkt} ${sp.geschenkt === 1 ? "Marke ist" : "Marken sind"} heute geschenkt.` : ""}${sp.marken ? ` ${sp.marken} gekaufte ${sp.marken === 1 ? "Marke liegt" : "Marken liegen"} bereit.` : ""}</p></div>`;
-  const knopf = sp.geschenkt || sp.marken ? `<button class="knopf haupt voll" data-act="marke-nutzen">${ic("karten")} Marke einlösen und spielen</button>`
-    : `<button class="knopf haupt voll" data-act="marke-kaufen" ${t >= 10 ? "" : "disabled"}>${ic("karten")} Marke für 10 Taler</button>${t < 10 ? `<p class="klein">Noch ${10 - t} Taler bis zur nächsten Marke.</p>` : ""}`;
+  const html = `<p>Eine Runde Patience dauert <span style="font-weight:700">10 Minuten</span>. Ist die Zeit um, ${A("darfst du", "dürfen Sie")} die Karten noch in Ruhe fertig legen. So bleibt das Spiel ein Vergnügen und frisst nicht den Tag.</p>
+    <div class="bogen mulde"><p style="margin:0">Heute schon gespielt: ${sp.genutzt}-mal von ${sp.limit}.${sp.geschenkt ? ` ${sp.geschenkt === 1 ? "Eine Runde ist" : sp.geschenkt + " Runden sind"} heute geschenkt.` : ""}${sp.marken ? ` ${sp.marken === 1 ? "Eine bezahlte Runde liegt" : sp.marken + " bezahlte Runden liegen"} bereit.` : ""}</p></div>`;
+  const knopf = sp.geschenkt || sp.marken ? `<button class="knopf haupt voll" data-act="marke-nutzen">${ic("karten")} Jetzt spielen</button>`
+    : `<button class="knopf haupt voll" data-act="marke-kaufen" ${t >= 10 ? "" : "disabled"}>${ic("karten")} ${t >= 10 ? "Für 10 Taler spielen" : `Noch ${10 - t} Taler sammeln`}</button><p class="klein">Eine Runde kostet 10 Taler (du hast ${t}). Taler gibt’s für alles, was du einträgst – zum Beispiel einen Spaziergang oder ein Kapitel.</p>`;
   sheet({ titel: "Waldpatience", inhalt: html, fuss: knopf });
 }
 function markeEinloesen(kaufen) {
