@@ -211,22 +211,37 @@ function tbFragen(tag) {
   }
   return [...new Set(out.concat(TB_FRAGEN.allg))];
 }
+function tbFrueherFragen() { return [...(D.tbFrueher || []), ...((D.lebensbuch || []).map(x => x.frage).filter(f => /Kind|früher|jung|Schul|Eltern|Mutter|Vater|damals/i.test(f)))]; }
+function tbMerkHTML() {
+  const M = S.tbMerk || [];
+  return `<div class="tb-merk"><p class="klein" style="margin:12px 0 6px"><span style="font-weight:700">Merkzettel</span> – fällt dir tagsüber was ein? Kurz notieren, abends ins Tagebuch übertragen. Dann verschwindet’s hier wieder.</p>
+    ${M.map(m => `<div class="tb-merk-zeile"><span>${esc(m.text)}</span><button class="knopf klein leise" data-act="tb-merk-weg" data-id="${m.id}" aria-label="Übertragen">${ic("haken")} übertragen</button></div>`).join("")}
+    <div class="zeile" style="gap:6px;margin-top:6px"><input id="tb-merk-neu" class="text" maxlength="120" placeholder="Stichwort, z. B. „Omas Küchenradio“" style="flex:1;min-width:0"><button class="knopf klein zweit" data-act="tb-merk-neu" aria-label="Merken">${ic("plus")}</button></div></div>`;
+}
 function tagebuchKarte(h) {
+  if (S.tbModus === "frueher") { const fr = tbFrueherFragen(), f = fr[(S.tbDreh || 0) % fr.length], schon = eintraegeAm(h).some(e => e.t === "tagebuch");
+    return `<section class="abschnitt"><div class="bogen streifen k-geist tb-karte"><div class="zeile zwischen" style="align-items:center"><h3 style="margin:0">Für dein Tagebuch</h3><div class="chips">${chip(false, "Heute", `data-act="tb-modus" data-v="heute"`)}${chip(true, "Von früher", `data-act="tb-modus" data-v="frueher"`)}</div></div>
+      <p class="serif tb-frage" style="margin-top:10px">${esc(f)}</p>
+      <div class="zeile" style="gap:8px;flex-wrap:wrap;margin-top:10px">${schon ? "" : `<button class="knopf klein haupt" data-act="tb-geschrieben">${ic("feder")} Hab’s aufgeschrieben</button>`}<button class="knopf klein leise" data-act="tb-andere">Andere Frage</button></div>${tbMerkHTML()}</div></section>`; }
   const tag = tbTag(h), es = eintraegeAm(tag).filter(e => e.t !== "tagebuch" && e.notiz !== "App eingerichtet");
   const was = [...new Set(es.map(e => e.t === "abgehakt" ? e.notiz : (e.person && (S.menschen.find(m => m.id === e.person) || {}).name ? `${tat(e.t).kurz || tat(e.t).name} (${S.menschen.find(m => m.id === e.person).name})` : tat(e.t).kurz || tat(e.t).name)))].filter(Boolean);
   const fr = tbFragen(tag), i = (S.tbDreh || 0) % fr.length, schon = eintraegeAm(h).some(e => e.t === "tagebuch");
   const wann = tag === h ? "Heute" : "Gestern";
-  return `<section class="abschnitt"><div class="bogen streifen k-geist tb-karte"><h3>Für dein Tagebuch</h3>
+  return `<section class="abschnitt"><div class="bogen streifen k-geist tb-karte"><div class="zeile zwischen" style="align-items:center"><h3 style="margin:0">Für dein Tagebuch</h3><div class="chips">${chip(true, "Heute", `data-act="tb-modus" data-v="heute"`)}${chip(false, "Von früher", `data-act="tb-modus" data-v="frueher"`)}</div></div><div style="height:8px"></div>
     ${was.length ? `<p class="klein" style="margin:0 0 8px"><span style="font-weight:700">${wann} in der App:</span> ${esc(was.join(", "))}</p>` : `<p class="klein" style="margin:0 0 8px">Noch nichts eingetragen – eine Frage gibt's trotzdem.</p>`}
     <p class="serif tb-frage">${esc(fr[i])}</p>
     ${schon ? `<p class="klein" style="margin:10px 0 0">✓ Heute schon ins Tagebuch geschrieben. Hühnchen liest nicht mit, Ehrenwort.</p><div class="zeile" style="margin-top:8px"><button class="knopf klein leise" data-act="tb-andere">Andere Frage</button></div>`
       : `<div class="zeile" style="gap:8px;flex-wrap:wrap;margin-top:10px"><button class="knopf klein haupt" data-act="tb-geschrieben">${ic("feder")} Hab's aufgeschrieben</button><button class="knopf klein leise" data-act="tb-andere">Andere Frage</button></div>`}
+    ${tbMerkHTML()}
   </div></section>`;
 }
-function tbAktion(a) {
+function tbAktion(a, d) {
+  if (a === "tb-modus") { S.tbModus = d.v; speichern(); render({ halteScroll: true, ohneAnim: true }); return; }
+  if (a === "tb-merk-neu") { const i = $("#tb-merk-neu"), t = (i?.value || "").trim(); if (!t) { i?.focus(); return; } S.tbMerk = [...(S.tbMerk || []), { id: "m" + Date.now().toString(36), text: t, tag: heute() }]; speichern(); haptik("auswahl"); render({ halteScroll: true, ohneAnim: true }); return; }
+  if (a === "tb-merk-weg") { S.tbMerk = (S.tbMerk || []).filter(m => m.id !== d.id); speichern(); haptik("erfolg"); render({ halteScroll: true, ohneAnim: true }); return; }
   if (a === "tb-andere") { S.tbDreh = (S.tbDreh || 0) + 1; speichern(); haptik("auswahl"); render({ halteScroll: true, ohneAnim: true }); return; }
   if (a === "tb-geschrieben") {
-    const fr = tbFragen(tbTag(heute())), f = fr[(S.tbDreh || 0) % fr.length];
+    const fr = S.tbModus === "frueher" ? tbFrueherFragen() : tbFragen(tbTag(heute())), f = fr[(S.tbDreh || 0) % fr.length];
     const r = eintragSpeichern({ t: "tagebuch", tag: heute(), min: 15, notiz: f });
     if (r) { S.huhnSagt = { tag: heute(), text: ["Steht drin! Ich hab nicht reingeguckt. Fast nicht.", "Tagebuch geschrieben. Das Papier freut sich.", "Aufgeschrieben ist aufgehoben."][Math.floor(Math.random() * 3)] }; speichern(); nachEintrag(r); }
     render({ halteScroll: true, ohneAnim: true });

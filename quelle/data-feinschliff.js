@@ -38,3 +38,24 @@ if (D.huehnchenReaktionen) D.huehnchenReaktionen.hofladen = [
   "Schön, dass du draußen warst! Ich hab hier nur ganz kurz das Kochbuch zugeklappt.",
   "Hofladen. Ich hab gehört, die haben da sehr nette … Möhren."
 ];
+
+/* QR-Code-Jagd kennt Rita längst – raus */
+if (D.stattDaddeln) D.stattDaddeln = D.stattDaddeln.filter(x => x.id !== "SD228");
+/* Fragen „von früher“ fürs Papier-Tagebuch */
+D.tbFrueher = [
+  "Welche Reise aus deiner Kindheit hast du noch genau vor Augen?",
+  "Wer hat dich als Kind getröstet – und wie?",
+  "Welches Lied haben die Erwachsenen gesungen, als du klein warst?",
+  "Was gab es sonntags zu essen, als du ein Kind warst?",
+  "Wie sah dein Schulweg aus? Was lag am Wegrand?",
+  "Welcher Erwachsene hat dich als Kind ernst genommen?",
+  "Was war dein erster eigener Besitz, auf den du stolz warst?",
+  "Wie habt ihr als Kinder Weihnachten gefeiert?",
+  "Welche Regel von früher findest du heute noch richtig – und welche nicht?",
+  "Welcher Satz deiner Eltern klingt dir heute noch im Ohr?",
+  "Wo warst du als Kind am liebsten allein?",
+  "Was hast du dich als Mädchen getraut, was sich andere nicht getraut haben?",
+  "Welche Nachricht aus den Erwachsenengesprächen hast du als Kind aufgeschnappt?",
+  "Welches Kleidungsstück aus deiner Kindheit siehst du noch genau vor dir?",
+  "Was würdest du der zehnjährigen Rita heute gern sagen?"
+];

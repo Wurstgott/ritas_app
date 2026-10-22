@@ -908,3 +908,6 @@ h2, h3 { font-weight: 620; }
 .portrait-gross .winkunter { transform-origin: 78px 108px; animation-name: unterarm-wink3; }
 @keyframes unterarm-wink3 { from { transform: rotate(-5deg); } to { transform: rotate(8deg); } }
 .portrait-gross .winkhand { transform-origin: 82px 72px; }
+.tb-merk-zeile { display: flex; align-items: center; justify-content: space-between; gap: 8px; padding: 4px 0; border-bottom: 1px dashed var(--mulde); }
+.tb-merk-zeile span { min-width: 0; overflow-wrap: anywhere; }
+.tb-karte .chips .chip { min-height: 36px; padding: 4px 12px; font-size: .85rem; }
