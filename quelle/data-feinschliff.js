@@ -62,3 +62,6 @@ D.tbFrueher = [
 
 /* Erfundene Erinnerungen vermeiden */
 if (D.ereignisse2) D.ereignisse2 = D.ereignisse2.filter(e => !["e2-max-klausur", "e2-max-bingo"].includes(e.id));
+
+/* Weitere Spaß-Telefonate (Greta, Pauli, Micha) */
+if (Array.isArray(D.anrufe2)) D.anrufe = [...(D.anrufe || []), ...D.anrufe2.filter(a => !(D.anrufe || []).some(x => x.id === a.id))];

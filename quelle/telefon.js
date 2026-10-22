@@ -3,19 +3,20 @@
    Gespräche aus D.anrufe; noch nicht geführte kommen zuerst.
    Bei Max endet jedes Gespräch im Tschüss-Duell.
    ============================================================ */
-const TEL_WER = { huhn: "Hühnchen", max: "Max", jane: "Jane" };
+const TEL_WER = { huhn: "Hühnchen", max: "Max", jane: "Jane", greta: "Greta", pauli: "Pauli", micha: "Micha" };
+const TEL_REIHE = ["huhn", "max", "jane", "greta", "pauli", "micha"];
 let TEL = null;
 
 function telBild(wer, gr) {
   if (wer === "huhn") return huhnSVG({ gr, kopf: true, stimmung: "spricht" });
   if (wer === "max") return maxSVG(gr);
-  return janeSVG(gr);
+  return ({ jane: janeSVG, greta: gretaSVG, pauli: pauliSVG, micha: michaSVG }[wer] || janeSVG)(gr);
 }
 function telAuswahlSheet() {
   const alle = D.anrufe || [], gef = S.anrufeGefuehrt || {};
   const zahl = w => alle.filter(a => a.wer === w).length, neu = w => alle.filter(a => a.wer === w && !gef[a.id]).length;
   sheet({ titel: "Kurz anrufen", id: "telefon", inhalt: `<p class="klein" style="margin-top:0">Nur zum Spaß – niemand wird wirklich angerufen.</p>
-    <div class="tel-wahl">${["huhn", "max", "jane"].map(w => `<button class="tel-kontakt" data-act="tel-ruf" data-wer="${w}">${telBild(w, 64)}<span class="titel">${TEL_WER[w]}</span><span class="unter">${zahl(w) ? (neu(w) ? `${neu(w)} neue Gespräche` : "alles schon gehört – nochmal?") : "bald"}</span></button>`).join("")}</div>
+    <div class="tel-wahl">${TEL_REIHE.filter(w => (D.anrufe || []).some(a => a.wer === w)).map(w => `<button class="tel-kontakt" data-act="tel-ruf" data-wer="${w}">${telBild(w, 64)}<span class="titel">${TEL_WER[w]}</span><span class="unter">${zahl(w) ? (neu(w) ? `${neu(w)} neue Gespräche` : "alles schon gehört – nochmal?") : "bald"}</span></button>`).join("")}</div>
     <p class="klein" style="margin-top:14px">${Object.keys(gef).length} von ${alle.length} Gesprächen entdeckt.</p>` });
 }
 function telStarten(wer) {

@@ -1006,6 +1006,41 @@ button.gruss-himmel svg { width: 46px; height: 50px; overflow: visible; }
 .ersteller { display: flex; gap: 12px; align-items: center; margin: 16px 0 8px; padding: 12px 14px; border-radius: 16px; background: color-mix(in srgb, var(--moos) 8%, var(--bogen)); }
 .ersteller p { margin: 0; }
 .ersteller-fuss { text-align: center; font-size: .78rem; opacity: .6; margin: 4px 0 18px; }
+/* Telefon-Karte prominent */
+.tel-karte { padding: 14px 14px 16px; border-radius: 20px; background: linear-gradient(160deg, color-mix(in srgb, #E2A93B 16%, var(--bogen)), var(--bogen)); box-shadow: 0 2px 10px rgba(28,38,32,.1); }
+.tel-karte .klein { opacity: .7; }
+.tel-karte-reihe { display: grid; grid-template-columns: repeat(3, 1fr); gap: 10px; margin-top: 12px; }
+.tel-karte-knopf { position: relative; display: grid; justify-items: center; gap: 4px; padding: 10px 4px 8px; border: 0; border-radius: 16px; background: var(--bogen); color: var(--tinte); cursor: pointer; box-shadow: 0 1px 4px rgba(28,38,32,.12); }
+.tel-karte-knopf:active { transform: scale(.97); }
+.tel-karte-bild { width: 66px; height: 66px; display: grid; place-items: center; }
+.tel-karte-bild .huhn { background: var(--mulde); border-radius: 50%; }
+.tel-karte-name { font-weight: 800; }
+.tel-karte-neu { position: absolute; top: 6px; right: 6px; font-size: .7rem; font-weight: 800; padding: 2px 6px; border-radius: 999px; background: #C8462F; color: #fff; }
+.tel-karte-hoerer { position: absolute; top: 52px; right: calc(50% - 40px); width: 26px; height: 26px; border-radius: 50%; display: grid; place-items: center; background: #2F7A4F; color: #fff; animation: hoerer-wackel 3.4s ease-in-out infinite; }
+.tel-karte-hoerer .icon { width: 15px; height: 15px; }
+.tel-karte-knopf:nth-child(2) .tel-karte-hoerer { animation-delay: 1.1s; } .tel-karte-knopf:nth-child(3) .tel-karte-hoerer { animation-delay: 2.2s; }
+@keyframes hoerer-wackel { 0%, 82%, 100% { transform: rotate(0); } 86% { transform: rotate(-16deg); } 90% { transform: rotate(14deg); } 94% { transform: rotate(-10deg); } }
+/* Ideen: Drinnen & Draußen groß, Notfallplan klar abgegrenzt */
+.tueren-gross { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; }
+.tuer-gross { position: relative; overflow: hidden; display: grid; align-content: end; gap: 4px; min-height: 168px; padding: 16px 14px 14px; border: 0; border-radius: 22px; text-align: left; cursor: pointer; color: #FFFDF5; font: inherit; box-shadow: 0 6px 16px rgba(28,38,32,.18); }
+.tuer-gross.drinnen { background: linear-gradient(160deg, #D9822B, #A8502A); }
+.tuer-gross.draussen { background: linear-gradient(160deg, #4E8A4A, #2C5E3A); }
+.tuer-gross .tg-bild { position: absolute; right: -10px; top: -8px; opacity: .25; }
+.tuer-gross .tg-bild .icon { width: 96px; height: 96px; color: #FFFDF5; }
+.tuer-gross .titel { font-family: Fraunces, Georgia, serif; font-size: 1.55rem; font-weight: 700; }
+.tuer-gross .unter { font-size: .86rem; line-height: 1.3; opacity: .92; }
+.tuer-gross:active { transform: scale(.98); }
+.notfall-leiste { display: flex; align-items: center; gap: 12px; width: 100%; margin-top: 14px; padding: 12px 16px; border-radius: 16px; border: 1.5px dashed color-mix(in srgb, #5E7FB0 55%, transparent); background: color-mix(in srgb, #5E7FB0 9%, var(--bogen)); color: var(--tinte); text-align: left; cursor: pointer; font: inherit; }
+.notfall-leiste .icon { width: 30px; height: 30px; color: #4A6A9E; flex: none; }
+.notfall-leiste .titel { display: block; font-weight: 800; }
+.notfall-leiste .unter { display: block; font-size: .86rem; opacity: .8; }
+@media (prefers-color-scheme: dark) { :root:not([data-theme="light"]) .notfall-leiste .icon { color: #A9C2E8; } }
+:root[data-theme="dark"] .notfall-leiste .icon { color: #A9C2E8; }
+.tuer-gross .titel { font-size: 1.4rem; }
+/* Schriftzug: etwas kleiner, dafür breiter laufend bis zum Zahnrad */
+.wm-text { font-size: min(2.3em, 9.6vw); word-spacing: .14em; transform: scaleX(1.16); transform-origin: left center; margin-left: 2px; }
+@media (max-width: 370px) { .wm-text { font-size: 8.6vw; transform: scaleX(1.12); } }
+#knopf-einst.nur-icon svg { width: 48px; height: 48px; padding: 9px; overflow: visible; }
 </style>
 <div id="app">
   <header class="kopf">
@@ -7346,6 +7381,708 @@ D.anrufe = [
   schluss: "Ich hab dich lieb, Rita. Und jetzt such ich die Kuchenbox." }
 ];
 
+/* Spaß-Telefon, Teil 2: kleine Dialogspiele mit Greta, Pauli und Micha.
+   Reines Datenobjekt, gleiches Schema wie D.anrufe. weiter:null = Gespräch endet nach dieser Antwort. */
+D.anrufe2 = [
+
+/* ==================== GRETA ==================== */
+
+{ id: "greta-01", wer: "greta", thema: "Vollmond",
+  knoten: {
+    start: { sagt: "Hallo Rita, heute ist Vollmond! Ich wollte nur fragen, ob du ihn auch siehst.", antworten: [
+      { text: "Groß und rund über dem Forst.", weiter: "k2" },
+      { text: "Der guckt mir gerade ins Fenster.", weiter: "k3" } ] },
+    k2: { sagt: "Wie schön. Bei Vollmond soll man Kräuter ernten, dann sind sie besonders kräftig, sagt man.", antworten: [
+      { text: "Mein Schnittlauch ist immer kräftig.", weiter: "k4" },
+      { text: "Und was sagt die Wissenschaft?", weiter: "k5" } ] },
+    k3: { sagt: "Dann sag ihm Hallo von mir. Ich bin sicher, er hat einen guten Geschmack, was Fenster angeht.", antworten: [
+      { text: "Er hat einen Logenplatz, der Gute.", weiter: "k4" },
+      { text: "Ich mach ihm gleich einen Tee.", weiter: "k4" } ] },
+    k4: { sagt: "Ich gehe gleich raus und schneide Zitronenmelisse. Max hält mir die Taschenlampe.", antworten: [
+      { text: "Bei Vollmond braucht man keine Lampe.", weiter: "k6" },
+      { text: "Hauptsache, er leuchtet nicht dir ins Gesicht.", weiter: "k6" } ] },
+    k5: { sagt: "Die Wissenschaft sagt: Bitte mehr Studien. Ich finde, ein bisschen Mondzauber schadet trotzdem nicht.", antworten: [
+      { text: "Ein bisschen Zauber ist nie verkehrt.", weiter: "k4" },
+      { text: "Ich bin eher der Teebeutel-Typ.", weiter: "k4" } ] },
+    k6: { sagt: "Das hab ich ihm auch gesagt. Er meint, er leuchte lieber den Mond an, damit der sich nicht übersehen fühlt.", antworten: [
+      { text: "Ganz der Max.", weiter: null },
+      { text: "Grüß ihn und den Mond.", weiter: null } ] }
+  },
+  schluss: "Gute Nacht, Rita. Der Mond und ich winken dir." },
+
+{ id: "greta-02", wer: "greta", thema: "Umzugskisten",
+  knoten: {
+    start: { sagt: "Rita, ich brauch kurz deine Expertise. Max beschriftet alle Umzugskisten mit „Zeug“.", antworten: [
+      { text: "Das ist wenigstens ehrlich.", weiter: "k2" },
+      { text: "Gib ihm sofort einen dicken Stift.", weiter: "k3" } ] },
+    k2: { sagt: "Ehrlich schon. Aber in Leipzig stehen dann zwanzig Kisten „Zeug“, und ich suche die Teekanne.", antworten: [
+      { text: "Die Teekanne trägst du selbst.", weiter: "k4" },
+      { text: "Mach eine Liste mit Nummern.", weiter: "k5" } ] },
+    k3: { sagt: "Hat er schon. Jetzt steht „ZEUG“ in Großbuchstaben drauf.", antworten: [
+      { text: "Immerhin ist er gut lesbar.", weiter: "k2" },
+      { text: "Dann bekommt er ein Farbsystem.", weiter: "k5" } ] },
+    k4: { sagt: "Das ist weise. Die Teekanne fährt auf meinem Schoß, in ein Handtuch gewickelt wie ein Baby.", antworten: [
+      { text: "So gehört sich das.", weiter: "k6" },
+      { text: "Und Max auf dem Rücksitz?", weiter: "k6" } ] },
+    k5: { sagt: "Eine Liste! Max hat gesagt, du würdest genau das sagen. Er kennt dich wirklich gut.", antworten: [
+      { text: "Und trotzdem schreibt er „Zeug“.", weiter: "k6" },
+      { text: "Listen sind mein zweiter Vorname.", weiter: "k6" } ] },
+    k6: { sagt: "Ich glaube, ich schreibe jetzt auf jede Kiste noch ein kleines Wort dazu. „Küchenzeug“, „Bücherzeug“, „Gretazeug“.", antworten: [
+      { text: "Und eine Kiste „Maxzeug“.", weiter: null },
+      { text: "So sieht Ordnung aus. Bravo!", weiter: null } ] }
+  },
+  schluss: "Danke, Rita! Ich geh jetzt Kisten taufen." },
+
+{ id: "greta-03", wer: "greta", thema: "Lieblingstee",
+  knoten: {
+    start: { sagt: "Ich mische gerade Kräutertee für den Winter. Was ist eigentlich dein Lieblingstee, Rita?", antworten: [
+      { text: "Schwarz, stark, mit Zucker.", weiter: "k2" },
+      { text: "Kommt drauf an, wie der Tag war.", weiter: "k3" } ] },
+    k2: { sagt: "Oh, eine Frau mit klarer Haltung. Ich würde dir trotzdem gern eine kleine Mischung schicken, ganz unverbindlich.", antworten: [
+      { text: "Was ist denn drin?", weiter: "k4" },
+      { text: "Unverbindlich trinke ich alles.", weiter: "k5" } ] },
+    k3: { sagt: "Das gefällt mir. Also ein Tee für jede Stimmung? Erzähl mal.", antworten: [
+      { text: "Morgens wach, abends gemütlich.", weiter: "k4" },
+      { text: "Bei Krimis immer Pfefferminze.", weiter: "k5" } ] },
+    k4: { sagt: "Melisse, Ringelblume und ein bisschen Apfelminze. Ich hab sie bei abnehmendem Mond getrocknet.", antworten: [
+      { text: "Schmeckt man den Mond?", weiter: "k6" },
+      { text: "Klingt nach einem Sommer in der Tasse.", weiter: "k6" } ] },
+    k5: { sagt: "Perfekt. Dann nenne ich die Mischung „Rita“. Mit einem kleinen Kommissar auf dem Etikett.", antworten: [
+      { text: "Mit Hut, bitte.", weiter: "k6" },
+      { text: "Ich fühle mich sehr geehrt.", weiter: "k6" } ] },
+    k6: { sagt: "Ich packe sie dir ein und Max bringt sie beim nächsten Besuch mit. Wenn er sie nicht vorher austrinkt.", antworten: [
+      { text: "Kleb ein Schild „Finger weg“ drauf.", weiter: null },
+      { text: "Ich zähle die Teebeutel nach.", weiter: null } ] }
+  },
+  schluss: "Bis bald, Rita! Und lass dir den Tee schmecken." },
+
+{ id: "greta-04", wer: "greta", thema: "Atemübung",
+  knoten: {
+    start: { sagt: "Ich hab heute eine neue Atemübung gelernt. Vier Sekunden ein, vier halten, vier aus. Willst du mitmachen?", antworten: [
+      { text: "Ich atme schon ein Leben lang.", weiter: "k2" },
+      { text: "Na gut, zähl du vor.", weiter: "k3" } ] },
+    k2: { sagt: "Ha! Und das sehr erfolgreich, würde ich sagen. Du bist quasi Profi.", antworten: [
+      { text: "Ohne Zertifikat, aber mit Erfahrung.", weiter: "k4" },
+      { text: "Ich könnte Kurse geben.", weiter: "k5" } ] },
+    k3: { sagt: "Eins, zwei, drei, vier … und halten … Rita, kicherst du?", antworten: [
+      { text: "Ich halte nur sehr fröhlich.", weiter: "k4" },
+      { text: "Das Hühnchen guckt so komisch.", weiter: "k4" } ] },
+    k4: { sagt: "Das ist die beste Version, die ich je gehört habe. Ich glaube, Lachen zählt auch als Atemübung.", antworten: [
+      { text: "Dann übe ich jeden Tag.", weiter: "k6" },
+      { text: "Bei Max-Anrufen übe ich doppelt.", weiter: "k6" } ] },
+    k5: { sagt: "Ich wäre die Erste in der Reihe. Wie hieße dein Kurs?", antworten: [
+      { text: "„Einfach machen“, ganz klar.", weiter: "k6" },
+      { text: "„Tief durchatmen und Tee kochen“.", weiter: "k6" } ] },
+    k6: { sagt: "Den Titel klau ich mir für meinen Kalender. Mit Quellenangabe, versprochen.", antworten: [
+      { text: "Rita, Spandauer Forst, sehr gerne.", weiter: null },
+      { text: "Ich will Tantiemen in Tee.", weiter: null } ] }
+  },
+  schluss: "Danke fürs Mitatmen, Rita. Das war schön." },
+
+{ id: "greta-05", wer: "greta", thema: "Hofladen",
+  knoten: {
+    start: { sagt: "Rita, ich hab gehört, du hast einen tollen Hofladen in der Nähe. Was kaufst du da am liebsten?", antworten: [
+      { text: "Eier, Kartoffeln und … psst.", weiter: "k2" },
+      { text: "Alles, was nach Sonntag riecht.", weiter: "k3" } ] },
+    k2: { sagt: "Psst? Warum flüstern wir? Ist jemand in der Nähe?", antworten: [
+      { text: "Das Hühnchen hört mit.", weiter: "k4" },
+      { text: "Es geht um Maishähnchen.", weiter: "k5" } ] },
+    k3: { sagt: "Was für eine schöne Beschreibung. Ich frag bei Hofläden immer, wie die Tiere leben, das ist so ein Studiending.", antworten: [
+      { text: "Frag die Bäuerin, die erzählt gern.", weiter: "k4" },
+      { text: "Die Hühner dort laufen draußen.", weiter: "k5" } ] },
+    k4: { sagt: "Oh, ich verstehe. Dann reden wir in Codewörtern. Ich sage „gelbe Sonne“, und du weißt Bescheid.", antworten: [
+      { text: "Die gelbe Sonne war köstlich.", weiter: "k6" },
+      { text: "Gelbe Sonne mit Kartoffeln, perfekt.", weiter: "k6" } ] },
+    k5: { sagt: "Ganz leise: Maishähnchen von Höfen mit Auslauf finde ich gut. Aber das Hühnchen muss das ja nicht wissen.", antworten: [
+      { text: "Das bleibt unter uns.", weiter: "k6" },
+      { text: "Das Hühnchen ist aus Ton.", weiter: "k6" } ] },
+    k6: { sagt: "Wenn ich das nächste Mal da bin, gehen wir zusammen hin. Ich bringe einen Korb und gute Tarnung mit.", antworten: [
+      { text: "Ich bringe die Sonnenbrille.", weiter: null },
+      { text: "Abgemacht. Geheimmission Hofladen.", weiter: null } ] }
+  },
+  schluss: "Ich muss los, Rita. Grüß die gelbe Sonne von mir!" },
+
+{ id: "greta-06", wer: "greta", thema: "Max’ Macken",
+  knoten: {
+    start: { sagt: "Rita, darf ich dich was fragen? Max sortiert seine Socken nach Laune, nicht nach Farbe. War das schon immer so?", antworten: [
+      { text: "Max hatte schon immer System.", weiter: "k2" },
+      { text: "Was ist denn heute seine Laune?", weiter: "k3" } ] },
+    k2: { sagt: "Ja, sein eigenes. Ich verstehe es nur noch nicht ganz. Gibt es eine Anleitung?", antworten: [
+      { text: "Die hat er nur im Kopf.", weiter: "k4" },
+      { text: "Frag ihn mit viel Geduld.", weiter: "k5" } ] },
+    k3: { sagt: "Heute sind es die grünen mit den Dinos. Er sagt, das ist ein „Dienstagsgefühl“.", antworten: [
+      { text: "Dinos sind ein guter Dienstag.", weiter: "k4" },
+      { text: "Und mittwochs trägt er Wale?", weiter: "k5" } ] },
+    k4: { sagt: "Ich glaube, ich fange an, es zu mögen. Man weiß morgens immer, wie er drauf ist.", antworten: [
+      { text: "Ein Barometer mit Füßen.", weiter: "k6" },
+      { text: "Praktischer als jede Wetter-App.", weiter: "k6" } ] },
+    k5: { sagt: "Ich hab gefragt. Er hat eine halbe Stunde erklärt und am Ende selbst gelacht.", antworten: [
+      { text: "Das ist das beste Zeichen.", weiter: "k4" },
+      { text: "Dann hat er es auch nicht verstanden.", weiter: "k4" } ] },
+    k6: { sagt: "Danke, Rita. Du weißt so viel über ihn, ich frag dich jetzt öfter, wenn ich ihn entschlüsseln muss.", antworten: [
+      { text: "Mein Telefon ist immer offen.", weiter: null },
+      { text: "Für Max-Fragen gibt’s keine Wartezeit.", weiter: null } ] }
+  },
+  schluss: "Ich geh jetzt Socken deuten. Bis bald, Rita!" },
+
+{ id: "greta-07", wer: "greta", thema: "Tagebuch",
+  knoten: {
+    start: { sagt: "Max hat erzählt, du schreibst Tagebuch auf Papier. Ich hab gerade auch damit angefangen!", antworten: [
+      { text: "Willkommen im Club der Füller.", weiter: "k2" },
+      { text: "Was schreibst du denn so rein?", weiter: "k3" } ] },
+    k2: { sagt: "Ich schreibe allerdings mit Bleistift. Darf ich trotzdem in den Club?", antworten: [
+      { text: "Bleistift ist die Probezeit.", weiter: "k4" },
+      { text: "Mit Radiergummi ist das Schummeln.", weiter: "k4" } ] },
+    k3: { sagt: "Mondphasen, was im Garten blüht und drei gute Dinge pro Tag. Heute war eins davon: Rita anrufen.", antworten: [
+      { text: "Da bin ich ja in bester Gesellschaft.", weiter: "k5" },
+      { text: "Und die anderen zwei?", weiter: "k5" } ] },
+    k4: { sagt: "Ha, du bist streng! Was schreibst du eigentlich rein, wenn ich fragen darf?", antworten: [
+      { text: "Alles, was der Tag so bringt.", weiter: "k6" },
+      { text: "Das ist streng geheim.", weiter: "k6" } ] },
+    k5: { sagt: "Ein Kohlrabi, der endlich gewachsen ist, und Max, der ohne Wecker aufgestanden ist. Beides selten.", antworten: [
+      { text: "Das Zweite ist seltener.", weiter: "k6" },
+      { text: "Das gehört eingerahmt.", weiter: "k6" } ] },
+    k6: { sagt: "Ich male jetzt noch einen kleinen Mond an den Rand. Das gehört bei mir dazu.", antworten: [
+      { text: "Ich male heute ein Hühnchen.", weiter: null },
+      { text: "Mach ihn halb, wie heute.", weiter: null } ] }
+  },
+  schluss: "Bis bald, Rita. Ich schreib dich gleich auf." },
+
+{ id: "greta-08", wer: "greta", thema: "Balkon in Leipzig",
+  knoten: {
+    start: { sagt: "Die neue Wohnung in Leipzig hat einen Balkon! Ich plane schon ein Hochbeet.", antworten: [
+      { text: "Wie groß ist der Balkon?", weiter: "k2" },
+      { text: "Was soll denn reinwachsen?", weiter: "k3" } ] },
+    k2: { sagt: "Ehrlich gesagt: zwei Stühle und ein Gedanke. Aber ich bin ja Expertin für kleine Flächen.", antworten: [
+      { text: "Dann wird es ein Hochbeetchen.", weiter: "k4" },
+      { text: "Stapel die Töpfe in die Höhe.", weiter: "k5" } ] },
+    k3: { sagt: "Tomaten, Kapuzinerkresse und Kräuter für Tee. Und Max will unbedingt Erdbeeren.", antworten: [
+      { text: "Die isst er vor der Ernte.", weiter: "k4" },
+      { text: "Erdbeeren sind ein guter Plan.", weiter: "k5" } ] },
+    k4: { sagt: "Das hab ich auch schon befürchtet. Vielleicht pflanze ich einfach doppelt so viele.", antworten: [
+      { text: "Eine für ihn, eine für dich.", weiter: "k6" },
+      { text: "Oder ein Schild „Nicht naschen“.", weiter: "k6" } ] },
+    k5: { sagt: "Ja, in die Höhe! Ein grüner Turm. Micha baut mir vielleicht ein Gestell.", antworten: [
+      { text: "Dann hält es hundert Jahre.", weiter: "k6" },
+      { text: "Und hängt Chilis dran.", weiter: "k6" } ] },
+    k6: { sagt: "Wenn es fertig ist, schicke ich dir ein Foto. Und im Sommer gibt’s die erste Tomate für dich.", antworten: [
+      { text: "Ich freu mich drauf.", weiter: null },
+      { text: "Ich male sie dir dann.", weiter: null } ] }
+  },
+  schluss: "Ich geh jetzt Balkon vermessen. Mit Zollstock und Hoffnung." },
+
+{ id: "greta-09", wer: "greta", thema: "Malen",
+  knoten: {
+    start: { sagt: "Max sagt, du malst so schön. Was malst du gerade?", antworten: [
+      { text: "Bäume aus dem Forst.", weiter: "k2" },
+      { text: "Das Hühnchen, schon wieder.", weiter: "k3" } ] },
+    k2: { sagt: "Oh, wie schön. Kiefern oder Eichen? Ich hab ein Herz für Eichen.", antworten: [
+      { text: "Kiefern, die halten still.", weiter: "k4" },
+      { text: "Alles, was sich gerade färbt.", weiter: "k5" } ] },
+    k3: { sagt: "Das Hühnchen! Steht es dir gern Modell?", antworten: [
+      { text: "Es bewegt sich nie. Perfekt.", weiter: "k4" },
+      { text: "Es will immer seine gute Seite.", weiter: "k4" } ] },
+    k4: { sagt: "Ich male gerade Mandalas aus Blättern. Das beruhigt so schön, und am Ende fegt der Wind sie weg.", antworten: [
+      { text: "Moderne Kunst mit Ablaufdatum.", weiter: "k6" },
+      { text: "Mach vorher ein Foto.", weiter: "k6" } ] },
+    k5: { sagt: "Der Herbst ist der beste Maler, finde ich. Wir dürfen nur abmalen.", antworten: [
+      { text: "Und ich mische die Farben nach.", weiter: "k4" },
+      { text: "Der Herbst hat mehr Farben als ich.", weiter: "k4" } ] },
+    k6: { sagt: "Weißt du was? Wenn ich bei dir bin, malen wir zusammen. Du zeigst mir die Bäume, ich bringe die Blätter.", antworten: [
+      { text: "Abgemacht. Ich koche den Tee.", weiter: null },
+      { text: "Das Hühnchen macht die Jury.", weiter: null } ] }
+  },
+  schluss: "Bis bald, Rita! Pinsel hoch!" },
+
+{ id: "greta-10", wer: "greta", thema: "Krimi-Tipp",
+  knoten: {
+    start: { sagt: "Rita, ich brauche einen Krimi für die Zugfahrt. Max meint, du bist die Expertin.", antworten: [
+      { text: "Wie viel Gänsehaut verträgst du?", weiter: "k2" },
+      { text: "Wie lange fährt der Zug?", weiter: "k3" } ] },
+    k2: { sagt: "Eher wenig. Ich lese manchmal mit einer Hand vor den Augen.", antworten: [
+      { text: "Dann etwas mit Schnee und Tee.", weiter: "k4" },
+      { text: "Die Hand ist der Lesetrick.", weiter: "k5" } ] },
+    k3: { sagt: "Bis Leipzig ungefähr eine Stunde. Der Mörder muss sich also beeilen.", antworten: [
+      { text: "Dann nimm einen mit kurzen Kapiteln.", weiter: "k4" },
+      { text: "Gute Kommissare sind schnell.", weiter: "k5" } ] },
+    k4: { sagt: "Schnee und Tee klingt sehr nach mir. Gibt’s da auch einen netten Kommissar?", antworten: [
+      { text: "Einen grummeligen mit gutem Herzen.", weiter: "k6" },
+      { text: "Nett ist er erst ab Seite hundert.", weiter: "k6" } ] },
+    k5: { sagt: "Ich merk schon, du liest anders als ich. Du liest wie eine Ermittlerin.", antworten: [
+      { text: "Ich errate den Täter meistens früh.", weiter: "k6" },
+      { text: "Ich hab den Spürsinn im Blut.", weiter: "k6" } ] },
+    k6: { sagt: "Dann verrat mir bitte nur nicht, wer es war. Ich will mich wenigstens ein bisschen gruseln.", antworten: [
+      { text: "Ich schweige wie ein Grab.", weiter: null },
+      { text: "Nur ein kleiner Tipp: der Gärtner.", weiter: null } ] }
+  },
+  schluss: "Danke, Rita! Ich such mir gleich einen aus." },
+
+/* ==================== PAULI ==================== */
+
+{ id: "pauli-01", wer: "pauli", thema: "Kochende Männer",
+  knoten: {
+    start: { sagt: "Rita, kurze Umfrage. Müssen Männer heute kochen können?", antworten: [
+      { text: "Sie müssen nicht. Sie sollten.", weiter: "k2" },
+      { text: "Kommt drauf an, wer fragt.", weiter: "k3" } ] },
+    k2: { sagt: "Sehr gut formuliert. Ich notier das für meine Statistik.", antworten: [
+      { text: "Wie viele hast du schon gefragt?", weiter: "k4" },
+      { text: "Schreib dazu: mit Nachdruck.", weiter: "k4" } ] },
+    k3: { sagt: "Ich frage. Und ich hab gestern Max’ Nudeln gegessen.", antworten: [
+      { text: "Dann lautet die Antwort: ja.", weiter: "k5" },
+      { text: "Waren sie wenigstens heiß?", weiter: "k5" } ] },
+    k4: { sagt: "Drei. Du, meine Mitbewohnerin und der Typ vom Späti. Der hat nur gegrunzt.", antworten: [
+      { text: "Grunzen zählt als Enthaltung.", weiter: "k6" },
+      { text: "Repräsentativ ist das nicht.", weiter: "k6" } ] },
+    k5: { sagt: "Lauwarm und mit Ketchup. Er nannte es „italienisch inspiriert“.", antworten: [
+      { text: "Inspiriert ist ein dehnbarer Begriff.", weiter: "k6" },
+      { text: "Italien wäre beleidigt.", weiter: "k6" } ] },
+    k6: { sagt: "Ich halte fest: Rita ist für kochende Männer und gegen lauwarme Ausreden.", antworten: [
+      { text: "Das kannst du so drucken.", weiter: null },
+      { text: "Und für Frauen mit Meinung.", weiter: null } ] }
+  },
+  schluss: "Umfrage beendet. Danke, Rita, du warst die beste Stimme." },
+
+{ id: "pauli-02", wer: "pauli", thema: "Tanzen früher",
+  knoten: {
+    start: { sagt: "Rita, sag mal ehrlich. Wurde früher besser getanzt als heute?", antworten: [
+      { text: "Früher wurde mehr getanzt.", weiter: "k2" },
+      { text: "Heute wird mehr gehüpft.", weiter: "k3" } ] },
+    k2: { sagt: "Mehr? Ihr hattet doch gar kein Handy, das euch ablenkt.", antworten: [
+      { text: "Eben. Wir hatten die Füße frei.", weiter: "k4" },
+      { text: "Wir hatten Musik und Mut.", weiter: "k4" } ] },
+    k3: { sagt: "Gehüpft! Das ist hart, aber fair. Ich hüpfe auf Konzerten wirklich nur.", antworten: [
+      { text: "Hüpfen ist auch eine Kunst.", weiter: "k5" },
+      { text: "Ich zeig dir mal einen Walzer.", weiter: "k5" } ] },
+    k4: { sagt: "Klingt besser als jede Clubnacht in Halle. Hat dich jemand aufgefordert oder hast du aufgefordert?", antworten: [
+      { text: "Ich hab nie lange gewartet.", weiter: "k6" },
+      { text: "Wer zögert, hält die Handtasche.", weiter: "k6" } ] },
+    k5: { sagt: "Walzer, ich? Ich würde dir auf die Füße treten, ganz emanzipiert.", antworten: [
+      { text: "Meine Füße sind das gewohnt.", weiter: "k6" },
+      { text: "Dann führst eben du.", weiter: "k6" } ] },
+    k6: { sagt: "Rita, du bist cooler als die Hälfte meiner Freundinnen. Sag das bloß niemandem.", antworten: [
+      { text: "Nur der Hälfte?", weiter: null },
+      { text: "Das wusste ich schon.", weiter: null } ] }
+  },
+  schluss: "Ich hüpf dann mal weiter. Bis bald, Rita!" },
+
+{ id: "pauli-03", wer: "pauli", thema: "Plakat-Spruch",
+  knoten: {
+    start: { sagt: "Ich bastle ein Plakat für den Frauentag. Mir fehlt nur noch der Spruch.", antworten: [
+      { text: "Was soll er denn sagen?", weiter: "k2" },
+      { text: "Kurz und frech, bitte.", weiter: "k3" } ] },
+    k2: { sagt: "Irgendwas mit Stärke. Aber nicht so pathetisch, sonst lacht mich meine WG aus.", antworten: [
+      { text: "„Frauen machen das schon.“", weiter: "k4" },
+      { text: "„Einfach machen. Grüße, Rita.“", weiter: "k5" } ] },
+    k3: { sagt: "Frech kann ich. Kurz ist mein Problem, ich schreibe immer Romane auf Pappe.", antworten: [
+      { text: "Drei Wörter, nicht mehr.", weiter: "k4" },
+      { text: "Größere Pappe, kleinere Buchstaben.", weiter: "k5" } ] },
+    k4: { sagt: "Oh, das ist gut. Trocken, selbstbewusst, passt auf jede Pappe.", antworten: [
+      { text: "Mit Ausrufezeichen, bitte.", weiter: "k6" },
+      { text: "Und mal eine Blume dran.", weiter: "k6" } ] },
+    k5: { sagt: "Ich hab’s laut vorgelesen, meine Mitbewohnerin hat applaudiert. Darf ich dich zitieren?", antworten: [
+      { text: "Mit vollem Namen, bitte.", weiter: "k6" },
+      { text: "Gegen eine kleine Gebühr.", weiter: "k6" } ] },
+    k6: { sagt: "Ich schick dir ein Foto vom fertigen Plakat. Du bist jetzt offiziell meine Chefredakteurin.", antworten: [
+      { text: "Ich nehme die Wahl an.", weiter: null },
+      { text: "Gehalt in Kuchen, bitte.", weiter: null } ] }
+  },
+  schluss: "Ich geh jetzt malen. Mit Edding und Haltung." },
+
+{ id: "pauli-04", wer: "pauli", thema: "Halle gegen Berlin",
+  knoten: {
+    start: { sagt: "Ich hab eine steile These. Halle ist das neue Berlin.", antworten: [
+      { text: "Das sagt ihr jedes Jahr.", weiter: "k2" },
+      { text: "Wo ist dann euer Forst?", weiter: "k3" } ] },
+    k2: { sagt: "Und jedes Jahr stimmt es ein bisschen mehr. Wir haben Kunst, Kneipen und keine Staus.", antworten: [
+      { text: "Wir haben Wildschweine.", weiter: "k4" },
+      { text: "Keine Staus? Dann ist es langweilig.", weiter: "k5" } ] },
+    k3: { sagt: "Wir haben die Heide. Und die Saale. Das ist so ähnlich, nur mit mehr Ruderern.", antworten: [
+      { text: "Ruderer sind keine Kiefern.", weiter: "k4" },
+      { text: "Na gut, ein Punkt für Halle.", weiter: "k5" } ] },
+    k4: { sagt: "Okay, Wildschweine sind ein starkes Argument. Die haben wir nur in der Kneipe.", antworten: [
+      { text: "Das gilt nicht.", weiter: "k6" },
+      { text: "Dann steht’s unentschieden.", weiter: "k6" } ] },
+    k5: { sagt: "Langweilig? Rita, du klingst wie eine echte Berlinerin.", antworten: [
+      { text: "Spandauerin. Das ist was anderes.", weiter: "k6" },
+      { text: "Das nehme ich als Kompliment.", weiter: "k6" } ] },
+    k6: { sagt: "Ich schlage vor: Du besuchst mich, und wir entscheiden vor Ort. Mit Kaffee und Stadtrundgang.", antworten: [
+      { text: "Ich bringe meine Wanderschuhe.", weiter: null },
+      { text: "Aber ich bleibe parteiisch.", weiter: null } ] }
+  },
+  schluss: "Bis bald, Rita. Halle wartet. Ich auch." },
+
+{ id: "pauli-05", wer: "pauli", thema: "Max zieht weg",
+  knoten: {
+    start: { sagt: "Max zieht nach Leipzig. Ich bin dann offiziell das einzige Geschwisterkind in Halle.", antworten: [
+      { text: "Glückwunsch zur Alleinherrschaft.", weiter: "k2" },
+      { text: "Wer bringt dir jetzt Nudeln?", weiter: "k3" } ] },
+    k2: { sagt: "Danke. Ich plane schon meine erste Amtshandlung. Sein Lieblingscafé gehört jetzt mir.", antworten: [
+      { text: "Das ist eine feindliche Übernahme.", weiter: "k4" },
+      { text: "Sehr pragmatisch, Frau Präsidentin.", weiter: "k4" } ] },
+    k3: { sagt: "Niemand, zum Glück. Ich koche jetzt selbst, also, ich bestelle selbst.", antworten: [
+      { text: "Das ist auch eine Fähigkeit.", weiter: "k5" },
+      { text: "Ich schick dir ein Rezept.", weiter: "k5" } ] },
+    k4: { sagt: "Eine freundliche. Leipzig ist ja nur eine halbe Stunde weg, er darf jederzeit zu Besuch kommen.", antworten: [
+      { text: "Und Greta bringt Kräutertee mit.", weiter: "k6" },
+      { text: "Mit Kuchen als Eintrittskarte.", weiter: "k6" } ] },
+    k5: { sagt: "Ein Rezept von dir? Das häng ich in die WG-Küche. Neben den Putzplan.", antworten: [
+      { text: "Dann wird es auch benutzt.", weiter: "k6" },
+      { text: "Da hängt es gut.", weiter: "k6" } ] },
+    k6: { sagt: "Ehrlich gesagt freu ich mich für die zwei. Aber sag ihm das nicht, sonst wird er sentimental.", antworten: [
+      { text: "Mein Mund ist versiegelt.", weiter: null },
+      { text: "Ich sag nur „Pauli grüßt“.", weiter: null } ] }
+  },
+  schluss: "So, ich muss los. Das Café ruft. Mein Café." },
+
+{ id: "pauli-06", wer: "pauli", thema: "Fahrradreparatur",
+  knoten: {
+    start: { sagt: "Ich hab heute mein Fahrrad selbst repariert. Ohne Video, ohne Typen, der mir’s erklärt.", antworten: [
+      { text: "Bravo! Was war kaputt?", weiter: "k2" },
+      { text: "Und, fährt es noch?", weiter: "k3" } ] },
+    k2: { sagt: "Die Kette. Sie ist runtergesprungen, wie jeden Dienstag. Ich glaube, sie hat Freiheitsdrang.", antworten: [
+      { text: "Das kenn ich, die Gute.", weiter: "k4" },
+      { text: "Spann sie, dann bleibt sie da.", weiter: "k5" } ] },
+    k3: { sagt: "Es fährt. Es quietscht jetzt nur ein bisschen, wie ein Protestlied.", antworten: [
+      { text: "Ein Fahrrad mit Haltung.", weiter: "k4" },
+      { text: "Ein Tropfen Öl, und es singt leiser.", weiter: "k5" } ] },
+    k4: { sagt: "Genau. Ich nenn es jetzt Rosa. Nach der Farbe oder nach der Revolution, such dir was aus.", antworten: [
+      { text: "Beides passt zu dir.", weiter: "k6" },
+      { text: "Ein schöner Name für ein Rad.", weiter: "k6" } ] },
+    k5: { sagt: "Du bist ja handwerklich unterwegs. Hast du immer alles selbst repariert?", antworten: [
+      { text: "Was ich nicht kann, lerne ich.", weiter: "k6" },
+      { text: "Selbst ist die Frau.", weiter: "k6" } ] },
+    k6: { sagt: "Das schreib ich mir an die Wand. Du bist echt mein Vorbild für Selbermachen.", antworten: [
+      { text: "Und du meins für Mut.", weiter: null },
+      { text: "Jetzt fahr vorsichtig, Meisterin.", weiter: null } ] }
+  },
+  schluss: "Rosa und ich drehen eine Runde. Tschau, Rita!" },
+
+{ id: "pauli-07", wer: "pauli", thema: "Hermine",
+  knoten: {
+    start: { sagt: "Max sagt, du liest Harry Potter, Band vier. Wer ist da eigentlich die Heldin?", antworten: [
+      { text: "Hermine, ganz klar.", weiter: "k2" },
+      { text: "Die Heldin? Nicht der Held?", weiter: "k3" } ] },
+    k2: { sagt: "Wusste ich’s. Sie gründet da doch diesen Verein für die Hauselfen, oder?", antworten: [
+      { text: "Und keiner will Mitglied werden.", weiter: "k4" },
+      { text: "Sie strickt sogar Mützen für sie.", weiter: "k5" } ] },
+    k3: { sagt: "Ich frag immer nach der Heldin. Alte Gewohnheit, wenn man feministisch erzogen wurde.", antworten: [
+      { text: "Gute Erziehung, würde ich sagen.", weiter: "k2" },
+      { text: "Dann ist es Hermine.", weiter: "k2" } ] },
+    k4: { sagt: "Typisch. Erst wenn es zu spät ist, merken alle, dass sie recht hatte.", antworten: [
+      { text: "Das kenne ich von mir.", weiter: "k6" },
+      { text: "Hermine hat meistens recht.", weiter: "k6" } ] },
+    k5: { sagt: "Mützen stricken für die Revolution. Das ist so liebenswert, dass es schon wieder radikal ist.", antworten: [
+      { text: "Strick du doch auch mal.", weiter: "k6" },
+      { text: "Mit Wolle die Welt verbessern.", weiter: "k6" } ] },
+    k6: { sagt: "Okay, ich bin überzeugt. Ich leih mir Band vier, dann diskutieren wir.", antworten: [
+      { text: "Aber nicht spoilern, ich bin mittendrin.", weiter: null },
+      { text: "Gründen wir einen Lesekreis.", weiter: null } ] }
+  },
+  schluss: "Bis bald, Rita. Hermine wäre stolz auf uns." },
+
+{ id: "pauli-08", wer: "pauli", thema: "Vorbilder",
+  knoten: {
+    start: { sagt: "Ich schreib gerade was über starke Frauen. Rita, wer ist dein Vorbild?", antworten: [
+      { text: "Ehrlich? Ich selbst, an guten Tagen.", weiter: "k2" },
+      { text: "Jede, die einfach anfängt.", weiter: "k3" } ] },
+    k2: { sagt: "Ha! Das ist die selbstbewussteste Antwort, die ich bisher bekommen habe. Und an schlechten Tagen?", antworten: [
+      { text: "Da trinke ich Tee und warte.", weiter: "k4" },
+      { text: "Da gibt es keine schlechten.", weiter: "k5" } ] },
+    k3: { sagt: "Einfach anfangen. Das klingt so leicht und ist so schwer.", antworten: [
+      { text: "Darum fang ich immer morgens an.", weiter: "k4" },
+      { text: "Mit einer Liste geht’s leichter.", weiter: "k5" } ] },
+    k4: { sagt: "Ich nehme das als Zitat für meinen Text. Darf ich dich „Rita, Macherin“ nennen?", antworten: [
+      { text: "Das darfst du.", weiter: "k6" },
+      { text: "Mit Ausrufezeichen dahinter.", weiter: "k6" } ] },
+    k5: { sagt: "Du bist wirklich die Coolste. Max hatte recht, und das sag ich nicht oft.", antworten: [
+      { text: "Schreib das bitte auch auf.", weiter: "k4" },
+      { text: "Max hat öfter recht, als er denkt.", weiter: "k4" } ] },
+    k6: { sagt: "Mein Text wird so gut. Ich schick ihn dir, du darfst als Erste lesen.", antworten: [
+      { text: "Ich lese mit Rotstift.", weiter: null },
+      { text: "Ich freu mich drauf.", weiter: null } ] }
+  },
+  schluss: "Danke, Rita, Macherin! Bis bald." },
+
+{ id: "pauli-09", wer: "pauli", thema: "Kaffee oder Tee",
+  knoten: {
+    start: { sagt: "Wichtige Grundsatzfrage. Kaffee oder Tee?", antworten: [
+      { text: "Tee. Darüber verhandle ich nicht.", weiter: "k2" },
+      { text: "Morgens Tee, nachmittags auch Tee.", weiter: "k3" } ] },
+    k2: { sagt: "Respekt. Ich trinke Hafermilch-Kaffee, viermal am Tag. Meine Mitbewohnerin nennt mich die Kaffeemaschine.", antworten: [
+      { text: "Viermal? Du vibrierst ja.", weiter: "k4" },
+      { text: "Hafermilch? Was ist das denn?", weiter: "k5" } ] },
+    k3: { sagt: "Konsequent. Ich bewundere das. Ich bin eher eine Wechselwählerin der Getränke.", antworten: [
+      { text: "Probier mal Tee mit Zucker.", weiter: "k4" },
+      { text: "Wechseln ist auch eine Haltung.", weiter: "k4" } ] },
+    k4: { sagt: "Ich wage mal einen Versuch. Was empfiehlst du einer Anfängerin?", antworten: [
+      { text: "Schwarzen Tee, kräftig gezogen.", weiter: "k6" },
+      { text: "Greta hat sicher eine Mischung.", weiter: "k6" } ] },
+    k5: { sagt: "Hafer, Wasser, ein bisschen Ehrgeiz. Schmeckt wie Milch, die sich Mühe gibt.", antworten: [
+      { text: "Dann lieber Tee pur.", weiter: "k4" },
+      { text: "Ich bleibe bei meiner Kuh.", weiter: "k4" } ] },
+    k6: { sagt: "Abgemacht. Ich trinke morgen eine Tasse Tee und schreib dir, wie es war.", antworten: [
+      { text: "Ein Kaffee wird sich nicht wehren.", weiter: null },
+      { text: "Ich erwarte einen Bericht.", weiter: null } ] }
+  },
+  schluss: "Ich koch jetzt Wasser. Für Tee. Wahrscheinlich." },
+
+{ id: "pauli-10", wer: "pauli", thema: "WG-Putzplan",
+  knoten: {
+    start: { sagt: "Rita, ich brauch dich als Beraterin. Unsere WG hat einen Putzplan, aber keiner hält sich dran.", antworten: [
+      { text: "Wie sieht der Plan aus?", weiter: "k2" },
+      { text: "Wer hält sich nicht dran?", weiter: "k3" } ] },
+    k2: { sagt: "Ein Zettel am Kühlschrank. Mit kleinen Smileys, die keiner abhakt.", antworten: [
+      { text: "Smileys sind zu freundlich.", weiter: "k4" },
+      { text: "Ohne Haken wird nicht geputzt.", weiter: "k5" } ] },
+    k3: { sagt: "Alle. Ich auch, wenn ich ehrlich bin. Aber ich fühl mich wenigstens schlecht dabei.", antworten: [
+      { text: "Das ist schon mal ein Anfang.", weiter: "k4" },
+      { text: "Schlechtes Gewissen putzt nicht.", weiter: "k5" } ] },
+    k4: { sagt: "Was würdest du machen? Du bist ja die Königin der Listen.", antworten: [
+      { text: "Wer nicht putzt, kocht.", weiter: "k6" },
+      { text: "Ein Kuchen für den Ordentlichsten.", weiter: "k6" } ] },
+    k5: { sagt: "Uff. Das ist so wahr, dass ich es aufschreiben muss.", antworten: [
+      { text: "Auf den Putzplan, bitte.", weiter: "k4" },
+      { text: "Und gleich danach abhaken.", weiter: "k4" } ] },
+    k6: { sagt: "Das ist genial. Ich führe das heute Abend ein und sag, es ist eine alte Spandauer Tradition.", antworten: [
+      { text: "Ab heute ist es eine.", weiter: null },
+      { text: "Viel Erfolg, Putzministerin.", weiter: null } ] }
+  },
+  schluss: "Ich geh jetzt revolutionieren. Erst den Plan, dann das Bad." },
+
+/* ==================== MICHA ==================== */
+
+{ id: "micha-01", wer: "micha", thema: "Chili-Ernte",
+  knoten: {
+    start: { sagt: "Rita. Micha hier. Die Chilis sind reif.", antworten: [
+      { text: "Wie scharf sind sie dieses Jahr?", weiter: "k2" },
+      { text: "Wie viele sind es denn?", weiter: "k3" } ] },
+    k2: { sagt: "Eine hab ich probiert. Ich hab jetzt fünf Minuten Ruhe gehabt, ganz ohne Ton.", antworten: [
+      { text: "Das war bestimmt schön für Jane.", weiter: "k4" },
+      { text: "Hast du wenigstens Milch getrunken?", weiter: "k5" } ] },
+    k3: { sagt: "Dreiundvierzig. Ich hab zweimal gezählt, beim zweiten Mal mit Handschuhen.", antworten: [
+      { text: "Sehr gründlich.", weiter: "k4" },
+      { text: "Und beim ersten Mal?", weiter: "k5" } ] },
+    k4: { sagt: "Eine Sorte hab ich nach dir benannt.", antworten: [
+      { text: "Nach mir? Warum das denn?", weiter: "k6" },
+      { text: "Hoffentlich die schönste.", weiter: "k6" } ] },
+    k5: { sagt: "Die Finger brennen noch. Ich trag die Erfahrung mit Würde.", antworten: [
+      { text: "Und mit Handschuhen, beim nächsten Mal.", weiter: "k4" },
+      { text: "Ein echter Chili-Held.", weiter: "k4" } ] },
+    k6: { sagt: "Klein, rot, und wer sie unterschätzt, hat verloren.", antworten: [
+      { text: "Das nehme ich als Kompliment.", weiter: null },
+      { text: "Ich verlange ein Glas davon.", weiter: null } ] }
+  },
+  schluss: "Ich bring dir welche mit. Mit Warnschild." },
+
+{ id: "micha-02", wer: "micha", thema: "Der Akkuschrauber",
+  knoten: {
+    start: { sagt: "Ich hab einen neuen Akkuschrauber. Jane sagt, das ist mein dritter.", antworten: [
+      { text: "Und was sagst du?", weiter: "k2" },
+      { text: "Was kann der neue?", weiter: "k3" } ] },
+    k2: { sagt: "Ich sag, der erste war für Holz, der zweite für Metall.", antworten: [
+      { text: "Und der dritte?", weiter: "k4" },
+      { text: "Klingt vernünftig. Fast.", weiter: "k4" } ] },
+    k3: { sagt: "Er hat ein Licht vorne. Und er macht ein sehr zufriedenes Geräusch.", antworten: [
+      { text: "So wie du beim Mittagessen.", weiter: "k5" },
+      { text: "Ein Licht? Wie modern.", weiter: "k4" } ] },
+    k4: { sagt: "Der dritte ist für die Stimmung.", antworten: [
+      { text: "Und, hebt er sie?", weiter: "k6" },
+      { text: "Jane überzeugt das bestimmt.", weiter: "k6" } ] },
+    k5: { sagt: "Das hat Jane auch gesagt. Sie meint, wir klingen gleich.", antworten: [
+      { text: "Ihr passt eben zusammen.", weiter: "k4" },
+      { text: "Wer ist lauter?", weiter: "k4" } ] },
+    k6: { sagt: "Meine schon. Ihre muss ich noch reparieren.", antworten: [
+      { text: "Mit Blumen geht’s ohne Akku.", weiter: null },
+      { text: "Bring ihr einen Kuchen mit.", weiter: null } ] }
+  },
+  schluss: "Ich muss los. Er lädt gerade. Ich auch." },
+
+{ id: "micha-03", wer: "micha", thema: "Das Regal",
+  knoten: {
+    start: { sagt: "Jane sagt, dein Regal ist schief.", antworten: [
+      { text: "Das ist nicht schief. Das ist Stil.", weiter: "k2" },
+      { text: "Woher weiß sie das?", weiter: "k3" } ] },
+    k2: { sagt: "Stil. Verstehe. Wie viel Grad Stil?", antworten: [
+      { text: "So viel, dass Bücher rutschen.", weiter: "k4" },
+      { text: "Nur ein bisschen, ganz elegant.", weiter: "k5" } ] },
+    k3: { sagt: "Sie hat gesagt, die Tassen stehen da so, als würden sie sich festhalten.", antworten: [
+      { text: "Meine Tassen sind sportlich.", weiter: "k4" },
+      { text: "Na gut, ein kleines bisschen.", weiter: "k5" } ] },
+    k4: { sagt: "Ich komm Samstag mit der Wasserwaage.", antworten: [
+      { text: "Bring auch Kuchenhunger mit.", weiter: "k6" },
+      { text: "Nur, wenn du nichts verrätst.", weiter: "k6" } ] },
+    k5: { sagt: "Elegant schief. Ich schreib das auf, für meine Werkstatt.", antworten: [
+      { text: "Das darfst du gern übernehmen.", weiter: "k4" },
+      { text: "Gegen eine kleine Gebühr.", weiter: "k4" } ] },
+    k6: { sagt: "Abgemacht. Ich richte das Regal, du richtest den Kaffee.", antworten: [
+      { text: "Ich mach Tee, mein Lieber.", weiter: null },
+      { text: "Und der Kaffee steht gerade.", weiter: null } ] }
+  },
+  schluss: "Bis Samstag. Halt durch, Regal." },
+
+{ id: "micha-04", wer: "micha", thema: "Sonntagsbraten",
+  knoten: {
+    start: { sagt: "Rita. Kurze Frage. Wie lange darf man vom Braten naschen, bevor es auffällt?", antworten: [
+      { text: "Genau ein Stück.", weiter: "k2" },
+      { text: "Hast du schon genascht?", weiter: "k3" } ] },
+    k2: { sagt: "Ein Stück. Und wenn das Stück sehr groß ist?", antworten: [
+      { text: "Dann sind es zwei Stück.", weiter: "k4" },
+      { text: "Dann merkt Jane es sofort.", weiter: "k5" } ] },
+    k3: { sagt: "Das ist eine sehr direkte Frage. Ich würde sagen: theoretisch.", antworten: [
+      { text: "Theoretisch fehlt eine Ecke?", weiter: "k4" },
+      { text: "Ich hör dich kauen, Micha.", weiter: "k5" } ] },
+    k4: { sagt: "Die Ecke war sowieso nicht schön. Ich hab den Braten optisch verbessert.", antworten: [
+      { text: "Sehr selbstlos von dir.", weiter: "k6" },
+      { text: "Du bist ein Künstler.", weiter: "k6" } ] },
+    k5: { sagt: "Sie steht gerade hinter mir.", antworten: [
+      { text: "Dann sag schön Hallo.", weiter: "k6" },
+      { text: "Viel Glück, mein Lieber.", weiter: "k6" } ] },
+    k6: { sagt: "Jane sagt, du sollst mich nicht noch ermutigen. Ich sage, du bist meine Anwältin.", antworten: [
+      { text: "Ich plädiere auf Hunger.", weiter: null },
+      { text: "Ich lege das Mandat nieder.", weiter: null } ] }
+  },
+  schluss: "Ich muss los. Ich hab Küchenverbot. Mal wieder." },
+
+{ id: "micha-05", wer: "micha", thema: "Fahrt zum Hofladen",
+  knoten: {
+    start: { sagt: "Samstag fahr ich raus zum Hofladen. Soll ich dir was mitbringen?", antworten: [
+      { text: "Eier und Kartoffeln, bitte.", weiter: "k2" },
+      { text: "Das Übliche. Du weißt schon.", weiter: "k3" } ] },
+    k2: { sagt: "Eier und Kartoffeln. Mehr nicht?", antworten: [
+      { text: "Und vielleicht ein … Vögelchen.", weiter: "k3" },
+      { text: "Na gut, noch Äpfel.", weiter: "k4" } ] },
+    k3: { sagt: "Ah. Das Gelbe. Sag nichts, ich verstehe.", antworten: [
+      { text: "Psst. Das Hühnchen hört mit.", weiter: "k4" },
+      { text: "Gut eingepackt, bitte.", weiter: "k5" } ] },
+    k4: { sagt: "Ich wickel alles in Zeitung. Da guckt keiner rein.", antworten: [
+      { text: "Du bist ein Profi.", weiter: "k6" },
+      { text: "Nimm den Sportteil, der ist dick.", weiter: "k6" } ] },
+    k5: { sagt: "Doppelt in Zeitung. Und ich trag die Tüte so, als wär’s nur Gemüse.", antworten: [
+      { text: "Pfeif dabei unauffällig.", weiter: "k6" },
+      { text: "Perfekte Tarnung.", weiter: "k6" } ] },
+    k6: { sagt: "Ich hab schon Schlimmeres geschmuggelt. Janes Geburtstagstorte, zum Beispiel. An ihr vorbei.", antworten: [
+      { text: "Dann schaffst du auch das.", weiter: null },
+      { text: "Ich bin beeindruckt.", weiter: null } ] }
+  },
+  schluss: "Bis Samstag. Unauffällig wie immer." },
+
+{ id: "micha-06", wer: "micha", thema: "Erster Frost",
+  knoten: {
+    start: { sagt: "Es soll Frost geben. Ich hol die Chilis rein.", antworten: [
+      { text: "Alle auf einmal?", weiter: "k2" },
+      { text: "Wohin denn damit?", weiter: "k3" } ] },
+    k2: { sagt: "Alle siebzehn Töpfe. Jane hat bei Nummer zwölf aufgehört zu zählen.", antworten: [
+      { text: "Aus Liebe oder Protest?", weiter: "k4" },
+      { text: "Wo stehen die alle?", weiter: "k3" } ] },
+    k3: { sagt: "Fensterbank, Flur, Badezimmer. Einer steht auf dem Klavier.", antworten: [
+      { text: "Spielt er auch?", weiter: "k5" },
+      { text: "Und wo wohnt ihr jetzt?", weiter: "k4" } ] },
+    k4: { sagt: "Jane sagt, wir wohnen jetzt in einem Gewächshaus mit Sofa.", antworten: [
+      { text: "Das klingt doch gemütlich.", weiter: "k6" },
+      { text: "Hauptsache, das Sofa bleibt frei.", weiter: "k6" } ] },
+    k5: { sagt: "Nein. Aber er hört zu, wenn Jane spielt. Er wird jedes Mal ein bisschen röter.", antworten: [
+      { text: "Das ist Musikalität.", weiter: "k6" },
+      { text: "Er wird rot vor Rührung.", weiter: "k6" } ] },
+    k6: { sagt: "Ich sag immer: Wer im Winter Chilis hat, braucht keine Heizung. Jane sagt, das stimmt nicht.", antworten: [
+      { text: "Jane hat meistens recht.", weiter: null },
+      { text: "Probier’s aus, aber mit Pullover.", weiter: null } ] }
+  },
+  schluss: "Ich muss los. Der Flur braucht noch einen Topf." },
+
+{ id: "micha-07", wer: "micha", thema: "Umzugshilfe",
+  knoten: {
+    start: { sagt: "Max zieht um. Ich trage.", antworten: [
+      { text: "Und was macht Max?", weiter: "k2" },
+      { text: "Wie viele Kisten sind es?", weiter: "k3" } ] },
+    k2: { sagt: "Max trägt die Verantwortung. Die ist leichter.", antworten: [
+      { text: "Typisch Max.", weiter: "k4" },
+      { text: "Und Greta?", weiter: "k5" } ] },
+    k3: { sagt: "Vierunddreißig. Auf allen steht „Zeug“.", antworten: [
+      { text: "Greta hat da noch nachgebessert.", weiter: "k5" },
+      { text: "Das ist ja sehr übersichtlich.", weiter: "k4" } ] },
+    k4: { sagt: "Ich hab ihm die Bohrmaschine geschenkt. Zum Einzug. Die alte, die gute.", antworten: [
+      { text: "Ein großer Moment.", weiter: "k6" },
+      { text: "Kann er damit umgehen?", weiter: "k6" } ] },
+    k5: { sagt: "Greta trägt die Pflanzen. Und redet mit ihnen, damit sie keine Angst haben.", antworten: [
+      { text: "Das ist sehr lieb.", weiter: "k4" },
+      { text: "Redest du mit den Kisten?", weiter: "k4" } ] },
+    k6: { sagt: "Er hat sie angeguckt wie ein Kind den Weihnachtsbaum. Ich hab ihm noch Dübel dazugelegt.", antworten: [
+      { text: "Du bist ein guter Papa.", weiter: null },
+      { text: "Dübel sind wahre Liebe.", weiter: null } ] }
+  },
+  schluss: "Ich geh jetzt Kisten heben. Mit den Knien, sagt Jane." },
+
+{ id: "micha-08", wer: "micha", thema: "Krimiabend",
+  knoten: {
+    start: { sagt: "Jane und ich gucken heute Abend Krimi. Hast du einen Tipp, wer der Täter ist?", antworten: [
+      { text: "Welcher Krimi denn?", weiter: "k2" },
+      { text: "Immer der Freundliche.", weiter: "k3" } ] },
+    k2: { sagt: "Irgendwas mit Schnee und einem Kommissar, der nie lacht.", antworten: [
+      { text: "Dann ist es der Nachbar.", weiter: "k3" },
+      { text: "Schläfst du wieder nach zehn Minuten?", weiter: "k4" } ] },
+    k3: { sagt: "Der Freundliche. Gut. Dann ist es hier im Haus also Jane.", antworten: [
+      { text: "Das sag ich ihr.", weiter: "k5" },
+      { text: "Oder der, der nascht.", weiter: "k5" } ] },
+    k4: { sagt: "Zwölf. Ich hab mich verbessert.", antworten: [
+      { text: "Und wie erfährst du den Täter?", weiter: "k6" },
+      { text: "Bald schaffst du die Hälfte.", weiter: "k6" } ] },
+    k5: { sagt: "Ich nehm alles zurück. Ich will heute noch Abendbrot.", antworten: [
+      { text: "Kluge Entscheidung.", weiter: "k4" },
+      { text: "Feigling.", weiter: "k4" } ] },
+    k6: { sagt: "Jane erzählt mir das Ende am nächsten Morgen. Mit Kaffee. Bester Teil.", antworten: [
+      { text: "Das ist ja fast romantisch.", weiter: null },
+      { text: "Dann viel Spaß beim Schlafen.", weiter: null } ] }
+  },
+  schluss: "Der Vorspann läuft. Ich bin schon müde." },
+
+{ id: "micha-09", wer: "micha", thema: "Zahnstocher-Turm",
+  knoten: {
+    start: { sagt: "Ich hab einen neuen Rekord. Zahnstocher-Turm, einunddreißig Stockwerke.", antworten: [
+      { text: "Wie hast du das geschafft?", weiter: "k2" },
+      { text: "Und die Rouladen?", weiter: "k3" } ] },
+    k2: { sagt: "Ruhige Hand. Und Jane war einkaufen.", antworten: [
+      { text: "Also ohne Aufsicht.", weiter: "k4" },
+      { text: "Steht er noch?", weiter: "k5" } ] },
+    k3: { sagt: "Die Rouladen müssen jetzt mit Bindfaden auskommen. Ein Opfer für die Kunst.", antworten: [
+      { text: "Jane wird begeistert sein.", weiter: "k4" },
+      { text: "Kunst geht vor.", weiter: "k5" } ] },
+    k4: { sagt: "Sie hat ihn schon gesehen. Sie hat nur „Micha“ gesagt. In diesem Ton.", antworten: [
+      { text: "Ich kenne diesen Ton.", weiter: "k6" },
+      { text: "Das ist fast ein Lob.", weiter: "k6" } ] },
+    k5: { sagt: "Er steht. Er wackelt nur, wenn jemand atmet.", antworten: [
+      { text: "Dann atme ich ganz leise.", weiter: "k4" },
+      { text: "Mach schnell ein Foto.", weiter: "k4" } ] },
+    k6: { sagt: "Ich bau dir zum Geburtstag einen. Mit Fahrstuhl.", antworten: [
+      { text: "Mit Treppe reicht mir auch.", weiter: null },
+      { text: "Ich bring die Rouladen mit.", weiter: null } ] }
+  },
+  schluss: "Ich muss los. Der Turm braucht Gesellschaft." },
+
+{ id: "micha-10", wer: "micha", thema: "Das letzte Stück Kuchen",
+  knoten: {
+    start: { sagt: "Rita, ich brauch eine Schiedsrichterin. Es geht um Kuchen.", antworten: [
+      { text: "Ich bin ganz Ohr.", weiter: "k2" },
+      { text: "Wer hat ihn gebacken?", weiter: "k3" } ] },
+    k2: { sagt: "Das letzte Stück Pflaumenkuchen. Jane sagt, das ist für dich.", antworten: [
+      { text: "Jane hat völlig recht.", weiter: "k4" },
+      { text: "Und was sagst du?", weiter: "k5" } ] },
+    k3: { sagt: "Jane. Und sie hat das letzte Stück schon für dich eingepackt.", antworten: [
+      { text: "Dann ist die Sache klar.", weiter: "k4" },
+      { text: "Sehr umsichtig, die Gute.", weiter: "k4" } ] },
+    k4: { sagt: "Ich wollte es nur sagen. Ich hab Alufolie drumgemacht. Ganz ohne zu naschen.", antworten: [
+      { text: "Ich zähle die Pflaumen nach.", weiter: "k6" },
+      { text: "Du bist ein Gentleman.", weiter: "k6" } ] },
+    k5: { sagt: "Ich sag nichts. Ich guck nur traurig.", antworten: [
+      { text: "Das Gucken kenne ich.", weiter: "k4" },
+      { text: "Das zieht bei mir nicht.", weiter: "k4" } ] },
+    k6: { sagt: "Bei Kuchen bin ich bei ihr nur auf Platz zwei. Hinter dir. Ich hab mich daran gewöhnt.", antworten: [
+      { text: "Platz zwei ist auch Silber.", weiter: null },
+      { text: "Beim Werkzeug bist du Erster.", weiter: null } ] }
+  },
+  schluss: "Der Kuchen kommt Sonntag. Unversehrt, wahrscheinlich." }
+
+];
+
 /* Brevvän: Briefwechsel mit Karin Sjöberg aus Vimmerby (Småland).
    Reines Datenobjekt. monat: null = ganzjährig, sonst Monate (1–12).
    weiter:null = Brief endet nach dieser Antwort, dann folgt „schluss“. */
@@ -8281,6 +9018,9 @@ D.tbFrueher = [
 /* Erfundene Erinnerungen vermeiden */
 if (D.ereignisse2) D.ereignisse2 = D.ereignisse2.filter(e => !["e2-max-klausur", "e2-max-bingo"].includes(e.id));
 
+/* Weitere Spaß-Telefonate (Greta, Pauli, Micha) */
+if (Array.isArray(D.anrufe2)) D.anrufe = [...(D.anrufe || []), ...D.anrufe2.filter(a => !(D.anrufe || []).some(x => x.id === a.id))];
+
 /* TV-Tipps aus tv.json */
 D.tv={"stand": "2026-10-22", "mediathek": [{"titel": "Kommissar Beck – Vilhelm", "sender": "ZDF", "art": "Film", "genre": "Krimi", "text": "Ein Überfall auf einen Steuerberater in Stockholm, bei dem es angeblich nur um teure Uhren geht, und doch steckt viel mehr dahinter. Die neuesten Beck-Fälle sind ruhig erzählt und klug gebaut, ganz in der Tradition von Sjöwall und Wahlöö.", "laenge": "88 Min. (Staffel 10 mit 4 Filmen)", "bis": "2027-05-17", "link": "https://www.zdf.de/video/serien/kommissar-beck-104/vilhelm-nach-den-romanfiguren-von-maj-sjoewall-und-per-wahloeoe-100"}, {"titel": "Kommissar Beck – Der unsichtbare Mann", "sender": "ZDF", "art": "Film", "genre": "Krimi", "text": "Ein Podcaster liegt tot in seiner Wohnung in Vasastan, und das Team um Beck stürzt sich in die Arbeit. Schwedischer geht's kaum: viel Stockholm, wenig Getöse, und am Ende möchte man sofort den nächsten Fall sehen.", "laenge": "90 Min.", "bis": "2027-05-17", "link": "https://www.zdf.de/video/serien/kommissar-beck-104/der-unsichtbare-mann-nach-den-romanfiguren-von-maj-sjoewall-und-per-wahloeoe-100"}, {"titel": "Mord im Mittsommer – Gefährliche Verbindungen", "sender": "ZDF", "art": "Film", "genre": "Krimi", "text": "Schärengarten, Holzstege, helle Nächte, und mittendrin ein junger Polizist, der einem Dealer auf die Schliche kommen will. Nach Viveca Sten: Schwedenkrimi wie ein kleiner Kurzurlaub, nur mit Leiche.", "laenge": "89 Min.", "bis": "2027-05-10", "link": "https://www.zdf.de/video/serien/mord-im-mittsommer-106/gefaehrliche-verbindungen-nach-den-charakteren-von-viveca-steen-100"}, {"titel": "Der Kommissar und das Meer – Lichterfest", "sender": "ZDF", "art": "Film", "genre": "Krimi", "text": "Walter Sittler als Robert Anders auf Gotland: Ausgerechnet beim Luciafest kurz vor Weihnachten geschieht ein Unglück. Gotland, Kerzenschein und ein Kommissar mit Herz, schöner kann man den dunklen Herbst nicht beginnen.", "laenge": "89 Min.", "bis": "2026-12-17", "link": "https://www.zdf.de/video/serien/der-kommissar-und-das-meer-104/lichterfest-100"}, {"titel": "Agatha Christies Hjerson", "sender": "ZDF", "art": "Miniserie", "genre": "Krimi", "text": "Agatha Christie trifft Schweden: Der schrullige Ex-Ermittler Sven Hjerson soll für eine True-Crime-Show vor die Kamera und löst dabei echte Mordfälle. Augenzwinkernd, elegant und mit einem herrlich eigenwilligen Helden.", "laenge": "4 Folgen à ca. 87 Min.", "bis": "2027-04-02", "link": "https://www.zdf.de/video/serien/agatha-christies-hjerson-102/agatha-christies-hjerson-1-100"}, {"titel": "Dan Sommerdahl – Die Enttäuschung", "sender": "ZDF", "art": "Film", "genre": "Krimi", "text": "Ein Forscher wird im Marineinstitut von Helsingør erstochen, kurz nachdem er ein wertvolles Patent nach Amerika verkauft hat. Dänische Idylle mit Hamlet-Schloss im Hintergrund, und ein Ermittler, der darüber gern sein Privatleben vergisst.", "laenge": "89 Min.", "bis": "2027-03-10", "link": "https://www.zdf.de/video/serien/dan-sommerdahl-toedliche-idylle-100/die-enttaeuschung-frei-nach-den-romanen-von-anna-grue-100"}, {"titel": "Oxen", "sender": "ZDF", "art": "Serie", "genre": "Krimi", "text": "Ein unbequemer dänischer Elitesoldat zieht sich in den Wald zurück und gerät dann in eine Verschwörung um einen geheimen Bund. Nach den Bestsellern von Jens Henrik Jensen: spannend wie ein guter Pageturner, bei dem man nur noch ein Kapitel lesen will.", "laenge": "Folgen à 45 Min.", "bis": "2027-02-25", "link": "https://www.zdf.de/video/serien/oxen-102/angriff-aus-dem-dunkeln-100"}, {"titel": "Countdown Copenhagen", "sender": "ZDF", "art": "Serie", "genre": "Krimi", "text": "Eine Kopenhagener U-Bahn wird mitten im Tunnel gestoppt, und eine Journalistin muss zwischen Geiselnehmern und Einsatzleitung vermitteln. Dänischer Nervenkitzel vom Feinsten. Nicht wundern, wenn der Tee dabei kalt wird.", "laenge": "2 Staffeln, Folgen à 44 Min.", "bis": "2027-02-05", "link": "https://www.zdf.de/video/serien/countdown-copenhagen-102/countdown-copenhagen-114"}, {"titel": "Under Salt Marsh – Tod in den Salzwiesen", "sender": "ZDF", "art": "Miniserie", "genre": "Krimi", "text": "Ein walisisches Küstendorf, ein Jahrhundertsturm im Anmarsch, und ein Mordfall, der an ein altes ungelöstes Verbrechen rührt. Herrlich atmosphärisch, mit Nebel, Wind und lauter Leuten, die mehr wissen, als sie sagen.", "laenge": "4 Folgen à ca. 52 Min.", "bis": "2027-10-16", "link": "https://www.zdf.de/video/serien/under-salt-marsh-tod-in-den-salzwiesen-100/under-salt-marsh---tod-in-den-salzwiesen-ein-grauenhafter-fund-100"}, {"titel": "Karen Pirie – Echo einer Mordnacht", "sender": "ZDF", "art": "Miniserie", "genre": "Krimi", "text": "Eine junge schottische Ermittlerin rollt in St. Andrews einen jahrzehntealten Mordfall neu auf, mit ihren direkten Fragen eckt sie überall an. Nach Val McDermid, klug und mit trockenem Humor. Schnell anschauen, es ist nur noch bis Anfang November online!", "laenge": "3 Teile à ca. 87 Min.", "bis": "2026-11-06", "link": "https://www.zdf.de/video/serien/karen-pirie-echo-einer-mordnacht-100/der-fall-rosie-duff-nach-dem-roman-von-val-mcdermid-echo-einer-winternacht-100"}, {"titel": "Tatort – Verborgen", "sender": "NDR", "art": "Film", "genre": "Krimi", "text": "Falke und Grosz suchen einen verschwundenen Jungen, dessen Eltern ohne Papiere in Deutschland leben und mit dem Gang zur Polizei alles riskieren. Ein leiser, sehr menschlicher Tatort. Liegt in der ZDF-Mediathek, die viele ARD-Krimis mit anbietet.", "laenge": "89 Min.", "bis": "2027-04-20", "link": "https://www.zdf.de/video/serien/collection-index-page-ard-collection-ard-dxjuomfyzdpzag93oji0ytqxodqzy2q5mtlmyjg-770/page-video-ard-verborgen-118"}, {"titel": "Polizeiruf 110 – Wolfsland", "sender": "rbb", "art": "Film", "genre": "Krimi", "text": "Olga Lenski und der unvergleichliche Horst Krause ermitteln im brandenburgischen Kaskow, sozusagen fast vor deiner Haustür. Märkische Landschaft, viel Lakonie und ein Fall mit Biss.", "laenge": "89 Min.", "bis": "2027-10-26", "link": "https://www.zdf.de/video/filme/collection-index-page-ard-collection-ard-dxjuomfyzdpzag93ojqxmzc1njhmyjrizgninwe-220/page-video-ard-wolfsland-102"}, {"titel": "Havelland-Krimi – Hinter der Fassade", "sender": "ZDF", "art": "Film", "genre": "Krimi", "text": "Eine Restaurierungsstudentin aus Potsdam wird tot am Havelufer gefunden, und Staatsanwältin Dena Paulos (Dennenesch Zoudé) übernimmt. Ganz neue Reihe aus der Nachbarschaft, die Havel kennst du ja bestens.", "laenge": "89 Min.", "bis": null, "link": "https://www.zdf.de/video/serien/havelland-krimi-100/havelland-krimi---hinter-der-fassade-102"}, {"titel": "Rechtsanwalt Vernau – Der schwarze Schwan", "sender": "ZDF", "art": "Film", "genre": "Krimi", "text": "Jan Josef Liefers als Berliner Anwalt, der neben einem Toten aufwacht und plötzlich selbst unter Mordverdacht steht. Nach Elisabeth Herrmann: Berlin-Krimi mit Witz und genau der richtigen Prise Selbstironie.", "laenge": "89 Min.", "bis": "2026-12-30", "link": "https://www.zdf.de/video/serien/rechtsanwalt-vernau-104/der-schwarze-schwan-102"}, {"titel": "Unter Verdacht – Verdecktes Spiel", "sender": "ZDF", "art": "Film", "genre": "Krimi", "text": "Der allererste Fall von Senta Berger als Kriminalrätin Prohacek: In München ermittelt sie gegen Kollegen, die es mit dem Gesetz nicht so genau nehmen. Ein Klassiker, der kein bisschen Staub angesetzt hat.", "laenge": "91 Min.", "bis": "2027-04-10", "link": "https://www.zdf.de/video/serien/unter-verdacht-104/unter-verdacht-180"}, {"titel": "Der letzte Zeuge", "sender": "ZDF", "art": "Serie", "genre": "Krimi", "text": "Ulrich Mühe als Berliner Gerichtsmediziner Dr. Kolmaar, der Mordfälle mit Präzision und feiner Ironie löst. Eine der klügsten deutschen Krimiserien, wunderbar zum Wiedersehen.", "laenge": "9 Staffeln, Folgen à ca. 46 Min.", "bis": "2027-02-18", "link": "https://www.zdf.de/video/serien/der-letzte-zeuge-274/das-dreieck-des-todes-100"}, {"titel": "Babylon Berlin", "sender": "ARD", "art": "Serie", "genre": "Krimi", "text": "Berlin 1929: Kommissar Gereon Rath und die patente Charlotte Ritter ermitteln zwischen Tanzpalästen, Unterwelt und politischem Umbruch. Opulent, spannend, voller Zeitgeschichte. Alle Staffeln am Stück, ideal für lange Herbstabende.", "laenge": "5 Staffeln, Folgen à ca. 45 Min.", "bis": "2027-09-09", "link": "https://www.zdf.de/video/serien/collection-index-page-ard-collection-ard-dxjuomfyzdpzag93omvmzje3nteymtu3oda5y2e-160/page-video-ard-folge-1--staffel-1---babylon-berlin-100"}, {"titel": "Ku'damm 56", "sender": "ZDF", "art": "Miniserie", "genre": "Drama", "text": "Berlin 1956: Monika Schöllack rebelliert in der Tanzschule ihrer strengen Mutter gegen die Konventionen der Zeit, mit Rock 'n' Roll. Westberliner Fünfziger zum Wiedererkennen, und danach warten noch Ku'damm 59, 63 und 77.", "laenge": "3 Teile à ca. 90 Min.", "bis": null, "link": "https://www.zdf.de/video/serien/kudamm-104/kudamm-56-teil-1-102"}, {"titel": "Der Palast (Staffel 2)", "sender": "ZDF", "art": "Miniserie", "genre": "Drama", "text": "Berlin 1990: Das Ensemble des Friedrichstadt-Palasts kämpft im frisch vereinten Berlin um seine Zukunft, und die berühmte Kickline wird neu aufgestellt. Glitzer, Wendezeit und Berliner Schnauze, aber nur noch bis 2. November online.", "laenge": "6 Folgen à 45 Min.", "bis": "2026-11-02", "link": "https://www.zdf.de/video/serien/der-palast-100/1-aufbruch-ins-ungewisse-zweite-staffel-der-sechsteiligen-event-serie-100"}, {"titel": "Unterleuten – Das zerrissene Dorf", "sender": "ZDF", "art": "Miniserie", "genre": "Drama", "text": "Ein geplanter Windpark spaltet ein brandenburgisches Dorf, und plötzlich werden Freunde zu Feinden. Nach Juli Zehs Bestseller, mit Thomas Thieme, Charly Hübner, Dagmar Manzel und Christine Schorn. Großes Ensemble, große Lust am Zuschauen.", "laenge": "3 Teile à ca. 94 Min.", "bis": null, "link": "https://www.zdf.de/video/serien/unterleuten-102/unterleuten---das-zerrissene-dorf-1-100"}, {"titel": "Altes Land", "sender": "ZDF", "art": "Miniserie", "genre": "Drama", "text": "Iris Berben als eigensinnige Vera auf ihrem alten Bauernhof bei Hamburg, wo über Jahrzehnte zwei Frauen Zuflucht finden. Nach Dörte Hansens Roman: herb, warm und mit viel norddeutschem Humor.", "laenge": "2 Teile à ca. 90 Min.", "bis": "2027-04-03", "link": "https://www.zdf.de/video/filme/altes-land-106/altes-land-ankommen-1-100"}, {"titel": "Neues Land", "sender": "ZDF", "art": "Film", "genre": "Drama", "text": "Jördis Triebel kehrt als Geologin in ihr Thüringer Heimatdorf zurück, das sich gerade vom Braunkohlerevier zum Ferienort wandelt, und stößt auf ein altes Familiengeheimnis. Der Fernsehfilm läuft erst am Montag im ZDF, in der Mediathek kannst du ihn schon jetzt sehen.", "laenge": "89 Min.", "bis": "2027-11-22", "link": "https://www.zdf.de/filme/neues-land-100"}, {"titel": "Berlin – Schicksalsjahre einer Stadt: 1990", "sender": "rbb", "art": "Doku", "genre": "Geschichte", "text": "Das Jahr nach dem Mauerfall: besetzte Häuser in Mitte, die Stasi-Zentrale wird gestürmt, die D-Mark kommt. Viele Bilder, die du vielleicht selbst noch im Kopf hast, und die ganze Reihe von 1945 bis 2019 gibt es gleich dazu.", "laenge": "89 Min. pro Jahr (Reihe)", "bis": null, "link": "https://www.zdf.de/video/dokus/collection-index-page-ard-collection-ard-dxjuomfyzdpzag93oja4ntcwmjqzzwzmmdvhmmi-144/page-video-ard-berlin---schicksalsjahre-einer-stadt-1990-102"}, {"titel": "Geheimnisvolle Orte – Rheinsberg: Strahlende Zukunft", "sender": "rbb", "art": "Doku", "genre": "Geschichte", "text": "1966 ging am Stechlinsee bei Rheinsberg das erste Atomkraftwerk der DDR ans Netz, eine Geschichte, die die wenigsten kennen. Das rbb führt zu verborgenen Kapiteln in Berlin und Brandenburg, weitere Folgen inklusive.", "laenge": "45 Min.", "bis": "2027-10-07", "link": "https://www.zdf.de/video/dokus/collection-index-page-ard-collection-ard-dxjuomfyzdpzag93ojgzm2fhnwmznmi2zmnlyzm-188/page-video-ard-rheinsberg-strahlende-zukunft---atomkraft-in-der-ddr-100"}, {"titel": "Das Geheimnis der Meister – Gustav Klimt", "sender": "3sat", "art": "Dokuserie", "genre": "Kultur", "text": "Wie ist Klimts goldene „Judith I“ entstanden? Die Reihe erzählt die Geschichte hinter berühmten Gemälden, und am Ende wird das Bild sogar nachgemalt. Kunstgeschichte zum Mitfiebern, und noch mehr Meister warten.", "laenge": "38 Min. pro Folge", "bis": "2027-06-30", "link": "https://www.zdf.de/video/dokus/das-geheimnis-der-meister-112/gustav-klimt-104"}, {"titel": "Die großen Frauen der Kunst", "sender": "ZDF", "art": "Dokuserie", "genre": "Kultur", "text": "Zwei Künstler gehen auf Spurensuche nach den Malerinnen, die die Kunstgeschichte gern unterschlagen hat, los geht's mit Angelika Kauffmann, der „Beyoncé ihrer Zeit“. Lehrreich, frisch und ohne erhobenen Zeigefinger.", "laenge": "2 Folgen à ca. 37 Min.", "bis": "2030-02-21", "link": "https://www.zdf.de/video/dokus/die-grossen-frauen-der-kunst-110/kuenstlerinnen-renaissance-abstraktion-102"}, {"titel": "Erlebnis Erde – Kaktus Hotel", "sender": "ARD", "art": "Doku", "genre": "Natur", "text": "Ein riesiger Saguaro-Kaktus in der Wüste Arizonas als Luxushotel für Spechte, Eulen und allerlei Gäste, die ein- und auschecken. Wunderschöne Naturbilder, und hinterher siehst du jede Topfpflanze mit anderen Augen.", "laenge": "44 Min.", "bis": "2028-10-14", "link": "https://www.zdf.de/video/dokus/collection-index-page-ard-collection-ard-dxjuomfyzdpzag93ojizogvmzwfmmwjlmja1njk-226/page-video-ard-kaktus-hotel-104"}], "fernsehen": [{"titel": "Portobello – Unschuldig verurteilt", "sender": "arte", "datum": "2026-10-22", "zeit": "21:45", "art": "Miniserie", "genre": "Drama", "text": "Italiens berühmtester Justizskandal: Der beliebte TV-Moderator Enzo Tortora wird aufgrund falscher Aussagen von Camorra-Kronzeugen angeklagt. Heute laufen die letzten drei Folgen am Stück, große Erzählkunst aus Italien.", "link": "https://www.prisma.de/tv-programm/Portobello-Unschuldig-verurteilt,58045679"}, {"titel": "Ein unmöglicher Zufall", "sender": "arte", "datum": "2026-10-23", "zeit": "20:15", "art": "Film", "genre": "Krimi", "text": "In den französischen Alpen stürzt ein Wanderer ab, und der einzige Zeuge war vor 40 Jahren sein bester Freund. Ein Untersuchungsrichter glaubt nicht an Zufälle. Nach Erri De Luca: ein Psychokrimi, der lange nachhallt.", "link": "https://www.prisma.de/tv-programm/Ein-unmoeglicher-Zufall,58052815"}, {"titel": "Das weiße Haus am Rhein", "sender": "3sat", "datum": "2026-10-23", "zeit": "20:15", "art": "Film", "genre": "Geschichte", "text": "Das Hotel Dreesen in Bad Godesberg in den Zwanziger- und Dreißigerjahren: Eine Hoteliersfamilie zerstreitet sich, während Hitlers Gefolge das Haus zu seinem Quartier macht. Packendes Zeitgeschichtsdrama nach wahren Begebenheiten.", "link": "https://www.prisma.de/tv-programm/Das-weisse-Haus-am-Rhein,58052614"}, {"titel": "Das Vergessen – Spurlos im Moor", "sender": "ARD", "datum": "2026-10-24", "zeit": "20:15", "art": "Miniserie", "genre": "Krimi", "text": "Julia Koschitz als Polizistin, die monatelang ihre verschwundene Nichte sucht, bis im Moor ein blutiger Turnschuh auftaucht. Österreichischer Thriller in sechs Teilen: vier heute Abend, die letzten zwei am Sonntag nach dem Tatort.", "link": "https://www.prisma.de/tv-programm/Das-Vergessen-Spurlos-im-Moor,58064097"}, {"titel": "Auf den Spuren der ersten Amerikaner", "sender": "arte", "datum": "2026-10-24", "zeit": "20:15", "art": "Doku", "genre": "Geschichte", "text": "Kamen die ersten Menschen schon vor 30.000 Jahren nach Amerika, also viel früher als gedacht? Archäologie wie ein Kriminalfall. Danach um 21:45 gleich noch Amerigo Vespucci, der Mann, der Amerika seinen Namen gab.", "link": "https://www.prisma.de/tv-programm/Auf-den-Spuren-der-ersten-Amerikaner,58060969"}, {"titel": "Die lange Welle hinterm Kiel", "sender": "3sat", "datum": "2026-10-24", "zeit": "21:40", "art": "Film", "genre": "Drama", "text": "Christiane Hörbiger erkennt auf einer Kreuzfahrt in Mario Adorf den Mann wieder, der bei Kriegsende ihren Ehemann hinrichten ließ. Zwei große Schauspieler, ein Schiff und ein Kapitel Vergangenheit, das nicht vergehen will. Nach Pavel Kohout.", "link": "https://www.prisma.de/tv-programm/Die-lange-Welle-hinterm-Kiel,58060799"}, {"titel": "Tatort – Gottesgarten", "sender": "ARD", "datum": "2026-10-25", "zeit": "20:15", "art": "Film", "genre": "Krimi", "text": "Neuer Franken-Tatort und der erste Fall für Rosalie Thomass an der Seite von Fabian Hinrichs: Ein Mordfall in Nürnberg führt in ein Dorf namens Gottesgarten, wo die Eltern des Opfers sehr unterschiedlich trauern. Erstausstrahlung!", "link": "https://www.prisma.de/tv-programm/Tatort,58069467"}, {"titel": "Ich kämpfe um dich (Spellbound)", "sender": "arte", "datum": "2026-10-25", "zeit": "20:15", "art": "Film", "genre": "Krimi", "text": "Hitchcock 1945 mit Ingrid Bergman und Gregory Peck: Eine Psychiaterin ahnt, dass der neue Klinikchef ein Hochstapler ist, und verliebt sich ausgerechnet in ihn. Mit der berühmten Traumsequenz von Salvador Dalí und Oscar-prämierter Musik.", "link": "https://www.prisma.de/tv-programm/Ich-kaempfe-um-dich,58066547"}, {"titel": "Terra X: Ozeane – Eine Menschheitsgeschichte", "sender": "ZDF", "datum": "2026-10-25", "zeit": "19:30", "art": "Dokuserie", "genre": "Geschichte", "text": "Letzte Folge: Polynesische Seefahrer, die nach Sternen, Wellen und Wolken navigieren, von Hawaii bis Neuseeland. Das Meer nicht als Grenze, sondern als Verbindung, eine schöne Einstimmung auf den Sonntagabend.", "link": "https://www.prisma.de/tv-programm/Ozeane-Eine-Menschheitsgeschichte,58065696"}, {"titel": "Agatha Christies Poirot", "sender": "ONE", "datum": "2026-10-25", "zeit": "20:15", "art": "Film", "genre": "Krimi", "text": "David Suchet als belgischer Meisterdetektiv mit den kleinen grauen Zellen, unschlagbar stilvoll und gemütlich. Die Alternative, falls dir am Sonntag nach Klassik statt Tatort ist.", "link": "https://www.prisma.de/tv-programm/Agatha-Christies-Poirot,58067475"}, {"titel": "Neues Land", "sender": "ZDF", "datum": "2026-10-26", "zeit": "20:15", "art": "Film", "genre": "Drama", "text": "Der Fernsehfilm der Woche mit Jördis Triebel, Jörg Schüttauf und Ronald Zehrfeld: Heimkehr in ein Thüringer Dorf im Wandel, mit einem Familiengeheimnis. Steht auch schon in der Mediathek.", "link": "https://www.prisma.de/tv-programm/Neues-Land,58070826"}, {"titel": "Der Mann aus dem Westen", "sender": "arte", "datum": "2026-10-26", "zeit": "20:15", "art": "Film", "genre": "Drama", "text": "Gary Cooper als Ex-Bandit, der nach einem Zugüberfall wieder unter seine alte Bande gerät. Anthony Manns Western von 1958 gilt als einer der besten der Fünfziger. Danach um 21:50 ein Porträt über Gary Cooper.", "link": "https://www.prisma.de/tv-programm/Der-Mann-aus-dem-Westen,58071784"}, {"titel": "Vienna Blood – Die letzte Séance", "sender": "3sat", "datum": "2026-10-27", "zeit": "20:15", "art": "Film", "genre": "Krimi", "text": "Wien um 1900: Ein junger Psychoanalytiker und ein Inspektor untersuchen den Tod eines Mediums in einem von innen verschlossenen Zimmer. Kaffeehaus-Eleganz, Freud-Zeitalter und ein echtes Rätsel. Krimi mit Stil.", "link": "https://www.prisma.de/tv-programm/Vienna-Blood-Die-letzte-Seance,58078054"}, {"titel": "Die Bücher, die Hitler nicht verbrannte", "sender": "arte", "datum": "2026-10-27", "zeit": "23:40", "art": "Doku", "genre": "Geschichte", "text": "Rund 16.000 Bücher besaß Hitler, und was sie über ihn verraten, ist erstaunlich. Ein ungewöhnlicher Blick in eine Privatbibliothek, spät am Abend, also lieber aufnehmen.", "link": "https://www.prisma.de/tv-programm/Die-Buecher-die-Hitler-nicht-verbrannte,58078247"}, {"titel": "The Game", "sender": "arte", "datum": "2026-10-28", "zeit": "20:15", "art": "Film", "genre": "Krimi", "text": "Michael Douglas bekommt zum Geburtstag ein mysteriöses „Spiel“ geschenkt, und bald weiß er nicht mehr, was echt ist. David Finchers Thriller ist ein raffiniertes Verwirrspiel, bei dem du bis zum Schluss miträtselst.", "link": "https://www.prisma.de/tv-programm/The-Game,58086809"}, {"titel": "Zwingli – Der Reformator", "sender": "3sat", "datum": "2026-10-30", "zeit": "20:15", "art": "Film", "genre": "Geschichte", "text": "Passend zum Reformationstag: Zürich 1519, Huldrych Zwingli predigt im Grossmünster und stellt Kirche und Gesellschaft auf den Kopf, auch aus Liebe zur jungen Witwe Anna. Prächtig ausgestattetes Historienkino. Danach um 22:15 „Luther“.", "link": "https://www.prisma.de/tv-programm/Zwingli-Der-Reformator,58100018"}, {"titel": "Dracula – Die wahre Geschichte", "sender": "arte", "datum": "2026-10-31", "zeit": "20:15", "art": "Doku", "genre": "Geschichte", "text": "Zu Halloween die Geschichte hinter dem Mythos: Wer war Vlad III. wirklich, und was ist Legende? Historiker trennen Fakten von Gruselmärchen, spannender als jeder Vampirfilm.", "link": "https://www.prisma.de/tv-programm/Dracula-Die-wahre-Geschichte,58108194"}, {"titel": "Stralsund – Dunkle Tiefen", "sender": "ZDF", "datum": "2026-10-31", "zeit": "20:15", "art": "Film", "genre": "Krimi", "text": "Zwei Tote im Netz eines Fischereibetriebs, und die Spur führt zu einer alten Fehde zwischen zwei Familien. Ostsee-Krimi mit Alexander Held, der hier zum letzten Mal als Karl Hidde ermittelt.", "link": "https://www.prisma.de/tv-programm/Stralsund-Dunkle-Tiefen,58107310"}, {"titel": "Polizeiruf 110 (Rostock)", "sender": "ARD", "datum": "2026-11-01", "zeit": "20:15", "art": "Film", "genre": "Krimi", "text": "Neuer Fall für die Rostocker Kommissarinnen König und Böwe: Eine junge Tote führt sie in ein Geflecht aus Ausbeutung und einer Ferienanlage an der Küste. Die Rostocker gehören zum Besten, was der Sonntagskrimi zu bieten hat.", "link": "https://www.prisma.de/tv-programm/Polizeiruf-110,58117065"}, {"titel": "Breitscheidplatz 19/12", "sender": "ARD", "datum": "2026-11-01", "zeit": "21:45", "art": "Miniserie", "genre": "Drama", "text": "Neue Dramaserie über die Vorgeschichte des Anschlags auf den Weihnachtsmarkt an der Gedächtniskirche: übersehene Warnzeichen, Behörden im Kompetenzgerangel. Ein Berliner Thema, ernst und sorgfältig erzählt. Zwei Folgen hintereinander.", "link": "https://www.prisma.de/tv-programm/Breitscheidplatz-1912,58117068"}, {"titel": "Rebecca", "sender": "arte", "datum": "2026-11-01", "zeit": "20:15", "art": "Film", "genre": "Krimi", "text": "Hitchcocks Meisterwerk von 1940 mit Laurence Olivier und Joan Fontaine: Eine junge Braut auf Manderley und der übermächtige Schatten der ersten Ehefrau. Danach um 22:20 „Mr. und Mrs. Hitchcock“ über die Frau hinter dem Meister.", "link": "https://www.prisma.de/tv-programm/Rebecca,58114053"}, {"titel": "Eine Dame verschwindet – The Lady Vanishes", "sender": "3sat", "datum": "2026-11-01", "zeit": "20:15", "art": "Film", "genre": "Krimi", "text": "Im Zug durch den Balkan verschwindet eine freundliche ältere Engländerin, und alle Mitreisenden behaupten, es habe sie nie gegeben. Charmante BBC-Neuverfilmung des Hitchcock-Klassikers, ein Fest für Rätselfreundinnen.", "link": "https://www.prisma.de/tv-programm/Eine-Dame-verschwindet-The-Lady-Vanishes,58113897"}]};
 
@@ -8291,10 +9031,10 @@ D.tv={"stand": "2026-10-22", "mediathek": [{"titel": "Kommissar Beck – Vilhelm
 <script>
 /* ============================================================
    Lichtung – Kern: Zustand, Rechnen, Rückmeldung, Bausteine
-   Build: 2026-10-22 03:33
+   Build: 2026-10-22 03:46
    ============================================================ */
 "use strict";
-const BUILD = "2026-10-22 03:33";
+const BUILD = "2026-10-22 03:46";
 const KEY = "lichtung-v1";
 const GV = 2;            // Zustandsversion (Migrationen)
 const RV = 1;            // Regelversion (wird je Eintrag festgeschrieben)
@@ -8491,7 +9231,7 @@ function haptik(art) {
   try { if (navigator.vibrate) navigator.vibrate(VIB[art] || 10); } catch (e) { }
 }
 /* iOS: echter Schalter unter einem label erzeugt den System-Tick (ab iOS 18) */
-const HAPSEL = ".tel-kontakt,.bingo-feld,.huhn-karte,.tuer,.logo-knopf,.knopf,.kachel,.tf,.chip,.liste-zeile,nav.tabs button,.karte:not(.zu),.fach:not(.leer),.schalter-zeile";
+const HAPSEL = ".tuer-gross,.notfall-leiste,.tel-kontakt,.tel-karte-knopf,.exkurs-karte,.bingo-feld,.huhn-karte,.tuer,.logo-knopf,.knopf,.kachel,.tf,.chip,.liste-zeile,nav.tabs button,.karte:not(.zu),.fach:not(.leer),.schalter-zeile";
 function armHaptics() {
   if (!IOS || !S.vib) return;
   $$(HAPSEL).forEach(el => {
@@ -10162,6 +10902,12 @@ function grussHimmel() {
   if (art === "schnee") svg += `<g class="flocken" fill="#9FC2E6"><circle cx="20" cy="56" r="1.8"/><circle cx="30" cy="58" r="1.8"/><circle cx="40" cy="56" r="1.8"/></g>`;
   return `<button class="gruss-himmel ${nacht ? "mond" : "sonne"}" data-act="wetter" aria-label="Wetter ansehen"><svg viewBox="0 0 60 64" aria-hidden="true">${svg}</svg>${W ? `<span class="gruss-temp">${Math.round(W.temp)}°</span>` : ""}</button>`;
 }
+function telKarteHTML() {
+  const alle = D.anrufe || [], wer = TEL_REIHE.filter(w => alle.some(a => a.wer === w)).map(w => [w, TEL_WER[w]]), gef = S.anrufeGefuehrt || {};
+  const neu = w => alle.filter(a => a.wer === w && !gef[a.id]).length;
+  return `<section class="abschnitt"><div class="tel-karte"><div class="zeile zwischen" style="align-items:baseline"><h2 style="margin:0">Kurz plaudern?</h2><span class="klein">zum Spaß, niemand wird wirklich angerufen</span></div>
+    <div class="tel-karte-reihe">${wer.map(([w, n]) => `<button class="tel-karte-knopf" data-act="tel-ruf" data-wer="${w}" aria-label="${n} anrufen"><span class="tel-karte-bild fig-idle">${w === "huhn" ? huhnFrontSVG(66) : telBild(w, 66)}</span><span class="tel-karte-name">${n}</span>${neu(w) ? `<span class="tel-karte-neu">${neu(w)} neu</span>` : ""}<span class="tel-karte-hoerer">${ic("telefon")}</span></button>`).join("")}</div></div></section>`;
+}
 function viewHeute() {
   const h = heute(), tf = S.tf[h];
   const liste = eintraegeAm(h);
@@ -10200,6 +10946,7 @@ function viewHeute() {
     : `<section class="abschnitt"><button class="umschlag" data-act="post-auf" aria-label="Post von ${von} – zum Öffnen antippen">${umschlagSVG(von)}<span class="umschlag-hinweis">Post von ${von} · zum Öffnen antippen</span></button></section>`; }
   html += zettelHTML();
   html += raetselHTML();
+  html += telKarteHTML();
   html += tvHeuteHTML();
   html += abendkarteHTML(tf);
   if (jetzt().getHours() >= 18 && !eintraegeAm(heute()).some(e => e.t === "tagebuch") && (S.tf[heute()] !== "D")) html += tagebuchKarte(heute());
@@ -10279,16 +11026,17 @@ function hinweisDesTages() {
 function viewIdeen() {
   const tf = S.tf[heute()] || "B";
   let html = `<div class="gruss"><h1>Ideen</h1><div class="datum">${A("Passend zu deinem Tag", "Passend zu Ihrem Tag")}: ${D.tagesformen.find(f => f.id === tf).name}</div></div>`;
+  html += `<section class="abschnitt"><div class="tueren-gross">
+    <button class="tuer-gross drinnen" data-act="tuer" data-v="drinnen"><span class="tg-bild" aria-hidden="true">${ic("lampe")}</span><span class="titel">Drinnen</span><span class="unter">Lesen, Telefon, Filme, Winter-Tees, Vorhaben, Patience</span></button>
+    <button class="tuer-gross draussen" data-act="tuer" data-v="draussen"><span class="tg-bild" aria-hidden="true">${ic("rucksack")}</span><span class="titel">Draußen</span><span class="unter">Ausflüge, Forst-Bingo, Binger, Angebote in Spandau</span></button>
+  </div>
+  <button class="notfall-leiste" data-act="ruhe-plan">${ic("atem")}<span><span class="titel">Wenn’s eng wird</span><span class="unter">Mein Notfallplan – ruhig, Schritt für Schritt</span></span></button></section>`;
   const vorschl = vorschlaege(tf, 3, "ideen" + heute() + (S._mischen || 0));
   html += `<section class="abschnitt"><h2>Jetzt vielleicht</h2><div class="liste">${vorschl.map(v => zeileBtn(katIcon(v.kat, v), v.titel, `${v.text} · ${v.min ? v.min + " Min." : "kurz"}`, `data-act="idee" data-id="${v.id}"`, "k-geist")).join("")}</div>
     <button class="knopf leise" data-act="mischen">Andere Ideen zeigen</button></section>`;
+  html += telKarteHTML();
   html += `<section class="abschnitt"><button class="exkurs-karte" data-act="bv-auf"><span class="fig-idle">${karinKopfSVG(72)}</span><span class="text"><span class="klein" style="font-weight:700;letter-spacing:.04em">AUSFLUG NACH SMÅLAND</span><span class="titel">Post von Karin aus Vimmerby</span><span class="unter">${bvHeuteNeu() ? "Ein neuer Brief wartet – auf Schwedisch, mit Übersetzung zum Aufklappen." : "Eine ausgedachte Brieffreundin zum Schwedisch-Auffrischen: Krimis, Fika und Katze Sotis."}</span></span></button></section>`;
-  const hp = D.hp && D.hp.baende ? D.hp.baende.find(b => b.nr === S.hp.band) : null;
-  html += `<section class="abschnitt"><div class="tueren">
-    <button class="tuer k-geist" data-act="tuer" data-v="drinnen">${ic("lampe")}<span class="titel">Drinnen</span><span class="unter">Timer, Lesen &amp; Bücherregal, Vorhaben, Patience</span></button>
-    <button class="tuer k-draussen" data-act="tuer" data-v="draussen">${ic("rucksack")}<span class="titel">Draußen</span><span class="unter">Ausflüge, Binger, Angebote in Spandau</span></button>
-    <button class="tuer k-ruhe" data-act="ruhe-plan">${ic("atem")}<span class="titel">Wenn’s eng wird</span><span class="unter">Mein Notfallplan</span></button>
-  </div></section>`;
+
   return html;
 }
 function tuerSheet(was) {
@@ -10312,7 +11060,7 @@ function tuerSheet(was) {
   const aktiv = S.missionen.aktiv.map(a => ({ a, m: (D.missionen || []).find(x => x.id === a.id) })).filter(x => x.m);
   html += `<h3 style="margin-top:20px">Kleine Vorhaben</h3>${aktiv.length ? `<div class="liste">${aktiv.map(({ a, m }) => zeileBtn("funke", m.titel, `${a.tage?.length || 0} von ${m.tage} Tagen`, `data-act="mission" data-id="${m.id}"`, "k-mut")).join("")}</div>` : `<p class="klein">Ein Vorhaben für ein paar Tage – mit Kästchen zum Abhaken.</p>`}
     <button class="knopf zweit voll" style="margin-top:10px" data-act="missionen">Vorhaben aussuchen</button>`;
-  html += `<h3 style="margin-top:20px">Zum Vergnügen</h3><div class="liste">${zeileBtn("telefon", "Zum Spaß telefonieren", "Mit Hühnchen, Max oder Jane", `data-act="tel-auf"`, "k-menschen")}${zeileBtn("maske", "Film & Fernsehen", "Krimis und gute Filme aus der Mediathek, Tipps der Woche", `data-act="tv-auf"`, "k-geist")}${zeileBtn("tasse", "Gut durch den Winter", "Tees, Ingwer-Tricks, Heizen & Lüften, Besuch", `data-act="wi-auf"`, "k-ruhe")}${zeileBtn("brief", "Post aus Vimmerby", bvHeuteNeu() ? "Neuer Brief von Karin – auf Schwedisch" : "Briefwechsel mit Karin, auf Schwedisch", `data-act="bv-auf"`, "k-menschen")}</div>`;
+  html += `<h3 style="margin-top:20px">Zum Vergnügen</h3><div class="liste">${zeileBtn("telefon", "Zum Spaß telefonieren", "Mit Hühnchen, Max, Jane und Co.", `data-act="tel-auf"`, "k-menschen")}${zeileBtn("maske", "Film & Fernsehen", "Krimis und gute Filme aus der Mediathek, Tipps der Woche", `data-act="tv-auf"`, "k-geist")}${zeileBtn("tasse", "Gut durch den Winter", "Tees, Ingwer-Tricks, Heizen & Lüften, Besuch", `data-act="wi-auf"`, "k-ruhe")}${zeileBtn("brief", "Post aus Vimmerby", bvHeuteNeu() ? "Neuer Brief von Karin – auf Schwedisch" : "Briefwechsel mit Karin, auf Schwedisch", `data-act="bv-auf"`, "k-menschen")}</div>`;
   if (S.spiel.an) html += `<h3 style="margin-top:20px">Waldpatience</h3><div class="liste">${zeileBtn("karten", "Eine Runde Patience", spielInfoText(), `data-act="spiel"`, "k-geist")}</div>`;
   sheet({ titel: "Drinnen", inhalt: html, id: "tuer" });
 }
@@ -10503,7 +11251,7 @@ function hilftSheet() {
   if (tf === "C" || tf === "D") { const lind = (D.stattDaddeln || []).filter(x => /Körper|Hören/.test(x.kat) && x.tf.includes(tf)); if (lind.length && !v.some(x => lind.includes(x))) v = [lind[Math.floor(Math.random() * lind.length)], ...v.slice(0, 2)]; }
   let html = `<button class="knopf zweit voll" style="margin-bottom:14px" data-act="ruhe-jetzt">${ic("atem")} Wenn es gerade eng wird</button><p>${A("Drei Ideen für jetzt. Oder keine – auch gut.", "Drei Ideen für jetzt. Oder keine – auch gut.")}</p><div class="liste">${v.map(x => zeileBtn(katIcon(x.kat, x), x.titel, `${x.text}${x.min ? " · " + x.min + " Min." : ""}`, `data-act="idee" data-id="${x.id}"`, "k-geist")).join("")}</div>`;
   if (S.spiel.an && S.gekauft.patience && (tf === "C" || tf === "D")) html += `<div class="bogen mulde" style="margin-top:14px"><p style="margin:0 0 8px">Spiel ruhig eine Runde Patience. Eine Runde ist nach ein paar Minuten vorbei.</p><button class="knopf zweit voll" data-act="spiel">${ic("karten")} Waldpatience</button></div>`;
-  html += `<button class="knopf leise" data-act="hilft-neu">Andere Ideen</button><div class="liste" style="margin-top:12px">${zeileBtn("telefon", "Kurz anrufen – zum Spaß", "Mit Hühnchen, Max oder Jane plaudern", `data-act="tel-auf"`, "k-menschen")}${zeileBtn("brief", "Post aus Vimmerby", "Briefwechsel mit Karin, auf Schwedisch", `data-act="bv-auf"`, "k-menschen")}${zeileBtn("maske", "Film & Fernsehen", "Krimis und gute Filme aus der Mediathek", `data-act="tv-auf"`, "k-geist")}</div>`;
+  html += `<button class="knopf leise" data-act="hilft-neu">Andere Ideen</button><div class="liste" style="margin-top:12px">${zeileBtn("telefon", "Kurz anrufen – zum Spaß", "Mit Hühnchen, Max, Jane und Co. plaudern", `data-act="tel-auf"`, "k-menschen")}${zeileBtn("brief", "Post aus Vimmerby", "Briefwechsel mit Karin, auf Schwedisch", `data-act="bv-auf"`, "k-menschen")}${zeileBtn("maske", "Film & Fernsehen", "Krimis und gute Filme aus der Mediathek", `data-act="tv-auf"`, "k-geist")}</div>`;
   sheet({ titel: "Ablenkung?", inhalt: html, id: "hilft" });
 }
 function ideeSheet(id) {
@@ -11745,19 +12493,20 @@ function tbAktion(a, d) {
    Gespräche aus D.anrufe; noch nicht geführte kommen zuerst.
    Bei Max endet jedes Gespräch im Tschüss-Duell.
    ============================================================ */
-const TEL_WER = { huhn: "Hühnchen", max: "Max", jane: "Jane" };
+const TEL_WER = { huhn: "Hühnchen", max: "Max", jane: "Jane", greta: "Greta", pauli: "Pauli", micha: "Micha" };
+const TEL_REIHE = ["huhn", "max", "jane", "greta", "pauli", "micha"];
 let TEL = null;
 
 function telBild(wer, gr) {
   if (wer === "huhn") return huhnSVG({ gr, kopf: true, stimmung: "spricht" });
   if (wer === "max") return maxSVG(gr);
-  return janeSVG(gr);
+  return ({ jane: janeSVG, greta: gretaSVG, pauli: pauliSVG, micha: michaSVG }[wer] || janeSVG)(gr);
 }
 function telAuswahlSheet() {
   const alle = D.anrufe || [], gef = S.anrufeGefuehrt || {};
   const zahl = w => alle.filter(a => a.wer === w).length, neu = w => alle.filter(a => a.wer === w && !gef[a.id]).length;
   sheet({ titel: "Kurz anrufen", id: "telefon", inhalt: `<p class="klein" style="margin-top:0">Nur zum Spaß – niemand wird wirklich angerufen.</p>
-    <div class="tel-wahl">${["huhn", "max", "jane"].map(w => `<button class="tel-kontakt" data-act="tel-ruf" data-wer="${w}">${telBild(w, 64)}<span class="titel">${TEL_WER[w]}</span><span class="unter">${zahl(w) ? (neu(w) ? `${neu(w)} neue Gespräche` : "alles schon gehört – nochmal?") : "bald"}</span></button>`).join("")}</div>
+    <div class="tel-wahl">${TEL_REIHE.filter(w => (D.anrufe || []).some(a => a.wer === w)).map(w => `<button class="tel-kontakt" data-act="tel-ruf" data-wer="${w}">${telBild(w, 64)}<span class="titel">${TEL_WER[w]}</span><span class="unter">${zahl(w) ? (neu(w) ? `${neu(w)} neue Gespräche` : "alles schon gehört – nochmal?") : "bald"}</span></button>`).join("")}</div>
     <p class="klein" style="margin-top:14px">${Object.keys(gef).length} von ${alle.length} Gesprächen entdeckt.</p>` });
 }
 function telStarten(wer) {

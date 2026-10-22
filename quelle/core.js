@@ -200,7 +200,7 @@ function haptik(art) {
   try { if (navigator.vibrate) navigator.vibrate(VIB[art] || 10); } catch (e) { }
 }
 /* iOS: echter Schalter unter einem label erzeugt den System-Tick (ab iOS 18) */
-const HAPSEL = ".tel-kontakt,.bingo-feld,.huhn-karte,.tuer,.logo-knopf,.knopf,.kachel,.tf,.chip,.liste-zeile,nav.tabs button,.karte:not(.zu),.fach:not(.leer),.schalter-zeile";
+const HAPSEL = ".tuer-gross,.notfall-leiste,.tel-kontakt,.tel-karte-knopf,.exkurs-karte,.bingo-feld,.huhn-karte,.tuer,.logo-knopf,.knopf,.kachel,.tf,.chip,.liste-zeile,nav.tabs button,.karte:not(.zu),.fach:not(.leer),.schalter-zeile";
 function armHaptics() {
   if (!IOS || !S.vib) return;
   $$(HAPSEL).forEach(el => {

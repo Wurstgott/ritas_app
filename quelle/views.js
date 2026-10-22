@@ -45,6 +45,12 @@ function grussHimmel() {
   if (art === "schnee") svg += `<g class="flocken" fill="#9FC2E6"><circle cx="20" cy="56" r="1.8"/><circle cx="30" cy="58" r="1.8"/><circle cx="40" cy="56" r="1.8"/></g>`;
   return `<button class="gruss-himmel ${nacht ? "mond" : "sonne"}" data-act="wetter" aria-label="Wetter ansehen"><svg viewBox="0 0 60 64" aria-hidden="true">${svg}</svg>${W ? `<span class="gruss-temp">${Math.round(W.temp)}°</span>` : ""}</button>`;
 }
+function telKarteHTML() {
+  const alle = D.anrufe || [], wer = TEL_REIHE.filter(w => alle.some(a => a.wer === w)).map(w => [w, TEL_WER[w]]), gef = S.anrufeGefuehrt || {};
+  const neu = w => alle.filter(a => a.wer === w && !gef[a.id]).length;
+  return `<section class="abschnitt"><div class="tel-karte"><div class="zeile zwischen" style="align-items:baseline"><h2 style="margin:0">Kurz plaudern?</h2><span class="klein">zum Spaß, niemand wird wirklich angerufen</span></div>
+    <div class="tel-karte-reihe">${wer.map(([w, n]) => `<button class="tel-karte-knopf" data-act="tel-ruf" data-wer="${w}" aria-label="${n} anrufen"><span class="tel-karte-bild fig-idle">${w === "huhn" ? huhnFrontSVG(66) : telBild(w, 66)}</span><span class="tel-karte-name">${n}</span>${neu(w) ? `<span class="tel-karte-neu">${neu(w)} neu</span>` : ""}<span class="tel-karte-hoerer">${ic("telefon")}</span></button>`).join("")}</div></div></section>`;
+}
 function viewHeute() {
   const h = heute(), tf = S.tf[h];
   const liste = eintraegeAm(h);
@@ -83,6 +89,7 @@ function viewHeute() {
     : `<section class="abschnitt"><button class="umschlag" data-act="post-auf" aria-label="Post von ${von} – zum Öffnen antippen">${umschlagSVG(von)}<span class="umschlag-hinweis">Post von ${von} · zum Öffnen antippen</span></button></section>`; }
   html += zettelHTML();
   html += raetselHTML();
+  html += telKarteHTML();
   html += tvHeuteHTML();
   html += abendkarteHTML(tf);
   if (jetzt().getHours() >= 18 && !eintraegeAm(heute()).some(e => e.t === "tagebuch") && (S.tf[heute()] !== "D")) html += tagebuchKarte(heute());
@@ -162,16 +169,17 @@ function hinweisDesTages() {
 function viewIdeen() {
   const tf = S.tf[heute()] || "B";
   let html = `<div class="gruss"><h1>Ideen</h1><div class="datum">${A("Passend zu deinem Tag", "Passend zu Ihrem Tag")}: ${D.tagesformen.find(f => f.id === tf).name}</div></div>`;
+  html += `<section class="abschnitt"><div class="tueren-gross">
+    <button class="tuer-gross drinnen" data-act="tuer" data-v="drinnen"><span class="tg-bild" aria-hidden="true">${ic("lampe")}</span><span class="titel">Drinnen</span><span class="unter">Lesen, Telefon, Filme, Winter-Tees, Vorhaben, Patience</span></button>
+    <button class="tuer-gross draussen" data-act="tuer" data-v="draussen"><span class="tg-bild" aria-hidden="true">${ic("rucksack")}</span><span class="titel">Draußen</span><span class="unter">Ausflüge, Forst-Bingo, Binger, Angebote in Spandau</span></button>
+  </div>
+  <button class="notfall-leiste" data-act="ruhe-plan">${ic("atem")}<span><span class="titel">Wenn’s eng wird</span><span class="unter">Mein Notfallplan – ruhig, Schritt für Schritt</span></span></button></section>`;
   const vorschl = vorschlaege(tf, 3, "ideen" + heute() + (S._mischen || 0));
   html += `<section class="abschnitt"><h2>Jetzt vielleicht</h2><div class="liste">${vorschl.map(v => zeileBtn(katIcon(v.kat, v), v.titel, `${v.text} · ${v.min ? v.min + " Min." : "kurz"}`, `data-act="idee" data-id="${v.id}"`, "k-geist")).join("")}</div>
     <button class="knopf leise" data-act="mischen">Andere Ideen zeigen</button></section>`;
+  html += telKarteHTML();
   html += `<section class="abschnitt"><button class="exkurs-karte" data-act="bv-auf"><span class="fig-idle">${karinKopfSVG(72)}</span><span class="text"><span class="klein" style="font-weight:700;letter-spacing:.04em">AUSFLUG NACH SMÅLAND</span><span class="titel">Post von Karin aus Vimmerby</span><span class="unter">${bvHeuteNeu() ? "Ein neuer Brief wartet – auf Schwedisch, mit Übersetzung zum Aufklappen." : "Eine ausgedachte Brieffreundin zum Schwedisch-Auffrischen: Krimis, Fika und Katze Sotis."}</span></span></button></section>`;
-  const hp = D.hp && D.hp.baende ? D.hp.baende.find(b => b.nr === S.hp.band) : null;
-  html += `<section class="abschnitt"><div class="tueren">
-    <button class="tuer k-geist" data-act="tuer" data-v="drinnen">${ic("lampe")}<span class="titel">Drinnen</span><span class="unter">Timer, Lesen &amp; Bücherregal, Vorhaben, Patience</span></button>
-    <button class="tuer k-draussen" data-act="tuer" data-v="draussen">${ic("rucksack")}<span class="titel">Draußen</span><span class="unter">Ausflüge, Binger, Angebote in Spandau</span></button>
-    <button class="tuer k-ruhe" data-act="ruhe-plan">${ic("atem")}<span class="titel">Wenn’s eng wird</span><span class="unter">Mein Notfallplan</span></button>
-  </div></section>`;
+
   return html;
 }
 function tuerSheet(was) {
@@ -195,7 +203,7 @@ function tuerSheet(was) {
   const aktiv = S.missionen.aktiv.map(a => ({ a, m: (D.missionen || []).find(x => x.id === a.id) })).filter(x => x.m);
   html += `<h3 style="margin-top:20px">Kleine Vorhaben</h3>${aktiv.length ? `<div class="liste">${aktiv.map(({ a, m }) => zeileBtn("funke", m.titel, `${a.tage?.length || 0} von ${m.tage} Tagen`, `data-act="mission" data-id="${m.id}"`, "k-mut")).join("")}</div>` : `<p class="klein">Ein Vorhaben für ein paar Tage – mit Kästchen zum Abhaken.</p>`}
     <button class="knopf zweit voll" style="margin-top:10px" data-act="missionen">Vorhaben aussuchen</button>`;
-  html += `<h3 style="margin-top:20px">Zum Vergnügen</h3><div class="liste">${zeileBtn("telefon", "Zum Spaß telefonieren", "Mit Hühnchen, Max oder Jane", `data-act="tel-auf"`, "k-menschen")}${zeileBtn("maske", "Film & Fernsehen", "Krimis und gute Filme aus der Mediathek, Tipps der Woche", `data-act="tv-auf"`, "k-geist")}${zeileBtn("tasse", "Gut durch den Winter", "Tees, Ingwer-Tricks, Heizen & Lüften, Besuch", `data-act="wi-auf"`, "k-ruhe")}${zeileBtn("brief", "Post aus Vimmerby", bvHeuteNeu() ? "Neuer Brief von Karin – auf Schwedisch" : "Briefwechsel mit Karin, auf Schwedisch", `data-act="bv-auf"`, "k-menschen")}</div>`;
+  html += `<h3 style="margin-top:20px">Zum Vergnügen</h3><div class="liste">${zeileBtn("telefon", "Zum Spaß telefonieren", "Mit Hühnchen, Max, Jane und Co.", `data-act="tel-auf"`, "k-menschen")}${zeileBtn("maske", "Film & Fernsehen", "Krimis und gute Filme aus der Mediathek, Tipps der Woche", `data-act="tv-auf"`, "k-geist")}${zeileBtn("tasse", "Gut durch den Winter", "Tees, Ingwer-Tricks, Heizen & Lüften, Besuch", `data-act="wi-auf"`, "k-ruhe")}${zeileBtn("brief", "Post aus Vimmerby", bvHeuteNeu() ? "Neuer Brief von Karin – auf Schwedisch" : "Briefwechsel mit Karin, auf Schwedisch", `data-act="bv-auf"`, "k-menschen")}</div>`;
   if (S.spiel.an) html += `<h3 style="margin-top:20px">Waldpatience</h3><div class="liste">${zeileBtn("karten", "Eine Runde Patience", spielInfoText(), `data-act="spiel"`, "k-geist")}</div>`;
   sheet({ titel: "Drinnen", inhalt: html, id: "tuer" });
 }
@@ -386,7 +394,7 @@ function hilftSheet() {
   if (tf === "C" || tf === "D") { const lind = (D.stattDaddeln || []).filter(x => /Körper|Hören/.test(x.kat) && x.tf.includes(tf)); if (lind.length && !v.some(x => lind.includes(x))) v = [lind[Math.floor(Math.random() * lind.length)], ...v.slice(0, 2)]; }
   let html = `<button class="knopf zweit voll" style="margin-bottom:14px" data-act="ruhe-jetzt">${ic("atem")} Wenn es gerade eng wird</button><p>${A("Drei Ideen für jetzt. Oder keine – auch gut.", "Drei Ideen für jetzt. Oder keine – auch gut.")}</p><div class="liste">${v.map(x => zeileBtn(katIcon(x.kat, x), x.titel, `${x.text}${x.min ? " · " + x.min + " Min." : ""}`, `data-act="idee" data-id="${x.id}"`, "k-geist")).join("")}</div>`;
   if (S.spiel.an && S.gekauft.patience && (tf === "C" || tf === "D")) html += `<div class="bogen mulde" style="margin-top:14px"><p style="margin:0 0 8px">Spiel ruhig eine Runde Patience. Eine Runde ist nach ein paar Minuten vorbei.</p><button class="knopf zweit voll" data-act="spiel">${ic("karten")} Waldpatience</button></div>`;
-  html += `<button class="knopf leise" data-act="hilft-neu">Andere Ideen</button><div class="liste" style="margin-top:12px">${zeileBtn("telefon", "Kurz anrufen – zum Spaß", "Mit Hühnchen, Max oder Jane plaudern", `data-act="tel-auf"`, "k-menschen")}${zeileBtn("brief", "Post aus Vimmerby", "Briefwechsel mit Karin, auf Schwedisch", `data-act="bv-auf"`, "k-menschen")}${zeileBtn("maske", "Film & Fernsehen", "Krimis und gute Filme aus der Mediathek", `data-act="tv-auf"`, "k-geist")}</div>`;
+  html += `<button class="knopf leise" data-act="hilft-neu">Andere Ideen</button><div class="liste" style="margin-top:12px">${zeileBtn("telefon", "Kurz anrufen – zum Spaß", "Mit Hühnchen, Max, Jane und Co. plaudern", `data-act="tel-auf"`, "k-menschen")}${zeileBtn("brief", "Post aus Vimmerby", "Briefwechsel mit Karin, auf Schwedisch", `data-act="bv-auf"`, "k-menschen")}${zeileBtn("maske", "Film & Fernsehen", "Krimis und gute Filme aus der Mediathek", `data-act="tv-auf"`, "k-geist")}</div>`;
   sheet({ titel: "Ablenkung?", inhalt: html, id: "hilft" });
 }
 function ideeSheet(id) {
