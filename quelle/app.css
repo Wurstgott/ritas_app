@@ -377,7 +377,7 @@ input.text:focus, textarea.text:focus { outline: 3px solid var(--fokus); outline
 .hinweis .zeile { margin-top: 6px; }
 
 /* ---------- Spiel: Waldpatience ---------- */
-.tisch { --kb: calc((min(100vw, 560px) - 32px - 6 * 6px) / 7); position: relative; user-select: none; -webkit-user-select: none; }
+.tisch { --kb: calc((min(100vw, 560px) - 32px - 6 * 6px) / 7); position: relative; user-select: none; -webkit-user-select: none; padding-top: 8px; /* Platz, damit eine gehobene Karte samt Rahmen nicht oben abgeschnitten wird */ }
 .tisch .reihe { display: grid; grid-template-columns: repeat(7, var(--kb)); gap: 6px; }
 .platz { position: relative; width: var(--kb); height: calc(var(--kb) * 1.42); border-radius: 7px; background: var(--mulde); box-shadow: inset 0 0 0 2px var(--mulde-2); }
 .saeule { position: relative; min-height: calc(var(--kb) * 1.42); }
@@ -399,6 +399,18 @@ input.text:focus, textarea.text:focus { outline: 3px solid var(--fokus); outline
 .karte.hinweis-puls { animation: kpuls 1s ease-in-out 2; }
 @keyframes kpuls { 50% { box-shadow: 0 0 0 5px var(--fokus); } }
 .spiel-leiste { display: flex; gap: 8px; flex-wrap: wrap; margin: 12px 0; }
+/* Zielwahl: mögliche Plätze leuchten (Fokus-Blau, in hell und dunkel kräftig), gewählte Karte hebt sich (Licht-Gelb) */
+.platz.ablage { border: 0; padding: 0; cursor: pointer; font: inherit; color: inherit; }
+.platz.ziel, .karte.ziel { box-shadow: 0 0 0 4px var(--fokus), 0 0 14px 2px color-mix(in srgb, var(--fokus) 55%, transparent); z-index: 4; }
+.platz.ziel { background: color-mix(in srgb, var(--fokus) 22%, var(--mulde)); }
+.spiel-status { margin: 10px 0 0; min-height: 0; font-weight: 700; color: var(--tinte); }
+.spiel-status:empty { display: none; }
+.spiel-regeln { margin: 4px 0 14px; }
+.spiel-regeln > summary { min-height: 48px; display: flex; align-items: center; gap: 8px; cursor: pointer; font-weight: 700; color: var(--fokus); list-style: none; }
+.spiel-regeln > summary::-webkit-details-marker { display: none; }
+.spiel-regeln > summary::before { content: "›"; font-size: 1.3em; line-height: 1; transition: transform .18s; }
+.spiel-regeln[open] > summary::before { transform: rotate(90deg); }
+.spiel-regeln p { margin: 0 0 8px; }
 
 /* ---------- Anleitung-Illustration ---------- */
 .schritt-bild { width: 100%; max-width: 170px; margin: 6px auto 10px; display: block; }
@@ -1272,3 +1284,5 @@ html[data-size="3"] .sheet .sheet-kopf h2 { font-size: clamp(1rem, 5.6vw, 1.25re
 @keyframes pg-lachen { 0%, 100% { transform: translateY(0) rotate(0); } 30% { transform: translateY(-4px) rotate(-2deg); } 65% { transform: translateY(1px) rotate(1.5deg); } }
 .lach-ha { position: absolute; font: 800 20px/1 var(--f-text); color: #C8372D; opacity: 0; animation: hg-flug 1.3s ease-out forwards; --dx: 26px; pointer-events: none; }
 @media (prefers-reduced-motion: reduce) { .portrait-gross.pg-lach svg { animation: none; } }
+/* Wortmarke führt zur Startseite (data-act=heim) */
+.wm-text[data-act] { cursor: pointer; -webkit-tap-highlight-color: transparent; }

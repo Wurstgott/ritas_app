@@ -73,7 +73,8 @@ function altesTelefonSVG(gr = 56) {
 let TEL_GEKLINGELT = false;
 function telKarteHTML() {
   const alle = D.anrufe || [], wer = TEL_REIHE.filter(w => alle.some(a => a.wer === w));
-  const bl = wer.slice(0, 3).map((w, i) => `<span class="tel-blase b${i}">${w === "huhn" ? huhnFrontSVG(30) : telBild(w, 30)}</span>`).join("");
+  const drei = wer.length > 3 ? [wer[0], wer[1], wer[2 + hash32("telbl" + heute()) % (wer.length - 2)]] : wer; // Hühnchen und Max, dazu jeden Tag jemand anderes
+  const bl = drei.map((w, i) => `<span class="tel-blase b${i}">${w === "huhn" ? huhnFrontSVG(30) : telBild(w, 30)}</span>`).join("");
   let klingelt = ""; if (!TEL_GEKLINGELT && Math.random() < .3) { TEL_GEKLINGELT = true; klingelt = " klingelt"; } // ab und zu (höchstens einmal je Öffnen) klingelt es einfach – wie in den Telefonhäuschen von Koholint
   return `<section class="abschnitt"><button class="tel-leiste${klingelt}" data-act="tel-auf" aria-label="Kurz plaudern – zum Spaß"><span class="tel-bild" aria-hidden="true">${altesTelefonSVG(46)}${bl}</span><span class="text"><span class="titel">Kurz plaudern <span class="tel-zusatz">zum Spaß, mit Hühnchen und Co.</span></span></span>${ic("pfeil", "pfeil")}</button></section>`;
 }
@@ -128,8 +129,8 @@ function viewHeute() {
   html += raetselHTML();
   html += tvHeuteHTML();
   html += abendkarteHTML(tf);
-  // abends nur eine kompakte Zeile – die volle Tagebuch-Karte (mit Merkzettel) steht im Rückblick
-  if (tbZeileHeute()) html += `<section class="abschnitt"><div class="liste">${zeileBtn("feder", "Für dein Tagebuch", "Eine Frage für heute Abend", 'data-tab="tagebuch"', "k-geist")}</div></section>`;
+  // ab 17 Uhr eine schlanke Leiste: Frage, Schönes und Farbe stehen in der Karte „Für dein Tagebuch“ im Rückblick (rueckblick.js)
+  if (typeof abendLeisteHTML === "function") html += abendLeisteHTML();
   if (tf === "A") html += draussenVorschlagHTML();
   if (!ruhig) html += `<section class="abschnitt"><button class="kachel breit k-ruhe" data-act="hilft">${ic("windrad")}<span><span class="titel">Ablenkung?</span><br><span class="unter">Wenn der Rücken zwickt oder das Handyspiel lockt.</span></span></button></section>`;
   // Heute eingetragen
@@ -152,7 +153,7 @@ function viewHeute() {
   html += `<p class="ersteller-fuss">Mit Liebe ausgedacht von Carlo Maximilian Engeländer für seine Patentante Rita</p>`;
   return html;
 }
-function tbZeileHeute() { return jetzt().getHours() >= 18 && !eintraegeAm(heute()).some(e => e.t === "tagebuch") && S.tf[heute()] !== "D"; }
+function tbZeileHeute() { return typeof abendLeisteAn === "function" ? abendLeisteAn() : false; } // alter Name, gleiche Regel wie die Abend-Leiste
 function zuletztText(id) {
   const t = tat(id), l = [...S.eintraege].reverse().find(e => e.t === id);
   if (!l) return t.art === "km" ? "z. B. 2 km" : t.art === "person" ? "mit wem?" : t.std ? `z. B. ${minText(t.std)}` : "";
@@ -212,7 +213,7 @@ function cFunde() {
     { id: "angebote", act: `data-act="fenster" data-ziel="angebote"`, icon: "tassen", ton: "falu", titel: "Angebote in Spandau", text: "Konzerte, Treffs und Feste mit Terminen" },
     { id: "bingo", act: `data-act="fenster" data-ziel="bingo-auf"`, icon: "bingo", ton: "moos", titel: "Forst-Bingo", text: "Hühnchens Karte für diese Woche" },
     { id: "ausflug", act: `data-act="fenster" data-ziel="ausflug"`, icon: "rucksack", ton: "moos", titel: "Ausflug planen", text: "Von nah bis weit, mit Checkliste" },
-    { id: "tagebuch", act: `data-act="fenster" data-ziel="tab:tagebuch"`, icon: "tagebuch", ton: "pflaume", titel: "Tagebuch", text: A2("Eine Frage für deinen Abend", "Eine Frage für Ihren Abend") },
+    { id: "tagebuch", act: `data-act="fenster" data-ziel="abend-zu"`, icon: "tagebuch", ton: "pflaume", titel: "Tagebuch", text: A2("Eine Frage für deinen Abend, was schön war, Farbe", "Eine Frage für Ihren Abend, was schön war, Farbe") },
     { id: "wissen", act: `data-act="fenster" data-ziel="wissen"`, icon: "funke", ton: "senf", titel: "Wissen", text: "Kurze Häppchen, mit Quelle" },
     { id: "vorhaben", act: `data-act="fenster" data-ziel="missionen"`, icon: "stern", ton: "dala", titel: "Kleine Vorhaben", text: "Ein paar Tage dranbleiben, mit Kästchen" }
   ];
@@ -312,6 +313,7 @@ function viewLichtung() {
     ${zeileBtn("treppe", "Alle Stufen", "Was schon dazugekommen ist", `data-act="stufen"`)}
     ${zeileBtn("liste", "Bild als Liste", "Was im Bild zu sehen ist, in Worten", `data-act="bildliste"`)}
     ${zeileBtn("setzkasten", "Setzkasten", M.ausfluege.length ? `${M.ausfluege.length} ${M.ausfluege.length === 1 ? "Andenken" : "Andenken"} von Ausflügen` : "Andenken von Ausflügen", `data-act="setzkasten"`, "k-draussen")}
+    ${typeof fundZeileHTML === "function" ? fundZeileHTML() : ""}
     ${typeof zuhauseZusatz === "function" ? "" : zeileBtn("kiste", "Kramladen", `Sachen fürs Bild, Spiele, Klänge · ${talerText(talerStand())}`, `data-act="laden"`, "k-mut")}</div></section>`;
   if (typeof mbZuhauseHTML === "function") html += mbZuhauseHTML(); // Briefe von Max (maxbriefe.js)
   const gekauft = gekaufteInhalteZeilen();
@@ -343,33 +345,15 @@ function gekaufteInhalteZeilen() {
    TAGEBUCH
    ============================================================ */
 function viewTagebuch() {
-  const h = heute();
-  let html = `<div class="gruss"><h1>Rückblick</h1><div class="datum">Alles, was du eingetragen und abgehakt hast. Ändern geht immer.</div></div>`;
-  // Woche
-  const wo = wochenZahlen(h);
-  html += `<section class="abschnitt"><div class="bogen"><h3>Diese Woche</h3><p style="margin:0">${wo.length ? esc(wo.join(" · ")) : "Noch nichts eingetragen."}</p>
-    <div class="zeile" style="margin-top:12px;flex-wrap:wrap"><button class="knopf klein zweit" data-act="moment">${ic("stern")} Schönster Moment heute</button>${tagDatum(h).getDay() === 0 || (tagDatum(h).getDay() === 1 && !S.rueckblick[kwVon(tagPlus(h, -1))]) ? `<button class="knopf klein leise" data-act="rueckblick">Wochenrückblick</button>` : ""}</div></div></section>`;
-  html += rueckblickExtras(h);
-  if ((S.briefe || []).length) html += `<section class="abschnitt"><details class="bogen" data-id="briefe"><summary style="font-weight:700;cursor:pointer;min-height:44px;display:flex;align-items:center">${ic("brief")}&nbsp; Briefe (${S.briefe.length})</summary>${S.briefe.slice().reverse().map(b => `<div class="brief-papier" style="margin-top:12px;animation:none"><p class="brief-anrede">Liebe ${esc(S.name)},</p><p class="brief-text">${esc(b.text)}</p><p class="brief-gruss">${b.wer === "christiane" ? "Deine Christiane" : b.wer === "huhn" ? "Dein Hühnchen" : "Dein Max"} <span aria-hidden="true">♥</span> · ${datumLang(b.tag)}</p></div>`).join("")}</details></section>`;
-  // Tage
-  const tage = [...new Set(S.eintraege.map(e => e.tag).concat(Object.keys(S.momente)))].sort().reverse();
-  if (!tage.length) html += `<p>${A("Sobald du etwas einträgst, steht es hier – nach Tagen sortiert.", "Sobald Sie etwas eintragen, steht es hier – nach Tagen sortiert.")}</p>`;
-  const zeige = tage.slice(0, S._tbMehr ? 400 : 21);
-  for (const t of zeige) {
-    const es = eintraegeAm(t), tf = S.tf[t];
-    const schwer = (tf === "C" || tf === "D") && t === h;
-    html += `<section class="abschnitt"><h3>${datumRelativ(t)}${schwer ? ` <span class="stern" title="ein ruhiger Tag">✱</span>` : ""}</h3>
-      ${S.momente[t] ? `<div class="bogen" style="margin-bottom:8px"><div class="klein">Schönster Moment</div><div style="font-style:italic">„${esc(S.momente[t])}“</div></div>` : ""}
-      <div class="liste">${es.slice().reverse().map(e => eintragZeile(e, true, t === h)).join("")}</div>
-      ${schwer && es.length ? `<p class="klein" style="margin-top:6px">✱ Ein ruhiger Tag – und trotzdem was geschafft.</p>` : ""}</section>`;
-  }
-  if (tage.length > zeige.length) html += `<button class="knopf zweit voll" data-act="tb-mehr">Ältere Tage zeigen</button>`;
-  return html;
+  // Rückblick nach Feinkonzept (22.10.): Aufbau in rueckblick.js; die lange Tagesliste steht jetzt im Sheet „Alle Tage“
+  if (typeof rbAnsicht === "function") return rbAnsicht();
+  return `<div class="gruss"><h1>Rückblick</h1></div>`;
 }
 function wochenZahlen(h) {
   const d = tagDatum(h), mo = tagPlus(h, -((d.getDay() + 6) % 7));
   const es = S.eintraege.filter(e => e.tag >= mo && e.tag <= h);
-  if (!es.length) return [];
+  const gesamt = h === heute() ? hakenDieseWoche() : es.length; // eine Zählung: dieselbe Zahl wie die Strichliste auf Heute
+  if (!es.length && !gesamt) return [];
   const km = es.filter(e => tat(e.t).art === "km").reduce((s, e) => s + (e.km || 0), 0);
   const lesen = es.filter(e => tat(e.t).bild === "eiche").reduce((s, e) => s + (e.min || 0), 0);
   const menschen = es.filter(e => tat(e.t).feld === "menschen").length;
@@ -381,7 +365,7 @@ function wochenZahlen(h) {
   if (ruhe) z.push(`${ruhe}× etwas Gutes für dich`);
   const haken = es.filter(e => e.t === "abgehakt").length;
   if (haken) z.unshift(`davon ${haken} von der Liste`);
-  z.unshift(`${es.length} ${es.length === 1 ? "Sache" : "Sachen"} geschafft`);
+  z.unshift(`${gesamt} ${gesamt === 1 ? "Sache" : "Sachen"} geschafft`);
   const aus = es.filter(e => e.t === "ausflug").length; if (aus) z.push(`${aus} ${aus === 1 ? "Ausflug" : "Ausflüge"}`);
   return z;
 }
@@ -479,7 +463,7 @@ function hilftSheet() {
 function ideeSheet(id) {
   const v = (D.stattDaddeln || []).find(x => x.id === id); if (!v) return;
   const t = tat(v.t || "frei");
-  sheet({ titel: v.titel, inhalt: `<p>${esc(v.text)}</p>${v.schritte ? `<ol class="idee-schritte">${v.schritte.map(x => `<li>${esc(x)}</li>`).join("")}</ol>` : ""}${v.links ? `<div class="stapel" style="margin:10px 0">${v.links.map(l => `<a class="knopf zweit voll" href="${esc(l.url)}" target="_blank" rel="noopener">${esc(l.text)} ↗</a>`).join("")}</div>` : ""}${v.gedicht ? `<div class="bogen mulde idee-gedicht"><p style="margin:0 0 6px;font-weight:700">${esc(v.gedicht.titel || "")}${v.gedicht.autor ? ` <span class="klein">· ${esc(v.gedicht.autor)}</span>` : ""}</p><p class="serif" style="white-space:pre-line;margin:0">${esc(v.gedicht.original || "")}</p>${v.gedicht.deutsch ? `<details style="margin-top:8px"><summary class="klein" style="font-weight:700">Auf Deutsch</summary><p class="serif" style="white-space:pre-line;margin:6px 0 0">${esc(v.gedicht.deutsch)}</p></details>` : ""}${v.gedicht.hinweis ? `<p class="klein" style="margin:8px 0 0">${esc(v.gedicht.hinweis)}</p>` : ""}</div>` : ""}${v.hoeren ? `<div class="stapel" style="margin:10px 0">${v.hoeren.map(l => `<a class="knopf haupt voll" href="${esc(l.url)}" target="_blank" rel="noopener">${ic("kopfhoerer")} ${esc(l.text)}</a>${S.spotify && l.spotify ? `<a class="knopf zweit voll" href="https://open.spotify.com/search/${encodeURIComponent(l.spotify)}" target="_blank" rel="noopener">${ic("note")} In Spotify öffnen</a>` : ""}`).join("")}</div>${!S.spotify && v.hoeren.some(l => l.spotify) ? `<p class="klein" style="margin:-2px 0 10px">Mit Spotify ginge das mit einem Tipp. <button class="link-knopf" data-act="spotify-info">Max hätte da ein Angebot …</button></p>` : ""}` : ""}${v.optionen ? `<div class="chips" style="margin:8px 0">${v.optionen.map(o => `<span class="chip">${esc(o)}</span>`).join("")}</div>` : ""}<p class="klein">${v.min ? `Etwa ${v.min} Minuten` : "Kurz"}${v.haltung ? ` · ${esc(v.haltung)}` : ""}</p>`,
+  sheet({ titel: v.titel, inhalt: `<p>${esc(v.text)}</p>${v.schritte ? `<ol class="idee-schritte">${v.schritte.map(x => `<li>${esc(x)}</li>`).join("")}</ol>` : ""}${v.links ? `<div class="stapel" style="margin:10px 0">${v.links.map(l => `<a class="knopf zweit voll" href="${esc(l.url)}" target="_blank" rel="noopener">${esc(l.text)} ↗</a>`).join("")}</div>` : ""}${v.gedicht ? `<div class="bogen mulde idee-gedicht"><p style="margin:0 0 6px;font-weight:700">${esc(v.gedicht.titel || "")}${v.gedicht.autor ? ` <span class="klein">· ${esc(v.gedicht.autor)}</span>` : ""}</p><p class="serif" style="white-space:pre-line;margin:0">${esc(v.gedicht.original || "")}</p>${v.gedicht.deutsch ? `<details style="margin-top:8px"><summary class="klein" style="font-weight:700">Auf Deutsch</summary><p class="serif" style="white-space:pre-line;margin:6px 0 0">${esc(v.gedicht.deutsch)}</p></details>` : ""}${v.gedicht.hinweis ? `<p class="klein" style="margin:8px 0 0">${esc(v.gedicht.hinweis)}</p>` : ""}</div>` : ""}${v.hoeren ? `<div class="stapel" style="margin:10px 0">${v.hoeren.map(l => `<a class="knopf haupt voll" href="${esc(l.url)}" target="_blank" rel="noopener">${ic("kopfhoerer")} ${esc(l.text)}</a>${S.spotify && l.spotify ? `<a class="knopf zweit voll" href="https://open.spotify.com/search/${encodeURIComponent(l.spotify)}" target="_blank" rel="noopener">${ic("note")} In Spotify öffnen</a>` : ""}`).join("")}</div>${!S.spotify && v.hoeren.some(l => l.spotify) ? `<p class="klein" style="margin:-2px 0 10px">Mit Spotify ginge das mit einem Tipp. <button class="link-knopf" data-act="spotify-info">Max hätte da ein Angebot …</button></p>` : ""}` : ""}${v.optionen ? `<div class="chips" style="margin:8px 0">${v.optionen.map(o => `<span class="chip">${esc(o)}</span>`).join("")}</div>` : ""}${typeof redeBlock === "function" ? redeBlock(v) : ""}<p class="klein">${v.min ? `Etwa ${v.min} Minuten` : "Kurz"}${v.haltung ? ` · ${esc(v.haltung)}` : ""}</p>`,
     fuss: `<div class="stapel">${v.min >= 5 ? `<button class="knopf haupt voll" data-act="timer-start" data-t="${t.id}" data-min="${v.min}" data-name="${esc(v.titel)}">${ic("uhr")} Mit Timer: ${v.min} Min.</button>` : ""}<button class="knopf zweit voll" data-act="idee-erledigt" data-id="${v.id}">${ic("haken")} Gemacht – eintragen</button></div>` });
 }
 
@@ -697,7 +681,7 @@ function andenkenSheet(i) {
 function bildListeSheet() { const z = bildBeschreibung(modell()); sheet({ titel: "Dein Bild in Worten", inhalt: `<ul style="padding-left:22px">${z.map(x => `<li style="margin-bottom:8px">${esc(x)}</li>`).join("")}</ul>` }); }
 function ortSheet(reg) {
   const M = modell();
-  if (reg.ort === "huehnchen") { sheet({ titel: "Hühnchen", inhalt: `<div style="display:grid;place-items:center;margin:8px 0 14px">${huhnSVG({ gr: 130, stimmung: "freut" })}</div><p>Ein kleines ockergelbes Huhn aus Ton, aus Peru. Wohnt neben Glücksschwein und grünem Hasen und steht im Bild dort, wo du zuletzt etwas getan hast.</p><p class="klein">Zu allem, was du machst, hat es eine Meinung. Die steht jeden Tag auf „Heute“.</p>` }); return; }
+  if (reg.ort === "huehnchen") { sheet({ titel: "Hühnchen", inhalt: `<div style="display:grid;place-items:center;margin:8px 0 14px">${huhnSVG({ gr: 130, stimmung: "freut" })}</div><p>Ein kleines ockergelbes Huhn aus Ton. Wohnt neben Glücksschwein und grünem Hasen und steht im Bild dort, wo du zuletzt etwas getan hast.</p><p class="klein">Zu allem, was du machst, hat es eine Meinung. Die steht jeden Tag auf „Heute“.</p>` }); return; }
   if (reg.ort === "figuren") { const namen = (reg.besuch || []).map(w => (S.menschen.find(m => m.id === w) || { name: "" }).name).filter(Boolean); sheet({ titel: "Wer heute da ist", inhalt: `<div style="display:grid;place-items:center;margin:4px 0 12px"><canvas class="figur-bild" data-wer="rita${reg.besuch && reg.besuch.length ? "," + reg.besuch.join(",") : ""}" width="240" height="150" style="width:240px;height:150px"></canvas></div><p>Das bist du${namen.length ? `, und daneben ${esc(namen.join(" und "))}` : ""}.</p><p class="klein">Wer mit dir Zeit verbracht hat, steht ein paar Tage mit im Bild.</p>` }); figurenMalen(); return; }
   if (reg.ort === "hochsitz") { sheet({ titel: "Der Hochsitz", inhalt: `<p>Von hier oben sieht man, wie weit die Wege schon reichen.</p><div class="bogen streifen k-bewegung"><p style="margin:0"><span class="zahl" style="font-weight:700">${fmt(M.km)} km</span> gegangen.</p>${massstabZeile(M.km)}</div><div class="liste" style="margin-top:12px">${D.massstab.map(z => `<div class="liste-zeile" style="cursor:default">${ic(M.km >= z.km ? "haken" : "karte")}<span class="text"><span class="titel">${z.km} km</span><br><span class="unter">${esc(z.ziel)}</span></span></div>`).join("")}</div>` }); return; }
   if (reg.ort === "horizont" && reg.a) { const i = M.ausfluege.indexOf(M.ausfluege.find(a => a.ziel === reg.a.ziel)); andenkenSheet(i); return; }
@@ -809,6 +793,7 @@ function einstellungenInhalt() {
       ${S.spiel.an ? `<label class="feld">Runden pro Tag (je 10 Minuten)</label><div class="chips">${[0, 1, 2, 3, 4, 5, 6].map(n => chip((S.spiel.limitNeu ?? S.spiel.limit) === n, String(n), `data-act="spiel-limit" data-v="${n}" aria-label="${n} Runden pro Tag"`)).join("")}</div><p class="klein">${S.spiel.limitNeu != null && S.spiel.limitNeu !== S.spiel.limit ? "Gilt ab morgen." : "Änderungen gelten ab dem nächsten Tag."}</p>` : ""}`)
     + einstGruppe("musik", "kopfhoerer", "Musik und Podcasts", S.spotify ? "Mit Spotify" : "Über YouTube und ARD Sounds",
       `${schalter(!!S.spotify, "Ich habe Spotify", `data-act="spotify-an"`, "Dann gibt es bei Musik- und Hörtipps zusätzlich einen Spotify-Knopf.")}${S.spotify ? "" : `<button class="knopf klein leise" data-act="spotify-info">Was hätte ich davon?</button>`}`)
+    + (typeof jfEinstGruppe === "function" ? jfEinstGruppe() : "") // Deine Tage (jahrfarben.js)
     + einstGruppe("hilfe", "frage", "Hilfe und Infos", "So funktioniert’s, aufs Handy legen, Wunsch an Max",
       `<div class="liste">${zeileBtn("frage", "So funktioniert’s", "Liste, Bild, Taler – kurz erklärt", `data-act="erklaerung"`)}
       ${zeileBtn("handy", "App aufs Handy legen", "Anleitung mit Bildern", `data-act="install"`)}
@@ -1071,9 +1056,6 @@ function postHeute() {
 /* Rückblick-Extras: Wann zuletzt, vor einem Monat, Stichworte fürs Tagebuch, Fundstücke */
 function rueckblickExtras(h) {
   let html = "";
-  // Stichworte fürs Papier-Tagebuch: die letzten 3 Tage in einer Zeile
-  const tage3 = [0, 1, 2].map(k => tagPlus(h, -k)).filter(t => eintraegeAm(t).length || S.momente[t]);
-  html += tagebuchKarte(h);
   // Wann zuletzt? (ohne Wertung)
   const zuletzt = [];
   // nur Tätigkeiten, keine Personen: kein stilles Kontakt-Messen
@@ -1097,7 +1079,7 @@ function abendkarteHTML(tf) {
   const h = heute(); if (!tf || jetzt().getHours() < 17 || S.abendWeg === h) return "";
   const ids = [...ABEND_IDS, ...(S.eigeneT || []).filter(x => !x.weg).map(x => x.id)].filter(id => D.taetigkeiten.some(t => t.id === id) && !(id === "tagebuch" && tbZeileHeute())); // Tagebuch hat abends seinen eigenen Weg
   const heuteT = new Set(eintraegeAm(h).map(e => e.t));
-  return `<section class="abschnitt"><div class="bogen streifen k-geist"><h3>Was war heute dabei?</h3><p class="klein" style="margin-top:0">Antippen genügt – ungefähre Werte, Ändern geht im Rückblick.</p><div class="chips">${ids.map(id => chip(heuteT.has(id), tat(id).kurz, heuteT.has(id) ? "disabled" : `data-act="abend" data-t="${id}"`)).join("")}</div><button class="knopf klein leise" style="padding-left:0;margin-top:6px" data-act="abend-weg">Fertig für heute</button></div></section>`;
+  return `<section class="abschnitt"><div class="bogen streifen k-geist"><h3>Was war heute dabei?</h3><p class="klein" style="margin-top:0">Antippen genügt – ungefähre Werte. Ändern geht unter ‚Heute eingetragen‘.</p><div class="chips">${ids.map(id => chip(heuteT.has(id), tat(id).kurz, heuteT.has(id) ? "disabled" : `data-act="abend" data-t="${id}"`)).join("")}</div><button class="knopf klein leise" style="padding-left:0;margin-top:6px" data-act="abend-weg">Fertig für heute</button></div></section>`;
 }
 
 /* Briefmarke: Hühnchen mit wechselndem Ulk (Schnurrbart, Brille, Zylinder, Fliege, Sonnenbrille) */

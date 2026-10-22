@@ -1,5 +1,6 @@
 /* ============================================================
-   Waldpatience – Klondike, 1 Karte ziehen, Tippen statt Ziehen
+   Waldpatience – Klondike, 1 Karte ziehen, Tippen statt Ziehen.
+   Nichts wird automatisch abgelegt; bei mehreren Zielen wählt Rita.
    Farben: Blüte & Laub (rot), Eichel & Kiefer (dunkel)
    Keine Punkte, keine Zeitwertung, unbegrenztes Rückgängig.
    ============================================================ */
@@ -27,24 +28,35 @@ function passtSaeule(k, col) { const c = G.tab[col]; if (!c.length) return k.w =
 function merke() { G.hist.push(JSON.stringify({ stock: G.stock, waste: G.waste, found: G.found, tab: G.tab })); if (G.hist.length > 300) G.hist.shift(); }
 function umdrehen() { for (const c of G.tab) if (c.length && !oben(c).up) oben(c).up = true; }
 
-/* Ziel für Karte/Stapel finden: erst Ablage, dann Säule (nicht leer bevorzugt) */
-function besterZug(quelle, idx) {
-  let karten;
-  if (quelle === "waste") karten = G.waste.length ? [oben(G.waste)] : [];
-  else karten = G.tab[quelle].slice(idx);
-  if (!karten.length || !karten[0].up) return null;
-  if (karten.length === 1 && passtAblage(karten[0])) return { ziel: "found" };
-  const kandid = [];
-  for (let c = 0; c < 7; c++) if (c !== quelle && passtSaeule(karten[0], c)) kandid.push(c);
-  // Einen König nicht sinnlos von einer leeren Säule auf eine andere leere schieben
-  const sinnvoll = kandid.filter(c => !(G.tab[c].length === 0 && quelle !== "waste" && idx === 0));
-  const voll = sinnvoll.filter(c => G.tab[c].length);
-  const c = voll[0] ?? sinnvoll[0];
-  return c == null ? null : { ziel: c };
+/* Nichts wird von allein abgelegt (Max: „Karten strategisch zwischennutzen“).
+   Quelle: "waste" | Säule 0–6 | "ablage" (idx = Farbe; Karte zurück ins Spiel).
+   ziele() nennt alle erlaubten Plätze; das Spiel wählt nie selbst zwischen mehreren. */
+function kartenVon(quelle, idx) {
+  if (quelle === "waste") return G.waste.length ? [oben(G.waste)] : [];
+  if (quelle === "ablage") { const f = G.found[idx]; return f && f.length ? [oben(f)] : []; }
+  return G.tab[quelle] ? G.tab[quelle].slice(idx) : [];
 }
+function ziele(quelle, idx) {
+  const karten = kartenVon(quelle, idx);
+  if (!karten.length || !karten[0].up) return [];
+  const z = [];
+  if (quelle !== "ablage" && karten.length === 1 && passtAblage(karten[0])) z.push("found");
+  for (let c = 0; c < 7; c++) {
+    if (c === quelle || !passtSaeule(karten[0], c)) continue;
+    // einen König nicht sinnlos von einer leeren Säule auf eine andere leere schieben
+    if (!G.tab[c].length && typeof quelle === "number" && idx === 0) continue;
+    z.push(c);
+  }
+  return z;
+}
+/* Für „passt nur an einen Platz?“: mehrere leere Säulen sind gleichwertig und zählen einmal */
+function zieleVerschieden(quelle, idx) { let leer = false; return ziele(quelle, idx).filter(z => z === "found" || G.tab[z].length || (leer ? false : (leer = true))); }
+/* Doppeltipp-Schutz: Ein zweiter, zu schneller Tipp nach einem Zug träfe die Karte, die gerade frei wurde,
+   und würde sie ungewollt weiterschicken. Solche Tipps (unter DOPPEL_MS) werden überhört. */
+let zugZeit = 0, DOPPEL_MS = 350;
 function zieh(quelle, idx, ziel) {
-  merke();
-  let karten = quelle === "waste" ? [G.waste.pop()] : G.tab[quelle].splice(idx);
+  merke(); zugZeit = performance.now();
+  let karten = quelle === "waste" ? [G.waste.pop()] : quelle === "ablage" ? [G.found[idx].pop()] : G.tab[quelle].splice(idx);
   if (ziel === "found") G.found[karten[0].s].push(karten[0]);
   else G.tab[ziel].push(...karten);
   umdrehen();
@@ -58,24 +70,39 @@ function stapelTipp() {
   else G.hist.pop();
   haptik("auswahl");
 }
-function pruefeFertig() { if (G.found.every(f => f.length === 13)) { G.fertig = true; haptik("erfolg"); setTimeout(spielEnde, 700); } }
+const alleAbgelegt = () => G.found.every(f => f.length === 13);
+function pruefeFertig() {
+  if (G.fertig || !alleAbgelegt()) return;
+  G.fertig = true; gewaehlt = null; haptik("erfolg");
+  const g0 = G;
+  // Wurde in der kurzen Pause noch „Zurück“ gedrückt, ist die Runde nicht vorbei
+  setTimeout(() => { if (G !== g0) return; if (alleAbgelegt()) spielEnde(); else { G.fertig = false; spielRender(); } }, 700);
+}
+/* Alles offen, Stapel leer: Jede Säule ist eine absteigende Folge, die kleinste Karte liegt also
+   immer oben und passt aufs Ass – die Runde ist sicher gewonnen. Erst dann wird „Rest ablegen?“ angeboten. */
 function alleOffen() { return !G.stock.length && !G.waste.length && G.tab.every(c => c.every(k => k.up)); }
+let autoLauf = false;
 function automatischLegen() {
-  let geschafft = true;
+  if (!G || G.fertig || autoLauf || !alleOffen() || alleAbgelegt()) return;
+  gewaehlt = null; merke();
+  const g0 = G, h0 = G.hist.length; autoLauf = true;
   const schritt = () => {
-    geschafft = false;
-    for (let c = 0; c < 7; c++) { const col = G.tab[c]; if (col.length && passtAblage(oben(col))) { G.found[oben(col).s].push(col.pop()); geschafft = true; break; } }
-    spielRender();
-    if (geschafft && !G.fertig) setTimeout(schritt, REDUCED() ? 0 : 120); else pruefeFertig();
+    // abbrechen, wenn zwischendurch „Zurück“, „Neu geben“ oder das Blatt geschlossen wurde
+    if (G !== g0 || G.hist.length !== h0 || !$("#spiel")) { autoLauf = false; spielRender(); return; }
+    let best = -1;
+    for (let c = 0; c < 7; c++) { const col = G.tab[c]; if (col.length && passtAblage(oben(col)) && (best < 0 || oben(col).w < oben(G.tab[best]).w)) best = c; }
+    if (best >= 0) { const k = G.tab[best].pop(); G.found[k.s].push(k); }
+    if (best >= 0 && !alleAbgelegt()) { spielRender(); setTimeout(schritt, REDUCED() ? 0 : 120); }
+    else { autoLauf = false; spielRender(); pruefeFertig(); }
   };
-  merke(); schritt();
+  schritt();
 }
 function tippHinweis() {
-  // 1) etwas auf die Ablage, 2) Säulen-Zug, der eine Karte aufdeckt, 3) Waste in Säule, 4) Stapel
+  // 1) Säulen-Zug, der eine Karte aufdeckt, 2) etwas aufs Ass, 3) Waste in Säule, 4) Stapel
+  for (let c = 0; c < 7; c++) { const col = G.tab[c]; const i = col.findIndex(k => k.up); if (i > 0 && ziele(c, i).some(z => z !== "found")) return { q: c, i }; }
   for (let c = 0; c < 7; c++) { const col = G.tab[c]; if (col.length && oben(col).up && passtAblage(oben(col))) return { q: c, i: col.length - 1 }; }
   if (G.waste.length && passtAblage(oben(G.waste))) return { q: "waste" };
-  for (let c = 0; c < 7; c++) { const col = G.tab[c]; const i = col.findIndex(k => k.up); if (i > 0) { const z = besterZug(c, i); if (z && z.ziel !== "found") return { q: c, i }; } }
-  if (G.waste.length && besterZug("waste")) return { q: "waste" };
+  if (G.waste.length && ziele("waste").length) return { q: "waste" };
   if (G.stock.length || G.waste.length) return { q: "stock" };
   return null;
 }
@@ -153,57 +180,87 @@ function spielEnde(zeitUm) {
 }
 
 /* ---------- Darstellung ---------- */
-function karteHTML(k, attrs, top) {
+function karteHTML(k, attrs, top, extra = "", tag = "button") {
   if (!k.up) return `<div class="karte zu${typeof rueckenKlasse === "function" ? rueckenKlasse() : ""}" style="top:${top}px" aria-hidden="true"></div>`;
   const F = FARBEN[k.s];
-  const sel = gewaehlt && attrs.includes(gewaehlt.attr) ? " gewaehlt" : "";
-  return `<button class="karte ${F.rot ? "rot" : ""} f${k.s}${sel}" style="top:${top}px" ${attrs} aria-label="${WERT[k.w]} ${F.n}"><span class="w">${WERT[k.w]}</span><svg class="f" viewBox="0 0 24 24"><path fill="currentColor" d="${F.p}"/></svg><svg class="gross" viewBox="0 0 24 24"><path fill="currentColor" d="${F.p}"/></svg></button>`;
+  return `<${tag} class="karte ${F.rot ? "rot" : ""} f${k.s}${extra}" style="top:${top}px" ${attrs} aria-label="${WERT[k.w]} ${F.n}"><span class="w">${WERT[k.w]}</span><svg class="f" viewBox="0 0 24 24"><path fill="currentColor" d="${F.p}"/></svg><svg class="gross" viewBox="0 0 24 24"><path fill="currentColor" d="${F.p}"/></svg></${tag}>`;
 }
 function spielRender() {
   const el = $("#spiel"); if (!el || !G) return;
+  if (gewaehlt && !kartenVon(gewaehlt.q, gewaehlt.i).length) gewaehlt = null;
   const kb = Math.floor((Math.min(innerWidth, 560) - 28 - 6 * 4) / 7), kh = Math.round(kb * 1.42);
   const vZu = Math.round(kb * .24), vAuf = Math.round(kb * .56);
-  let h = `<div class="tisch" style="--kb:${kb}px"><div class="reihe" style="gap:4px">`;
+  // Gewählte Karte(n) heben sich, alle erlaubten Plätze leuchten
+  const zl = gewaehlt ? ziele(gewaehlt.q, gewaehlt.i) : [];
+  const istSel = (q, i) => gewaehlt && gewaehlt.q === q && (q === "waste" || i >= gewaehlt.i && (q !== "ablage" || i === gewaehlt.i));
+  let h = `<div class="tisch${gewaehlt ? " waehlt" : ""}" style="--kb:${kb}px"><div class="reihe" style="gap:4px">`;
   // Stapel + Ablage (Waste)
   h += `<button class="platz" data-act="g-stapel" aria-label="${G.stock.length ? "Karte ziehen" : "Stapel neu auflegen"}" style="border:0;cursor:pointer;padding:0">${G.stock.length ? `<div class="karte zu${typeof rueckenKlasse === "function" ? rueckenKlasse() : ""}" style="top:0"></div>` : `<svg viewBox="0 0 24 24" style="width:60%;height:60%;color:var(--tinte-2)" aria-hidden="true"><path fill="currentColor" d="M12 5V2L7 6.5 12 11V8a5 5 0 1 1-5 5H5a7 7 0 1 0 7-8Z"/></svg>`}</button>`;
-  h += `<div class="platz" style="background:transparent;box-shadow:none">${G.waste.length ? karteHTML(oben(G.waste), `data-act="g-karte" data-q="waste"`, 0) : ""}</div><div></div>`;
-  for (let f = 0; f < 4; f++) { const a = G.found[f]; h += `<div class="platz" aria-label="Ablage ${FARBEN[f].n}">${a.length ? karteHTML(oben(a), `data-act="g-nix"`, 0).replace("<button", "<div").replace("</button>", "</div>") : `<svg viewBox="0 0 24 24" style="position:absolute;inset:22%;color:var(--mulde-2)" aria-hidden="true"><path fill="currentColor" d="${FARBEN[f].p}"/></svg>`}</div>`; }
+  h += `<div class="platz" style="background:transparent;box-shadow:none">${G.waste.length ? karteHTML(oben(G.waste), `data-act="g-karte" data-q="waste"`, 0, istSel("waste") ? " gewaehlt" : "") : ""}</div><div></div>`;
+  // Ass-Stapel: antippbar – als Ziel für eine gewählte Karte, oder um die oberste Karte zurück ins Spiel zu holen
+  for (let f = 0; f < 4; f++) {
+    const a = G.found[f], ziel = zl.includes("found") && gewaehlt && kartenVon(gewaehlt.q, gewaehlt.i)[0].s === f;
+    const lab = `Ass-Stapel ${FARBEN[f].n}: ${a.length ? `bis ${WERT[a.length]}` : "leer"}${ziel ? " – hierher legen" : ""}`;
+    h += `<button class="platz ablage${ziel ? " ziel" : ""}" data-act="g-karte" data-q="ablage" data-i="${f}" aria-label="${lab}">${a.length ? karteHTML(oben(a), `aria-hidden="true"`, 0, istSel("ablage", f) ? " gewaehlt" : "", "div") : `<svg viewBox="0 0 24 24" style="position:absolute;inset:22%;color:var(--mulde-2)" aria-hidden="true"><path fill="currentColor" d="${FARBEN[f].p}"/></svg>`}</button>`;
+  }
   h += `</div><div class="reihe" style="gap:4px;margin-top:12px">`;
   for (let c = 0; c < 7; c++) {
-    const col = G.tab[c]; let top = 0, inner = "";
-    col.forEach((k, i) => { inner += karteHTML(k, `data-act="g-karte" data-q="${c}" data-i="${i}"`, top); top += k.up ? vAuf : vZu; });
+    const col = G.tab[c], ziel = zl.includes(c); let top = 0, inner = "";
+    col.forEach((k, i) => { inner += karteHTML(k, `data-act="g-karte" data-q="${c}" data-i="${i}"`, top, (istSel(c, i) ? " gewaehlt" : "") + (ziel && i === col.length - 1 ? " ziel" : "")); top += k.up ? vAuf : vZu; });
     const hoehe = Math.max(kh, top - (col.length ? (oben(col).up ? vAuf : vZu) : 0) + kh);
-    h += `<div class="saeule" style="height:${hoehe}px">${col.length ? "" : `<button class="platz" data-act="g-leer" data-q="${c}" aria-label="Leere Säule" style="border:0;cursor:pointer"></button>`}${inner}</div>`;
+    h += `<div class="saeule" style="height:${hoehe}px">${col.length ? "" : `<button class="platz${ziel ? " ziel" : ""}" data-act="g-leer" data-q="${c}" aria-label="Leere Säule${ziel ? " – hierher legen" : ""}" style="border:0;cursor:pointer"></button>`}${inner}</div>`;
   }
   h += `</div></div>`;
   const sp = S.spiel;
   const zeit = sp.frei ? "" : sp.restSek > 0 ? `Noch ${Math.ceil(sp.restSek / 60)} Min.` : "";
-  h += `${!sp.frei && sp.restSek === 0 && !G.fertig ? `<div class="bogen mulde" role="status" style="margin-top:12px"><p style="margin:0">Deine Zeit ist um. Leg diese Runde in Ruhe zu Ende.</p></div>` : ""}
+  const status = G.fertig ? "Geschafft – alle Karten liegen auf den Ass-Stapeln."
+    : gewaehlt ? `${gewaehlt.q === "ablage" ? "Zurück ins Spiel?" : "Wohin damit?"} ${A("Tippe", "Tippen Sie")} auf einen leuchtenden Platz. Noch einmal auf die Karte tippen: abbrechen.` : "";
+  h += `<p class="spiel-status" role="status" aria-live="polite">${status}</p>`;
+  h += `${!sp.frei && sp.restSek === 0 && !G.fertig ? `<div class="bogen mulde" role="status" style="margin-top:12px"><p style="margin:0">${A("Deine", "Ihre")} Zeit ist um. ${A("Leg", "Legen Sie")} diese Runde in Ruhe zu Ende.</p></div>` : ""}
+    ${alleOffen() && !G.fertig && !autoLauf ? `<div class="bogen mulde spiel-angebot" style="margin-top:12px"><p style="margin:0 0 10px">Alle Karten liegen offen – die Runde ist gewonnen. Rest automatisch ablegen?</p><button class="knopf haupt voll" data-act="g-auto">Ja, Rest ablegen</button><p class="klein" style="margin:8px 0 0">Oder ${A("leg", "legen Sie")} die Karten selbst weiter.</p></div>` : ""}
     <div class="spiel-leiste">
-      <button class="knopf klein zweit" data-act="g-zurueck" ${G.hist.length ? "" : "disabled"}>Zurück</button>
-      <button class="knopf klein zweit" data-act="g-tipp">Tipp</button>
-      ${alleOffen() && !G.fertig ? `<button class="knopf klein haupt" data-act="g-auto">Fertig legen</button>` : ""}
+      <button class="knopf klein zweit" data-act="g-zurueck" ${G.hist.length && !G.fertig ? "" : "disabled"}>Zurück</button>
+      <button class="knopf klein zweit" data-act="g-tipp" ${G.fertig ? "disabled" : ""}>Tipp</button>
       <button class="knopf klein leise" data-act="g-neu">Neu geben</button>
-    </div><p class="klein">${zeit ? zeit + " · " : ""}Karte antippen: Sie wandert an einen passenden Platz. Passt sie mehrfach, erst antippen, dann den Stapel.</p>
+    </div><p class="klein">${zeit ? zeit + " · " : ""}Karte antippen: Passt sie an genau einen Platz, wandert sie dorthin. Passt sie an mehrere, hebt sie sich, und die möglichen Plätze leuchten – dann den Platz antippen. Von allein wird nichts abgelegt.</p>
+    <details class="spiel-regeln"><summary>Spielregeln</summary>
+      <p>Ziel: alle Karten nach Farben geordnet auf die vier Ass-Stapel oben rechts legen – vom Ass bis zum König.</p>
+      <p>In den sieben Säulen legt man absteigend und immer abwechselnd rot und dunkel: zum Beispiel eine rote 7 auf eine dunkle 8. Rot sind Blüte und Laub, dunkel sind Eichel und Kiefer. Auf eine leere Säule passt nur ein König.</p>
+      <p>Tippt man eine offene Karte mitten in einer Säule an, wandern die Karten, die auf ihr liegen, mit. Wird eine verdeckte Karte frei, dreht sie sich um – und bleibt liegen, bis man sie selbst bewegt.</p>
+      <p>Von allein kommt keine Karte auf einen Ass-Stapel. Passt eine angetippte Karte an mehrere Plätze, etwa auf eine Säule und aufs Ass, hebt sie sich, und die möglichen Plätze leuchten. Dann den gewünschten Platz antippen. So kann man eine Karte auch bewusst noch in den Säulen behalten.</p>
+      <p>Der Stapel oben links deckt bei jedem Antippen eine Karte auf. Ist er leer, ihn noch einmal antippen: Die Karten kommen zurück, so oft man will.</p>
+      <p>Eine Karte auf einem Ass-Stapel darf wieder zurück ins Spiel: antippen, dann den leuchtenden Platz.</p>
+      <p>„Zurück“ nimmt Züge zurück. „Tipp“ zeigt einen möglichen Zug. Sind Stapel und gezogene Karten aufgebraucht und liegen alle Karten offen, bietet das Spiel an, den Rest abzulegen.</p>
+    </details>
     <button class="knopf zweit voll" data-act="g-aufhoeren">Für jetzt aufhören</button>`;
+  // Regeln aufgeklappt lassen, wenn sie offen waren
+  const offen = el.querySelector(".spiel-regeln")?.open;
   el.innerHTML = h;
+  if (offen) el.querySelector(".spiel-regeln").open = true;
   armHaptics();
 }
 function spielKarteTipp(q, i) {
-  const quelle = q === "waste" ? "waste" : Number(q), idx = Number(i);
-  // Ist eine Karte gewählt und wird eine andere Säule angetippt → dorthin legen
-  if (gewaehlt && quelle !== "waste" && gewaehlt.q !== quelle) {
-    const karten = gewaehlt.q === "waste" ? [oben(G.waste)] : G.tab[gewaehlt.q].slice(gewaehlt.i);
-    if (passtSaeule(karten[0], quelle)) { const gq = gewaehlt.q, gi = gewaehlt.i; gewaehlt = null; zieh(gq, gi, quelle); spielRender(); return; }
-    gewaehlt = null; haptik("achtung"); spielRender(); return;
+  if (!G || G.fertig || autoLauf || performance.now() - zugZeit < DOPPEL_MS) return;
+  const quelle = q === "waste" || q === "ablage" ? q : Number(q), idx = Number(i) || 0;
+  if (gewaehlt) {
+    const gq = gewaehlt.q, gi = gewaehlt.i;
+    // dieselbe Karte (oder dieselbe Säule) noch einmal → abbrechen
+    if (gq === quelle && (quelle !== "ablage" || gi === idx)) { gewaehlt = null; spielRender(); return; }
+    const karten = kartenVon(gq, gi);
+    const ok = !karten.length ? false
+      : quelle === "ablage" ? gq !== "ablage" && karten.length === 1 && karten[0].s === idx && passtAblage(karten[0])
+      : quelle === "waste" ? false
+      : passtSaeule(karten[0], quelle) && !(G.tab[quelle].length === 0 && typeof gq === "number" && gi === 0);
+    gewaehlt = null;
+    if (ok) { zieh(gq, gi, quelle === "ablage" ? "found" : quelle); spielRender(); return; }
+    haptik("achtung"); toast("Dort passt sie nicht hin. Die Karte bleibt, wo sie war."); spielRender(); return;
   }
-  if (gewaehlt && gewaehlt.q === quelle) { gewaehlt = null; spielRender(); return; }
-  const z = besterZug(quelle, idx);
-  if (!z) { // nichts passt automatisch → auswählen
-    const k = quelle === "waste" ? oben(G.waste) : G.tab[quelle][idx];
-    if (k && k.up) { gewaehlt = { q: quelle, i: idx, attr: quelle === "waste" ? `data-q="waste"` : `data-q="${quelle}" data-i="${idx}"` }; haptik("auswahl"); }
-    spielRender(); return;
-  }
-  // Mehrere Säulen möglich? Dann trotzdem die beste nehmen (einfach), Auswahl bleibt für Sonderfälle.
-  zieh(quelle, idx, z.ziel); spielRender();
+  if (quelle === "ablage" && !G.found[idx].length) return;   // leerer Ass-Stapel ohne gewählte Karte: nichts tun
+  const k = kartenVon(quelle, idx)[0];
+  if (!k || !k.up) return;
+  const z = zieleVerschieden(quelle, idx);
+  if (!z.length) { haptik("achtung"); toast("Diese Karte passt gerade nirgends hin."); spielRender(); return; }
+  // Genau ein Platz: die Karte wandert dorthin. Mehrere Plätze – oder Karte vom Ass-Stapel: Rita wählt selbst.
+  if (z.length === 1 && quelle !== "ablage") { zieh(quelle, idx, z[0]); spielRender(); return; }
+  gewaehlt = { q: quelle, i: idx }; haptik("auswahl"); spielRender();
 }

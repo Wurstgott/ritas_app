@@ -160,7 +160,7 @@ const D_SKINS = [
     s: { kopf: [SL("M56 27.6 L47.6 26.4", "#1C2620", 1.6), SP("M56 25.6 H73.4 Q75 25.6 74.6 27.6 L73.2 35 Q72.6 37.8 69.4 37.8 H60 Q57 37.8 56.4 35 L55 27.6 Q54.8 25.6 56 25.6Z", "#1C2620"),
       SL("M74.4 28.4 L76.6 29", "#1C2620", 1.4), SL("M58.4 28.6 L62.4 28.6", "#FFFFFF", 1.2, { op: .7 })] },
     f: { kopf: [SP("M53.5 26.5 H66 Q66.6 26.5 66.4 27.2 L65 34.5 Q64.5 36.6 62 36.6 H57.6 Q55 36.6 54.4 34.4 L53 27.4 Q52.9 26.5 53.5 26.5Z M70 26.5 H82.5 Q83.1 26.5 83 27.4 L81.6 34.4 Q81 36.6 78.4 36.6 H74 Q71.5 36.6 71 34.5 L69.6 27.2 Q69.4 26.5 70 26.5Z", "#1C2620"), SL("M66 28.4 H70", "#1C2620", 1.6), SL("M55.6 28.6 L58.6 28.6 M72.2 28.6 L75.2 28.6", "#FFFFFF", 1.1, { op: .7 })] } },
-  { id: "h-chullo", fuer: "huhn", fach: "kopf", name: "Chullo aus Peru", preis: 90, reihe: "welt", deckt: "kamm", text: "Die bunte Strickmütze mit Ohrenklappen. Hühnchen: „Endlich mal was Vernünftiges auf dem Kopf.“",
+  { id: "h-chullo", fuer: "huhn", fach: "kopf", name: "Bommelmütze mit Ohrenklappen", preis: 90, reihe: "welt", deckt: "kamm", text: "Die bunte Strickmütze mit Ohrenklappen. Hühnchen: „Endlich mal was Vernünftiges auf dem Kopf.“",
     s: { kopf: [SP("M48 23 Q46.6 32.6 50.8 37.6 Q55.2 33 55 23.6Z", "#C8363A"), SL("M49 27 L51.6 29.4 L54 27 M49.4 31 L51.6 33.4 L53.8 31", "#F2C33A", 1),
       SL("M50.8 37.6 L50.8 46", "#F2C33A", 1.1), SC(50.8, 47.6, 2.4, "#2FA6A0"),
       SP("M46.8 25 Q45.6 5.8 63 4.6 Q80.4 5.8 79.8 25 Q63 20.6 46.8 25Z", "#C8363A"), SL("M48.2 16.4 L51.2 13.4 L54.2 16.4 L57.2 13.4 L60.2 16.4 L63.2 13.4 L66.2 16.4 L69.2 13.4 L72.2 16.4 L75.2 13.4 L78.2 16.4", "#F2C33A", 1.5),
@@ -314,7 +314,7 @@ const SKIN_VARIANTEN = [
   ["h-strohhut", "h-strohhut-blau", "Strohhut mit blauem Band", "2027-07", { "#C9563A": "#2F5E8E" }, "Der Strohhut, diesmal mit blauem Band. Blau und Gelb, sehr schwedisch."],
   ["r-zauberschal", "r-zauberschal-gelb", "Zauberschal, gelb-schwarz", "2027-08", { "#8E2430": "#2A2A2A", "#E2B13C": "#E8C23A" }, "Gelb und schwarz wie bei Hufflepuff. Die sind treu und backen gern, sagt man."],
   ["r-katzenauge", "r-katzenauge-tuerkis", "Katzenaugen-Brille, türkis", "2027-09", { "#C0282A": "#2A8C8A" }, "Türkis statt Rot. Ermittelt wird trotzdem."],
-  ["h-chullo", "h-chullo-blau", "Chullo, blau", "2027-10", { "#C8363A": "#2F5E8E" }, "Die Peru-Mütze in Blau. In den Anden trägt man jetzt Blau, sagt Hühnchen. Woher es das weiß, sagt es nicht."],
+  ["h-chullo", "h-chullo-blau", "Chullo, blau", "2027-10", { "#C8363A": "#2F5E8E" }, "Die Ohrenklappen-Mütze in Blau. Blau trägt man jetzt, sagt Hühnchen. Woher es das weiß, sagt es nicht."],
   ["r-ohrenwaermer", "r-ohrenwaermer-mint", "Ohrenwärmer, mint", "2027-11", { "#7E5A92": "#3F7A6A", "#9C7AAE": "#6FA898", "#E7DCEF": "#DCEFE8", "#F1EAF6": "#EDF8F4", "#E0D3EA": "#CFE8DF" }, "Flauschig in Mint. Wie zwei kleine Pfefferminzwolken."],
   ["r-bommel", "r-bommel-blau", "Bommelmütze, blau-gelb", "2027-12", { "#C8463B": "#2F5E8E", "#A9382F": "#244A78", "#F7F2E8": "#F2C33A", "#F7F1E6": "#F2C33A" }, "Blau mit gelbem Bommel. Schwedischer geht eine Mütze nicht."],
   ["h-schal", "h-schal-blau", "Ringelschal, blau-gelb", "2028-01", { "#3F8F5A": "#2F5E8E", "#F3EDE0": "#F2C33A" }, "Blau-gelb geringelt. Hühnchen ruft jetzt „Heja Sverige!“, auch wenn gar kein Spiel ist."],
@@ -334,7 +334,7 @@ const SKIN_REAKTION = {
   "h-koch": { eichhoernchen: "Nüsse roh? Na gut. Jeder, wie er mag.", igel: "Apfel ohne Zimt. Na ja, er ist ja kein Feinschmecker." },
   "h-wikinger": { kraniche: "Skål, ihr Vögel!", schneemann: "Den nehmen wir mit auf die nächste Fahrt." },
   "h-hexe": { laterne: "Das war Zauberei. Und ein bisschen der Schalter." },
-  "h-taucher": { blumen: "Ich bin vorbereitet, falls zu viel Wasser kommt." },
+  "h-taucher": { blumen: "Gegossen. Falls es zu viel war: Ich tauch nach." },
   "h-zylinder": { seifenblasen: "Zack, weg. Ich sag ja: Zauberei." },
   "h-elch": { kraniche: "Ich bin ein Elch. Elche fliegen nicht. Ich guck nur.", katze: "Keine Angst. Ich bin ein freundlicher Elch." },
   "h-fliege": { nachbar: "Er hat gewinkt. Ich hab mich verbeugt. So macht man das." },
@@ -371,8 +371,26 @@ function skinsMigrieren() {
   // Laden-Lektorat: Hasenohren sind nur noch Ostergeschenk – wer sie gekauft hat, bekommt die 60 Taler zurück und behält sie
   if (S.skins.besitz["h-osterohren"] && !S.skins.geschenkt["h-osterohren"]) { S.skins.geschenkt["h-osterohren"] = S.skins.besitz["h-osterohren"]; S.taler = (Number(S.taler) || 0) + 60; S.talerAusgegeben = Math.max(0, (S.talerAusgegeben || 0) - 60); S.skins.erstattet += 60; S.skins.erstattetGemeldet = false; }
   if (typeof laden2Migrieren === "function") laden2Migrieren();
+  if (typeof dankMigrieren === "function") try { dankMigrieren(); } catch (e) { S.dank = { tage: {}, taler: {}, dreh: 0 }; } // Dankbar heute (dank.js)
 }
 /* K-F-09: Taler nur ganzzahlig buchen; Bruchteile sammeln sich in S.talerRest */
+/* Große Tätigkeiten (Max, 14:37): ganze Extra-Taler obendrauf, maßvoll gestaffelt und gedeckelt.
+   Pro Eintrag höchstens 3, pro Tag zusammen höchstens 3. Nur wenn der Eintrag überhaupt zählt (w > 0).
+   „Gut für mich“-Minuten (Ausruhen, Wärme …) bekommen keinen Zuschlag – länger ausruhen ist keine Leistung. */
+const TALER_GROSS_TAG = 3;
+function talerGrossStufe(e) {
+  const t = tat(e.t), m = Number(e.min) || 0;
+  if (e.t === "ausflug") { const l = Number(e.leiter) || 1; return l >= 7 ? 3 : l >= 6 ? 2 : l >= 4 ? 1 : 0; }
+  if (t.art === "km") { const km = Number(e.km) || 0; return km >= 6 ? 2 : km >= 4 ? 1 : 0; }
+  if (e.t === "tanzstunde") return m >= 90 ? 2 : m >= 45 ? 1 : 0;
+  if ((t.art === "min" || t.art === "person") && t.feld !== "sorge") return m >= 150 ? 2 : m >= 90 ? 1 : 0;
+  return 0;
+}
+function talerGross(e, vorher) {
+  if (!(e.w > 0)) return 0;
+  const schon = (vorher || []).reduce((s, x) => s + (Number(x.tg) || 0), 0);
+  return Math.max(0, Math.min(talerGrossStufe(e), TALER_GROSS_TAG - schon));
+}
 function talerGanz(roh) { const r = (Number(S.talerRest) || 0) + (Number(roh) || 0), g = Math.floor(r + 1e-9); S.talerRest = Math.max(0, Math.round((r - g) * 1000) / 1000); return g; }
 function skMonat(d = jetzt()) { return `${d.getFullYear()}-${String(d.getMonth() + 1).padStart(2, "0")}`; }
 const skinDa = s => (!s.ab || skMonat() >= s.ab) && (!s.wenn || !!s.wenn()); // wenn: z. B. Ballrobe erst ab Band 4, Kapitel 23 (hp.js)
@@ -433,7 +451,7 @@ function geschenkePruefen() {
 /* ---------- Als Nächstes ---------- */
 function skWaren() {
   return [...D_SKINS.filter(s => skinKaufbar(s) && !(s.geschenk === "start" && !(S.skins && S.skins.intro))).map(s => ({ id: s.id, name: s.naechst || s.name, fuer: s.fuer, preis: s.preis, skin: true })),
-    ...(D.laden || []).filter(x => !SK_GUTSCHEINE[x.id] && x.preis && !(S.gekauft || {})[x.id] && !(x.gutschein && typeof halleGesperrt === "function" && halleGesperrt(x))).map(x => ({ id: x.id, name: x.name, preis: x.preis }))];
+    ...(D.laden || []).filter(x => !SK_GUTSCHEINE[x.id] && !/^fh-/.test(x.id) && x.preis && !(S.gekauft || {})[x.id] && !(x.gutschein && typeof halleGesperrt === "function" && halleGesperrt(x))).map(x => ({ id: x.id, name: x.name, preis: x.preis }))];
 }
 function alsNaechstes() {
   const t = talerStand(), w = skWaren();
@@ -667,7 +685,7 @@ function kramladenInhalt() {
   const abt = []; for (const x of D.laden || []) { if (SK_GUTSCHEINE[x.id]) continue; const a = LADEN_ABT[x.gruppe] || { id: "x" + hash32(x.gruppe), name: x.gruppe, icon: "stern" }; let e = abt.find(y => y.id === a.id); if (!e) { e = { ...a, waren: [] }; abt.push(e); } e.waren.push(x); }
   const satz = LADEN_HUHN[hash32("laden" + heute()) % LADEN_HUHN.length];
   let h = `<div class="laden-front"><div class="markise" aria-hidden="true"></div><div class="laden-kasse"><button class="muenze-knopf" data-act="sk-muenze" aria-label="Münze drehen">${MUENZE("muenze gross")}</button><span><span class="zahl" style="font-weight:700;font-size:1.25em">${t} Taler</span><br><span class="klein">Gibt’s für alles, was du einträgst, und fürs Spielen im Bild. Verfallen nie – anders als Quark.</span></span></div>${S.huhn ? `<p class="laden-huhn">${huhnSVG({ gr: 40, kopf: true })}<span><span class="wer">Hühnchen</span> ${esc(satz)}</span></p>` : ""}<p class="laden-naechst">${ic("stern")}<span>${esc(naechstesText())}</span></p></div>`;
-  h += `<div class="laden-chips-rahmen"><div class="chips laden-chips">${[{ id: "fenster", name: "Schaufenster" }, ...abt, { id: "bald", name: "Bald im Laden" }, { id: "nebenan", name: "Nebenan: Kleiderschrank" }].map(a => `<button class="chip" data-act="sk-abt" data-v="${a.id}">${esc(a.name)}</button>`).join("")}</div></div>`;
+  h += `<div class="laden-chips-rahmen"><div class="chips laden-chips">${[{ id: "fenster", name: "Schaufenster" }, ...abt, { id: "bald", name: "Bald im Laden" }, ...(typeof fhRegal === "function" && S.huhn ? [{ id: "fuerhuhn", name: "Für Hühnchen" }] : []), { id: "nebenan", name: "Nebenan: Kleiderschrank" }].map(a => `<button class="chip" data-act="sk-abt" data-v="${a.id}">${esc(a.name)}</button>`).join("")}</div></div>`;
   if (typeof sfRegal === "function") h += sfRegal();
   for (const a of abt) {
     h += `<section class="laden-abt" id="abt-${a.id}"><h3 class="abt-schild">${ic(a.icon)} ${esc(a.name)}</h3><div class="regal">${a.waren.map(x => {
@@ -676,6 +694,7 @@ function kramladenInhalt() {
     }).join("")}</div><div class="regal-brett" aria-hidden="true"></div></section>`;
   }
   if (typeof baldRegal === "function") h += baldRegal();
+  if (typeof fhRegal === "function") h += fhRegal(); // Für Hühnchen (huhnfutter.js): unter Schaufenster und Skins
   const neu = D_SKINS.some(skNeu);
   h += `<section class="laden-abt laden-nebenan" id="abt-nebenan"><p class="klein nebenan-schild">Eine Tür weiter</p><button class="laden-tuer nebenan-tuer" data-act="sk-schrank"><span class="lt-bild" aria-hidden="true">${ritaSVG(50)}${huhnSVG({ gr: 54 })}</span><span class="nebenan-text"><span class="lt-titel">Nebenan: Kleiderschrank${neu ? ` <span class="ks-marke">Neu</span>` : ""}</span><span class="lt-unter">Hüte, Brillen und Outfits für dich und Hühnchen. Anprobieren kostet nichts.</span></span>${ic("pfeil", "pfeil")}</button></section>`;
   return h;

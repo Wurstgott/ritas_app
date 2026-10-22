@@ -1,0 +1,63 @@
+/* ============================================================
+   Nachtrag 22.10.: Dankbar heute (dank.js), Redensarten (rede.js),
+   Halle-Gutscheine per Signal (laden2.js), Wetter aktualisieren (wetter.js).
+   Nur Token aus app.css/design.css – hell und dunkel ohne eigene Farben.
+   ============================================================ */
+
+/* ---------- Dankbar heute ---------- */
+.dank-karte { position: relative; background: color-mix(in srgb, var(--bogen) 90%, var(--wiese)); }
+.dank-kopf { display: flex; gap: 10px; align-items: center; margin-bottom: 10px; }
+.dank-kopf h3 { font-size: 1.04rem; line-height: 1.25; }
+.dank-frage { margin: 0; font-size: 1.08rem; line-height: 1.4; }
+.dank-liste { margin: 0; padding: 0; list-style: none; counter-reset: dank; display: grid; gap: 6px; }
+.dank-liste li { counter-increment: dank; position: relative; padding: 6px 4px 6px 34px; font-family: var(--f-stimme); font-weight: 450; font-size: 1.04rem; line-height: 1.4;
+  border-bottom: 1px dashed var(--linie-fein); overflow-wrap: anywhere; }
+.dank-liste li:last-child { border-bottom: 0; }
+.dank-liste li::before { content: counter(dank); position: absolute; left: 4px; top: 6px; width: 22px; height: 22px; border-radius: 50%;
+  display: grid; place-items: center; font: 700 .78rem/1 var(--f-text); color: var(--auf-moos); background: var(--moos); }
+.dank-knoepfe { gap: 8px; flex-wrap: wrap; margin-top: 12px; align-items: center; }
+.dank-nr { margin: 10px 0 4px; }
+.dank-feld { width: 100%; }
+.dank-monate { margin: 0 0 12px; }
+.dank-tag { padding: 10px 0; border-bottom: 1px solid var(--mulde); }
+.dank-tag:last-child { border-bottom: 0; }
+.dank-datum { margin: 0 0 4px; font-weight: 700; color: var(--tinte-2); }
+
+/* ---------- Schwedische Redensarten ---------- */
+.rede-liste { display: grid; gap: 10px; margin: 12px 0 6px; }
+.rede-karte { position: relative; }
+.rede-karte + .rede-karte { margin-top: 0; }
+.rede-sv { margin: 0 0 6px; font-family: var(--f-schild); font-size: 1.12rem; line-height: 1.3; }
+.rede-laut { display: flex; gap: 8px; align-items: flex-start; margin: 0 0 6px; font-size: 1.02rem; line-height: 1.4; }
+.rede-laut b { color: var(--ziegel); letter-spacing: .02em; }
+.rede-ohr .ic-f, .rede-ohr .icon { width: 22px; height: 22px; flex: none; margin-top: 1px; }
+.rede-de { margin: 0; }
+.rede-knoepfe { gap: 8px; flex-wrap: wrap; margin-top: 10px; align-items: center; }
+.rede-ok { display: inline-flex; gap: 4px; align-items: center; color: var(--moos); font-weight: 700; }
+.rede-ok .icon { width: 16px; height: 16px; }
+.rede-hinweis { margin: 4px 0 10px; }
+
+/* ---------- Halle-Gutscheine per Signal ---------- */
+.halle-nachricht { -webkit-user-select: text; user-select: text; }
+.halle-schritte { margin: 12px 0 0; padding-left: 1.4em; display: grid; gap: 4px; line-height: 1.45; }
+.halle-schritte b { font-weight: 700; }
+.knopf.halle-ok { color: var(--moos); }
+
+/* ---------- Wetter aktualisieren ---------- */
+.wetter-kopf { display: flex; gap: 10px; align-items: center; justify-content: space-between; flex-wrap: wrap; margin: 0 0 12px; }
+.wetter-stand { display: grid; gap: 2px; min-width: 0; }
+.wetter-stand .zahl { font-weight: 700; }
+.wetter-stand .klein { margin: 0; }
+.knopf.wetter-neu { position: relative; display: inline-flex; gap: 8px; align-items: center; }
+.wetter-kreis { width: 16px; height: 16px; flex: none; border-radius: 50%; border: 2.4px solid currentColor; border-right-color: transparent; opacity: .85; }
+.wetter-neu:not(.laedt) .wetter-kreis { border-right-color: currentColor; border-top-color: transparent; transform: rotate(45deg); }
+.wetter-neu.laedt { cursor: progress; opacity: .8; }
+.wetter-neu.laedt .wetter-kreis { animation: wetterDreh .8s linear infinite; }
+@keyframes wetterDreh { to { transform: rotate(360deg); } }
+@media (prefers-reduced-motion: reduce) { .wetter-neu.laedt .wetter-kreis { animation-duration: 2.4s; } }
+.dank-taler { display: flex; gap: 6px; align-items: center; }
+.dank-taler .muenze { width: 22px; height: 22px; flex: none; }
+.rede-laut .rede-ohr { display: inline-flex; flex: none; }
+.rede-laut .rede-ohr svg { width: 24px !important; height: 24px !important; }
+.dank-med { --k: var(--ziegel); width: 46px; height: 46px; flex: none; display: grid; place-items: center; }
+.dank-med svg { width: 28px; height: 28px; }

@@ -61,6 +61,7 @@ function frisch() {
     onboard: false, name: "Rita", anrede: "du", nachname: "",
     size: 2, theme: "auto", vib: true, ton: false, motion: "normal", huhn: true,
     tf: {},                 // { "JJJJ-MM-TT": "A".."D" } – nur für Vorschläge und ✱, keine Auswertung
+    jf: { an: true, tage: {}, weg: "" }, // Deine Tage (jahrfarben.js): abends gewählte Tagesfarben, unabhängig von tf
     eintraege: [], geloescht: [],
     taler: 0, talerAusgegeben: 0, maxStufe: 0, gesehenStufe: 0,
     gekauft: { patience: true }, menschen: D.menschenStart.map(m => ({ ...m })),
@@ -152,6 +153,7 @@ function migrieren() {
   const grenze = Date.now() - 30 * 864e5;
   S.geloescht = (S.geloescht || []).filter(e => (e.weg || 0) > grenze);
   if (typeof skinsMigrieren === "function") try { skinsMigrieren(); } catch (e) { } // Kleiderschrank, Bild-Spielereien (skins.js)
+  if (typeof jfMigrieren === "function") try { jfMigrieren(); } catch (e) { S.jf = { an: true, tage: {}, weg: "" }; } // Deine Tage (jahrfarben.js)
   if (typeof mbMigrieren === "function") try { mbMigrieren(); } catch (e) { } // Briefe von Max, Geburtstag (maxbriefe.js)
   speichern();
 }
@@ -251,7 +253,7 @@ function vibriere(art) {
   try { if (navigator.vibrate) navigator.vibrate(VIB[art] || 10); } catch (e) { }
 }
 /* iOS: echter Schalter unter einem label erzeugt den System-Tick (ab iOS 18) */
-const HAPSEL = ".rg-knopf,.rg-skip,.rg-muenze,.rg-huhn,.rg-einst,.c-entdecken,.c-fach,.c-kasten,.c-ruhe-kachel,.link-knopf,button.umschlag,.buehne button.ueber,.mb-torte,.mb-umschlag,.av-wahl,.av-farbe,.av-knopf,.ks-teil,.ks-fig,.ks-karte,.taler-plakette,.laden-schrank,.bild-wetter-knopf,.mem-karte,.wetter-chip,.tel-leiste,.tuer-gross,.notfall-leiste,.tel-kontakt,.tel-karte-knopf,.goenn-leiste,.ware-kachel:not(.bald-kachel),.laden-tuer,.muenze-knopf,.ks-punkt,.schaufenster,.exkurs-karte,.bingo-feld,.huhn-karte,.tuer,.logo-knopf,.knopf,.kachel,.tf,.chip,.liste-zeile,nav.tabs button,.karte:not(.zu),.fach:not(.leer),.schalter-zeile";
+const HAPSEL = ".wo-tag:not(.zukunft),.rb-karteikarte,.rb-postkarte,.abendblatt .tb-modus .chip,.abend-leiste,.wm-text,.jf-tag:not(.jf-zukunft),.jf-flicken:not(.zukunft),.rg-knopf,.rg-skip,.rg-muenze,.rg-huhn,.rg-einst,.c-entdecken,.c-fach,.c-kasten,.c-ruhe-kachel,.link-knopf,button.umschlag,.buehne button.ueber,.mb-torte,.mb-umschlag,.av-wahl,.av-farbe,.av-knopf,.ks-teil,.ks-fig,.ks-karte,.taler-plakette,.laden-schrank,.bild-wetter-knopf,.fh-dose,.fh-ding,.fh-album-knopf,.mem-karte,.wetter-chip,.tel-leiste,.tuer-gross,.notfall-leiste,.tel-kontakt,.tel-karte-knopf,.goenn-leiste,.ware-kachel:not(.bald-kachel),.laden-tuer,.muenze-knopf,.ks-punkt,.schaufenster,.exkurs-karte,.bingo-feld,.huhn-karte,.tuer,.logo-knopf,.knopf,.kachel,.tf,.chip,.liste-zeile,nav.tabs button,.karte:not(.zu),.fach:not(.leer),.schalter-zeile";
 function armHaptics() {
   if (!IOS) return;
   // Vibration aus oder Bewegung reduziert: keine Haptik, auch kein iOS-Tick
@@ -359,7 +361,13 @@ function sheet(opt) {
   histPlanen();
   return sh;
 }
-addEventListener("pointerdown", () => { window._letzterTipp = Date.now(); }, true);
+addEventListener("pointerdown", () => {
+  window._letzterTipp = Date.now();
+  // Selbstheilung: Fenster oder Schleier, die nicht (mehr) im Stapel stehen, dürfen keine Tipps schlucken
+  const lebend = new Set(SHEETS.flatMap(x => [x.sh, x.schleier]));
+  $$("#ebene > .sheet:not(.zu), #ebene > .schleier[data-act]").forEach(el => { if (!lebend.has(el)) el.remove(); });
+  if (!SHEETS.length && document.body.style.overflow === "hidden") document.body.style.overflow = "";
+}, true);
 function sheetZu(ohneHistory) {
   const s = SHEETS.pop(); if (!s) return;
   s.sh.classList.add("zu"); s.schleier.style.opacity = 0;
@@ -376,24 +384,35 @@ function sheetZu(ohneHistory) {
 function alleSheetsZu() { while (SHEETS.length) sheetZu(true); histPlanen(); }
 /* Zurück-Taste: Der Verlauf wird zentral am Sheet-Stapel ausgerichtet – gebündelt per Microtask,
    damit „schließen und sofort öffnen“ keine Verlaufsbewegung erzeugt. */
-let IGNORE_POP = 0, HIST_TIEFE = 0, HIST_GEPLANT = false;
+let IGNORE_POP = 0, HIST_TIEFE = 0, HIST_GEPLANT = false, HIST_LAEUFT = 0;
 function histSync() {
   HIST_GEPLANT = false;
+  // Eine eigene Rückwärtsbewegung (go/back) ist noch unterwegs: erst ihr popstate abwarten. Sonst überholt ein
+  // pushState (schnell zu und wieder auf) den Sprung, und später schließt Zurück zwei Fenster oder verlässt die App.
+  if (IGNORE_POP > 0) {
+    if (performance.now() - HIST_LAEUFT < 700) { HIST_GEPLANT = true; setTimeout(histSync, 40); return; }
+    IGNORE_POP = 0; HIST_TIEFE = (history.state && history.state.sheet) || 0; // popstate kam nie: Stand aus dem echten Verlauf übernehmen
+  }
   const soll = SHEETS.length;
   try {
     // Ein offener Besuch hat schon einen Verlaufseintrag: den übernimmt das neue Fenster
     if (soll > HIST_TIEFE && ER_HIST) { ER_HIST = false; history.replaceState({ sheet: ++HIST_TIEFE }, ""); }
     if (soll > HIST_TIEFE) { while (HIST_TIEFE < soll) history.pushState({ sheet: ++HIST_TIEFE }, ""); }
-    else if (soll < HIST_TIEFE) { const n = HIST_TIEFE - soll; HIST_TIEFE = soll; IGNORE_POP++; history.go(-n); }
+    else if (soll < HIST_TIEFE) { const n = HIST_TIEFE - soll; HIST_TIEFE = soll; IGNORE_POP++; HIST_LAEUFT = performance.now(); history.go(-n); }
   } catch (e) { HIST_TIEFE = soll; }
 }
 function histPlanen() { if (!HIST_GEPLANT) { HIST_GEPLANT = true; queueMicrotask(histSync); } }
 /* Besuche (Zufallsereignisse) bekommen einen eigenen Verlaufseintrag: Zurück schließt den Besuch, nicht die App */
 let ER_HIST = false;
 function histBesuchAuf() { if (ER_HIST) return; try { history.pushState({ sheet: HIST_TIEFE, er: 1 }, ""); ER_HIST = true; } catch (e) { } }
-function histBesuchZu() { setTimeout(() => { if (!ER_HIST) return; ER_HIST = false; IGNORE_POP++; try { history.back(); } catch (e) { IGNORE_POP--; } }, 0); }
+function histBesuchZu() { setTimeout(() => { if (!ER_HIST) return; ER_HIST = false; IGNORE_POP++; HIST_LAEUFT = performance.now(); try { history.back(); } catch (e) { IGNORE_POP--; } }, 0); }
 addEventListener("popstate", () => {
-  if (IGNORE_POP > 0) { IGNORE_POP--; return; }
+  if (IGNORE_POP > 0) {
+    // eigener Sprung angekommen: Tiefe aus dem echten Verlauf. Lag er tiefer (Zurück-Taste fiel mit dem Sprung zusammen), Fenster nachziehen.
+    IGNORE_POP--; HIST_TIEFE = (history.state && history.state.sheet) || 0;
+    if (!IGNORE_POP && !ER_HIST) while (SHEETS.length > HIST_TIEFE) sheetZu(true);
+    return;
+  }
   if (ER_HIST) { ER_HIST = false; const el = $(".ereignis:not(.weg)"); if (el && typeof ereignisWeg === "function") ereignisWeg(el); if (!(history.state && history.state.er)) { HIST_TIEFE = (history.state && history.state.sheet) || 0; while (SHEETS.length > HIST_TIEFE) sheetZu(true); } return; }
   HIST_TIEFE = (history.state && history.state.sheet) || 0;
   while (SHEETS.length > HIST_TIEFE) sheetZu(true);
@@ -676,7 +695,7 @@ function ic(name, cls = "icon") {
   const p = IC[name] || IC.stern; return `<svg class="${cls}" viewBox="0 0 24 24" aria-hidden="true"><path fill="currentColor" d="${p}"/></svg>`;
 }
 
-/* ---------- Hühnchen (Ton-Figur, nach Beschreibung: peruanische Keramik) ---------- */
+/* ---------- Hühnchen (Ton-Figur, ockergelb, gesprenkelt) ---------- */
 function huehnchenSVG(gr = 40) {
   return `<svg class="huehnchen-mini" style="width:${gr}px;height:${gr}px" viewBox="0 0 48 48" aria-hidden="true">
     <ellipse cx="24" cy="44" rx="14" ry="2.6" fill="rgba(0,0,0,.18)"/>

@@ -1,0 +1,62 @@
+/* ============================================================
+   Figuren: Lachen, kleine Eigenheiten, lebendige Telefon-Auswahl (figuren.js)
+   ============================================================ */
+/* Max/Dani lachen herzhaft (maxLacht) */
+.portrait .lach { opacity: 0; }
+svg.portrait.lacht .lach { opacity: 1; }
+svg.portrait.lacht .augen, svg.portrait.lacht .mund { opacity: 0; animation: none !important; }
+svg.portrait.lacht .brauen { transform: translateY(-1.3px); }
+svg.portrait.lacht { animation: fig-lachen .34s ease-in-out 6 !important; transform-origin: 50% 85%; }
+@keyframes fig-lachen { 0%, 100% { transform: translateY(0) rotate(0); } 30% { transform: translateY(-5%) rotate(-3deg); } 65% { transform: translateY(1%) rotate(2deg); } }
+.fig-ha { position: fixed; z-index: 96; pointer-events: none; font: 800 16px/1 var(--f-text, sans-serif); color: #C8372D; opacity: 0; animation: hg-flug 1.3s ease-out forwards; white-space: nowrap; }
+:root[data-theme="dark"] .fig-ha { color: #F2917F; }
+@media (prefers-color-scheme: dark) { :root:not([data-theme="light"]) .fig-ha { color: #F2917F; } }
+
+/* kleine Eigenheiten (figSchelm) */
+.portrait .brauen, .portrait .jane-brille, .portrait .zwinker { transition: transform .25s ease; }
+svg.portrait.fig-grinst .mund { transform-box: fill-box; transform-origin: 50% 30%; animation: fig-grins 1.5s ease-in-out !important; }
+@keyframes fig-grins { 0%, 100% { transform: scale(1); } 30%, 70% { transform: scale(1.14, 1.24); } }
+svg.portrait.fig-brille .jane-brille { animation: fig-brille 1.3s ease-in-out; }
+@keyframes fig-brille { 0%, 100% { transform: translateY(0); } 25%, 40% { transform: translateY(1.3px); } 60% { transform: translateY(-.7px); } 80% { transform: translateY(0); } }
+svg.portrait.fig-nickt { animation: fig-nicken 1.1s ease-in-out !important; transform-origin: 50% 95%; }
+@keyframes fig-nicken { 0%, 50%, 100% { transform: translateY(0) scaleY(1); } 22%, 72% { transform: translateY(2.5%) scaleY(.98); } }
+svg.portrait.fig-zwinkert .auge-r { animation: fig-zu 1.1s linear !important; }
+svg.portrait.fig-zwinkert .zwinker { animation: fig-auf 1.1s linear; }
+svg.portrait.fig-zwinkert .mund { transform-box: fill-box; transform-origin: 50% 30%; animation: fig-grins 1.1s ease-in-out !important; }
+@keyframes fig-zu { 0%, 18%, 72%, 100% { opacity: 1; } 22%, 68% { opacity: 0; } }
+@keyframes fig-auf { 0%, 18%, 72%, 100% { opacity: 0; } 22%, 68% { opacity: 1; } }
+svg.portrait.fig-braue .brauen { animation: fig-braue 1.3s ease-in-out; }
+svg.portrait.fig-braue .mund { transform-box: fill-box; transform-origin: 50% 30%; animation: fig-grins 1.3s ease-in-out !important; }
+@keyframes fig-braue { 0%, 100% { transform: translateY(0); } 25%, 60% { transform: translateY(-1.6px); } }
+/* Hühnchen plustert sich, wenn Taler fliegen */
+svg.huhn.fig-plustert .huhn-koerper { transform-box: fill-box; transform-origin: 50% 90%; animation: fig-plustern .9s cubic-bezier(.3,1.5,.5,1); }
+svg.huhn.fig-plustert .huhn-kopf { transform-box: view-box; transform-origin: 60px 50px; animation: fig-plustern-kopf .9s cubic-bezier(.3,1.5,.5,1); }
+@keyframes fig-plustern { 0%, 100% { transform: scale(1); } 35% { transform: scale(1.13, 1.1); } 65% { transform: scale(1.05); } }
+@keyframes fig-plustern-kopf { 0%, 100% { transform: translateY(0); } 35% { transform: translateY(-2.5px) rotate(-3deg); } }
+
+/* „Kurz plaudern“: alle Gesichter dezent lebendig – versetzt wippen und blinzeln */
+.tel-kontakt .tel-rund { animation: fig-wippen 3.4s ease-in-out infinite; transform-origin: 50% 100%; }
+.tel-kontakt:nth-child(2) .tel-rund { animation-duration: 3.9s; animation-delay: -1.2s; }
+.tel-kontakt:nth-child(3) .tel-rund { animation-duration: 4.3s; animation-delay: -2.4s; }
+.tel-kontakt:nth-child(4) .tel-rund { animation-duration: 3.6s; animation-delay: -.7s; }
+.tel-kontakt:nth-child(5) .tel-rund { animation-duration: 4.1s; animation-delay: -3.1s; }
+.tel-kontakt:nth-child(6) .tel-rund { animation-duration: 3.7s; animation-delay: -1.8s; }
+.tel-kontakt:nth-child(7) .tel-rund { animation-duration: 4s; animation-delay: -2.9s; }
+.tel-kontakt:nth-child(2) .portrait .augen { animation-duration: 6.1s; animation-delay: 1.9s; }
+.tel-kontakt:nth-child(3) .portrait .augen { animation-duration: 4.9s; animation-delay: .4s; }
+.tel-kontakt:nth-child(4) .portrait .augen { animation-duration: 5.7s; animation-delay: 3.3s; }
+.tel-kontakt:nth-child(5) .portrait .augen { animation-duration: 6.5s; animation-delay: 2.2s; }
+.tel-kontakt:nth-child(6) .portrait .augen { animation-duration: 5.2s; animation-delay: 4.1s; }
+.tel-kontakt:nth-child(7) .portrait .augen { animation-duration: 4.6s; animation-delay: 1.1s; }
+.tel-wahl .tel-kontakt:last-child:nth-child(odd) { grid-column: 1 / -1; }
+.tel-leiste .tel-blase.b1 .portrait .augen { animation-duration: 6.3s; animation-delay: 2.4s; }
+.tel-leiste .tel-blase.b2 .portrait .augen { animation-duration: 4.8s; animation-delay: .9s; }
+/* Linus ist kurz dran */
+.tel-blase .tel-wer { display: block; font: 800 .72rem/1.2 var(--f-text, sans-serif); letter-spacing: .02em; opacity: .7; margin-bottom: 2px; }
+.portrait.dani .augen { animation-delay: 2.8s; } .portrait.linus .augen { animation-delay: .9s; animation-duration: 4.4s; }
+
+@media (prefers-reduced-motion: reduce) {
+  svg.portrait.lacht, svg.portrait.fig-nickt, .tel-kontakt .tel-rund, svg.huhn.fig-plustert .huhn-koerper, svg.huhn.fig-plustert .huhn-kopf { animation: none !important; }
+  .fig-ha { display: none; }
+}
+:root[data-motion="ruhig"] .fig-ha { display: none; }

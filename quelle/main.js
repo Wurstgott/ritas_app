@@ -63,6 +63,8 @@ function eintragSpeichern(entwurf, altId) {
   e.w = rechneWirkung(e, vorher);
   if (altId && alt) e.w = Math.max(e.w, 0); // Festschreiben: neu gerechnet nur für die geänderte Eingabe
   e.taler = typeof talerGanz === "function" ? talerGanz(e.w / 4) : e.w / 4; // ganze Taler, Rest wird gesammelt (skins.js)
+  e.tg = typeof talerGross === "function" ? talerGross(e, vorher) : 0; e.taler += e.tg; // große Tätigkeit: maßvoller Zuschlag mit Deckel (skins.js)
+  if (!e.tg) delete e.tg;
   S.eintraege.push(e);
   S.eintraege.sort((a, b) => a.tag < b.tag ? -1 : a.tag > b.tag ? 1 : a.ts - b.ts);
   S.taler += e.taler;
@@ -101,7 +103,7 @@ function nachEintrag(r, text) {
   alleSheetsZu();
   haptik("erfolg"); ton("erfolg");
   render({ neu: neuKey, halteScroll: true, ohneAnim: true });
-  const talerTxt = taler >= .5 ? `+${Math.max(1, Math.round(taler))} Taler` : "";
+  const talerTxt = taler >= .5 ? `+${Math.max(1, Math.round(taler))} Taler${e.tg ? `, davon ${e.tg} extra für was Großes` : ""}` : "";
   const auchNeu = [];
   if (e.t === "ausflug" && !S.leiter.neuland[e.leiter] && !e.umgekehrt) { S.leiter.neuland[e.leiter] = e.tag; const bonus = 5 * e.leiter; S.taler += bonus; auchNeu.push(`Zum ersten Mal: „${(D.leiter[e.leiter - 1] || {}).name || "neuer Ausflug"}“ (+${bonus} Taler)`); speichern(); }
   if (e.t === "buchfertig" && !S.meilensteine.buch) { S.meilensteine.buch = e.tag; auchNeu.push("das erste Lesezeichen an der Eiche"); speichern(); }
@@ -188,7 +190,11 @@ document.addEventListener("change", ev => {
 function aktion(a, d, el, ev) {
   switch (a) {
     /* Allgemein */
-    case "sheet-zu": sheetZu(); break;
+    case "sheet-zu": {
+      // Tipp auf den Schleier genau über der Wortmarke „Ritas App“: zur Startseite statt nur ein Fenster zu
+      const wm = el.classList.contains("schleier") && ev && ev.clientX != null && $(".wm-text"), r = wm && wm.getBoundingClientRect();
+      if (r && r.width && ev.clientX >= r.left - 4 && ev.clientX <= r.right + 4 && ev.clientY >= r.top - 6 && ev.clientY <= r.bottom + 6) { aktion("heim", {}, wm, ev); break; }
+      sheetZu(); break; }
     /* Schaufenster-Fächer (Ideen): eigenes Kennzeichen, damit die Seite die Aktionen der Blätter nicht doppelt trägt */
     case "fenster": { const z = d.ziel || ""; if (z.startsWith("tab:")) wechsleTab(z.slice(4)); else if (z) aktion(z, {}, el, ev); break; }
     case "toast-zu": $$(".toast").forEach(t => t.remove()); break;
@@ -207,6 +213,9 @@ function aktion(a, d, el, ev) {
     }
     case "go": if (d.go === "einstellungen") einstellungenSheet(); break;
     case "rundgang": if (window.RUNDGANG) RUNDGANG.start(); break;
+    case "heim": /* Wortmarke „Ritas App“: immer zurück zur Startseite */
+      alleSheetsZu(); $$(".ereignis:not(.weg)").forEach(x => { try { ereignisWeg(x); } catch (e) { x.remove(); } });
+      if (TAB !== "heute") wechsleTab("heute"); else scrollTo({ top: 0, behavior: REDUCED() ? "auto" : "smooth" }); break;
 
     /* Tagesform */
     case "tf": S.tf[heute()] = d.v; if (S.huhn) S.huhnSagt = { tag: heute(), text: { A: "Mehr Energie? Dann halt ich hier die Stellung, und du ziehst los.", B: "Gemächlich? Mein Tempo. Ich hab ja nur das eine.", C: "Ruhig angehen. Da bin ich Profi, ich steh seit Jahren still.", D: "Sparflamme. Dann halt ich heute auch mal den Schnabel." }[d.v] }; try { eierTagesform(d.v); } catch (e) { } speichern(); haptik("auswahl"); el.setAttribute("aria-pressed", "true");

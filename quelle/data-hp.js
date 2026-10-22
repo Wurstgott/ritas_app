@@ -60,6 +60,7 @@ D.hpAkte = {
     { m: ["käfer"], ab: [4, 37], art: "identitaet" }, { m: ["animagus"], ab: [4, 37], art: "identitaet" }, { m: ["einmachglas"], ab: [4, 37], art: "identitaet" }, { m: ["preisgeld", "fred"], ab: [4, 37], art: "enthuellung" },
     /* spätere Bände (Altlasten-Wache) */
     { m: ["strick"], ab: [5, 1], art: "enthuellung", hinweis: "Hermine strickt den Elfen Mützen erst in Band 5" },
+    { m: ["p\u0065ru"], ab: [99, 0], art: "tabu", hinweis: "Rita kennt Hühnchens Herkunft nicht – das Herkunftsland (siehe m) darf in keinem HP-Text stehen" },
     { m: ["elfenmütze"], ab: [5, 1], art: "enthuellung" }, { m: ["umbridge"], ab: [5, 1], art: "auftritt" },
     { m: ["sirius", "stirbt"], ab: [5, 35], art: "enthuellung" }, { m: ["horkrux"], ab: [6, 23], art: "enthuellung" },
     { m: ["dumbledore", "stirbt"], ab: [6, 28], art: "enthuellung" }, { m: ["snape", "mörder"], ab: [6, 28], art: "enthuellung" }

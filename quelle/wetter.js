@@ -10,7 +10,7 @@ function wetterLaden(erzwingen) {
   const u = `https://api.open-meteo.com/v1/forecast?latitude=${WETTER_ORT.lat}&longitude=${WETTER_ORT.lon}&current=temperature_2m,apparent_temperature,relative_humidity_2m,weather_code,wind_speed_10m&daily=temperature_2m_max,temperature_2m_min,precipitation_probability_max,weather_code,sunrise,sunset&timezone=Europe%2FBerlin&forecast_days=3`;
   return fetch(u).then(r => r.ok ? r.json() : null).then(j => {
     if (!j || !j.current) return null;
-    S.wetter = { zeit: Math.min(Date.now(), Date.parse(j.current.time) || Date.now()), temp: j.current.temperature_2m, gefuehlt: j.current.apparent_temperature, feuchte: j.current.relative_humidity_2m, code: j.current.weather_code, wind: j.current.wind_speed_10m,
+    S.wetter = { zeit: Math.min(Date.now(), Date.parse(j.current.time) || Date.now()), geladen: Date.now(), temp: j.current.temperature_2m, gefuehlt: j.current.apparent_temperature, feuchte: j.current.relative_humidity_2m, code: j.current.weather_code, wind: j.current.wind_speed_10m,
       tage: (j.daily.time || []).map((t, i) => ({ t, max: j.daily.temperature_2m_max[i], min: j.daily.temperature_2m_min[i], regen: j.daily.precipitation_probability_max[i], code: j.daily.weather_code[i], auf: j.daily.sunrise[i], unter: j.daily.sunset[i] })) };
     speichern(); return S.wetter;
   }).catch(() => null);
@@ -29,17 +29,36 @@ function wetterInhalt() {
   const links = `<h3 style="margin-top:18px">Mit deiner Wetter-App</h3><p class="klein" style="margin-top:0">Ritas App kann nicht direkt in andere Apps hineinschauen. Aber mit einem Tipp bist du drüben:</p>
     <div class="stapel"><a class="knopf zweit voll" href="https://www.dwd.de/DE/wetter/wetterundklima_vorort/berlin_brandenburg/berlin_brandenburg_node.html" target="_blank" rel="noopener">Deutscher Wetterdienst: Berlin ↗</a><a class="knopf zweit voll" href="https://play.google.com/store/apps/details?id=de.dwd.warnapp" target="_blank" rel="noopener">WarnWetter-App (DWD) im Play Store ↗</a><a class="knopf leise voll" href="https://www.google.com/search?q=wetter+spandau" target="_blank" rel="noopener">Google-Wetter für Spandau ↗</a></div>
     <p class="klein">Tipp: Das Wetter-Widget lässt sich auch direkt auf den Startbildschirm legen – lange auf eine freie Stelle drücken → „Widgets“ → „Wetter“.</p>`;
-  if (!W) return `<p>Das Wetter wird gerade geladen …</p>${links}`;
+  if (!W) return `${wetterKopf()}<p>${WETTER_LAEDT ? "Das Wetter wird gerade geladen …" : "Das Wetter lässt sich gerade nicht laden – vielleicht kein Internet."}</p>${links}`;
   // „Heute/Morgen“ nach Datum, nicht nach Position – ein alter Stand zeigt keine vergangenen Tage
   const tage = (W.tage || []).filter(d => d.t >= heute()).map(d => `<div class="wetter-tag"><span style="font-weight:700">${d.t === heute() ? "Heute" : d.t === tagPlus(heute(), 1) ? "Morgen" : datumLang(d.t).split(",")[0]}</span><span>${esc(WETTER_TEXT[d.code] || "")}</span><span class="zahl">${Math.round(d.min)}° / ${Math.round(d.max)}°</span><span class="klein">${d.regen != null ? `Regen ${d.regen} %` : ""}</span></div>`).join("");
   const h0 = (W.tage || []).find(d => d.t === heute());
-  return `<div class="wetter-jetzt"><span class="wetter-grad zahl">${Math.round(W.temp)}°</span><div><p style="margin:0;font-weight:700">${esc(WETTER_TEXT[W.code] || "")}</p><p class="klein" style="margin:2px 0 0">gefühlt ${Math.round(W.gefuehlt)}° · Wind ${Math.round(W.wind)} km/h · Luftfeuchte ${W.feuchte} %</p>${h0 ? `<p class="klein" style="margin:2px 0 0">Sonne ${h0.auf.slice(11)} – ${h0.unter.slice(11)} Uhr</p>` : ""}</div></div>
+  return `${wetterKopf()}<div class="wetter-jetzt"><span class="wetter-grad zahl">${Math.round(W.temp)}°</span><div><p style="margin:0;font-weight:700">${esc(WETTER_TEXT[W.code] || "")}</p><p class="klein" style="margin:2px 0 0">gefühlt ${Math.round(W.gefuehlt)}° · Wind ${Math.round(W.wind)} km/h · Luftfeuchte ${W.feuchte} %</p>${h0 ? `<p class="klein" style="margin:2px 0 0">Sonne ${h0.auf.slice(11)} – ${h0.unter.slice(11)} Uhr</p>` : ""}</div></div>
     <div class="bogen mulde" style="margin-top:12px"><p style="margin:0">${esc(wetterTipp(W))}</p></div>
     <div class="wetter-tage">${tage}</div>
-    <p class="klein">Für den ${WETTER_ORT.name} · Stand ${wetterStand(W.zeit)} · Daten: Open-Meteo</p>${links}`;
+    <p class="klein">Für den ${WETTER_ORT.name} · Daten: Open-Meteo</p>${links}`;
 }
 function wetterStand(ms) { const d = new Date(ms), t = tagVon(d), uhr = d.toLocaleTimeString("de-DE", { hour: "2-digit", minute: "2-digit" }) + " Uhr"; return t === tagVon(new Date()) ? uhr : t === tagPlus(tagVon(new Date()), -1) ? `gestern, ${uhr}` : `${datumLang(t)}, ${uhr}`; }
+/* Kopfzeile im Sheet: „Stand: 14:32“ + Knopf „Aktualisieren“ (mit Lade-Zustand) */
+let WETTER_LAEDT = false, WETTER_FEHLER = false;
+function wetterKopf() {
+  const W = S.wetter, t = W && (W.geladen || W.zeit);
+  const stand = t ? `Stand: ${wetterStand(t).replace(" Uhr", "")}` : WETTER_LAEDT ? "Wird geladen …" : "";
+  return `<div class="wetter-kopf"><div class="wetter-stand" aria-live="polite"><span class="zahl">${esc(stand)}</span>${!WETTER_LAEDT && WETTER_FEHLER ? `<span class="klein">Gerade kein Internet – das ist der letzte Stand.</span>` : ""}</div>
+    <button class="knopf klein zweit wetter-neu${WETTER_LAEDT ? " laedt" : ""}" data-act="wetter-neu" aria-busy="${WETTER_LAEDT}"><span class="wetter-kreis" aria-hidden="true"></span>${WETTER_LAEDT ? "Lädt …" : "Aktualisieren"}</button></div>`;
+}
+function wetterNeuZeigen() { const sh = aktuellesSheet(); if (sh && sh.dataset.id === "wetter") sheetInhalt(wetterInhalt()); }
+function wetterAktualisieren() {
+  if (WETTER_LAEDT) return;
+  WETTER_LAEDT = true; WETTER_FEHLER = false; wetterNeuZeigen();
+  const t0 = Date.now();
+  wetterLaden(true).then(W => new Promise(r => setTimeout(() => r(W), Math.max(0, 600 - (Date.now() - t0))))).then(W => {
+    WETTER_LAEDT = false; WETTER_FEHLER = !W; wetterNeuZeigen();
+    if (W) render({ halteScroll: true, ohneAnim: true });
+  });
+}
 function wetterSheet() {
   sheet({ titel: "Wetter", id: "wetter", inhalt: wetterInhalt() });
-  wetterLaden(true).then(W => { const sh = aktuellesSheet(); if (sh && sh.dataset.id === "wetter") sheetInhalt(W || S.wetter ? (W ? "" : "<p class=\"klein\">Gerade kein Internet – das ist der letzte Stand.</p>") + wetterInhalt() : "<p>Das Wetter lässt sich gerade nicht laden – vielleicht kein Internet.</p>" + wetterInhalt().split("</p>").slice(1).join("</p>")); render({ halteScroll: true, ohneAnim: true }); });
+  wetterAktualisieren();
 }
+document.addEventListener("click", ev => { const el = ev.target.closest && ev.target.closest("[data-act='wetter-neu']"); if (el) wetterAktualisieren(); });

@@ -1,0 +1,23 @@
+/* ---------- Rote Zahl an den Tabs (tabzahl.js) ---------- */
+:root { --tz-rot: #C8322A; --tz-text: #fff; --tz-rand: var(--bogen, #fff); }
+@media (prefers-color-scheme: dark) { :root:not([data-theme="light"]) { --tz-rot: #E5554B; --tz-text: #fff; } }
+:root[data-theme="dark"] { --tz-rot: #E5554B; --tz-text: #fff; }
+nav.tabs button { position: relative; }
+nav.tabs button > .tab-zahl {
+  position: absolute; top: 2px; left: calc(50% + 12px);
+  min-width: 20px; height: 20px; padding: 0 5px; box-sizing: border-box;
+  border-radius: 10px; background: var(--tz-rot); color: var(--tz-text);
+  border: 2px solid var(--tz-rand);
+  font-family: var(--f-text, system-ui, sans-serif); font-size: 12px; font-weight: 800; line-height: 16px;
+  text-align: center; font-variant-numeric: tabular-nums; pointer-events: none;
+  animation: tz-puls 2.8s ease-in-out infinite;
+}
+:root[data-size="2"] nav.tabs button > .tab-zahl, :root[data-size="3"] nav.tabs button > .tab-zahl { min-width: 22px; height: 22px; border-radius: 11px; font-size: 13px; line-height: 18px; }
+@keyframes tz-puls {
+  0%, 60%, 100% { transform: scale(1); box-shadow: 0 0 0 0 color-mix(in srgb, var(--tz-rot) 45%, transparent); }
+  75% { transform: scale(1.1); box-shadow: 0 0 0 5px color-mix(in srgb, var(--tz-rot) 0%, transparent); }
+}
+@media (prefers-reduced-motion: reduce) { nav.tabs button > .tab-zahl { animation: none; } }
+:root[data-motion="ruhig"] nav.tabs button > .tab-zahl { animation: none; }
+/* Wortmarke „Ritas App“ ist antippbar (→ Heute) und steht in HAPSEL: Bezugssystem fürs iOS-label.hap */
+.wm-text { position: relative; cursor: pointer; }

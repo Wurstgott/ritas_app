@@ -48,7 +48,7 @@ function mbMigrieren() {
       if ((S.menschen || []).some(m => m && m.avatar)) setz("gesicht");
       if (S.ruhe && S.ruhe.geuebt > 0) setz("notfall");
       if (S.bildWetter && S.bildWetter !== "echt") setz("wetter");
-      if (S.tbModus || (S.tbMerk || []).length) setz("tagebuch");
+      if (S.tbModus || (S.tbMerk || []).length || Object.keys((S.dank && S.dank.tage) || {}).length) setz("tagebuch");
     } catch (x) { }
     M.entMigr = 1;
   }
@@ -183,7 +183,7 @@ const MB_FUNKTIONEN = [
   { id: "buecher", text: "dass du dir in der App ein Bücherregal einrichten kannst? Mit Lesezeichen für Harry Potter und ein paar Tipps von mir.", knopf: "Zum Bücherregal" },
   { id: "winter", text: "dass es eine Ecke „Gut durch den Winter“ gibt? Tees, Ingwer-Tricks und solche Sachen. Mama hat ihren Teil beigesteuert, man merkt’s.", knopf: "Gut durch den Winter", m: [10, 11, 12, 1, 2, 3] },
   { id: "angebote", text: "dass die App jeden Sonntag neue Angebote in Spandau raussucht? Konzerte, Feste, Treffs. Mit einem Tipp steht’s auf deiner Liste.", knopf: "Angebote ansehen" },
-  { id: "tagebuch", text: "dass unter „Rückblick“ jeden Tag eine Frage fürs Tagebuch wartet? Wahlweise auch eine von früher. Fürs Papier-Tagebuch, die App liest nicht mit.", knopf: "Zur Tagebuch-Frage" },
+  { id: "tagebuch", text: "dass unter „Rückblick“ jeden Abend eine Frage fürs Tagebuch wartet? Wahlweise auch eine von früher. Fürs Papier-Tagebuch, die App liest nicht mit.", knopf: "Zur Tagebuchfrage" },
   { id: "kramladen", text: "dass du mit deinen Talern im Kramladen einkaufen kannst? Sachen fürs Bild, kleine Spiele, Klänge. Hühnchen hat sich auch schon was ausgeguckt.", knopf: "Zum Kramladen" },
   { id: "kleiderschrank", text: "dass es unter „Zuhause“ einen Kleiderschrank gibt? Hühnchen als Detektiv, du mit Sonnenhut. Ich sag nur: Wikingerhelm.", knopf: "Zum Kleiderschrank" },
   { id: "goennen", text: "dass im Kramladen „Gönn dir was“-Karten liegen? Kleine Sachen, die einfach nur schön sind. Ohne Grund, ohne Haken.", knopf: "Gönn dir was" },
@@ -195,7 +195,7 @@ const MB_FUNKTIONEN = [
 ];
 /* … und wenn schon alles entdeckt ist: Max’ Lieblings-Tipps */
 const MB_LIEBLING = [
-  { id: "l-moment", text: "Mein Lieblingsding in der App ist „Schönster Moment heute“ im Rückblick. Ein Satz am Abend, und nach einem Monat hast du eine kleine Sammlung.", knopf: "Schönster Moment" },
+  { id: "l-moment", text: "Mein Lieblingsding in der App ist „Was war heute schön?“ im Rückblick. Ein Satz am Abend, und nach einem Monat hast du eine kleine Sammlung.", knopf: "Was war heute schön?" },
   { id: "l-lebensbuch", text: "Mein Lieblingstipp gerade: die Erzählfragen unter „Ideen“. Such dir eine aus und erzähl sie mir beim nächsten Telefonat. Ich hab Zeit mitgebracht.", knopf: "Erzählfragen" },
   { id: "l-wissen", text: "Ich les selbst gern die Wissen-Häppchen unter „Ideen“. Gestern hab ich gelernt, dass ich vorher nichts wusste.", knopf: "Wissen" },
   { id: "l-bingo", text: "Das Forst-Bingo ist mein heimlicher Favorit. Eichhörnchen, Specht, Pilz: Wer zuerst eine Reihe hat, darf angeben.", knopf: "Forst-Bingo" },
@@ -481,22 +481,25 @@ function mbBriefHTML(b) {
     ${b.ps ? `<p class="brief-text mb-ps">${esc(b.ps)}</p>` : ""}
   </article>`;
 }
+/* Bei diesen PS muss Max selbst lachen (maxLacht aus figuren.js) */
+const MB_PS_LACHT = ["PS: Mama sagt, sonntags", "PS: Falls Hühnchen fragt", "PS: Micha lässt grüßen", "PS: Ich hab beim Aufräumen", "PS: Ich erzähl immer noch jedem"];
 function mbBriefSheet(b, ausAblage) {
   const titel = b.art === MB_ART_GB ? "Geburtstagsbrief von Max" : "Brief von Max";
+  if (b.ps && typeof maxLacht === "function" && MB_PS_LACHT.some(p => b.ps.startsWith(p))) setTimeout(() => { const m = aktuellesSheet()?.querySelector(".mb-brief .brief-marke"); if (m) maxLacht(m); }, 1100);
   sheet({ titel, id: "mb-brief", inhalt: mbBriefHTML(b), fuss: `<div class="stapel">${ausAblage ? "" : `<button class="knopf zweit voll" data-act="mb-ablage">${ic("brief")} Alle Briefe von Max</button>`}<button class="knopf haupt voll" data-act="sheet-zu">Schön, danke!</button></div>`, onclose: () => { if (!ausAblage) render({ halteScroll: true, ohneAnim: true }); } });
 }
 function mbAblageSheet() {
   const A = [...mbS().archiv].reverse();
   const zeilen = A.map((b, i) => zeileBtn(b.art === MB_ART_GB ? "kuchen" : "brief", b.art === MB_ART_GB ? `Geburtstagsbrief ${b.tag.slice(0, 4)}` : `Brief vom ${mbDatum(b.tag)}`, (b.absaetze[0] || "").replace(/^(\S+\s+\S+\s+\S+\s+\S+\s+\S+\s+\S+).*$/, "$1 …"), `data-act="mb-lesen" data-i="${A.length - 1 - i}"`, "k-menschen")).join("");
-  const naechster = (() => { const h = heute(); for (let i = 1; i <= 15; i++) { const t = tagPlus(h, i); if (mbBriefTage(t).slice(-1)[0] === t) return t; } return ""; })();
-  sheet({ titel: "Briefe von Max", id: "mb-ablage", inhalt: `<div class="max-karte">${maxSVG(60)}<div class="bogen post brief" style="flex:1;min-width:0;margin:0"><p style="margin:0">Ab und zu schreib ich dir einen richtigen Brief. Was drinsteht, zählt die App auf deinem Handy zusammen – ich selbst seh deine Einträge nicht.</p></div></div>
-    ${A.length ? `<h3 style="margin-top:18px">Nochmal lesen</h3><div class="liste">${zeilen}</div>` : `<div class="bogen mulde" style="margin-top:14px"><p style="margin:0">Der erste Brief ist schon unterwegs${naechster ? ` und kommt am ${WOCHENTAG[tagDatum(naechster).getDay()]}` : ""}.</p></div>`}` });
+  // schlicht: keine Erklärung, kein Datum, kein Countdown (Max, 22.10. 14:49)
+  sheet({ titel: "Briefe von Max", id: "mb-ablage", inhalt: A.length ? `<div class="liste">${zeilen}</div>`
+    : `<div class="max-karte">${maxSVG(60)}<div class="bogen post brief" style="flex:1;min-width:0;margin:0"><p style="margin:0">Hier sammeln sich die Briefe von Max.</p></div></div>` });
 }
 /* Unter „Zuhause“: die Ablage */
 function mbZuhauseHTML() {
   try {
     const n = mbS().archiv.length;
-    return `<section class="abschnitt"><h2>Post</h2><div class="liste">${zeileBtn("brief", "Briefe von Max", n ? `${n} ${n === 1 ? "Brief" : "Briefe"} zum Nochmal-Lesen` : "Ab und zu kommt einer – der erste ist unterwegs", `data-act="mb-ablage"`, "k-menschen")}</div></section>`;
+    return `<section class="abschnitt"><h2>Post</h2><div class="liste">${zeileBtn("brief", "Briefe von Max", n ? `${n} ${n === 1 ? "Brief" : "Briefe"} zum Nochmal-Lesen` : "Hier sammeln sich die Briefe von Max", `data-act="mb-ablage"`, "k-menschen")}${typeof kurzePostZeile === "function" ? kurzePostZeile() : ""}</div></section>`;
   } catch (e) { return ""; }
 }
 
@@ -507,11 +510,11 @@ function mbZiel(id) {
   const Z = {
     plaudern: typeof telAktion === "function" && akt("tel-auf"), karin: typeof bvAktion === "function" && akt("bv-auf"), tv: typeof tvAktion === "function" && akt("tv-auf"),
     buecher: typeof lesebegleiterSheet === "function" && akt("lesebegleiter"), winter: typeof winterAktion === "function" && akt("wi-auf"), angebote: akt("angebote"),
-    tagebuch: typeof tbAktion === "function" && tab("tagebuch", ".tb-karte"), kramladen: () => ladenSheet(),
+    tagebuch: typeof tbAktion === "function" && (() => { if (typeof RB === "object") RB.offen = heute(); if (TAB === "tagebuch") render({ ohneAnim: true }); tab("tagebuch", "#abend")(); }), kramladen: () => ladenSheet(),
     kleiderschrank: typeof skAktion === "function" && (() => skAktion("sk-schrank", {}, null)), goennen: typeof gkSheet === "function" && (() => gkSheet()),
     gesicht: typeof avatarEditor === "function" && (() => { const m = (S.menschen || []).find(x => x.id === "nachbarin" && !personFest(x)) || (S.menschen || []).find(x => x.id !== "daniel" && !personFest(x)); if (m) avatarEditor(m.id); else { EINST_OFFEN = new Set(["menschen"]); einstellungenSheet(); } }), notfall: typeof ruheAktion === "function" && akt("ruhe-plan"),
     huhn: S.huhn !== false && (() => tab("heute", ".huhn-karte")()), bild: () => tab("lichtung", "#buehne-gross")(), wetter: typeof skAktion === "function" && (() => skAktion("sk-wetter", {}, null)),
-    "l-moment": akt("moment"), "l-lebensbuch": akt("lebensbuch"), "l-wissen": akt("wissen"), "l-bingo": typeof bingoSheet === "function" && (() => bingoSheet()), "l-vorhaben": akt("missionen"),
+    "l-moment": typeof rbSchoenSheet === "function" ? (() => rbSchoenSheet()) : akt("moment"), "l-lebensbuch": akt("lebensbuch"), "l-wissen": akt("wissen"), "l-bingo": typeof bingoSheet === "function" && (() => bingoSheet()), "l-vorhaben": akt("missionen"),
     "l-setzkasten": akt("setzkasten"), "l-stufen": akt("stufen"), "l-woche": akt("rueckblick"), "l-hp": akt("lesebegleiter"), "l-ausflug": akt("ausflug")
   };
   return Z[id] || null;

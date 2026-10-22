@@ -1,6 +1,6 @@
 /* ============================================================
    Laden-Lektorat (22.10.): Schaufenster der Woche (immer etwas Neues, wiederkaufbar),
-   „Bald im Laden“, Regal „Aus Halle“ (Einlösen per WhatsApp, Postkarte jeden Monat),
+   „Bald im Laden“, Regal „Aus Halle“ (Einlösen per Signal: kopieren, öffnen, einfügen; Postkarte jeden Monat),
    Kartenrücken für die Patience.
    Zustand: S.halle = { verlauf: [{ id, kauf, eingeloest }] } · S.schaufenster = { kaeufe: {id: n}, tag: {id: "JJJJ-MM-TT"} } · S.spiel.ruecken
    ============================================================ */
@@ -40,20 +40,36 @@ function halleWare(x, t) {
   const g = (D.gutscheine || []).find(y => y.id === x.id) || x, hat = (S.gekauft || {})[x.id], ein = halleEingeloest(x.id);
   const alle = halleVerlauf(x.id).filter(v => v.eingeloest);
   const extra = alle.length ? `<p class="klein halle-verlauf">${ic("haken")} Eingelöst am ${alle.slice(-6).map(v => esc(l2Datum(v.eingeloest))).join(", ")}</p>` : "";
-  if (hat && !ein) return { extra: extra + `<p class="klein" style="margin-bottom:4px">Das geht an Max:</p><div class="bogen mulde halle-nachricht">${esc(g.nachricht || "")}</div>`,
-    fuss: `<div class="stapel"><button class="knopf haupt voll" data-act="sk-einloesen" data-id="${x.id}">${ic("brief")} Einlösen: per WhatsApp an Max</button><p class="klein" style="margin:0;text-align:center">WhatsApp öffnet sich mit dem Text. Dort nur noch auf „Senden“ tippen.</p></div>` };
-  if (hat && ein) return { extra, fuss: `<p class="klein" style="margin:0;text-align:center">${ic("haken")} Gehört dir – eingelöst am ${esc(l2Datum(ein))}. Max weiß Bescheid.</p>` };
+  if (hat && !ein) return { extra: extra + `<p class="klein" style="margin-bottom:4px">Das geht an Max:</p><div class="bogen mulde halle-nachricht">${esc(g.nachricht || "")}</div>${halleSchritte()}`,
+    fuss: `<div class="stapel"><button class="knopf zweit voll" data-act="halle-kopie" data-id="${x.id}">1. Text kopieren</button><button class="knopf haupt voll" data-act="sk-einloesen" data-id="${x.id}">${ic("handy")} 2. Signal öffnen: Chat mit Max</button></div>` };
+  const nochmal = `<button class="knopf leise voll" data-act="halle-nochmal" data-id="${x.id}">Nachricht nochmal per Signal schicken</button>`;
+  if (hat && ein) return { extra, fuss: `<div class="stapel"><p class="klein" style="margin:0;text-align:center">${ic("haken")} Gehört dir – eingelöst am ${esc(l2Datum(ein))}.</p>${nochmal}</div>` };
   const sperre = halleGesperrt(x);
-  if (sperre) return { extra, fuss: `<p class="klein" style="margin:0;text-align:center">Diesen Monat ist schon eine Postkarte unterwegs. Die nächste gibt’s ab ${esc(sperre)}.</p>` };
+  if (sperre) return { extra, fuss: `<div class="stapel"><p class="klein" style="margin:0;text-align:center">Diesen Monat ist schon eine Postkarte unterwegs. Die nächste gibt’s ab ${esc(sperre)}.</p>${nochmal}</div>` };
   return { extra, fuss: "" };
 }
 function halleEinloesen(id) {
   const g = (D.gutscheine || []).find(y => y.id === id), k = (S.gekauft || {})[id]; if (!g || !k) return;
   if (!halleEingeloest(id)) { S.halle.verlauf.push({ id, kauf: typeof k === "string" ? k : heute(), eingeloest: heute() }); if (g.jedenMonat) delete S.gekauft[id]; }
   speichern(); haptik("erfolg");
-  try { window.open(`https://wa.me/${MAX_WA}?text=${encodeURIComponent(g.nachricht)}`, "_blank"); } catch (e) { }
+  halleSignal(g.nachricht);
   const sh = aktuellesSheet(); if (sh && sh.dataset.id === "ware") { sheetZu(); setTimeout(() => { const l = aktuellesSheet(); if (l && l.dataset.id === "laden") sheetInhalt(ladenInhalt()); wareSheet(id); }, 240); }
-  toast(`Eingelöst am ${l2Datum(heute())}. Max weiß Bescheid.${g.jedenMonat ? "\nDie nächste Postkarte gibt’s im nächsten Monat." : ""}`, { erfolg: true });
+  toast(`Eingelöst am ${l2Datum(heute())}.\nIn Signal: lange ins Textfeld tippen, „Einfügen“, senden.${g.jedenMonat ? "\nDie nächste Postkarte gibt’s im nächsten Monat." : ""}`, { erfolg: true, dauer: 9000 });
+}
+/* Signal kann keinen Text vorausfüllen: Rita kopiert, öffnet den Chat mit Max und fügt ein.
+   Nummer wie in wunsch.js (MAX_WA, nicht im Klartext) */
+function halleSignalLink() { return `https://signal.me/#p/+${MAX_WA}`; }
+function halleSchritte() {
+  return `<ol class="halle-schritte"><li><b>Text kopieren</b></li><li><b>Signal öffnen</b> – der Chat mit Max geht von selbst auf.</li><li>Lange ins Textfeld tippen, <b>„Einfügen“</b> wählen und senden.</li></ol>`;
+}
+function halleKopieren(text, still) {
+  const alt = () => { const ta = document.createElement("textarea"); ta.value = text; ta.setAttribute("readonly", ""); ta.style.cssText = "position:fixed;opacity:0;top:0"; document.body.appendChild(ta); ta.select(); let ok = false; try { ok = document.execCommand("copy"); } catch (e) { } ta.remove(); return ok; };
+  const p = navigator.clipboard && navigator.clipboard.writeText ? navigator.clipboard.writeText(text).then(() => true, () => alt()) : Promise.resolve(alt());
+  return p.then(ok => { if (!still) toast(ok ? "Kopiert. Jetzt Signal öffnen." : "Kopieren ging nicht. Bitte lange auf den Text tippen und „Kopieren“ wählen."); return ok; });
+}
+function halleSignal(text) {
+  try { halleKopieren(text, true); } catch (e) { }   // zur Sicherheit noch einmal in die Zwischenablage
+  try { window.open(halleSignalLink(), "_blank"); } catch (e) { }
 }
 
 /* ============================================================
@@ -83,14 +99,14 @@ function nachLadenKauf(x) {
    beliebig oft zu haben. Kein Zufall beim Kaufen – man sieht vorher, was es ist.
    ============================================================ */
 const SF = [
-  { id: "sf-ballon", name: "Heißluftballon über dem Forst", preis: 30, m: [4, 5, 6, 7, 8, 9, 10], text: "Ein bunter Ballon schwebt einmal quer übers Bild. Hühnchen winkt. Der Ballon hat zu tun.", satz: "Ich hab gewinkt! Die haben zurückgewinkt. Glaub ich." },
+  { id: "sf-ballon", name: "Heißluftballon über dem Forst", preis: 30, m: [4, 5, 6, 7, 8, 9, 10], text: "Ein bunter Ballon schwebt einmal quer übers Bild. Hühnchen winkt, bis er weg ist.", satz: "Ich hab gewinkt! Die haben zurückgewinkt. Glaub ich." },
   { id: "sf-laternen", name: "Laternenumzug", preis: 30, m: [10, 11], text: "Kleine Laternen ziehen den Weg entlang. Hühnchen läuft vorneweg und singt. Den Text kann es nicht.", satz: "Laterne, Laterne … wie ging’s weiter? Egal, ich sing einfach." },
   { id: "sf-drachen", name: "Drachen steigen lassen", preis: 25, m: [9, 10, 11], text: "Ein roter Drachen tanzt über der Wiese. Wer ihn hält, verrät Hühnchen nicht.", satz: "Ich halt die Schnur. Also, ich guck, wer sie hält." },
-  { id: "sf-kraniche", name: "Kraniche bestellen", preis: 25, m: [3, 10], text: "Ein ganzer Zug Kraniche über dem Haus. Laut, pünktlich, auf Bestellung.", satz: "Bestellt und geliefert. Ich hab nachgezählt: alle da." },
+  { id: "sf-kraniche", name: "Kraniche bestellen", preis: 25, m: [3, 10], text: "Ein ganzer Zug Kraniche über dem Haus. Laut wie immer, aber diesmal auf Bestellung.", satz: "Bestellt und geliefert. Ich hab nachgezählt: alle da." },
   { id: "sf-seifen", name: "Seifenblasen-Nachmittag", preis: 25, m: [4, 5, 6, 7, 8, 9], text: "Hühnchen pustet Seifenblasen übers ganze Bild. Fangen ist erlaubt.", satz: "Die große war meine. Jetzt ist sie weg. Typisch." },
   { id: "sf-regenbogen", name: "Regenbogen", preis: 25, m: [3, 4, 5, 6, 7, 8, 9], text: "Ein Regenbogen über dem Forst, ganz ohne Regen vorher.", satz: "Am Ende liegt ein Topf Gold. Ich geh mal gucken." },
   { id: "sf-sternschnuppen", name: "Sternschnuppen", preis: 30, m: [7, 8, 11, 12], text: "Ein paar Sternschnuppen über dem Haus. Wünschen ist erlaubt, verraten nicht.", satz: "Ich hab mir was gewünscht. Es hat mit Kuchen zu tun." },
-  { id: "sf-schnee", name: "Eine Ladung Schnee", preis: 20, m: [11, 12, 1, 2], text: "Dicke Flocken, nur fürs Bild. Draußen bleibt alles, wie es ist.", satz: "Schnee! Ich hab einen gefangen. Er war kalt." },
+  { id: "sf-schnee", name: "Eine Ladung Schnee", preis: 20, m: [11, 12, 1, 2], text: "Dicke Flocken, nur fürs Bild. Draußen bleibt alles, wie es ist.", satz: "Schnee! Ich hab eine Flocke gefangen. Kalt, die Dinger." },
   { id: "sf-feuerwerk", name: "Feuerwerk über Spandau", preis: 40, m: [12, 1], text: "Ein kleines Feuerwerk über dem Haus, so oft du willst. Ohne Knallerei.", satz: "Oooh. Und ganz ohne Krach. So mag ich das." },
   { id: "sf-polarlicht", name: "Polarlicht", preis: 35, m: [11, 12, 1, 2, 3], text: "Grünes Licht über den Kiefern. In Schweden heißt es norrsken. In Spandau heißt es: Hast du das gesehen?", satz: "Hast du das gesehen? Das war norrsken. Sagt Karin." }
 ];
@@ -229,4 +245,10 @@ document.addEventListener("click", ev => {
     else if (a === "sf-kaufen") sfKaufen(el.dataset.id);
     else if (a === "sf-zeigen") sfAbspielen(el.dataset.id);
   } catch (e) { console.warn(e); }
+});
+document.addEventListener("click", ev => {
+  const el = ev.target.closest && ev.target.closest("[data-act^='halle-']"); if (!el || el.disabled) return;
+  const g = (D.gutscheine || []).find(y => y.id === el.dataset.id); if (!g) return;
+  if (el.dataset.act === "halle-kopie") halleKopieren(g.nachricht).then(ok => { if (ok && el.isConnected) { el.innerHTML = `${ic("haken")} Kopiert`; el.classList.add("halle-ok"); } });
+  else if (el.dataset.act === "halle-nochmal") { halleSignal(g.nachricht); toast("Text ist kopiert.\nIn Signal: lange ins Textfeld tippen, „Einfügen“, senden.", { dauer: 8000 }); }
 });

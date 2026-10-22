@@ -97,15 +97,15 @@ const EREIGNISSE = [
     antworten: [{ text: "Klingt gut", sagt: "Ich empfehle Ingwer. Ich hab da ein paar Rezepte.", aktion: "wi-auf" }, { text: "Und morgen?", sagt: "Morgen: leicht bewölkt mit Aussicht auf Kuchen." }] },
   { id: "huhn-grusel", wer: "huhn", wann: { monat: 10, tag: 31 }, zeilen: ["Buh!", "… hast du dich erschrocken? Ein bisschen? Ein ganz kleines bisschen?"],
     antworten: [{ text: "Fürchterlich!", sagt: "Jaaa! Ich bin ein Gespenst-Huhn!", effekt: "konfetti" }, { text: "Nö.", sagt: "Mist. Nächstes Jahr dann." }] },
-  { id: "huhn-schnee", wer: "huhn", wann: { monate: [12, 1, 2] }, wenn: () => !(S.ereignisse || {})["huhn-schnee"], zeilen: ["Ich hab gehört, es soll schneien.", "Ich hab noch nie Schnee gesehen. Ich bin aus Peru!"],
+  { id: "huhn-schnee", wer: "huhn", wann: { monate: [12, 1, 2] }, wenn: () => !(S.ereignisse || {})["huhn-schnee"], zeilen: ["Ich hab gehört, es soll schneien.", "Ich hab noch nie Schnee gesehen. Ich steh ja immer drinnen!"],
     antworten: [{ text: "Er ist kalt und weich", sagt: "Wie Quark? Nur von oben?", effekt: "schnee" }, { text: "Du wirst staunen", sagt: "Ich staune jetzt schon. Vorsorglich." }] },
   { id: "huhn-buch", wer: "huhn", zeilen: ["Ich hab heimlich in deinem Buch gelesen.", "Keine Sorge, ich hab das Lesezeichen wieder richtig reingelegt. Glaub ich."],
     antworten: [{ text: "Und? Gut?", sagt: "Zu wenig Hühner. Sonst prima.", aktion: "lesebegleiter" }, { text: "Hühnchen!", sagt: "Ich konnt nicht anders. Die Spannung!" }] },
 ];
-const ER_WER = { max: "Max", jane: "Christiane", micha: "Micha", karin: "Karin", greta: "Greta", pauli: "Pauli", huhn: "Hühnchen" };
+const ER_WER = { max: "Max", jane: "Christiane", micha: "Micha", karin: "Karin", greta: "Greta", pauli: "Pauli", dani: "Dani", huhn: "Hühnchen" };
 function erFigur(wer, gr) {
   if (wer === "huhn") return huhnFrontSVG(gr);
-  return { max: maxSVG, jane: janeSVG, micha: michaSVG, karin: karinKopfSVG, greta: gretaSVG, pauli: pauliSVG }[wer](gr);
+  return ({ max: maxSVG, jane: janeSVG, micha: michaSVG, karin: karinKopfSVG, greta: gretaSVG, pauli: pauliSVG, dani: typeof daniSVG === "function" ? daniSVG : maxSVG }[wer] || maxSVG)(gr);
 }
 function erPasst(e) {
   const d = jetzt(), w = e.wann || {};
@@ -154,7 +154,7 @@ function ereignisPruefen(anlass = "start") {
   S.erHeute.n++; S.erHeute.zuletzt = Date.now(); S.ereignisse[e.id] = h; speichern();
   setTimeout(() => { if (!SHEETS.length && !$(".ereignis")) ereignisZeigen(e); }, anlass === "tab" ? 900 + Math.random() * 1600 : 1400);
 }
-const ER_TSCHUESS = { max: "Tschüss, Max!", jane: "Tschüss, Christiane!", micha: "Tschüss, Micha!", karin: "Hej då, Karin!", greta: "Tschüss, Greta!", pauli: "Tschüss, Pauli!", huhn: "Bis gleich, Hühnchen!" };
+const ER_TSCHUESS = { max: "Tschüss, Max!", jane: "Tschüss, Christiane!", micha: "Tschüss, Micha!", karin: "Hej då, Karin!", greta: "Tschüss, Greta!", pauli: "Tschüss, Pauli!", dani: "Hej då, Dani!", huhn: "Bis gleich, Hühnchen!" };
 function ereignisZeigen(e) {
   if (typeof e === "string") e = EREIGNISSE.find(x => x.id === e); if (!e || $(".ereignis")) return;
   const el = document.createElement("div"); el.className = "ereignis"; el.setAttribute("role", "dialog"); el.setAttribute("aria-label", `${ER_WER[e.wer]} schaut vorbei`);
@@ -181,6 +181,7 @@ function ereignisZeigen(e) {
     zeile(a.sagt, () => {
       if (el._weg) return;
       if (a.effekt) erEffekt(a.effekt, fig);
+      if (a.lacht && typeof maxLacht === "function") maxLacht(fig);
       if (a.tanz) fig.classList.add("er-tanzt");
       if (a.aktion && a.aktion.startsWith("liste:")) { S.liste = S.liste || []; S.liste.push({ id: "l" + Date.now().toString(36), text: a.aktion.slice(6), neu: heute() }); speichern(); render({ halteScroll: true, ohneAnim: true }); }
       if (a.aktion && !a.aktion.startsWith("liste:")) setTimeout(() => {

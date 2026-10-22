@@ -12,7 +12,7 @@ D.anrufe = [
     k2: { sagt: "Zehn Minuten, sagst du. Ich zähl mit, und ich bin schon bei elf.", antworten: [
       { text: "Du kannst doch gar nicht zählen.", weiter: "k4" },
       { text: "Gut, ich mach gleich zu.", weiter: "k4" } ] },
-    k3: { sagt: "Im Ofen in Peru waren es neunhundert Grad. Dagegen ist das hier Nordpol.", antworten: [
+    k3: { sagt: "Im Brennofen waren es neunhundert Grad. Dagegen ist das hier Nordpol.", antworten: [
       { text: "Du warst genau einmal im Ofen.", weiter: "k4" },
       { text: "Soll ich dir einen Schal stricken?", weiter: "k5" } ] },
     k4: { sagt: "Einmal reicht, das prägt einen. Kannst du mich wenigstens ein Stück Richtung Heizung rücken?", antworten: [
@@ -147,7 +147,7 @@ D.anrufe = [
     start: { sagt: "Draußen sitzt wieder diese Meise. Die guckt mich an, als wär ich nicht echt.", antworten: [
       { text: "Na ja, bist du ja auch nicht.", weiter: "k2" },
       { text: "Die will bloß ans Futter.", weiter: "k3" } ] },
-    k2: { sagt: "Ich bin echt. Echter Ton aus Peru. Die ist bloß echte Meise.", antworten: [
+    k2: { sagt: "Ich bin echt. Echter Ton. Die ist bloß echte Meise.", antworten: [
       { text: "Da hast du auch wieder recht.", weiter: "k4" },
       { text: "Sie kann aber fliegen.", weiter: "k5" } ] },
     k3: { sagt: "Futter? Du fütterst die? Ich krieg nie was.", antworten: [
@@ -165,9 +165,9 @@ D.anrufe = [
   },
   schluss: "Sie ist weg. Na also. Der Vogel hier drin bin immer noch ich." },
 
-{ id: "huhn-08", wer: "huhn", thema: "Postkarte nach Peru",
+{ id: "huhn-08", wer: "huhn", thema: "Postkarte an die Töpferei",
   knoten: {
-    start: { sagt: "Ich will eine Karte nach Peru schreiben. An die Werkstatt, wo sie mich gemacht haben.", antworten: [
+    start: { sagt: "Ich will eine Karte schreiben. An die Werkstatt, wo sie mich gemacht haben.", antworten: [
       { text: "Was willst du denn schreiben?", weiter: "k2" },
       { text: "Und wer schreibt? Du hast keine Hände.", weiter: "k3" } ] },
     k2: { sagt: "„Mir geht’s gut, ich steh in Berlin, hier ist es kalt, aber ich wohne bei Rita.“", antworten: [
@@ -343,7 +343,7 @@ D.anrufe = [
     k5: { sagt: "Gans, na toll. Und was steht im zweiten Kästchen?", antworten: [
       { text: "Ein U. Also doch Huhn.", weiter: "k4" },
       { text: "Gut, du hast recht.", weiter: "k4" } ] },
-    k6: { sagt: "Spree oder Havel, such dir eins aus. Ich bin aus Peru, ich hab keine Ahnung.", antworten: [
+    k6: { sagt: "Spree oder Havel, such dir eins aus. Ich bin ein Fensterbank-Huhn, ich hab keine Ahnung.", antworten: [
       { text: "Havel. Das V passt.", weiter: "k4" },
       { text: "So weit war ich auch.", weiter: "k4" } ] }
   },

@@ -711,7 +711,7 @@ function zeichneSzene(canvas, opt = {}) {
 
   // ===== Hühnchen (Ton): steht, wo Rita zuletzt etwas getan hat =====
   { const pos0 = nacht > .5 ? HUHN_NACHT : huehnchenPos(M.letzte); const besuch = figurenHeute();
-    if (S.figuren !== false && nacht < .5) { const fs = pos0[1] / 640; figur(ctx, pos0[0] - 30 * fs, pos0[1] + 2, fs * 1.05, "rita", { schirm: BW.art === "regen", muetze: BW.art === "schnee" || (schnee && saison === "winter") }); besuch.forEach((w, i) => figur(ctx, pos0[0] - 62 * fs - i * 28 * fs, pos0[1] + 4, fs * 1.05, w)); SZ.regionen.push({ ort: "figuren", x: pos0[0] - 120, y: pos0[1] - 90, w: 110, h: 95, besuch }); } }
+    if (S.figuren !== false && nacht < .5) { const pl = figurenPlaetze(pos0, besuch.length, M); figur(ctx, pl[0][0], pl[0][1], pl[0][2] * 1.05, "rita", { schirm: BW.art === "regen", muetze: BW.art === "schnee" || (schnee && saison === "winter") }); besuch.forEach((w, i) => figur(ctx, pl[i + 1][0], pl[i + 1][1], pl[i + 1][2] * 1.05, w)); const xs = pl.map(q => q[0]); SZ.regionen.push({ ort: "figuren", x: Math.min(...xs) - 16, y: Math.min(...pl.map(q => q[1])) - 90, w: Math.max(...xs) - Math.min(...xs) + 32, h: 95, besuch }); } }
   if (S.huhn) { const pos = nacht > .5 ? HUHN_NACHT : huehnchenPos(M.letzte); huehnchenZeichnen(ctx, pos[0], pos[1], .6 * pos[1] / 680); SZ.anker.huhn = [pos[0], pos[1] - 16]; SZ.regionen.push({ ort: "huehnchen", x: pos[0] - 18, y: pos[1] - 36, w: 40, h: 40 }); }
 
   // ===== Papierfaser über allem =====
@@ -723,12 +723,12 @@ function zeichneSzene(canvas, opt = {}) {
   SZ.sk = sk; SZ.ox = ox; SZ.oy = oy;
   if (canvas.id === "bild-gross") try { fxEinrichten(canvas); } catch (e) { }
 }
-function blockiert(x, y, M) {
+function blockiert(x, y, M, wegOk) {
   // Zufahrt, Parkplatz, Hecke, Häuser
   if (y < PARK.vorn + 18 && x > strasseL(Math.max(y, PARK.hinten - 40)) - 16) return true;
   if (y > PARK.hinten - 30 && x > strasseL(y) - 14 && x < strasseR(y) + 14) return true;
   // Waldweg
-  const u = (VH + 10 - y) / 200; if (u >= 0 && u <= 1) { const [px, , w] = wegPunkt(u); if (Math.abs(x - px) < w + 16) return true; }
+  const u = (VH + 10 - y) / 200; if (!wegOk && u >= 0 && u <= 1) { const [px, , w] = wegPunkt(u); if (Math.abs(x - px) < w + 16) return true; }
   // Weiher, Quelle und Bach
   if (M.ruhe > 8 && ((x - WEIHER[0]) / 165) ** 2 + ((y - WEIHER[1]) / 44) ** 2 < 1) return true;
   const [qx, qy] = QUELLE, dx = WEIHER[0] + 30 - qx, dy = WEIHER[1] - 4 - qy;
@@ -739,6 +739,28 @@ function blockiert(x, y, M) {
   // Eichenstamm
   if (Math.abs(x - 118) < 30 && y < 692) return true;
   return false;
+}
+/* Rita und Besuch stehen nur auf freier Wiese oder dem Waldweg – nie auf Straße, Parkplatz/Autos,
+   Grünstreifen, Häusern, Baumstämmen, Weiher oder Bank. Liefert [[x, y, Maßstab], …]: Rita zuerst. */
+function figurPlatzFrei(x, y, M) {
+  if (x < 72 || x > 928 || y < 690 || y > VH - 16) return false;                                  // Bildrand, Kiefernstämme vorn
+  if (y > HORIZONT && x > strasseL(y) - 26 && x < strasseR(y) + 28) return false;                // Straße/Zufahrt (mit Saum)
+  if (y < PARK.vorn + 30 && x > strasseL(Math.max(y, PARK.hinten - 40)) - 20) return false;      // Parkplatz, Autos, Grünstreifen, Häuser
+  if (Math.abs(x - 118) < 36 && y < 716) return false;                                           // Eichenstamm
+  if (SZ.bankPos && Math.abs(x - SZ.bankPos[0]) < 40 && Math.abs(y - SZ.bankPos[1]) < 18) return false; // Bank
+  return !blockiert(x, y, M, true);
+}
+function figurenPlaetze(pos0, n, M) {
+  const reihe = (ax, ay, seite) => { const fs = ay / 640, p = [[ax + seite * 30 * fs, ay + 2, fs]]; for (let i = 0; i < n; i++) p.push([ax + seite * (62 + i * 28) * fs, ay + 4, fs]); return p; };
+  const passt = p => p.every(([x, y, fs]) => figurPlatzFrei(x - 9 * fs, y, M) && figurPlatzFrei(x + 9 * fs, y, M));
+  const kand = [];
+  for (let dy = -120; dy <= 200; dy += 10) for (let dx = -460; dx <= 460; dx += 15) kand.push([dx, dy, Math.abs(dx) + 1.6 * Math.abs(dy)]);
+  kand.sort((a, b) => a[2] - b[2]);
+  for (const [dx, dy] of kand) {
+    const ax = pos0[0] + dx, ay = pos0[1] + dy;
+    for (const seite of [-1, 1]) { const p = reihe(ax, ay, seite); if (passt(p)) return p; }
+  }
+  return reihe(560, 880, -1); // Wiese vorn in der Mitte (Notlösung)
 }
 function easeOut(x) { return 1 - Math.pow(1 - clamp(x, 0, 1), 3); }
 
@@ -764,7 +786,7 @@ function bank(ctx, x, y, s) {
 /* ---------- Figuren aus Papier: Rita, Max, Christiane, Micha (nach Fotos stilisiert, keine Porträts) ---------- */
 const FIGUREN = {
   rita: { haut: "#F0C9AA", haar: "#B9AB8E", strähne: "#DCD6C8", oben: "#22304A", unten: "#8FA9C4", schuh: "#C9A27E", gross: 1 },
-  max: { haut: "#E6B593", haar: "#6B4A30", oben: "#5E6168", unten: "#3A3F4A", schuh: "#2A2A2A", locken: true, undercut: false, bart: "#8A5A3A", kette: "#D7DADF", gross: 1.08 },
+  max: { haut: "#E6B593", haar: "#6B4A30", oben: "#5E6168", unten: "#3A3F4A", schuh: "#2A2A2A", locken: true, undercut: false, bart: "rgba(122,65,36,.34)", kette: "#D7DADF", gross: 1.08 },
   christiane: { haut: "#EBBE9E", haar: "#E3CF94", oben: "#8E2B4F", unten: "#2A3550", schuh: "#3A2A22", brille: "#C0282A", tuch: "#2B3A66", gross: .98 },
   micha: { haut: "#E0AE8C", haar: null, oben: "#1F2D4F", unten: "#4A4A4A", schuh: "#2A2A2A", gross: 1.05 }
 };
@@ -913,21 +935,21 @@ function bildBeschreibung(M) {
    ============================================================ */
 const ENTDECKEN = [
   { id: "eichhoernchen", name: "Eichhörnchen", nacht: false, anker: "eiche", x: 122, y: 520, r: 60, text: "Wer hat da geraschelt?", mal: vEichhoernchen },
-  { id: "eich2", name: "Eichhörnchen in der Kiefer", nacht: "egal", anker: "eich2", x: 0, y: 0, r: 34, text: n => n ? "Psst – im Kobel schläft das Eichhörnchen, zusammengerollt unter seinem Schwanz." : "Noch eins! Das hier saust die Kiefer hoch.", mal: vEichKletter, wenn: () => !!(SZ.anker && SZ.anker.eich2) },
+  { id: "eich2", name: "Eichhörnchen in der Kiefer", nacht: "egal", anker: "eich2", x: 0, y: 0, r: 34, text: n => n ? "Psst – im Kobel schläft eins. Der Schwanz ist die Bettdecke." : "Noch eins! Das hier saust die Kiefer hoch.", mal: vEichKletter, wenn: () => !!(SZ.anker && SZ.anker.eich2) },
   { id: "uhu", name: "Uhu", nacht: true, anker: "eiche", x: 122, y: 520, r: 60, text: "Der Uhu hält Nachtwache in der Eiche.", mal: vUhu },
-  { id: "nest", name: "Vogelnest", nacht: false, anker: "nest", x: 886, y: 416, r: 46, text: () => jahreszeit(jetzt()) === "winter" ? "Ein leeres Nest. Im Frühling ist hier wieder Betrieb." : "Drei Schnäbel, ein Gedanke: Hunger!", mal: vNest },
+  { id: "nest", name: "Vogelnest", nacht: false, anker: "nest", x: 886, y: 416, r: 46, text: () => ["winter", "herbst"].includes(jahreszeit(jetzt())) ? "Ein leeres Nest. Im Frühling ist hier wieder Betrieb." : "Drei Schnäbel, ein Gedanke: Hunger!", mal: vNest },
   { id: "spatzen", name: "Spatzen", nacht: false, anker: "spatzen", x: 388, y: 450, r: 46, text: "Die Spatzen halten Dachkonferenz.", mal: vSpatzen },
   { id: "katze", name: "Katze auf dem Autodach", nacht: "egal", anker: "katze", x: 606, y: 642, r: 40, text: n => n ? "Die Katze bewacht den Parkplatz." : "Das wärmste Autodach gehört der Katze.", mal: vKatze },
   { id: "igel", name: "Igel", nacht: "egal", anker: "igel", x: 304, y: 650, r: 44, text: () => jahreszeit(jetzt()) === "winter" ? "Psst – unterm Busch hält einer Winterschlaf." : "Unterm Busch schnauft einer.", mal: vIgel },
   { id: "nachbar", name: "Nachbar mit Mülltonne", nacht: false, anker: "muell", x: 868, y: 704, r: 42, text: "Der Nachbar bringt den Müll raus. In Pantoffeln.", mal: vNachbar },
-  { id: "frosch", name: "Frosch", nacht: false, anker: "wasser", x: 560, y: 848, r: 50, text: "Ein Frosch sitzt am Ufer und hält ganz still.", mal: vFrosch },
+  { id: "frosch", name: "Frosch", nacht: false, anker: "wasser", x: 560, y: 848, r: 50, text: "Ein Frosch am Ufer. Er tut so, als wär er ein Stein.", mal: vFrosch },
   { id: "reh", name: "Reh", nacht: false, x: 940, y: 728, r: 42, text: "Ganz leise – da schaut ein Reh aus dem Wald.", mal: vReh },
-  { id: "schnecke", name: "Schnecke", nacht: false, anker: "schnecke", x: 860, y: 830, r: 40, text: "Eine Schnecke geht auch spazieren. Ganz in Ruhe.", mal: vSchnecke },
+  { id: "schnecke", name: "Schnecke", nacht: false, anker: "schnecke", x: 860, y: 830, r: 40, text: "Eine Schnecke ist unterwegs. Ankunft: irgendwann morgen.", mal: vSchnecke },
   { id: "fuchs", name: "Fuchs", nacht: true, x: 940, y: 728, r: 46, text: "Ein Fuchs schnürt am Waldrand entlang.", mal: vFuchs },
   { id: "lesen", name: "Lesendes Fenster", nacht: true, anker: "lesefenster", x: 858, y: 522, r: 40, text: "Da liest noch jemand. Nur noch ein Kapitel …", mal: vLesefenster },
-  { id: "mond", name: "Mond im Wasser", nacht: true, anker: "wasser", x: 560, y: 848, r: 52, text: "Der Mond schaut sich im Wasser an.", mal: vMond, wenn: () => (SZ.mondDa || 0) > 0 },
-  { id: "motten", name: "Motten an der Laterne", nacht: true, anker: "laterne", x: 404, y: 644, r: 40, text: "Die Motten drehen ihre Runden ums Licht.", mal: vMotten },
-  { id: "huhn", name: "Hühnchen", nacht: "egal", anker: "huhn", x: 0, y: 0, r: 34, text: n => n ? "Hühnchen hält vor der Tür Wache. Mit einem Auge." : ["Hühnchen tut so, als würde es nicht gucken.", "Hühnchen hält hier die Stellung.", "Hühnchen zählt heimlich mit, was du heute machst."][hash32("hv" + heute()) % 3], mal: vHuhn, wenn: () => !!(S.huhn && SZ.anker && SZ.anker.huhn) },
+  { id: "mond", name: "Mond im Wasser", nacht: true, anker: "wasser", x: 560, y: 848, r: 52, text: "Der Mond schaut sich im Wasser an. Ein bisschen eitel ist er ja.", mal: vMond, wenn: () => (SZ.mondDa || 0) > 0 },
+  { id: "motten", name: "Motten an der Laterne", nacht: true, saison: true, wenn: () => ["sommer", "fruehling"].includes(jahreszeit(jetzt())), anker: "laterne", x: 404, y: 644, r: 40, text: "Die Motten drehen ihre Runden ums Licht.", mal: vMotten },
+  { id: "huhn", name: "Hühnchen", nacht: "egal", anker: "huhn", x: 0, y: 0, r: 34, text: n => n ? "Hühnchen hält vor der Tür Wache. Mit einem Auge." : ["Hühnchen tut so, als würde es nicht gucken.", "Hühnchen hält hier die Stellung.", "Hühnchen hat dich längst gesehen. Es tut nur so cool."][hash32("hv" + heute()) % 3], mal: vHuhn, wenn: () => !!(S.huhn && SZ.anker && SZ.anker.huhn) },
   { id: "gluehw", name: "Glühwürmchen", nacht: true, anker: "gluehw", x: 0, y: 0, r: 44, text: "Glühwürmchen funken sich was zu.", mal: vGluehw, wenn: () => !!(SZ.anker && SZ.anker.gluehw) }
 ];
 function tageszeit(d = jetzt()) { const h = d.getHours(); return h >= 5 && h < 11 ? "morgen" : h < 14 && h >= 11 ? "mittag" : h >= 14 && h < 17 ? "nachmittag" : h >= 17 && h < 22 ? "abend" : "nacht"; }
@@ -1055,7 +1077,7 @@ function vNest(g, n) {
   vHimmel(g, false);
   vP(g, p => poly(p, [[124, 66], [30, 82], [30, 88], [124, 76]], null), "#5E4334", 2);
   const r = mulberry32(5); vP(g, p => { for (let i = 0; i < 6; i++) fetzen(p, 70 + r() * 60, 30 + r() * 30, 18, 8, r, 15); }, "#3A5A41", 2);
-  const winter = jahreszeit(jetzt()) === "winter";
+  const winter = ["winter", "herbst"].includes(jahreszeit(jetzt()));
   if (!winter) { vP(g, p => { for (const [x, y] of [[44, 64], [58, 59], [72, 64]]) kreis(p, x, y, 7); }, "#8A7A66", 1);
     vP(g, p => { for (const [x, y] of [[44, 64], [58, 59], [72, 64]]) poly(p, [[x - 4, y - 5], [x, y - 17], [x + 4, y - 5]], null); }, "#F2C33A", 0);
     g.fillStyle = "#1C1A16"; for (const [x, y] of [[44, 64], [58, 59], [72, 64]]) { g.beginPath(); g.arc(x + 3, y - 2, 1.2, 0, TAU); g.fill(); }
@@ -1265,14 +1287,14 @@ const BILDSPIELE = [
   { id: "blumen", wo: "auf deinem Balkon", wer: "huhn", satz: "Gegossen. Ich hab dabei streng geguckt – das hilft auch.", jahr: c => c.m >= 4 && c.m <= 10 && c.art !== "regen" && !c.schnee, uhr: c => c.h >= 7 && c.h < 20, anker: () => SZ.anker.balkon, dauer: 2600, bleibt: true },
   { id: "nachbar", wo: "bei den Mülltonnen", satz: "Er hat zurückgewinkt. Mit dem Deckel.", jahr: c => c.art !== "regen" && c.art !== "schnee", uhr: c => c.h >= 7 && c.h < 19, anker: () => SZ.anker.muell, dauer: 2800 },
   { id: "licht", blase: "unten", wo: "an deinem Fenster", satz: "Licht an. Jetzt fehlt nur noch der Tee.", jahr: () => true, uhr: c => c.h >= 16 && c.h < 23 && (c.nacht > .05 || c.gold > .3 || c.h >= 18), anker: () => SZ.anker.ritafenster, dauer: 1600, bleibt: true, abends: true },
-  { id: "katze", wo: "bei der Katze", satz: "Prrr. Das Autodach bleibt ihres.", jahr: c => c.art !== "regen", uhr: () => true, anker: () => SZ.anker.katze, dauer: 2600 },
+  { id: "katze", wo: "bei der Katze", satz: "Gestreichelt. Sie schnurrt – und rührt sich keinen Zentimeter.", jahr: c => c.art !== "regen", uhr: () => true, anker: () => SZ.anker.katze, dauer: 2600 },
   { id: "vogelhaus", blase: "unten", wo: "am Vogelfutter", taler: 3, satz: "Die Meisen sind zuerst da. Der Spatz tut so, als wär er eingeladen.", jahr: c => [11, 12, 1, 2, 3].includes(c.m), uhr: c => c.h >= 8 && c.h < 16, anker: () => SZ.anker.futter, dauer: 3400, bleibt: true },
   { id: "schneemann", wo: "auf der Wiese", taler: 3, wer: "huhn", satz: "Schneemann steht. Ich halt lieber Abstand – der guckt so.", jahr: c => c.schnee, uhr: c => c.h >= 8 && c.h < 18, anker: () => [SCHNEEMANN[0], SCHNEEMANN[1] - 34], dauer: 3400, bleibt: true },
-  { id: "laub", wo: "auf der Wiese", satz: "Ein Haufen für die Igel. Ordnung muss sein.", jahr: c => (c.m === 10 || c.m === 11) && !c.schnee, uhr: c => c.h >= 8 && c.h < 18, anker: () => [LAUBHAUFEN[0], LAUBHAUFEN[1] - 6], dauer: 3000, bleibt: true },
+  { id: "laub", wo: "auf der Wiese", satz: "Laub zusammengeharkt. Ein Igel ist schon eingezogen.", jahr: c => (c.m === 10 || c.m === 11) && !c.schnee, uhr: c => c.h >= 8 && c.h < 18, anker: () => [LAUBHAUFEN[0], LAUBHAUFEN[1] - 6], dauer: 3000, bleibt: true },
   { id: "igel", wo: "am Busch", satz: "Er schmatzt. Sehr laut für so einen Kleinen.", jahr: c => c.m >= 4 && c.m <= 10, uhr: c => c.h >= 17 && c.h < 23, anker: () => SZ.anker.igel, dauer: 3000, abends: true },
-  { id: "laterne", blase: "unten", wo: "an der Laterne", satz: "Laterne brennt. Die Motten haben schon gewartet.", jahr: () => true, uhr: c => c.h >= 16 && c.h < 23 && (c.nacht > .05 || c.gold > .25 || c.h >= 18), anker: () => SZ.anker.laterne, dauer: 2400, bleibt: true, abends: true },
+  { id: "laterne", blase: "unten", wo: "an der Laterne", satz: "Flackert kurz, dann brennt sie. Jetzt findet jeder heim.", jahr: () => true, uhr: c => c.h >= 16 && c.h < 23 && (c.nacht > .05 || c.gold > .25 || c.h >= 18), anker: () => SZ.anker.laterne, dauer: 2400, bleibt: true, abends: true },
   { id: "seifenblasen", blase: "unten", wo: "auf deinem Balkon", wer: "huhn", satz: "Ich hab eine gefangen. Sie war weg. Betrug!", jahr: c => c.m >= 5 && c.m <= 8 && c.art !== "regen", uhr: c => c.h >= 9 && c.h < 20 && c.tag, anker: () => SZ.anker.balkon, dauer: 3400 },
-  { id: "kraniche", blase: "unten", wo: "am Himmel", taler: 3, wer: "huhn", satz: "Die fliegen nach Süden. Peru ist auch Süden. Ich bleib trotzdem.", jahr: c => c.m === 10 || c.m === 3, uhr: c => c.h >= 8 && c.h < 17 && c.tag, anker: () => [700, 120], dauer: 4200 }
+  { id: "kraniche", blase: "unten", wo: "am Himmel", taler: 3, wer: "huhn", satz: "Die ziehen los. Ich nicht. Ich hab hier meine Fensterbank.", jahr: c => c.m === 10 || c.m === 3, uhr: c => c.h >= 8 && c.h < 17 && c.tag, anker: () => [700, 120], dauer: 4200 }
 ];
 /* Die Tagesauswahl hängt nur vom echten Wetter und vom Datum ab (K-F-13) – Umstellen des Bildwetters ändert sie nicht */
 function spielKontext() {
@@ -1540,25 +1562,25 @@ const monatIst = (...m) => () => m.includes(jetzt().getMonth() + 1);
 const festIst = k => () => typeof festHeute === "function" && !!festHeute()[k];
 ENTDECKEN.push(
   { id: "zeitung", name: "Zeitung vor der Tür", zeit: ["morgen"], anker: "eingang", dx: -6, dy: -4, r: 36, text: "Die Zeitung liegt noch vor der Tür. Wer zuerst kommt …", mal: vZeitung },
-  { id: "specht", name: "Buntspecht", zeit: ["morgen", "mittag"], x: 46, y: 500, r: 44, text: "Tock-tock-tock. Der Buntspecht ist schon bei der Arbeit.", mal: vSpecht },
+  { id: "specht", name: "Buntspecht", zeit: ["morgen", "mittag"], x: 46, y: 500, r: 44, text: "Tock-tock-tock. Der Buntspecht klopft. Aufmachen muss keiner.", mal: vSpecht },
   { id: "kaffee", name: "Kaffee auf dem Balkon", zeit: ["morgen"], anker: "balkon", dx: -14, r: 30, text: "Auf dem Balkon dampft eine Tasse. Erst Kaffee, dann der Rest.", mal: vKaffee },
   { id: "waesche", name: "Wäsche nebenan", zeit: ["mittag", "nachmittag"], x: 304, y: 506, r: 36, text: "Nebenan flattert Wäsche. Die Socken sind alle zu zweit. Fast.", mal: vWaesche, wenn: () => jahreszeit(jetzt()) !== "winter" },
   { id: "paket", name: "Paketbote", zeit: ["mittag"], anker: "eingang", dx: -16, dy: -6, r: 36, text: "Der Paketbote sucht die richtige Klingel. Mal wieder.", mal: vPaket },
   { id: "kuchen", name: "Kuchen hinterm Fenster", zeit: ["nachmittag"], x: 304, y: 579, r: 34, text: "Hinterm Fenster wird Kuchen angeschnitten. Kaffeezeit!", mal: vKuchen },
   { id: "fledermaus", name: "Fledermaus", zeit: ["abend"], x: 190, y: 360, r: 50, text: "Eine Fledermaus fängt sich ihr Abendbrot.", mal: vFledermaus, wenn: () => jahreszeit(jetzt()) !== "winter" },
-  { id: "amsel", name: "Amsel auf dem Dach", zeit: ["abend"], x: 640, y: 446, r: 40, text: "Die Amsel singt vom Dach. Ganz schön laut für so einen kleinen Vogel.", mal: vAmsel },
+  { id: "amsel", name: "Amsel auf dem Dach", zeit: ["abend"], x: 640, y: 446, r: 40, text: "Die Amsel gibt ihr Abendkonzert vom Dach. Eintritt frei.", mal: vAmsel },
   { id: "krimi", name: "Krimi-Fenster", zeit: ["abend"], x: 392, y: 498, r: 36, text: "Bei den Nachbarn läuft ein Krimi. Man sieht’s am Flackern.", mal: vKrimi },
   { id: "sternschnuppe", name: "Sternschnuppe", zeit: ["nacht"], x: 300, y: 150, r: 70, text: "Eine Sternschnuppe! Schnell was wünschen.", mal: vSternschnuppe },
   { id: "waschbaer", name: "Waschbär", zeit: ["nacht"], anker: "muell", dx: -10, r: 40, text: "Ein Waschbär prüft die Mülltonnen. Sehr gründlich.", mal: vWaschbaer },
   { id: "dachs", name: "Dachs", zeit: ["nacht"], x: 96, y: 700, r: 46, text: "Ein Dachs schnüffelt am Waldrand entlang. Er hat’s nicht eilig.", mal: vDachs },
   // Jahreszeiten und Feste (zählen nicht mit)
-  { id: "kerze", name: "Kerze im Fenster", saison: true, anker: "ritafenster", r: 34, text: "Im Fenster brennen Lichter. Es ist Advent.", mal: vKerze, wenn: () => (festIst("advent")() || festIst("weihnachten")() || festIst("lucia")()) && (LICHT.nacht > .2 || jetzt().getHours() >= 16) },
+  { id: "kerze", name: "Kerze im Fenster", saison: true, anker: "ritafenster", r: 34, text: "In deinem Fenster brennen Lichter. Von der Straße sieht’s richtig gemütlich aus.", mal: vKerze, wenn: () => (festIst("advent")() || festIst("weihnachten")() || festIst("lucia")()) && (LICHT.nacht > .2 || jetzt().getHours() >= 16) },
   { id: "schneemann", name: "Schneemann", saison: true, x: 104, y: 800, r: 44, text: () => S.bildspiel && S.bildspiel.schneemann ? "Dein Schneemann steht noch. Die Möhre auch." : "Schnee! Da wäre Platz für einen Schneemann.", mal: vSchneemann, wenn: () => !!SZ.schnee },
   { id: "osterei", name: "Osterei", saison: true, anker: "osterei", r: 40, text: "Ein buntes Ei im Gras. Hühnchen: „Das war ich nicht.“", mal: vOsterei, wenn: () => !!(SZ.anker && SZ.anker.osterei) },
-  { id: "johannis", name: "Johanniswürmchen", saison: true, nacht: true, x: 150, y: 700, r: 50, text: "Johanniswürmchen! Im Juni leuchten sie am Waldrand.", mal: vGluehw, wenn: monatIst(6) },
-  { id: "rakete", name: "Silvesterrakete", saison: true, anker: "rakete", r: 70, text: "Die erste Rakete! Prost Neujahr – fast.", mal: vRakete, wenn: () => !!(SZ.anker && SZ.anker.rakete) },
+  { id: "johannis", name: "Johanniswürmchen", saison: true, nacht: true, x: 150, y: 700, r: 50, text: "Johanniswürmchen! Der Waldrand hat seine Lichterkette an.", mal: vGluehw, wenn: monatIst(6) },
+  { id: "rakete", name: "Silvesterrakete", saison: true, anker: "rakete", r: 70, text: "Raketen über dem Forst! Hühnchen guckt lieber durchs Fenster.", mal: vRakete, wenn: () => !!(SZ.anker && SZ.anker.rakete) },
   { id: "kuerbis", name: "Kürbis auf dem Balkon", saison: true, anker: "balkon", dx: -14, dy: 6, r: 30, text: "Ein Kürbis mit Gesicht auf dem Balkon. Er grinst nur ein bisschen.", mal: vKuerbis, wenn: () => festIst("halloween")() && jetzt().getHours() >= 15 },
-  { id: "pilze", name: "Pilze", saison: true, nacht: false, x: 238, y: 640, r: 40, text: "Pilze unter der Kiefer. Hühnchen: „Nur gucken, nicht pflücken.“", mal: vPilze, wenn: monatIst(9, 10, 11) },
+  { id: "pilze", name: "Pilze", saison: true, nacht: false, x: 238, y: 640, r: 40, text: "Pilze unter der Kiefer. Hühnchen probiert einen als Hut.", mal: vPilze, wenn: monatIst(9, 10, 11) },
   { id: "schneegloeckchen", name: "Schneeglöckchen", saison: true, nacht: false, x: 262, y: 676, r: 40, text: "Die ersten Schneeglöckchen. Der Winter packt langsam ein.", mal: vSchneegloeckchen, wenn: monatIst(2, 3) },
   { id: "schwalben", name: "Schwalben", saison: true, nacht: false, x: 470, y: 452, r: 50, text: "Schwalben flitzen unterm Dach durch. Es gibt Mücken zum Mittag.", mal: vSchwalben, wenn: monatIst(5, 6, 7, 8) }
 );

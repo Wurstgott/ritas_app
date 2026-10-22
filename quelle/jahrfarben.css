@@ -1,0 +1,110 @@
+/* ============================================================
+   Deine Tage (jahrfarben.js) – Buntstift auf Papier, Emaille-Töne.
+   Sechs gleichrangige, warme Farben; „Durchwachsen“ ist Haferbeige (nie Grau, Schwarz oder Rot).
+   Schrift über var(--f-…); Klick-Rückmeldung macht feedback.js (keine eigenen :active-Effekte).
+   ============================================================ */
+:root {
+  --jf-froehlich: #E3A93A;    /* Sonnengelb */
+  --jf-aktiv: #5E9A68;        /* Waldgrün */
+  --jf-gesellig: #E07F5C;     /* Koralle */
+  --jf-gemuetlich: #4D8C96;   /* Teeblau/Petrol */
+  --jf-ruhig: #9D8DCB;        /* Lavendel */
+  --jf-durchwachsen: #D9C39B; /* Haferbeige */
+  --jf-papier: #FBF6EA; --jf-tinte: #1D2433;
+}
+@media (prefers-color-scheme: dark) { :root:not([data-theme="light"]) {
+  --jf-froehlich: #D5A043; --jf-aktiv: #6B9E73; --jf-gesellig: #D47D5E; --jf-gemuetlich: #5A949C; --jf-ruhig: #9B8CC6; --jf-durchwachsen: #D2BC93;
+  --jf-papier: #202C25; --jf-tinte: #1D2433; } }
+:root[data-theme="dark"] {
+  --jf-froehlich: #D5A043; --jf-aktiv: #6B9E73; --jf-gesellig: #D47D5E; --jf-gemuetlich: #5A949C; --jf-ruhig: #9B8CC6; --jf-durchwachsen: #D2BC93;
+  --jf-papier: #202C25; --jf-tinte: #1D2433;
+}
+.jf-froehlich { --jf: var(--jf-froehlich); } .jf-aktiv { --jf: var(--jf-aktiv); } .jf-gesellig { --jf: var(--jf-gesellig); }
+.jf-gemuetlich { --jf: var(--jf-gemuetlich); } .jf-ruhig { --jf: var(--jf-ruhig); } .jf-durchwachsen { --jf: var(--jf-durchwachsen); }
+
+/* Buntstift: dichte Schraffur in der Farbe, dazwischen hellere Striche, leicht ungleicher Rand */
+.jf-mal, .jf-halb {
+  background:
+    repeating-linear-gradient(-58deg, transparent 0 2.4px, color-mix(in srgb, var(--jf, transparent) 55%, #fff) 2.4px 3.4px),
+    var(--jf, transparent);
+}
+.jf-mal { position: relative; display: inline-block; flex: none; overflow: hidden; border-radius: 9px 6px 10px 7px; }
+.jf-mal.jf-zwei > .jf-halb, .jf-px.jf-zwei > .jf-halb { position: absolute; inset: 0; clip-path: polygon(100% 0, 100% 100%, 0 100%); }
+.jf-mal.punkt { width: 22px; height: 22px; border-radius: 50% 46% 52% 48%; box-shadow: inset 0 0 0 1px rgba(0,0,0,.08); }
+.jf-mal.klein { width: 30px; height: 30px; border-radius: 8px 6px 9px 6px; }
+.jf-mal.gross { width: 54px; height: 54px; border-radius: 14px 10px 15px 11px; }
+
+/* ---------- Heute: Abendfrage ---------- */
+.jf-frage { background: var(--bogen); }
+.jf-titel { margin: 0 0 4px; font-family: var(--f-stimme); font-weight: 500; font-size: 1.12rem; color: var(--tinte); }
+.jf-unter { margin: 0 0 6px; }
+.jf-frage.jf-eingebettet { position: relative; background: none; padding: 0; } /* in fremder Karte (z. B. „Für dein Tagebuch“) */
+.jf-wahl-reihe { display: flex; flex-wrap: wrap; gap: 8px; margin-top: 10px; }
+.chip.jf-wahl { position: relative; gap: 8px; padding: 8px 14px 8px 10px; min-height: 52px; background: var(--bogen); color: var(--tinte);
+  font-family: var(--f-text); font-weight: 600; box-shadow: inset 0 0 0 1.5px var(--linie); }
+.chip.jf-wahl[aria-pressed="true"] { background: var(--mulde); color: var(--tinte); box-shadow: inset 0 0 0 2.5px var(--tinte-2); }
+.chip.jf-wahl[aria-pressed="true"] .jf-mal.punkt { box-shadow: 0 0 0 2px var(--bogen), 0 0 0 3.5px var(--tinte-2); }
+.jf-fuss { justify-content: space-between; flex-wrap: wrap; gap: 4px 10px; margin-top: 8px; }
+.jf-fuss .klein { margin: 0; }
+.jf-fertig { position: relative; display: flex; align-items: center; gap: 12px; padding: 4px 4px 4px 14px; border-radius: 14px;
+  background: var(--mulde); color: var(--tinte); }
+.jf-fertig-text { flex: 1; min-width: 0; font-family: var(--f-text); }
+.jf-fertig-text b { font-weight: 700; }
+
+/* ---------- Rückblick: Monatsblatt ---------- */
+.jf-karte { padding: 16px 10px 14px; }
+.jf-karte > .c-kicker { padding: 0 8px; }
+.jf-nav { display: flex; align-items: center; justify-content: space-between; gap: 6px; margin: 2px 0 8px; }
+.jf-nav h3 { margin: 0; font-family: var(--f-schild); font-weight: 400; font-size: 1.12rem; text-align: center; flex: 1; }
+.knopf.jf-pfeil { position: relative; min-width: 56px; font-size: 1.7rem; line-height: 1; text-decoration: none; }
+.jf-wt, .jf-blatt { display: grid; grid-template-columns: repeat(7, minmax(0, 1fr)); gap: 3px; }
+.jf-wt span { text-align: center; font: 700 .66rem/1.6 var(--f-text); letter-spacing: .06em; text-transform: uppercase; color: var(--tinte-2); }
+.jf-tag, .jf-leer { aspect-ratio: 1; min-height: 44px; }
+.jf-tag { position: relative; display: grid; place-items: center; padding: 0; border: 0; border-radius: 9px; cursor: pointer;
+  background: var(--jf-papier); color: var(--tinte-2); box-shadow: inset 0 0 0 1px var(--linie-fein);
+  font: 600 15px/1 var(--f-text); touch-action: manipulation; overflow: hidden; isolation: isolate; }
+.jf-tag > .jf-mal { position: absolute; inset: 3px; z-index: -1; }
+.jf-tag.gemalt { color: var(--jf-tinte); }
+.jf-tag.gemalt .jf-zahl { font-weight: 700; text-shadow: 0 0 3px rgba(255,251,242,.7); }
+.jf-tag.heute { box-shadow: inset 0 0 0 2.5px var(--ziegel); }
+.jf-tag.jf-zukunft { cursor: default; background: transparent; box-shadow: none; opacity: .38; }
+.jf-hinweis { margin: 10px 8px 0; }
+.jf-legende { display: flex; flex-wrap: wrap; gap: 6px 14px; margin: 12px 8px 0; font: 500 .82rem/1.3 var(--f-text); color: var(--tinte-2); }
+.jf-legende > span { display: inline-flex; align-items: center; gap: 6px; }
+.jf-legende .jf-mal.punkt { width: 16px; height: 16px; }
+.jf-jahr-knopf { margin-top: 14px; }
+
+/* ---------- Das ganze Jahr: Flickenteppich ---------- */
+.jf-jahr { margin-top: 14px; }
+.jf-jahr-titel { margin: 0 0 8px; text-align: center; font-family: var(--f-schild); font-weight: 400; }
+.jf-teppich { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 6px; }
+.jf-flicken { position: relative; display: flex; flex-direction: column; gap: 4px; min-height: 44px; padding: 6px 6px 7px; border: 0; border-radius: 8px;
+  background: var(--jf-papier); color: var(--tinte-2); cursor: pointer; touch-action: manipulation; overflow: hidden; isolation: isolate;
+  outline: 1.5px dashed var(--linie); outline-offset: -4px; }
+.jf-flicken.an { outline: 2px solid var(--ziegel); outline-offset: -2px; }
+.jf-flicken.zukunft { cursor: default; opacity: .5; }
+.jf-fname { font: 700 .66rem/1 var(--f-text); letter-spacing: .08em; text-transform: uppercase; text-align: left; padding: 2px 2px 0; }
+.jf-pixel { display: grid; grid-template-columns: repeat(7, 1fr); gap: 1.5px; }
+.jf-px { position: relative; display: block; aspect-ratio: 1; border-radius: 2px; overflow: hidden; background: var(--jf-papier); box-shadow: inset 0 0 0 .75px var(--linie); } /* leer = Papier, nie verwechselbar mit Durchwachsen */
+.jf-px.leer { background: transparent; }
+.jf-px.zukunft { background: transparent; box-shadow: inset 0 0 0 .5px var(--linie-fein); }
+.jf-px.jf-froehlich, .jf-px.jf-aktiv, .jf-px.jf-gesellig, .jf-px.jf-gemuetlich, .jf-px.jf-ruhig, .jf-px.jf-durchwachsen {
+  background: repeating-linear-gradient(-58deg, transparent 0 1.6px, color-mix(in srgb, var(--jf) 60%, #fff) 1.6px 2.3px), var(--jf); }
+
+/* ---------- Tag-Blatt ---------- */
+.jf-tag-farbe { display: flex; align-items: center; gap: 14px; margin: 2px 0 4px; }
+.jf-tag-farbe .serif { font-size: 1.2rem; }
+.jf-zitat { margin-top: 12px; padding: 12px 14px; }
+.jf-zitat p { margin: 4px 0 0; font-family: var(--f-stimme); font-style: italic; }
+.jf-zitat ol, .jf-zitat ul { margin: 6px 0 0; padding-left: 22px; font-family: var(--f-stimme); }
+.jf-tag-h { margin: 18px 0 8px; }
+.jf-tag-hinweis { margin: 0 0 8px; }
+.jf-tag-hinweis.mit-farbe { margin-top: 12px; }
+
+/* Schriftgröße 3: Wahl einspaltig, Zahlen bleiben im Feld */
+html[data-size="3"] .jf-wahl-reihe { display: grid; grid-template-columns: 1fr; }
+html[data-size="3"] .jf-tag { font-size: 16px; }
+html[data-size="3"] .jf-wt span { font-size: 12px; }
+html[data-size="3"] .jf-fname { font-size: 11px; }
+html[data-size="3"] .jf-legende { font-size: 15px; }
+html[data-size="3"] .jf-nav h3 { font-size: 1rem; }

@@ -48,7 +48,7 @@
       ziel: () => huhnAn() ? [["[data-act=huhn-tap]"], [".huhn-karte"], ["[data-act=tf]"]] : [["[data-act=tf]"]],
       alle: () => !huhnAn() || !q("[data-act=huhn-tap], .huhn-karte"),
       mitmach: () => huhnAn() && q("[data-act=huhn-tap], .huhn-karte") ? "huhn" : null,
-      max: () => huhnAn() ? "Und das ist Hühnchen – ja, das aus Peru. Morgens fragt es nach deiner Energie. Tipp mal drauf oder halt den Finger länger drauf."
+      max: () => huhnAn() ? "Und das ist Hühnchen – ja, das aus Ton. Morgens fragt es nach deiner Energie. Tipp mal drauf oder halt den Finger länger drauf."
         : "Morgens tippst du hier an, wie viel Energie du hast. Danach richten sich die Ideen.",
       huhn: "Na los. Ich beiß nicht. Meistens." },
     { id: "telefon", titel: "Kurz plaudern", tab: "heute", ziel: [["[data-act=tel-auf]"], ["[data-ziel=tel-auf]"]],
@@ -62,14 +62,14 @@
     { id: "post", titel: "Post aus Vimmerby", tab: "ideen", ziel: [["[data-act=bv-auf]"], [".c-fach[data-ziel=bv-auf]"], ["[data-ziel=bv-auf]"]],
       max: "Und Post aus Vimmerby: Karin schreibt dir auf Schwedisch, die Übersetzung klappst du auf. Karin hab ich mir ausgedacht – ihr Schwedisch ist echt.",
       huhn: "Über mich schreibt sie nie was. Verdächtig." },
-    { id: "bild", titel: "Dein Zuhause", tab: "lichtung", ziel: [["#buehne-gross"], ["#bild-gross"], ["[data-act=sk-wetter]"]],
-      max: "Das ist dein Zuhause. Tipp aufs Bild, dann erfährst du was. Halt den Finger drauf und fahr herum – das ist die Lupe. Da steckt allerhand drin.",
+    { id: "bild", titel: "Dein Zuhause", tab: "lichtung", ziel: [["#buehne-gross"], ["#bild-gross"], ["[data-act=sk-wetter]"]], durch: "#bild-gross",
+      max: "Das ist dein Zuhause. Tipp aufs Bild, dann erfährst du was. Halt den Finger drauf und fahr herum – das ist die Lupe. Probier’s ruhig, hier geht das schon.",
       huhn: "Ich bin auch irgendwo drin. Such mich." },
     { id: "laden", titel: "Laden & Schrank", tab: "lichtung", ziel: [["[data-act=sk-schrank]", "[data-act=laden]"], ["[data-ziel=laden]"], ["[data-act=sk-taler]"]], alle: true,
       max: "Fürs Eintragen gibt’s Taler. Ausgeben kannst du sie hier: im Kramladen und im Kleiderschrank – Hüte und Kostüme für dich und Hühnchen.",
       huhn: "Wikingerhelm. Ich sag’s nur." },
-    { id: "rueckblick", titel: "Rückblick", tab: "tagebuch", ziel: [["[data-act=tb-geschrieben]", "[data-act=tb-andere]", "[data-act=tb-modus]"], ["[data-act=moment]"]], bereich: el => el.closest(".tb-karte") || el,
-      max: "Im Rückblick steht, was du gemacht hast. Und jeden Tag gibt’s eine Frage für dein Papier-Tagebuch – von heute oder von früher.",
+    { id: "rueckblick", titel: "Rückblick", tab: "tagebuch", ziel: [["#abend [data-act=tb-geschrieben]", "#abend [data-act=tb-andere]", "#abend [data-act=tb-modus]"], ["#abend"]], bereich: el => el.closest(".abendblatt") || el, // Karte steht während des Rundgangs immer im Abend-Zustand (rueckblick.js: rbZustand)
+      max: "Im Rückblick wartet jeden Abend eine Frage für dein Papier-Tagebuch – von heute oder von früher. Darunter: was heute schön war, die Farbe für den Tag und alle deine Tage im Kalender.",
       huhn: "Schreib ruhig was über mich. Nur Gutes." },
     { id: "einst", titel: "Einstellungen", tab: "heute", ziel: [["[data-act=go][data-go=einstellungen]"], ["[data-go=einstellungen]"], ["#knopf-einst"]],
       max: "Am Zahnrad machst du die Schrift größer. Und unter „Wunsch an Max“ schreibst du mir, was fehlt oder nervt. Ich nehm’s sportlich." },
@@ -81,7 +81,7 @@
   const wert = (x, ...a) => typeof x === "function" ? x(...a) : x;
   const belohnt = () => { const s = zustand(); return !!(s && s.rundgang && s.rundgang.taler); };
 
-  const HUHN_TIPP = ["Ich bin Kunst aus Peru. Bitte mit Respekt drücken.", "He! Das kitzelt.", "Noch mal, und ich pick zurück.", "Okay, okay. Ich bin wach."];
+  const HUHN_TIPP = ["Ich bin Kunst. Bitte mit Respekt drücken.", "He! Das kitzelt.", "Noch mal, und ich pick zurück.", "Okay, okay. Ich bin wach."];
   const HUHN_HALT = "Na? Von nahem noch hübscher, oder?";
 
   /* ---------- Zustand ---------- */
@@ -191,6 +191,7 @@
     RG.histEigen = false;
     if (wie === "skip") { try { toast("Den Rundgang mit Max findest du jederzeit in den Einstellungen."); } catch (e) { } }
     if (neuBelohnt) nachklapp();
+    if (s && s.rundgang && !s.rundgang.bildHinweis) { s.rundgang.bildHinweis = "offen"; merken(); }
     // Fokus zurück an einen sinnvollen Ort
     try { const m = q("#main"); (m || document.body).focus({ preventScroll: true }); } catch (e) { }
   }
@@ -275,6 +276,7 @@
     const els = zielFinden(st);
     if (!els) { el.classList.add("mitte"); el.dataset.ohneZiel = st.id; rahmenZu(); nebenZu(); return; }
     const vh = innerHeight, pad = st.pad != null ? st.pad : 10;
+    el.classList.toggle("durch", !!st.durch);
     q(".rg-loch", el).classList.toggle("rund", !!st.rund);
     const karte = q(".rg-karte", el);
     // Erst unten versuchen, sonst oben
@@ -296,6 +298,9 @@
       rahmenAuf({ left: r.left - pad, top: t, right: r.right + pad, bottom: Math.max(b, t + 24) }, 0);
       break;
     }
+    const fang = q(".rg-fang", el), R0 = RG.rahmen;
+    if (st.durch && R0) { const l = R0.left, t = R0.top, r = l + R0.w, b = t + R0.h; fang.style.clipPath = `polygon(evenodd, 0 0, 100% 0, 100% 100%, 0 100%, 0 0, ${l}px ${t}px, ${l}px ${b}px, ${r}px ${b}px, ${r}px ${t}px, ${l}px ${t}px)`; }
+    else fang.style.clipPath = "";
     // Ring um den Reiter, auf den gerade gewechselt wurde (auch ohne Bewegung)
     if (RG.reiter && RG.reiter.isConnected) nebenAuf(RG.reiter.getBoundingClientRect()); else nebenZu();
     // Mitmachen: der Papierfinger zeigt aufs echte Hühnchen, nicht auf Text
@@ -337,7 +342,7 @@
     const p = q(".rg-text", el);
     p.innerHTML = text.split(/(\s+)/).map(w => /\s+/.test(w) ? w : `<span class="rg-w">${html(w)}</span>`).join("");
     const hs = huhnAn() ? wert(st.huhn) : null;
-    const hz = q(".rg-huhn-satz", el); hz.classList.remove("da"); hz.hidden = !hs; q(".rg-huhn-txt", el).textContent = hs || "";
+    const hz = q(".rg-huhn-satz", el); hz.classList.remove("da", "ort"); hz.hidden = !hs; q(".rg-huhn-txt", el).textContent = hs || ""; q(".rg-huhn-wer", el).textContent = "Hühnchen";
     const bel = q(".rg-belohnung", el);
     bel.innerHTML = st.mitmach !== "muenze" ? "" : belohnt() ? `<span class="rg-schild">Taler: schon abgeholt</span>${stempelHTML(zustand().rundgang.taler)}` : (`<button class="rg-muenze" type="button" data-fb="taler" aria-label="${BELOHNUNG} Taler einsammeln">${MUENZE_GROSS}<span class="rg-muenze-zahl">+${BELOHNUNG}</span><span class="rg-muenze-tipp">Tipp drauf</span></button>`);
     bel.hidden = !bel.innerHTML;
@@ -438,6 +443,38 @@
       setTimeout(() => { n.classList.add("raus"); setTimeout(() => n.remove(), 400); }, 3400);
     }, ruhig() ? 200 : 900);
   }
+
+  /* ---------- Mitmachen 3: im Bild tippen (Station „Dein Zuhause“) ----------
+     Die Fangfläche hat dort ein Loch, das Bild bekommt Tipps und Lupe direkt. Ein kurzer Tipp öffnet aber kein
+     Blatt unter dem Rundgang, sondern erzählt in der kleinen Blase, was da ist. Funkeln (scene.js) darf wie immer. */
+  document.addEventListener("click", ev => {
+    if (!RG.an || !RG.el) return; const st = STATIONEN[RG.i]; if (!st.durch) return;
+    const c = ev.target && ev.target.closest ? ev.target.closest(st.durch) : null; if (!c) return;
+    ev.stopImmediatePropagation(); ev.preventDefault();
+    let titel = "Im Bild", text = "Hier ist nichts Besonderes. Probier eine andere Stelle – oder halt den Finger drauf.";
+    try {
+      const reg = typeof bildRegion === "function" ? bildRegion(c, ev.clientX, ev.clientY) : null;
+      if (reg && reg.ort === "huehnchen") { titel = "Hühnchen"; text = "Gefunden! Da steh ich. Immer dort, wo du zuletzt was gemacht hast."; }
+      else if (reg && reg.ort === "figuren") { titel = "Im Bild"; text = "Das bist du. Wer mit dir Zeit verbracht hat, steht ein paar Tage mit im Bild."; }
+      else if (reg && D.orte && D.orte[reg.ort]) { titel = D.orte[reg.ort].name; text = D.orte[reg.ort].text; }
+    } catch (e) { }
+    const hz = q(".rg-huhn-satz", RG.el); q(".rg-huhn-wer", RG.el).textContent = titel; q(".rg-huhn-txt", RG.el).textContent = text;
+    hz.hidden = false; hz.classList.add("da", "ort"); RG.el.classList.add("geklappt"); brumm("auswahl");
+  }, true);
+
+  /* ---------- Nach dem Rundgang einmal: „Probier’s jetzt: tipp aufs Bild“ ---------- */
+  function bildHinweisPruefen() {
+    const s = zustand(); if (RG.an || !s || !s.rundgang || s.rundgang.bildHinweis !== "offen") return;
+    const b = q("#buehne-gross"); if (!b || q(".rg-bild-hinweis", b)) return;
+    s.rundgang.bildHinweis = tag(); merken();
+    const h = document.createElement("div"); h.className = "rg-bild-hinweis"; h.setAttribute("role", "status");
+    h.innerHTML = `<span class="rg-bh-finger" aria-hidden="true">${FINGER}</span><span class="rg-bh-text">Probier’s jetzt: tipp aufs Bild</span>`;
+    if (getComputedStyle(b).position === "static") b.style.position = "relative";
+    b.appendChild(h);
+    const weg = () => { h.classList.add("weg"); setTimeout(() => h.remove(), 300); document.removeEventListener("pointerdown", weg, true); };
+    document.addEventListener("pointerdown", weg, true); setTimeout(weg, 9000);
+  }
+  document.addEventListener("click", ev => { if (ev.target.closest && ev.target.closest("[data-tab=lichtung], [data-ziel='tab:lichtung']")) setTimeout(bildHinweisPruefen, 450); });
 
   /* ---------- Einbindung in die App ---------- */
   // Automatisch nur für echte Menschen; Testläufe (navigator.webdriver) setzen window.RUNDGANG_AUTOSTART = true, wenn sie ihn sehen wollen

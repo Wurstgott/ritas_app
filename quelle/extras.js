@@ -94,7 +94,7 @@ function raetselAktion(d) { const R = raetselDerWoche(); if (!R) return; S.raets
    Schon gekaufte werden in skins.js (skinsMigrieren) einmalig als Taler zurückgezahlt. ---------- */
 function gutscheinSheet(id) {
   const g = (D.gutscheine || []).find(x => x.id === id); if (!g) return;
-  wareSheet(id); // Einlösen per WhatsApp an Max, mit Datum (laden2.js)
+  wareSheet(id); // Einlösen per Signal an Max, mit Datum (laden2.js)
 }
 
 /* ---------- Echte Post von Max aus dem Repo (post.json) ---------- */
@@ -150,13 +150,13 @@ function postLaden() {
 const HG_EMOJI = [
   { art: "emo-froh", zeichen: ["✨", "⭐", "✨"], n: 5, flug: "steigen", sprueche: ["Ich hab mich heute extra poliert. Sieht man, oder?", "Glitzer. Hat mir keiner verboten.", "Funkel, funkel, Hühnchen."] },
   { art: "emo-froh", zeichen: ["🍰", "☕"], n: 4, flug: "steigen", sprueche: ["Hab ich da Kuchen gehört?", "Kaffee? Kuchen? Kaffee UND Kuchen?", "Ich nehm das Stück mit der Kirsche."] },
-  { art: "emo-zu", zeichen: ["💤", "z", "Z"], n: 4, flug: "steigen", sprueche: ["Bin wach! … Fast.", "Ich hab nur kurz die Augen geschont.", "Ich war nicht weg. Ich hab nur von Peru geträumt."] },
+  { art: "emo-zu", zeichen: ["💤", "z", "Z"], n: 4, flug: "steigen", sprueche: ["Bin wach! … Fast.", "Ich hab nur kurz die Augen geschont.", "Ich war nicht weg. Ich hab nur vom Brennofen geträumt."] },
   { art: "emo-froh", zeichen: ["🎉", "🎊", "✨"], n: 6, flug: "steigen", sprueche: ["Konfetti! Aufräumen musst aber du, ich hab keine Hände.", "Tusch! Wofür, weiß ich auch nicht.", "Mir war grad nach Feiern. Ein Grund findet sich noch."] },
   { art: "emo-froh", zeichen: ["🌸", "🌼", "🌷"], n: 5, flug: "fall", sprueche: ["Blumen für dich. Hab ich selbst … gefunden.", "Die sind vom Balkon nebenan. Pssst."] },
   { art: "emo-schreck", zeichen: ["❗", "❓"], n: 3, flug: "steigen", sprueche: ["Huch! Du schon wieder!", "Ich hab dich gar nicht kommen sehen!", "Erschreck mich doch nicht so, ich bin aus Ton!"] },
   { art: "emo-froh", zeichen: ["📚", "🔍"], n: 3, flug: "steigen", sprueche: ["Ich lese gerade. Krimi. Der Gärtner war’s nicht.", "Ich ermittle. Verdächtig: alle."] },
   { art: "emo-froh", zeichen: ["☀️", "🌤️"], n: 3, flug: "steigen", sprueche: ["Wetterbericht: Hühnchen sonnig.", "Ich hab die Sonne bestellt. Gern geschehen."] },
-  { art: "emo-froh", zeichen: ["❄️", "❄"], n: 7, flug: "fall", sprueche: ["Mir ist kalt. Ich bin aus Peru!", "Schneeflocken! Darf man die essen?"] },
+  { art: "emo-froh", zeichen: ["❄️", "❄"], n: 7, flug: "fall", sprueche: ["Mir ist kalt. Ton hält nicht warm!", "Schneeflocken! Darf man die essen?"] },
   { art: "emo-froh", zeichen: ["💪"], n: 2, flug: "steigen", sprueche: ["Guck mal, mein Bizeps. … Okay, ich hab keinen.", "Training! Ich hab heute zweimal genickt."] },
   { art: "emo-schreck", zeichen: ["🌽"], n: 2, flug: "steigen", sprueche: ["Wer hat hier Mais gesagt? Ich mag Mais. Glaub ich.", "Mais? Nie gehört. Klingt aber lecker."] },
   { art: "emo-froh", zeichen: ["🎵", "🎶"], n: 5, flug: "steigen", sprueche: ["La-la-laaa! Ich hab Talent. Glaub ich.", "Ich übe für den Chor. Der weiß nur noch nichts davon."] },
@@ -184,7 +184,7 @@ const HG_EMOJI = [
     if (art === "rot" && Math.random() < .5) blase(zuf(["Guck nicht so.", "Oh. Du schon wieder.", "Ich werd ja ganz verlegen."]));
     if (art === "frage") blase(zuf(["Ist was?", "Hab ich was im Gesicht?", "Ich hab Körner gezählt. Was gibt’s?"]));
     if (art === "weg") blase(zuf(["Hmpf. Ich guck jetzt woandershin.", "Bin nicht da.", "Pause. Hühnerpause."]));
-    if (art === "cool") blase(zuf(["Läuft bei mir.", "Sonnenbrille. Weil ich’s kann.", "Ich bin aus Peru. Ich bin cool geboren.", "Autogramme gibt’s später.", "Ich bin heute schwer beschäftigt. Mit Gucken.", "Zurücklehnen geht bei Ton schlecht. Sieht aber gut aus."]));
+    if (art === "cool") blase(zuf(["Läuft bei mir.", "Sonnenbrille. Weil ich’s kann.", "Ich bin aus Ton. Ich bin cool gebrannt.", "Autogramme gibt’s später.", "Ich bin heute schwer beschäftigt. Mit Gucken.", "Zurücklehnen geht bei Ton schlecht. Sieht aber gut aus."]));
     if (art === "frech") blase(zuf(["Na, auch hier?", "Was guckst du? Ich bin handgemacht.", "Erst die Liste, dann das Hühnchen!", "Ich hab dich zuerst gesehen.", "Schon wieder du? Ich fühl mich geehrt.", "Finger weg, ich bin frisch glasiert!", "Ich bin klein, aber ich hab Meinungen.", "Noch einmal antippen, und ich sag’s Max.","Du hast da was. … Reingefallen!", "Ich bin nicht neugierig. Ich bin informiert."]));
     grossH.classList.add("hg-" + art);
     if (grossH._emoji) { const E = grossH._emoji; for (let i = 0; i < E.n; i++) { const z = document.createElement("span"); z.className = "hg-flug hg-emo hg-" + E.flug; z.textContent = E.zeichen[i % E.zeichen.length]; z.style.left = (70 + Math.random() * 70) + "px"; z.style.top = (E.flug === "fall" ? 0 : 50) + "px"; z.style.animationDelay = (1900 + i * 140) + "ms"; z.style.setProperty("--dx", ((Math.random() - .5) * 90) + "px"); grossH.appendChild(z); } }
@@ -222,7 +222,6 @@ const TB_FRAGEN = {
 function tbTag(h) { if (eintraegeAm(h).some(e => e.t !== "tagebuch") || S.momente[h]) return h; const g = tagPlus(h, -1); return eintraegeAm(g).length || S.momente[g] ? g : h; }
 function tbFragen(tag) {
   const out = [], es = eintraegeAm(tag).filter(e => e.t !== "tagebuch" && e.notiz !== "App eingerichtet");
-  if (S.momente[tag]) out.push(...TB_FRAGEN.moment.map(f => f.replace("{M}", S.momente[tag])));
   for (const e of es) {
     const p = e.person && S.menschen.find(m => m.id === e.person);
     if (p) out.push(...TB_FRAGEN.person.map(f => f.replace("{P}", p.name)));
@@ -231,7 +230,9 @@ function tbFragen(tag) {
     else if (["lesen", "hoerbuch", "buchfertig"].includes(e.t)) out.push(...TB_FRAGEN.lesen);
     else if (tat(e.t).bild === "tanz") out.push(...TB_FRAGEN.musik);
   }
-  // „das Beste“ fragt schon der Knopf „Schönster Moment“ – hier nicht doppelt
+  // Moment-Frage nur, wenn schon ein Moment da ist – und erst nach den Eintrags-Fragen (Rückblick-Umbau)
+  if (S.momente[tag]) out.push(...TB_FRAGEN.moment.map(f => f.replace("{M}", S.momente[tag])));
+  // „das Beste“ fragt schon „Was war heute schön?“ – hier nicht doppelt
   return [...new Set(out.concat(TB_FRAGEN.allg.filter(f => !/das Beste/.test(f))))];
 }
 function tbFrueherFragen() { return [...(D.tbFrueher || []), ...((D.lebensbuch || []).map(x => x.frage).filter(f => /Kind|früher|jung|Schul|Eltern|Mutter|Vater|damals/i.test(f)))]; }
@@ -264,7 +265,7 @@ function tbAktion(a, d) {
   if (a === "tb-merk-weg") { S.tbMerk = (S.tbMerk || []).filter(m => m.id !== d.id); speichern(); haptik("erfolg"); render({ halteScroll: true, ohneAnim: true }); return; }
   if (a === "tb-andere") { S.tbDreh = (S.tbDreh || 0) + 1; speichern(); haptik("auswahl"); render({ halteScroll: true, ohneAnim: true }); return; }
   if (a === "tb-geschrieben") {
-    const fr = S.tbModus === "frueher" ? tbFrueherFragen() : tbFragen(tbTag(heute())), f = fr[(S.tbDreh || 0) % fr.length];
+    const fr = typeof rbFragenAktuell === "function" ? rbFragenAktuell() : S.tbModus === "frueher" ? tbFrueherFragen() : tbFragen(tbTag(heute())), f = fr[(S.tbDreh || 0) % fr.length];
     const r = eintragSpeichern({ t: "tagebuch", tag: heute(), min: 15, notiz: f });
     if (r) { S.huhnSagt = { tag: heute(), text: ["Steht drin! Ich hab nicht reingeguckt. Fast nicht.", "Tagebuch geschrieben? Dann hast du heute mehr geschafft als ich.", "Wieder eine Seite voll. Ich hab nur auf den Stift geguckt."][Math.floor(Math.random() * 3)] }; speichern(); nachEintrag(r); }
     render({ halteScroll: true, ohneAnim: true });

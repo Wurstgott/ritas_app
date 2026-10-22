@@ -3,14 +3,16 @@
    Gespräche aus D.anrufe; noch nicht geführte kommen zuerst.
    Bei Max endet jedes Gespräch im Tschüss-Duell.
    ============================================================ */
-const TEL_WER = { huhn: "Hühnchen", max: "Max", jane: "Christiane", greta: "Greta", pauli: "Pauli", micha: "Micha", elsbeth: "Elsbeth" };
-const TEL_REIHE = ["huhn", "max", "jane", "greta", "pauli", "micha"];
+const TEL_WER = { huhn: "Hühnchen", max: "Max", jane: "Christiane", greta: "Greta", pauli: "Pauli", micha: "Micha", dani: "Dani", linus: "Linus", elsbeth: "Elsbeth" };
+const TEL_REIHE = ["huhn", "max", "jane", "greta", "pauli", "micha", "dani"];
 let TEL = null;
 
 function telBild(wer, gr) {
   if (wer === "huhn") return huhnSVG({ gr, kopf: true, stimmung: "spricht" });
   if (wer === "elsbeth" && typeof elsbethSVG === "function") return elsbethSVG(gr); // Akte Feuerkelch (hp.js)
   if (wer === "max") return maxSVG(gr);
+  if (wer === "dani" && typeof daniSVG === "function") return daniSVG(gr);
+  if (wer === "linus" && typeof linusSVG === "function") return linusSVG(gr);
   return ({ jane: janeSVG, greta: gretaSVG, pauli: pauliSVG, micha: michaSVG }[wer] || janeSVG)(gr);
 }
 function telAuswahlSheet() {
@@ -33,29 +35,33 @@ function telStarten(wer) {
 function telKlingeln() {
   return `<div class="tel-klingel">${telBild(TEL.g.wer, 110)}<p class="serif" style="font-size:1.2rem;margin:14px 0 4px">Es klingelt bei ${TEL_WER[TEL.g.wer]} …</p><p class="klein" style="margin:0 0 16px">Tuut … tuut …</p></div>`;
 }
-function telAbheben() { haptik("erfolg"); TEL.verlauf = []; TEL.knoten = "__warte"; telZeige(); telFigurSagt(TEL.g.knoten.start.sagt, () => { TEL.knoten = "start"; }); }
+function telAbheben() { haptik("erfolg"); TEL.verlauf = []; TEL.knoten = "__warte"; telZeige(); telFigurSagt(TEL.g.knoten.start.sagt, () => { TEL.knoten = "start"; }, TEL.g.knoten.start); }
 function telAnsicht() {
   const T = TEL, k = T.g.knoten[T.knoten];
-  const bubbles = T.verlauf.map(([w, t]) => `<div class="tel-zeile ${w}">${w === "fig" ? `<span class="tel-mini">${telBild(T.g.wer, 30)}</span>` : ""}<span class="tel-blase">${esc(t)}</span></div>`).join("");
+  const bubbles = T.verlauf.map(([w, t, wer]) => `<div class="tel-zeile ${w}${wer && wer !== T.g.wer ? " tel-gast" : ""}">${w === "fig" ? `<span class="tel-mini">${telBild(wer || T.g.wer, 30)}</span>` : ""}<span class="tel-blase">${wer && wer !== T.g.wer ? `<span class="tel-wer">${esc(TEL_WER[wer] || "")}</span>` : ""}${esc(t)}</span></div>`).join("");
+  const sp = T.sprecher || T.g.wer;
   let unten = "";
   if (T.duell) unten = telDuellHTML();
   else if (T.ende) unten = `<p class="klein" style="text-align:center;margin:12px 0 4px">Aufgelegt.</p><div class="stapel"><button class="knopf zweit voll" data-act="tel-nochmal" data-wer="${T.g.wer}">Nochmal anrufen</button><button class="knopf leise" data-act="sheet-zu">Fertig</button></div>`;
   else if (k) unten = `<div class="tel-antworten">${k.antworten.map((a, i) => `<button class="knopf zweit voll" data-act="tel-antwort" data-i="${i}">${esc(a.text)}</button>`).join("")}</div>`;
-  return `<div class="tel-kopf"><span class="tel-figur fig-idle">${telBild(T.g.wer, 44)}</span><span class="klein">im Gespräch</span></div><div class="tel-verlauf" id="tel-verlauf">${bubbles}</div>${unten}`;
+  return `<div class="tel-kopf"><span class="tel-figur fig-idle">${telBild(sp, 44)}</span><span class="klein">${sp !== T.g.wer ? `${esc(TEL_WER[sp] || "")} ist kurz dran` : "im Gespräch"}</span></div><div class="tel-verlauf" id="tel-verlauf">${bubbles}</div>${unten}`;
 }
 function telZeige() { sheetInhalt(telAnsicht()); const v = $("#tel-verlauf"); const sc = aktuellesSheet()?.querySelector(".sheet-inhalt"); if (sc) sc.scrollTop = sc.scrollHeight; }
-function telFigurSagt(text, dann) {
-  // kleine Tipp-Pause, damit es nach Gespräch aussieht
+function telFigurSagt(text, dann, knoten) {
+  // kleine Tipp-Pause, damit es nach Gespräch aussieht. knoten.wer: jemand anderes ist kurz dran (Linus), knoten.lacht: herzhaftes Lachen
   const T = TEL; if (!T) return;
-  const v = $("#tel-verlauf"); if (v) v.insertAdjacentHTML("beforeend", `<div class="tel-zeile fig tippt"><span class="tel-mini">${telBild(T.g.wer, 30)}</span><span class="tel-blase">…</span></div>`);
+  const wer = (knoten && knoten.wer) || T.g.wer, wechsel = wer !== (T.sprecher || T.g.wer);
+  T.sprecher = wer; if (wechsel) telZeige();
+  const v = $("#tel-verlauf"); if (v) v.insertAdjacentHTML("beforeend", `<div class="tel-zeile fig tippt"><span class="tel-mini">${telBild(wer, 30)}</span><span class="tel-blase">…</span></div>`);
   telMund(true);
-  setTimeout(() => { if (TEL !== T) return; T.verlauf.push(["fig", text]); if (dann) dann(); telZeige(); telMund(true); haptik("auswahl"); clearTimeout(T._mund); T._mund = setTimeout(() => telMund(false), 800); }, REDUCED() ? 0 : 650);
+  setTimeout(() => { if (TEL !== T) return; T.verlauf.push(["fig", text, wer]); if (dann) dann(); telZeige(); telMund(true); haptik("auswahl"); clearTimeout(T._mund); T._mund = setTimeout(() => telMund(false), 800);
+    if (knoten && knoten.lacht && typeof maxLacht === "function") setTimeout(() => { if (TEL === T) maxLacht(aktuellesSheet()?.querySelector(".tel-kopf .tel-figur")); }, 350); }, REDUCED() ? 0 : 650);
 }
 /* Beim Sprechen bewegt sich der Mund – auch im Telefon */
 function telMund(an) { const f = aktuellesSheet()?.querySelector(".tel-kopf .tel-figur"); if (f) f.classList.toggle("spricht", !!an); }
 function telEnde() {
   const T = TEL; S.anrufeGefuehrt = S.anrufeGefuehrt || {}; const neu = !S.anrufeGefuehrt[T.g.id]; S.anrufeGefuehrt[T.g.id] = heute(); speichern();
-  if (T.g.schluss) telFigurSagt(T.g.schluss, () => { if (T.g.wer === "max") T.duell = { n: 0, grenze: 2 + Math.floor(Math.random() * 4) }; else T.ende = true; });
+  if (T.g.schluss) telFigurSagt(T.g.schluss, () => { if (T.g.wer === "max") T.duell = { n: 0, grenze: 2 + Math.floor(Math.random() * 4) }; else T.ende = true; }, { lacht: T.g.schlussLacht });
   else { if (T.g.wer === "max") T.duell = { n: 0, grenze: 2 + Math.floor(Math.random() * 4) }; else T.ende = true; telZeige(); }
 }
 function telDuellHTML() {
@@ -71,7 +77,7 @@ function telAktion(a, d) {
     case "tel-antwort": {
       const k = TEL.g.knoten[TEL.knoten], ant = k && k.antworten[Number(d.i)]; if (!ant) return true;
       TEL.verlauf.push(["rita", ant.text]); haptik("auswahl");
-      if (ant.weiter && TEL.g.knoten[ant.weiter]) { TEL.knoten = ant.weiter; const n = TEL.g.knoten[ant.weiter]; TEL.knoten = "__warte"; telZeige(); telFigurSagt(n.sagt, () => { TEL.knoten = ant.weiter; }); }
+      if (ant.weiter && TEL.g.knoten[ant.weiter]) { TEL.knoten = ant.weiter; const n = TEL.g.knoten[ant.weiter]; TEL.knoten = "__warte"; telZeige(); telFigurSagt(n.sagt, () => { TEL.knoten = ant.weiter; }, n); }
       else { TEL.knoten = "__ende"; telZeige(); telEnde(); }
       return true; }
     case "tel-tschuess": { const du = TEL.duell; du.n++; TEL.verlauf.push(["rita", TSCHUESS[Math.floor(Math.random() * TSCHUESS.length)]]);
