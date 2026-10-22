@@ -218,11 +218,11 @@ function aktion(a, d, el, ev) {
       if (TAB !== "heute") wechsleTab("heute"); else scrollTo({ top: 0, behavior: REDUCED() ? "auto" : "smooth" }); break;
 
     /* Tagesform */
-    case "tf": S.tf[heute()] = d.v; if (S.huhn) S.huhnSagt = { tag: heute(), text: { A: "Mehr Energie? Dann halt ich hier die Stellung, und du ziehst los.", B: "Gemächlich? Mein Tempo. Ich hab ja nur das eine.", C: "Ruhig angehen. Da bin ich Profi, ich steh seit Jahren still.", D: "Sparflamme. Dann halt ich heute auch mal den Schnabel." }[d.v] }; try { eierTagesform(d.v); } catch (e) { } speichern(); haptik("auswahl"); el.setAttribute("aria-pressed", "true");
+    case "tf": S.tf[heute()] = d.v; TF_NEU_WAEHLEN = false; if (S.huhn) S.huhnSagt = { tag: heute(), text: { A: "Mehr Energie? Dann halt ich hier die Stellung, und du ziehst los.", B: "Gemächlich? Mein Tempo. Ich hab ja nur das eine.", C: "Ruhig angehen. Da bin ich Profi, ich steh seit Jahren still.", D: "Sparflamme. Dann halt ich heute auch mal den Schnabel." }[d.v] }; try { eierTagesform(d.v); } catch (e) { } speichern(); haptik("auswahl"); el.setAttribute("aria-pressed", "true");
       setTimeout(() => { try { ereignisPruefen("tf"); } catch (e) { } }, 2000); // Besuch erst, wenn die Morgenfrage beantwortet ist
       setTimeout(() => { render({ halteScroll: true, ohneAnim: true }); const f = D.tagesformen.find(x => x.id === d.v); sag(`${f.name} gewählt.`); }, REDUCED() ? 0 : 320); break;
     case "tf-onb": S.tf[heute()] = d.v; speichern(); haptik("auswahl"); sheetInhalt(onboardingInhalt()); break;
-    case "tf-aendern": delete S.tf[heute()]; speichern(); render({ halteScroll: true, ohneAnim: true }); break;
+    case "tf-aendern": delete S.tf[heute()]; TF_NEU_WAEHLEN = true; speichern(); render({ halteScroll: true, ohneAnim: true }); break;
 
     /* Eintragen */
     case "eintragen": eintragenSheet(d.t); break;

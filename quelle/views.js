@@ -74,10 +74,11 @@ let TEL_GEKLINGELT = false;
 function telKarteHTML() {
   const alle = D.anrufe || [], wer = TEL_REIHE.filter(w => alle.some(a => a.wer === w));
   const drei = wer.length > 3 ? [wer[0], wer[1], wer[2 + hash32("telbl" + heute()) % (wer.length - 2)]] : wer; // Hühnchen und Max, dazu jeden Tag jemand anderes
-  const bl = drei.map((w, i) => `<span class="tel-blase b${i}">${w === "huhn" ? huhnFrontSVG(30) : telBild(w, 30)}</span>`).join("");
+  const bl = drei.map((w, i) => `<span class="tel-blase b${i}">${telBild(w, 30)}</span>`).join("");
   let klingelt = ""; if (!TEL_GEKLINGELT && Math.random() < .3) { TEL_GEKLINGELT = true; klingelt = " klingelt"; } // ab und zu (höchstens einmal je Öffnen) klingelt es einfach – wie in den Telefonhäuschen von Koholint
   return `<section class="abschnitt"><button class="tel-leiste${klingelt}" data-act="tel-auf" aria-label="Kurz plaudern – zum Spaß"><span class="tel-bild" aria-hidden="true">${altesTelefonSVG(46)}${bl}</span><span class="text"><span class="titel">Kurz plaudern <span class="tel-zusatz">zum Spaß, mit Hühnchen und Co.</span></span></span>${ic("pfeil", "pfeil")}</button></section>`;
 }
+let TF_NEU_WAEHLEN = false; // „Ändern“ gedrückt: dann darf die Frage auch abends noch einmal kommen
 function viewHeute() {
   const h = heute(), tf = S.tf[h];
   const liste = eintraegeAm(h);
@@ -95,21 +96,21 @@ function viewHeute() {
   const geplantH = S.plaene.filter(p => p.status === "geplant");
   if (geplantH.length && !unterwegs) html += `<section class="abschnitt"><div class="liste">${geplantH.map(p => zeileBtn("rucksack", `Geplant: ${p.titel}`, "Liste für unterwegs ansehen, dann los", `data-act="plan" data-id="${p.id}"`, "k-draussen")).join("")}</div></section>`;
   // Tagesform
-  html += `<section class="abschnitt" aria-labelledby="tf-h">`;
-  if (!tf) {
-    // K-F-18: abends nicht nach der Morgen-Energie fragen
-    const std = jetzt().getHours();
-    const frage = std >= 21 || std < 4 ? A("Wie geht’s dir gerade?", "Wie geht es Ihnen gerade?") : std >= 17 ? A("Wie geht’s dir heute Abend?", "Wie geht es Ihnen heute Abend?") : A("Wie ist deine Energie heute?", "Wie ist Ihre Energie heute?");
+  // Ab dem späten Nachmittag (16 Uhr) fragt niemand mehr nach der Energie für den Tag – der Tag ist gelaufen.
+  const tfStd = jetzt().getHours(), tfSpaet = (tfStd >= 16 || tfStd < 4) && !TF_NEU_WAEHLEN;
+  if (tf || !tfSpaet) html += `<section class="abschnitt" aria-labelledby="tf-h">`;
+  if (!tf && !tfSpaet) {
+    const frage = A("Wie ist deine Energie heute?", "Wie ist Ihre Energie heute?");
     html += S.huhn ? `<div class="huhn-karte" style="margin-bottom:12px">${huhnSVG({ gr: 76, stimmung: "spricht" })}<div class="sprechblase"><span class="wer">Hühnchen</span><span id="tf-h">${tfFrageSatz()} ${frage}</span></div></div>` : `<h2 id="tf-h">${frage}</h2>`;
     html += `<div class="tagesform">${D.tagesformen.map(f => `<button class="tf" aria-pressed="false" data-act="tf" data-v="${f.id}">${ic(f.icon)}<span>${f.name}<br><span class="tf-text">${esc(f.text)}</span></span></button>`).join("")}</div><p class="klein" style="margin-top:8px">Danach richten sich die Ideen.</p>`;
-  } else {
+  } else if (tf) {
     const f = D.tagesformen.find(x => x.id === tf);
     html += `<div class="bogen mulde zeile zwischen" style="padding:10px 12px 10px 16px"><span class="tf-kurz">${ic(f.icon)}<span><span style="font-weight:700">${f.name}</span><br><span class="klein">${esc(TF_WIRKUNG[tf] || f.text)}</span></span></span><button class="knopf klein leise" data-act="tf-aendern">Ändern</button></div>`;
   }
-  html += `</section>`;
+  if (tf || !tfSpaet) html += `</section>`;
 
   // Hühnchen sagt etwas (ein Satz am Tag), ab und zu Post von Max
-  if (S.huhn && tf) html += `<section class="abschnitt"><div class="huhn-karte" data-act="huhn-tap">${huhnSVG({ gr: 84, stimmung: "spricht" })}<div class="sprechblase"><span class="wer">Hühnchen</span>${esc(huehnchenSatz())}</div></div></section>`;
+  if (S.huhn && (tf || tfSpaet)) html += `<section class="abschnitt"><div class="huhn-karte" data-act="huhn-tap">${huhnSVG({ gr: 84, stimmung: "spricht" })}<div class="sprechblase"><span class="wer">Hühnchen</span>${esc(huehnchenSatz())}</div></div></section>`;
   const ruhig = tf === "C" || tf === "D";
   const post = postHeute();
   if (post) { const von = EI_WER[post.wer] || "Max", gruss = post.wer === "christiane" ? "Deine Christiane" : post.wer === "huhn" ? "Dein Hühnchen" : "Dein Max";
@@ -915,7 +916,7 @@ function erklaerungSheet() {
     <div class="bogen"><h3>Stufen</h3><p style="margin:0">Mit der Zeit kommen neue Dinge dazu: eine Bank, ein Steg, eine Lichterkette, ein Hochsitz … Was als Nächstes kommt, steht unter „Zuhause“.</p></div>
     <div class="bogen"><h3>Taler</h3><p style="margin:0">Für jeden Eintrag gibt es ein paar Taler. Damit kannst du im Kramladen einkaufen: Gedichte, Rezepte, den Tanz-Taktgeber, Schönes fürs Bild, Outfits im Kleiderschrank. Taler verfallen nie.</p></div>
     <div class="bogen"><h3>Der Stern ✱</h3><p style="margin:0">Ein Stern heißt: ruhiger Tag – und trotzdem was geschafft. Er ist nur am selben Tag zu sehen.</p></div>
-    <div class="bogen"><h3>Patience</h3><p style="margin:0">Eine Runde dauert 10 Minuten und kostet 10 Taler. An ruhigen Tagen ist das Spiel kostenlos.</p></div>
+    <div class="bogen"><h3>Patience</h3><p style="margin:0">Die Patience gehört dir. Eine Runde dauert 10 Minuten und kostet keine Taler. Wie viele Runden pro Tag drin sind, stellst du in den Einstellungen ein. An ruhigen Tagen gibt’s keine Grenze.</p></div>
     <div class="bogen"><h3>Hühnchen</h3><p style="margin:0">Hühnchen fragt morgens nach deiner Energie, sagt ab und zu was dazu und steht im Bild immer da, wo du zuletzt etwas getan hast. Wenn’s nervt: oben rechts aufs Zahnrad, unter „Hühnchen und Überraschungen“ „Hühnchen zeigen und sprechen lassen“ ausschalten.</p></div>
     <div class="bogen"><h3>Notfallplan</h3><p style="margin:0">Unter „Ideen“ und bei „Ablenkung?“ liegt dein Notfallplan: für Momente mit Unruhe, Anspannung und dergleichen. Was drinsteht, bestimmst du. Ab und zu üben, dann sitzt er.</p></div>` });
 }
@@ -1076,7 +1077,7 @@ function rueckblickExtras(h) {
 /* Abendkarte: den Tag mit ein paar Tipps nachtragen */
 const ABEND_IDS = ["gehen", "lesen", "telefon", "tagebuch", "ruhe", "musik", "kochen", "pflanzen", "raetsel", "draussensitzen", "durchgehalten"];
 function abendkarteHTML(tf) {
-  const h = heute(); if (!tf || jetzt().getHours() < 17 || S.abendWeg === h) return "";
+  const h = heute(); if (jetzt().getHours() < 17 || S.abendWeg === h) return ""; // abends auch ohne Tagesform (die wird ab 16 Uhr nicht mehr gefragt)
   const ids = [...ABEND_IDS, ...(S.eigeneT || []).filter(x => !x.weg).map(x => x.id)].filter(id => D.taetigkeiten.some(t => t.id === id) && !(id === "tagebuch" && tbZeileHeute())); // Tagebuch hat abends seinen eigenen Weg
   const heuteT = new Set(eintraegeAm(h).map(e => e.t));
   return `<section class="abschnitt"><div class="bogen streifen k-geist"><h3>Was war heute dabei?</h3><p class="klein" style="margin-top:0">Antippen genügt – ungefähre Werte. Ändern geht unter ‚Heute eingetragen‘.</p><div class="chips">${ids.map(id => chip(heuteT.has(id), tat(id).kurz, heuteT.has(id) ? "disabled" : `data-act="abend" data-t="${id}"`)).join("")}</div><button class="knopf klein leise" style="padding-left:0;margin-top:6px" data-act="abend-weg">Fertig für heute</button></div></section>`;

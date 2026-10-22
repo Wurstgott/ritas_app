@@ -52,25 +52,20 @@
         : "Morgens tippst du hier an, wie viel Energie du hast. Danach richten sich die Ideen.",
       huhn: "Na los. Ich beiß nicht. Meistens." },
     { id: "telefon", titel: "Kurz plaudern", tab: "heute", ziel: [["[data-act=tel-auf]"], ["[data-ziel=tel-auf]"]],
-      max: "Das alte Telefon: Kurz plaudern, nur zum Spaß – mit Hühnchen und Co. Ab und zu klingelt’s von selbst. Rangehen musst du nicht.",
-      huhn: "Ich ruf nur an, wenn’s wichtig ist. Also ständig." },
+      max: "Das alte Telefon: Kurz plaudern, nur zum Spaß – mit Hühnchen und Co. Ab und zu klingelt’s von selbst. Rangehen musst du nicht.", },
     { id: "ideen", titel: "Ideen", tab: "ideen", ziel: [["[data-act=tuer]"], ["[data-ziel=drinnen]", "[data-ziel=draussen]"], [".c-fach[data-act=fenster]"]], alle: true,
-      max: "Unter „Ideen“ gibt’s Futter für die Neugier. Erst drinnen oder draußen, dann suchst du dir was aus: Krimi, Schwedisch, Tee, Handy-Kniffe.",
-      huhn: "Mein Tipp: alles, wo Kekse vorkommen." },
+      max: "Unter „Ideen“ gibt’s Futter für die Neugier. Erst drinnen oder draußen, dann suchst du dir was aus: Krimi, Schwedisch, Tee, Handy-Kniffe.", },
     { id: "notfall", titel: "Notfallplan", tab: "ideen", ziel: [["[data-act=ruhe-plan]"], ["[data-ziel=ruhe-plan]"], ["[data-act=ruhe-jetzt]"]],
       max: "Dein Notfallplan. Wenn’s mal eng wird, geht er Schritt für Schritt mit dir durch. Was drinsteht, bestimmst du – in Ruhe, wann du magst." },
     { id: "post", titel: "Post aus Vimmerby", tab: "ideen", ziel: [["[data-act=bv-auf]"], [".c-fach[data-ziel=bv-auf]"], ["[data-ziel=bv-auf]"]],
-      max: "Und Post aus Vimmerby: Karin schreibt dir auf Schwedisch, die Übersetzung klappst du auf. Karin hab ich mir ausgedacht – ihr Schwedisch ist echt.",
-      huhn: "Über mich schreibt sie nie was. Verdächtig." },
+      max: "Und Post aus Vimmerby: Karin schreibt dir auf Schwedisch, die Übersetzung klappst du auf. Karin hab ich mir ausgedacht – ihr Schwedisch ist echt.", },
     { id: "bild", titel: "Dein Zuhause", tab: "lichtung", ziel: [["#buehne-gross"], ["#bild-gross"], ["[data-act=sk-wetter]"]], durch: "#bild-gross",
       max: "Das ist dein Zuhause. Tipp aufs Bild, dann erfährst du was. Halt den Finger drauf und fahr herum – das ist die Lupe. Probier’s ruhig, hier geht das schon.",
       huhn: "Ich bin auch irgendwo drin. Such mich." },
     { id: "laden", titel: "Laden & Schrank", tab: "lichtung", ziel: [["[data-act=sk-schrank]", "[data-act=laden]"], ["[data-ziel=laden]"], ["[data-act=sk-taler]"]], alle: true,
-      max: "Fürs Eintragen gibt’s Taler. Ausgeben kannst du sie hier: im Kramladen und im Kleiderschrank – Hüte und Kostüme für dich und Hühnchen.",
-      huhn: "Wikingerhelm. Ich sag’s nur." },
+      max: "Fürs Eintragen gibt’s Taler. Ausgeben kannst du sie hier: im Kramladen und im Kleiderschrank – Hüte und Kostüme für dich und Hühnchen.", },
     { id: "rueckblick", titel: "Rückblick", tab: "tagebuch", ziel: [["#abend [data-act=tb-geschrieben]", "#abend [data-act=tb-andere]", "#abend [data-act=tb-modus]"], ["#abend"]], bereich: el => el.closest(".abendblatt") || el, // Karte steht während des Rundgangs immer im Abend-Zustand (rueckblick.js: rbZustand)
-      max: "Im Rückblick wartet jeden Abend eine Frage für dein Papier-Tagebuch – von heute oder von früher. Darunter: was heute schön war, die Farbe für den Tag und alle deine Tage im Kalender.",
-      huhn: "Schreib ruhig was über mich. Nur Gutes." },
+      max: "Im Rückblick wartet jeden Abend eine Frage für dein Papier-Tagebuch – von heute oder von früher. Darunter: was heute schön war, die Farbe für den Tag und alle deine Tage im Kalender.", },
     { id: "einst", titel: "Einstellungen", tab: "heute", ziel: [["[data-act=go][data-go=einstellungen]"], ["[data-go=einstellungen]"], ["#knopf-einst"]],
       max: "Am Zahnrad machst du die Schrift größer. Und unter „Wunsch an Max“ schreibst du mir, was fehlt oder nervt. Ich nehm’s sportlich." },
     { id: "ende", titel: "Geschafft", tab: "heute", ziel: [["[data-act=sk-taler]"], ["#taler-plakette"]], rund: true, pad: 5, mitmach: "muenze",
@@ -435,6 +430,15 @@
   /* ---------- Nachklapp auf „Heute“: Hühnchen hüpft über der Tableiste herein ---------- */
   function nachklapp() {
     if (!huhnAn() || typeof huhnSVG !== "function") return;
+    // Steht Hühnchen schon auf „Heute“, sagt dieses Hühnchen den Satz – nie zwei Hühnchen gleichzeitig
+    const karte = q("#main .huhn-karte"), blase = karte && q(".sprechblase", karte);
+    if (blase) {
+      setTimeout(() => {
+        const wer = q(".wer", blase); blase.innerHTML = ""; if (wer) blase.appendChild(wer); blase.appendChild(document.createTextNode("Zehn Taler! Ich hab nachgezählt."));
+        const h = q("svg.huhn", karte); if (h && !ruhig()) { h.classList.remove("rg-hopst"); void h.getBoundingClientRect(); h.classList.add("rg-hopst", "spricht"); setTimeout(() => h.classList.remove("rg-hopst", "spricht"), 1200); }
+      }, ruhig() ? 200 : 700);
+      return;
+    }
     const n = document.createElement("div"); n.className = "rg-nachklapp"; n.setAttribute("role", "status");
     n.innerHTML = `${huhnSVG({ gr: 64 })}<span class="rg-nk-blase">Zehn Taler! Ich hab nachgezählt.</span>`;
     setTimeout(() => {

@@ -61,3 +61,7 @@
 .rede-laut .rede-ohr svg { width: 24px !important; height: 24px !important; }
 .dank-med { --k: var(--ziegel); width: 46px; height: 46px; flex: none; display: grid; place-items: center; }
 .dank-med svg { width: 28px; height: 28px; }
+
+/* Versalziffern überall (Young Serif setzt sonst Mediävalziffern: „0 Taler“ sah aus wie „o Taler“) */
+html { font-variant-numeric: lining-nums; }
+.zahl, .laden-kasse .zahl, .ks-kasse .zahl { font-variant-numeric: lining-nums tabular-nums; }

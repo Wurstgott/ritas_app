@@ -8,7 +8,7 @@ D.ereignisse2 = [
   { id: "e2-huhn-handy", wer: "huhn", zeilen: ["Ich hab versucht, dein Handy zu bedienen. Ohne Hände.", "Mit dem Schnabel hab ich aus Versehen was gewünscht."],
     antworten: [{ text: "Was denn?", sagt: "Kuchen. Schau selbst.", aktion: "wunsch-huhn" }, { text: "Hühnchen!", sagt: "Ich wollte nur die Uhrzeit wissen. Ehrlich." }] },
   { id: "e2-huhn-advent", wer: "huhn", wann: { monat: 12, tag: 1 }, zeilen: ["Erster Dezember! Ich hab das Türchen schon aufgemacht.", "Mit dem Schnabel. Das Türchen ist jetzt … etwas größer."],
-    antworten: [{ text: "Was war drin?", sagt: "Schokolade. War. Vergangenheitsform.", effekt: "konfetti" }, { text: "Das war meins!", sagt: "Ich hab’s nur vorgekostet. Aus Fürsorge." }] },
+    antworten: [{ text: "Was war drin?", sagt: "Ein Schokoladen-Tannenbaum. Die Spitze fehlt. Keine Ahnung, wieso.", effekt: "konfetti" }, { text: "Das war meins!", sagt: "Ich hab’s nur vorgekostet. Aus Fürsorge." }] },
   { id: "e2-huhn-silvester", wer: "huhn", wann: { monat: 12, tag: 31 }, zeilen: ["Heute Nacht wird’s laut, hab ich gehört.", "Ich versteck mich unterm Sofakissen. Mit Proviant."],
     antworten: [{ text: "Ich halt dir die Ohren zu", sagt: "Du bist die Beste. Wo sind eigentlich meine Ohren?", effekt: "herzen" }, { text: "Guten Rutsch!", sagt: "Rutsch? Wohin? Ich bleib schön hier!", effekt: "konfetti" }] },
   { id: "e2-huhn-fruehling", wer: "huhn", wann: { monate: [9, 10, 11] }, zeilen: ["Auf der Südhalbkugel wär jetzt Frühling.", "Hier ist Herbst. Ich hab noch nicht entschieden, was besser ist."],

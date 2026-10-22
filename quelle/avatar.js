@@ -239,7 +239,7 @@ function avatarEditor(id, opt = {}) {
   const vn = avVorname(m.name);
   const titel = opt.neu ? (vn ? `Wie sieht ${vn} aus?` : "Gesicht aussuchen") : hat ? "Gesicht ändern" : "Gesicht aussuchen";
   sheet({ titel, id: "avatar", inhalt: avatarEditorInhalt(),
-    fuss: `<div class="zeile" style="gap:10px"><button class="knopf zweit" data-act="av-zufall" style="flex:1">${ic("funke")}Zufällig</button><button class="knopf" data-act="av-fertig" style="flex:1.4">Fertig</button></div>`,
+    fuss: `<div class="zeile" style="gap:10px"><button class="knopf zweit" data-act="av-zufall" style="flex:1">${ic("funke")}Zufällig</button><button class="knopf haupt" data-act="av-fertig" style="flex:1.4">Fertig</button></div>`,
     onclose: () => { if (!AVED) return; avNamenUebernehmen(); const mm = S.menschen.find(x => x.id === AVED.id);
       if (mm && AVED.geaendert) { if (AVED.ohne) delete mm.avatar; else mm.avatar = { ...AVED.cfg }; }
       speichern(); const z = AVED.zurueck; AVED = null;
@@ -254,7 +254,7 @@ function avFrisurVorschau(c) {
 function avatarEditorInhalt() {
   const m = S.menschen.find(x => x.id === AVED.id); if (!m) return "";
   const c = AVED.cfg, ohne = AVED.ohne;
-  const kachel = (k, o, bild) => `<button class="av-wahl" aria-pressed="${!ohne && c[k] === o[0]}" data-act="av-setz" data-k="${k}" data-v="${o[0]}">${bild}<span>${o[1].startsWith("#") ? o[2] : o[1]}</span></button>`;
+  const kachel = (k, o, bild) => `<button class="av-wahl" aria-pressed="${!ohne && c[k] === o[0]}" data-act="av-setz" data-k="${k}" data-v="${o[0]}">${bild}<span>${o[1].startsWith("#") ? o[2] : avTrenn(o[1])}</span></button>`;
   const kacheln = (k, titel, vb, basis = c, extra = {}) => `<h3 class="av-titel">${titel}</h3><div class="av-raster">${AV[k].map(o => kachel(k, o, avatarSVG({ ...basis, [k]: o[0] }, 56, { vb, ...extra }))).join("")}</div>`;
   const farben = (k, titel) => `<h3 class="av-titel">${titel}</h3><div class="av-farben">${AV[k].map(o => { const an = !ohne && c[k] === o[0]; return `<button class="av-farbe${avLum(o[1]) > .38 ? " hell" : ""}" aria-pressed="${an}" aria-label="${o[2]}" title="${o[2]}" data-act="av-setz" data-k="${k}" data-v="${o[0]}" style="--f:${o[1]}">${an ? ic("haken") : ""}</button>`; }).join("")}</div><p class="klein av-gewaehlt">${ohne ? "" : avName(k, c[k])}</p>`;
   const gesicht = "26 28 48 48", unten = "24 38 52 52";
@@ -266,6 +266,9 @@ function avatarEditorInhalt() {
   ${kacheln("nase", "Nase", "38 45 24 24", { ...c, brille: "keine", bart: "keiner" }, { dick: true })}${kacheln("mund", "Mund", "34 48 32 32")}${kacheln("brille", "Brille", gesicht)}${kacheln("bart", "Bart", unten)}${kacheln("ohrringe", "Ohrringe", "22 36 56 56")}
   ${farben("oben", "Oberteil")}${farben("hg", "Hintergrund")}`;
 }
+/* Lange Wörter in den Kacheln sauber trennen (Chrome ohne Silbentrennung bricht sonst mitten im Wort) */
+const AV_TRENN = { Haarkranz: "Haar&shy;kranz", Seitenscheitel: "Seiten&shy;scheitel", Wuschelig: "Wusche&shy;lig", Lockenkopf: "Locken&shy;kopf", Schmunzeln: "Schmun&shy;zeln", Schnurrbart: "Schnurr&shy;bart" };
+const avTrenn = t => AV_TRENN[t] || t;
 function avName(k, id) { const o = AV[k].find(x => x[0] === id); return o ? o[o.length - 1] : ""; }
 function avNamenUebernehmen() {
   const m = S.menschen.find(x => x.id === AVED.id); if (!m) return;

@@ -38,7 +38,7 @@ def _fonts_klein(css_all, text):
         if not u: return block
         try:
             f = TTFont(io.BytesIO(base64.b64decode(u.group(1))))
-            opt = _ss.Options(); opt.flavor = "woff"; opt.notdef_outline = True
+            opt = _ss.Options(); opt.flavor = "woff"; opt.notdef_outline = True; opt.layout_features = list(opt.layout_features) + ["lnum", "tnum", "pnum", "zero"]  # Ziffern-Varianten behalten (klare „0“ in der Kasse)
             sub = _ss.Subsetter(opt); sub.populate(unicodes=zeichen); sub.subset(f)
             out = io.BytesIO(); f.flavor = "woff"; f.save(out)
             return block.replace(u.group(1), base64.b64encode(out.getvalue()).decode())

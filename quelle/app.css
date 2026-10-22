@@ -123,7 +123,8 @@ h2 { font-size: 1.25rem; line-height: 1.25; margin: 0 0 .35rem; }
 h3 { font-size: 1.1rem; line-height: 1.3; margin: 0 0 .25rem; }
 p { margin: 0 0 .6rem; }
 .klein { font-size: .86rem; color: var(--tinte-2); line-height: 1.45; }
-.zahl { font-variant-numeric: tabular-nums; }
+/* Zahlen in Versalziffern: eine „0“ darf nie wie ein kleines „o“ aussehen (Young Serif hat sonst Mediävalziffern) */
+.zahl, .taler-zahl, .plakette, [class*="taler"] .zahl, .laden-kasse, .ks-kasse { font-variant-numeric: lining-nums tabular-nums; }
 a { color: var(--fokus); text-underline-offset: 3px; }
 button, input, select, textarea { font: inherit; color: inherit; }
 :focus-visible { outline: 3px solid var(--fokus); outline-offset: 3px; border-radius: 10px; }
@@ -1225,7 +1226,7 @@ html[data-size="3"] .sheet .sheet-kopf h2 { font-size: clamp(1rem, 5.6vw, 1.25re
 .av-raster.av-zwei { grid-template-columns: 1fr 1fr; }
 .av-wahl { position: relative; display: flex; flex-direction: column; align-items: center; gap: 4px; min-height: 96px; padding: 8px 4px 6px; border: 0; border-radius: 12px; background: var(--mulde); color: var(--tinte); font: inherit; font-size: .82rem; font-weight: 650; line-height: 1.15; text-align: center; cursor: pointer; touch-action: manipulation; overflow: hidden; isolation: isolate; }
 .av-wahl .portrait, .av-wahl .person-initiale { border-radius: 50%; width: 56px !important; height: 56px !important; }
-.av-wahl > span:last-child { overflow-wrap: break-word; hyphens: auto; -webkit-hyphens: auto; max-width: 100%; }
+.av-wahl > span:not([aria-hidden]) { overflow-wrap: break-word; hyphens: auto; -webkit-hyphens: auto; max-width: 100%; }
 .av-wahl[aria-pressed="true"] { background: var(--moos); color: var(--auf-moos); box-shadow: inset 0 0 0 3px var(--moos); }
 .av-wahl[aria-pressed="true"] .portrait { box-shadow: 0 0 0 3px var(--auf-moos); }
 .av-farben { display: flex; flex-wrap: wrap; gap: 10px; }
@@ -1244,6 +1245,9 @@ html[data-size="3"] .sheet .sheet-kopf h2 { font-size: clamp(1rem, 5.6vw, 1.25re
 :root[data-size="3"] .av-vorschau { position: static; flex-wrap: wrap; box-shadow: none; }
 :root[data-size="3"] .av-raster { grid-template-columns: 1fr 1fr; }
 :root[data-size="3"] .av-wahl { font-size: .78rem; }
+.sheet[data-id="avatar"] .sheet-fuss .zeile { align-items: stretch; }
+:root[data-size="3"] .sheet[data-id="avatar"] .sheet-fuss .knopf { padding-left: 10px; padding-right: 10px; gap: 6px; }
+:root[data-size="3"] .sheet[data-id="avatar"] .sheet-fuss [data-act="av-zufall"] { flex: 1.3 !important; }
 .av-farbe[aria-pressed="true"] { box-shadow: 0 0 0 3px var(--bogen), 0 0 0 6px var(--moos); }
 .av-gewaehlt { margin: 6px 0 0; }
 .sheet[data-id="avatar"] .sheet-inhalt { padding-bottom: 24px; }

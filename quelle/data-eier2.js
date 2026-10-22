@@ -56,7 +56,7 @@ D.eier2 = [
 
 /* ---------- Datum und Monat ---------- */
 { id: "e2-valentin", wer: "max", form: "brief", selten: 0.7, wann: {typ:"datum", md:"02-14"},
-  text: "Valentinstag! Hühnchen hat dem Glücksschwein eine Karte geschrieben. Die Antwort steht noch aus, das Schwein ziert sich." },
+  text: "Valentinstag! Hühnchen hat dem Glücksschwein von der Fensterbank eine Karte geschrieben. Die Antwort steht noch aus, das Schwein ziert sich." },
 { id: "e2-fruehling", wer: "huhn", form: "sprechblase", selten: 0.7, wann: {typ:"datum", md:"03-20"},
   text: "Frühlingsanfang. Der Hase ist ganz grün vor Aufregung, also noch grüner als sonst." },
 { id: "e2-tag-des-buches", wer: "max", form: "zettel", selten: 0.8, wann: {typ:"datum", md:"04-23"},
@@ -88,7 +88,7 @@ D.eier2 = [
 { id: "e2-sonntagmittag", wer: "christiane", form: "toast", selten: 0.3, wann: {typ:"wochentag", tag:0, ab:12, bis:15},
   text: "Sonntagmittag in der Binger: Der Braten ruht, Micha nicht." },
 { id: "e2-frueh-wach", wer: "huhn", form: "sprechblase", selten: 0.3, wann: {typ:"uhr", ab:5, bis:7},
-  text: "So früh schon auf? Das Glücksschwein schläft noch, ich tu nur so wach." },
+  text: "So früh schon auf? Das Glücksschwein neben mir schläft noch, ich tu nur so wach." },
 { id: "e2-kaffeezeit", wer: "christiane", form: "toast", selten: 0.3, wann: {typ:"uhr", ab:15, bis:17},
   text: "Drei Uhr, Kaffeezeit. Irgendwo in der Binger wird gerade ein Kuchen angeschnitten, und ich verrat nicht, wo." },
 { id: "e2-noch-wach", wer: "max", form: "zettel", selten: 0.3, wann: {typ:"uhr", ab:21, bis:23},
@@ -114,7 +114,7 @@ D.eier2 = [
 { id: "e2-zufall-ein-bein", wer: "huhn", form: "sprechblase", selten: 0.1, wann: {typ:"zufall"},
   text: "Ich hab heute geübt, auf einem Bein zu stehen. Der Sockel hat sehr geholfen." },
 { id: "e2-zufall-schwein-zustaendig", wer: "huhn", form: "sprechblase", selten: 0.08, wann: {typ:"zufall"},
-  text: "Das Glücksschwein behauptet, es sei für die guten Tage zuständig. Ich hab ihm deine Liste gezeigt: Das warst du." },
+  text: "Das Glücksschwein neben mir auf der Fensterbank behauptet, es sei für die guten Tage zuständig. Ich hab ihm deine Liste gezeigt: Das warst du." },
 { id: "e2-zufall-ofen-spandau", wer: "huhn", form: "toast", selten: 0.1, wann: {typ:"zufall"},
   text: "Gebrannt im Ofen, abgestaubt in Spandau. Ich weiß bis heute nicht, was mir besser gefallen hat." },
 { id: "e2-zufall-hase-exotisch", wer: "huhn", form: "sprechblase", selten: 0.1, wann: {typ:"zufall"},

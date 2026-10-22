@@ -120,7 +120,7 @@ function jfRueckblickHTML(h) {
       <span class="c-kicker">Deine Tage</span>
       <div class="jf-nav"><button class="knopf klein leise jf-pfeil" data-act="jf-monat" data-v="-1" aria-label="Voriger Monat" ${m <= erst ? "disabled" : ""}>‹</button><h3>${jfMonatName(m)}</h3><button class="knopf klein leise jf-pfeil" data-act="jf-monat" data-v="1" aria-label="Nächster Monat" ${m >= jetztM ? "disabled" : ""}>›</button></div>
       ${jfBlatt(m)}
-      ${!an ? `<p class="klein jf-hinweis">Tipp auf einen Tag zeigt, was da los war.</p>` : leer ? `<p class="klein jf-hinweis">Abends ab 17 Uhr ${A("kannst du deinem", "können Sie Ihrem")} Tag oben eine Farbe geben. Tipp auf einen Tag zeigt, was da los war.</p>` : jfLegende()}
+      ${!an ? `<p class="klein jf-hinweis">Tipp auf einen Tag zeigt, was da los war.</p>` : leer ? `<p class="klein jf-hinweis">${jfDarf(heute()) ? A("Oben kannst du deinem Tag jetzt eine Farbe geben.", "Oben können Sie Ihrem Tag jetzt eine Farbe geben.") : `Abends ab ${JF_AB} Uhr ${A("kannst du deinem", "können Sie Ihrem")} Tag eine Farbe geben.`} Tipp auf einen Tag zeigt, was da los war.</p>` : jfLegende()}
       ${an ? `<button class="knopf klein zweit voll jf-jahr-knopf" data-act="jf-jahr" aria-expanded="${JF.jahr}" aria-controls="jf-jahr">${ic("pinsel")} ${JF.jahr ? "Das ganze Jahr zuklappen" : "Das ganze Jahr ansehen"}</button>
       ${JF.jahr ? jfJahr(JF.jahrNr) : ""}` : ""}
     </div></section>`;

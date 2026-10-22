@@ -122,8 +122,8 @@ function spielInfoText() {
   spielTagPruefen(); const sp = S.spiel;
   if (sp.frei) return "Ohne Zeitgrenze";
   if (sp.restSek > 0) return `Noch ${Math.ceil(sp.restSek / 60)} Min. in dieser Runde`;
-  const frei = sp.geschenkt + sp.marken;
-  return `${sp.genutzt} von ${sp.limit} Runden heute${frei ? ` · noch ${frei} frei` : ""}`;
+  // Die Patience gehört Rita: jeden Tag sind ihre Runden frei, ohne Taler
+  return `${sp.genutzt} von ${sp.limit} Runden heute · ohne Taler`;
 }
 function spielStarten() {
   spielTagPruefen(); const sp = S.spiel;
@@ -135,17 +135,18 @@ function spielStarten() {
     sheet({ titel: "Waldpatience", inhalt: `<p>Für heute sind alle Runden gespielt.</p><p class="klein">In den Einstellungen ${A("kannst du", "können Sie")} mehr erlauben. An Tagen mit „Ruhig angehen“ oder „Sparflamme“ ist das Spiel ohnehin frei.</p>`, fuss: `<div class="stapel"><button class="knopf haupt voll" data-act="hilft">Andere Ablenkung</button><button class="knopf zweit voll" data-act="go" data-go="einstellungen">Einstellungen</button></div>` });
     return;
   }
-  const t = talerStand();
+  // Gekauft ist gekauft: Runden kosten keine Taler. Nur die Zahl der Runden pro Tag (Einstellungen) gilt.
+  const rest = sp.limit - sp.genutzt;
   const html = `<p>Eine Runde Patience dauert <span style="font-weight:700">10 Minuten</span>. Ist die Zeit um, ${A("darfst du", "dürfen Sie")} die Karten noch in Ruhe fertig legen.</p>
-    <div class="bogen mulde"><p style="margin:0">Heute schon gespielt: ${sp.genutzt}-mal von ${sp.limit}.${sp.geschenkt ? ` ${sp.geschenkt === 1 ? "Eine Runde ist" : sp.geschenkt + " Runden sind"} heute geschenkt.` : ""}${sp.marken ? ` ${sp.marken === 1 ? "Eine bezahlte Runde liegt" : sp.marken + " bezahlte Runden liegen"} bereit.` : ""}</p></div>`;
-  const knopf = sp.geschenkt || sp.marken ? `<button class="knopf haupt voll" data-act="marke-nutzen">${ic("karten")} Jetzt spielen</button>`
-    : `<button class="knopf haupt voll" data-act="marke-kaufen" ${t >= 10 ? "" : "disabled"}>${ic("karten")} ${t >= 10 ? "Für 10 Taler spielen" : `Noch ${10 - t} Taler sammeln`}</button><p class="klein">Eine Runde kostet 10 Taler (du hast ${t}). Taler gibt’s für alles, was du einträgst – zum Beispiel einen Spaziergang oder ein Kapitel.</p>`;
+    <div class="bogen mulde"><p style="margin:0">${A("Die Patience gehört dir", "Die Patience gehört Ihnen")} – ${rest === 1 ? "eine Runde ist" : rest + " Runden sind"} heute noch drin, ganz ohne Taler.</p></div>`;
+  const knopf = `<button class="knopf haupt voll" data-act="marke-nutzen">${ic("karten")} Jetzt spielen</button>`;
   sheet({ titel: "Waldpatience", inhalt: html, fuss: knopf });
 }
 function markeEinloesen(kaufen) {
   const sp = S.spiel;
-  if (kaufen) { if (talerStand() < 10) return; S.taler -= 10; S.talerAusgegeben += 10; }
-  else if (sp.geschenkt) sp.geschenkt--; else if (sp.marken) sp.marken--; else return;
+  // Runden kosten keine Taler mehr (die Patience gehört Rita); „kaufen“ bleibt nur für alte Knöpfe erhalten und zählt wie eine freie Runde
+  if (sp.genutzt >= sp.limit && !sp.geschenkt) return;
+  if (sp.geschenkt) sp.geschenkt--;
   sp.genutzt++; sp.restSek = 600; speichern();
   sheetZu(); setTimeout(spielOeffnen, 260);
 }
@@ -222,8 +223,9 @@ function spielRender() {
       <button class="knopf klein zweit" data-act="g-zurueck" ${G.hist.length && !G.fertig ? "" : "disabled"}>Zurück</button>
       <button class="knopf klein zweit" data-act="g-tipp" ${G.fertig ? "disabled" : ""}>Tipp</button>
       <button class="knopf klein leise" data-act="g-neu">Neu geben</button>
-    </div><p class="klein">${zeit ? zeit + " · " : ""}Karte antippen: Passt sie an genau einen Platz, wandert sie dorthin. Passt sie an mehrere, hebt sie sich, und die möglichen Plätze leuchten – dann den Platz antippen. Von allein wird nichts abgelegt.</p>
-    <details class="spiel-regeln"><summary>Spielregeln</summary>
+    </div><p class="klein">${zeit ? zeit + " · " : ""}Karte antippen, dann wandert sie.</p>
+    <details class="spiel-regeln"><summary>So geht’s</summary>
+      <p>Karte antippen: Passt sie an genau einen Platz, wandert sie dorthin. Passt sie an mehrere, hebt sie sich, und die möglichen Plätze leuchten – dann den Platz antippen. Von allein wird nichts abgelegt.</p>
       <p>Ziel: alle Karten nach Farben geordnet auf die vier Ass-Stapel oben rechts legen – vom Ass bis zum König.</p>
       <p>In den sieben Säulen legt man absteigend und immer abwechselnd rot und dunkel: zum Beispiel eine rote 7 auf eine dunkle 8. Rot sind Blüte und Laub, dunkel sind Eichel und Kiefer. Auf eine leere Säule passt nur ein König.</p>
       <p>Tippt man eine offene Karte mitten in einer Säule an, wandern die Karten, die auf ihr liegen, mit. Wird eine verdeckte Karte frei, dreht sie sich um – und bleibt liegen, bis man sie selbst bewegt.</p>

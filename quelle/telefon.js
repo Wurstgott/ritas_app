@@ -18,8 +18,10 @@ function telBild(wer, gr) {
 function telAuswahlSheet() {
   const alle = D.anrufe || [], gef = S.anrufeGefuehrt || {};
   const zahl = w => alle.filter(a => a.wer === w).length, neu = w => alle.filter(a => a.wer === w && !gef[a.id]).length;
+  // Sauberer Stapel: die Auswahl ersetzt ein laufendes Gespräch (nie zwei Sheets mit zwei „Schließen“)
+  while (SHEETS.some(s => s.id === "tel-gespraech")) sheetZu();
   sheet({ titel: "Kurz plaudern", id: "telefon", inhalt: `<div class="tel-kopf">${typeof altesTelefonSVG === "function" ? altesTelefonSVG(64) : ""}<p class="klein" style="margin:0">Nur zum Spaß – niemand wird wirklich angerufen. Wählscheibe drehen musst du auch nicht.</p></div>
-    <div class="tel-wahl">${TEL_REIHE.filter(w => (D.anrufe || []).some(a => a.wer === w)).map(w => `<button class="tel-kontakt" data-act="tel-ruf" data-wer="${w}"><span class="tel-rund">${w === "huhn" ? huhnFrontSVG(56) : telBild(w, 56)}</span><span class="titel">${TEL_WER[w]}</span><span class="unter">${zahl(w) ? (neu(w) ? "hat was zu erzählen" : "alles schon gehört – nochmal?") : "bald"}</span></button>`).join("")}</div>
+    <div class="tel-wahl">${TEL_REIHE.filter(w => (D.anrufe || []).some(a => a.wer === w)).map(w => `<button class="tel-kontakt" data-act="tel-ruf" data-wer="${w}"><span class="tel-rund">${telBild(w, 56)}</span><span class="titel">${TEL_WER[w]}</span><span class="unter">${zahl(w) ? (neu(w) ? "hat was zu erzählen" : "alles schon gehört – nochmal?") : "bald"}</span></button>`).join("")}</div>
 ` });
 }
 function telStarten(wer) {
@@ -27,8 +29,8 @@ function telStarten(wer) {
   const gef = S.anrufeGefuehrt || {}; const neu = alle.filter(a => !gef[a.id]);
   const pool = neu.length ? neu : alle;
   const g = pool[Math.floor(Math.random() * pool.length)];
-  // Auswahl bleibt darunter liegen (Zurück führt wieder hin); ein altes Gespräch schließt sheet() über die gleiche id
-  if (aktuellesSheet()?.dataset.id === "tel-gespraech") sheetZu();
+  // Das Gespräch ersetzt die Auswahl (kein Stapel aus zwei Sheets); „Andere anrufen“ führt am Ende zurück zur Auswahl
+  while (SHEETS.some(s => s.id === "tel-gespraech" || s.id === "telefon")) sheetZu();
   const neuTEL = { g, knoten: "start", verlauf: [], ende: false, duell: null };
   setTimeout(() => { TEL = neuTEL; const ich = neuTEL; sheet({ titel: TEL_WER[wer], id: "tel-gespraech", inhalt: telKlingeln(), onclose: () => { if (TEL === ich) TEL = null; } }); setTimeout(() => { if (TEL === ich && !ich.verlauf.length && ich.knoten === "start") telAbheben(); }, REDUCED() ? 600 : 2400); }, 240);
 }
@@ -42,7 +44,7 @@ function telAnsicht() {
   const sp = T.sprecher || T.g.wer;
   let unten = "";
   if (T.duell) unten = telDuellHTML();
-  else if (T.ende) unten = `<p class="klein" style="text-align:center;margin:12px 0 4px">Aufgelegt.</p><div class="stapel"><button class="knopf zweit voll" data-act="tel-nochmal" data-wer="${T.g.wer}">Nochmal anrufen</button><button class="knopf leise" data-act="sheet-zu">Fertig</button></div>`;
+  else if (T.ende) unten = `<p class="klein" style="text-align:center;margin:12px 0 4px">Aufgelegt.</p><div class="stapel"><button class="knopf zweit voll" data-act="tel-nochmal" data-wer="${T.g.wer}">Nochmal anrufen</button>${T.g.wer !== "elsbeth" ? `<button class="knopf zweit voll" data-act="tel-auf">Jemand anderen anrufen</button>` : ""}<button class="knopf leise" data-act="sheet-zu">Fertig</button></div>`;
   else if (k) unten = `<div class="tel-antworten">${k.antworten.map((a, i) => `<button class="knopf zweit voll" data-act="tel-antwort" data-i="${i}">${esc(a.text)}</button>`).join("")}</div>`;
   return `<div class="tel-kopf"><span class="tel-figur fig-idle">${telBild(sp, 44)}</span><span class="klein">${sp !== T.g.wer ? `${esc(TEL_WER[sp] || "")} ist kurz dran` : "im Gespräch"}</span></div><div class="tel-verlauf" id="tel-verlauf">${bubbles}</div>${unten}`;
 }
@@ -66,7 +68,7 @@ function telEnde() {
 }
 function telDuellHTML() {
   const d = TEL.duell;
-  if (d.fertig) return `<p class="klein" style="text-align:center;margin:12px 0 4px">${d.fertig === "rita" ? "Aufgelegt. Runde an dich!" : "Max hat aufgelegt. Aus Versehen, sagt er. Zählt nicht – Revanche!"}</p><div class="stapel"><button class="knopf zweit voll" data-act="tel-nochmal" data-wer="max">Nochmal anrufen</button><button class="knopf leise" data-act="sheet-zu">Fertig</button></div>`;
+  if (d.fertig) return `<p class="klein" style="text-align:center;margin:12px 0 4px">${d.fertig === "rita" ? "Aufgelegt. Runde an dich!" : "Max hat aufgelegt. Aus Versehen, sagt er. Zählt nicht – Revanche!"}</p><div class="stapel"><button class="knopf zweit voll" data-act="tel-nochmal" data-wer="max">Nochmal anrufen</button><button class="knopf zweit voll" data-act="tel-auf">Jemand anderen anrufen</button><button class="knopf leise" data-act="sheet-zu">Fertig</button></div>`;
   return `<div class="tel-antworten"><button class="knopf zweit voll" data-act="tel-tschuess">Tschüss!</button>${d.n >= 2 ? `<button class="knopf haupt voll" data-act="tel-auflegen">Ich leg jetzt auf. Tschüss!</button>` : ""}</div>`;
 }
 function telAktion(a, d) {

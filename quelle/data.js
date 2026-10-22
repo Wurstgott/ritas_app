@@ -127,16 +127,16 @@ D.taetigkeiten = [
   // Für mich sorgen
   { id: "ruhe", name: "Bewusst ausgeruht (Couch, Bett, Sessel)", kurz: "Ausgeruht", art: "min", std: 30, feld: "sorge", bild: "quelle", tf: "BCD", icon: "bett",
     info: ["Pause gemacht. Darf auf die Liste – mit Haken."] },
-  { id: "arzt", name: "Arzttag überstanden", kurz: "Arzttag", art: "fest", w: 20, feld: "sorge", bild: "quelle", tf: "ABCD", icon: "kreuz", stern: true,
-    info: ["Ein Arzttag ist ein Arbeitstag. Gut, dass er hinter dir liegt."] },
-  { id: "durchgehalten", name: "Heute durchgehalten", kurz: "Durchgehalten", art: "fest", w: 18, feld: "sorge", bild: "quelle", tf: "CD", icon: "waerme", stern: true,
-    info: ["Durchgehalten. Der wichtigste Haken des Tages."] },
+  { id: "arzt", name: "Termin erledigt (Amt, Bank, Praxis)", kurz: "Termin", art: "fest", w: 20, feld: "sorge", bild: "quelle", tf: "ABCD", icon: "uhr", stern: true,
+    info: ["Erledigt. Der Rest des Tages gehört dir."] },
+  { id: "durchgehalten", name: "Mir einen gemütlichen Tag gemacht", kurz: "Gemütlicher Tag", art: "fest", w: 18, feld: "sorge", bild: "quelle", tf: "CD", icon: "waerme", stern: true,
+    info: ["Ein gemütlicher Tag – eingetragen, mit Stern."] },
   { id: "waerme", name: "Wärmflasche, Bad oder Eincremen", kurz: "Wärme", art: "min", std: 20, feld: "sorge", bild: "quelle", tf: "CD", icon: "waerme",
     info: ["Etwas Gutes für den Körper."] },
   { id: "versorgung", name: "Meine Routine in Ruhe erledigt", kurz: "Routine", art: "klein", feld: "sorge", bild: "quelle", tf: "BCD", icon: "kiste",
     info: ["In Ruhe gemacht, ohne Eile."] },
-  { id: "getrunken", name: "Genug getrunken", kurz: "Getrunken", art: "klein", feld: "sorge", bild: "quelle", tf: "ABCD", icon: "glas",
-    info: ["Glas leer, Haken dran."] },
+  { id: "getrunken", name: "Eine Kanne Tee aufgebrüht", kurz: "Tee", art: "klein", feld: "sorge", bild: "quelle", tf: "ABCD", icon: "tasse",
+    info: ["Tee ist fertig. Hühnchen schnuppert mit."] },
   { id: "ausgesprochen", muehOpt: true, name: "Etwas Belastendes ausgesprochen", kurz: "Ausgesprochen", art: "min", std: 30, feld: "menschen", neben: "sorge", bild: "quelle", tf: "BCD", icon: "sprechen",
     info: ["Gut, dass es raus ist. Gesagt ist gesagt."] },
   { id: "draussensitzen", name: "Auf dem Balkon oder draußen gesessen", kurz: "Balkon", art: "min", std: 20, feld: "sorge", bild: "quelle", draussen: true, tf: "BCD", icon: "bank",
@@ -162,8 +162,8 @@ D.gruppen = [
   { name: "Lesen, Hören, Musik", ids: ["tagebuch", "lesen", "hoerbuch", "buchfertig", "musik", "singen", "tanzplanen", "radio", "raetsel", "erinnern", "kultur"] },
   { name: "Draußen & Neues", ids: ["hofladen", "draussensitzen", "natur", "licht", "eroller", "erstesmal", "gelernt"] },
   { name: "Hände & Haus", ids: ["kochen", "handarbeit", "pflanzen", "ordnung", "papier", "foto", "zimmer"] },
-  { name: "Gut für mich", ids: ["ruhe", "arzt", "durchgehalten", "waerme", "versorgung", "getrunken", "hilfe", "goennen"] },
-  { name: "Sonst", ids: ["frei"] }
+  { name: "Gut für mich", ids: ["ruhe", "durchgehalten", "waerme", "versorgung", "getrunken", "hilfe", "goennen"] },
+  { name: "Sonst", ids: ["frei", "arzt"] }
 ];
 
 /* ---------- Herzensmenschen (Voreinstellung) ----------

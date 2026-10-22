@@ -68,7 +68,7 @@ function rbStichworteHTML(t, wort, mitSchoen) {
 }
 
 /* ---------- Fragen ---------- */
-let RB_FRAGEN = null; // die gerade gezeigte Fragenliste (für „Hab’s ins Tagebuch geschrieben“ in extras.js)
+let RB_FRAGEN = null; // die gerade gezeigte Fragenliste (für „Ins Tagebuch geschrieben“ in extras.js)
 function rbFragen(tag) { const f = tbFragen(tag); return f.length ? f : TB_FRAGEN.allg.slice(); }
 function rbFragenAktuell() { return RB_FRAGEN || (S.tbModus === "frueher" ? tbFrueherFragen() : rbFragen(rbAbendTag())); }
 function rbGeschrieben(tage) { return S.eintraege.filter(e => e.t === "tagebuch" && tage.includes(e.tag)).sort((a, b) => (b.ts || 0) - (a.ts || 0))[0] || null; }
@@ -183,7 +183,7 @@ function rbAbendKarte() {
     ? `<div class="ab-fertig"><div class="rb-stempel${neuGestempelt ? " neu" : ""}" role="img" aria-label="Ins Tagebuch geschrieben am ${esc(datumLang(ges.tag))}">Ins Tagebuch geschrieben · ${rbKurzDatum(ges.tag)}</div>
        <p class="klein ab-huhn">${S.huhn ? "Hühnchen liest nicht mit, Ehrenwort." : "Die App liest nicht mit."}</p>
        <div class="zeile ab-knoepfe"><button class="knopf klein leise" data-act="tb-andere">Andere Frage</button></div></div>`
-    : `<div class="zeile ab-knoepfe stapel-mitte"><button class="knopf haupt" data-act="tb-geschrieben">${ic("feder")} Hab’s ins Tagebuch geschrieben</button><button class="knopf klein leise" data-act="tb-andere">Andere Frage</button></div>`;
+    : `<div class="zeile ab-knoepfe stapel-mitte"><button class="knopf haupt" data-act="tb-geschrieben">${ic("feder")} Ins Tagebuch geschrieben</button><button class="knopf klein leise" data-act="tb-andere">Andere Frage</button></div>`;
   // Farbe: abends für heute (jfFrageHTML, eingebettet), morgens „Farbe für gestern“ nachtragen (aufklappbar)
   let farbe = "";
   if (rbJfAn()) {

@@ -1452,11 +1452,13 @@ function fxBlase(s, satz, taler) {
   setTimeout(() => { el.classList.add("weg"); setTimeout(() => el.remove(), 400); }, Math.max(3400, s.dauer * .7 + 1600));
 }
 /* Antippen: kurzes Tippen auf ein Funkeln geht vor dem Orts-Blatt; Ziehen und Halten bleiben bei der Lupe */
+/* Trefferfläche: Radius mindestens 30 Bildschirm-Pixel (also gut 60 px Durchmesser, deutlich über 44 px), bei großem Bild mitwachsend */
+const FUNKEL_TREFFER = () => Math.max(30, 36 * fxK());
 document.addEventListener("click", ev => {
   const c = ev.target && ev.target.closest ? ev.target.closest("#bild-gross") : null; if (!c || !FX.cv || !FX.geo) return;
   const r = FX.cv.getBoundingClientRect(), x = ev.clientX - r.left, y = ev.clientY - r.top;
   let best = null, bd = 1e9;
-  for (const s of spieleAktiv()) { const a = s.anker(); if (!a) continue; const [px, py] = fxP(a), dd = Math.hypot(x - px, y - py); if (dd < 30 * fxK() && dd < bd) { best = s; bd = dd; } }
+  for (const s of spieleAktiv()) { const a = s.anker(); if (!a) continue; const [px, py] = fxP(a), dd = Math.hypot(x - px, y - py); if (dd < FUNKEL_TREFFER() && dd < bd) { best = s; bd = dd; } }
   if (!best) return;
   ev.stopImmediatePropagation(); ev.preventDefault(); lupeWeg();
   spielAusloesen(best, ev.clientX, ev.clientY);

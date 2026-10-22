@@ -172,7 +172,7 @@ function hpKopfHTML(a, b, nr) {
   const tage = t => t ? (tagDatum(heute()) - tagDatum(t)) / 864e5 : 0;
   if (!a.du) satz = "Rohde, Kommissarin a.\u00a0D., Lüneburg. Ich lese genau so weit wie Sie, keine Seite weiter.";
   else if (tage(a.zuletzt) >= 14 && !b.pause && !B.platzhalter && b.stand < B.kapitel) { satz = "Wo stehen wir in der Sache? Ich frag nur einmal, versprochen. Keine Eile."; b.pause = true; speichern(); }
-  else satz = waehle(["Ich bin genau da, wo du bist. Keine Seite weiter.", "Die Akte liegt auf dem Küchentisch, der Kaffee daneben.", "Lies in deinem Tempo. Ich hab Zeit, ich bin pensioniert.", "Kein Stapel, keine Eile. Nur wir zwei und ein Buch."], "hp-gruss" + heute());
+  else satz = waehle(["Ich bin genau da, wo du bist. Keine Seite weiter.", "Die Akte liegt auf dem Küchentisch, der Kaffee daneben.", "Lies in deinem Tempo. Die Akte läuft nicht weg.", "Kein Stapel, keine Eile. Nur wir zwei und ein Buch."], "hp-gruss" + heute());
   return `<div class="hp-kopf"><span class="fig-idle hp-fig">${elsbethSVG(64)}</span><div class="hp-kopf-text"><span class="hp-name">Elsbeth Rohde <span class="hp-plakette">ausgedacht</span></span><p>${esc(satz)}</p></div></div>`;
 }
 function hpLesezeichenHTML(b, nr, B) {
