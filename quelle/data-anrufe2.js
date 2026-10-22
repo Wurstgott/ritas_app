@@ -493,7 +493,7 @@ D.anrufe2 = [
 
 { id: "micha-02", wer: "micha", thema: "Der Akkuschrauber",
   knoten: {
-    start: { sagt: "Hab einen neuen Akkuschrauber. Jane sagt, das ist der dritte.", antworten: [
+    start: { sagt: "Hab einen neuen Akkuschrauber. Christiane sagt, das ist der dritte.", antworten: [
       { text: "Und was sagst du?", weiter: "k2" },
       { text: "Was kann der neue?", weiter: "k3" } ] },
     k2: { sagt: "Der erste ist für Holz. Der zweite für Metall.", antworten: [
@@ -504,11 +504,11 @@ D.anrufe2 = [
       { text: "Licht ist praktisch.", weiter: "k4" } ] },
     k4: { sagt: "Der dritte ist für die Stimmung.", antworten: [
       { text: "Und, hebt er sie?", weiter: "k6" },
-      { text: "Das kauft dir Jane nicht ab.", weiter: "k6" } ] },
-    k5: { sagt: "Sagt Jane auch.", antworten: [
+      { text: "Das kauft dir Christiane nicht ab.", weiter: "k6" } ] },
+    k5: { sagt: "Sagt Christiane auch.", antworten: [
       { text: "Na siehst du.", weiter: "k4" },
       { text: "Wer brummt lauter?", weiter: "k4" } ] },
-    k6: { sagt: "Meine schon. An Janes arbeite ich noch.", antworten: [
+    k6: { sagt: "Meine schon. An Christianes arbeite ich noch.", antworten: [
       { text: "Bring ihr Blumen mit.", weiter: null },
       { text: "Schraub ihr was an.", weiter: null } ] }
   },
@@ -516,7 +516,7 @@ D.anrufe2 = [
 
 { id: "micha-03", wer: "micha", thema: "Das Regal",
   knoten: {
-    start: { sagt: "Jane sagt, dein Regal ist schief.", antworten: [
+    start: { sagt: "Christiane sagt, dein Regal ist schief.", antworten: [
       { text: "Das ist nicht schief, das ist Stil.", weiter: "k2" },
       { text: "Woher weiß sie das?", weiter: "k3" } ] },
     k2: { sagt: "Wie viel Grad Stil?", antworten: [
@@ -527,7 +527,7 @@ D.anrufe2 = [
       { text: "Na gut, ein bisschen.", weiter: "k5" } ] },
     k4: { sagt: "Ich komm Samstag mit der Wasserwaage.", antworten: [
       { text: "Bring Hunger mit.", weiter: "k6" },
-      { text: "Und kein Wort zu Jane.", weiter: "k6" } ] },
+      { text: "Und kein Wort zu Christiane.", weiter: "k6" } ] },
     k5: { sagt: "Elegant schief. Merk ich mir.", antworten: [
       { text: "Darfst du gern verwenden.", weiter: "k4" },
       { text: "Kostet aber was.", weiter: "k4" } ] },
@@ -544,7 +544,7 @@ D.anrufe2 = [
       { text: "Hast du schon?", weiter: "k3" } ] },
     k2: { sagt: "Und wenn das Stück groß ist?", antworten: [
       { text: "Dann sind’s zwei.", weiter: "k4" },
-      { text: "Dann merkt Jane es sofort.", weiter: "k5" } ] },
+      { text: "Dann merkt Christiane es sofort.", weiter: "k5" } ] },
     k3: { sagt: "Direkte Frage. Sagen wir: theoretisch.", antworten: [
       { text: "Theoretisch fehlt eine Ecke?", weiter: "k4" },
       { text: "Micha, ich hör dich kauen.", weiter: "k5" } ] },
@@ -554,7 +554,7 @@ D.anrufe2 = [
     k5: { sagt: "Sie steht hinter mir.", antworten: [
       { text: "Dann sag schön Hallo.", weiter: "k6" },
       { text: "Viel Glück, mein Lieber.", weiter: "k6" } ] },
-    k6: { sagt: "Jane sagt, du sollst mich nicht auch noch ermutigen.", antworten: [
+    k6: { sagt: "Christiane sagt, du sollst mich nicht auch noch ermutigen.", antworten: [
       { text: "Ich plädiere auf Hunger.", weiter: null },
       { text: "Ich hab gar nichts gesagt.", weiter: null } ] }
   },
@@ -577,7 +577,7 @@ D.anrufe2 = [
     k5: { sagt: "Doppelt in Zeitung. Und ich trag die Tüte, als wär’s Gemüse.", antworten: [
       { text: "Und pfeif dabei.", weiter: "k6" },
       { text: "Perfekte Tarnung.", weiter: "k6" } ] },
-    k6: { sagt: "Ich hab schon Janes Geburtstagstorte an ihr vorbeigeschmuggelt. Das hier schaff ich auch.", antworten: [
+    k6: { sagt: "Ich hab schon Christianes Geburtstagstorte an ihr vorbeigeschmuggelt. Das hier schaff ich auch.", antworten: [
       { text: "Daran zweifle ich nicht.", weiter: null },
       { text: "Ich bin beeindruckt.", weiter: null } ] }
   },
@@ -588,20 +588,20 @@ D.anrufe2 = [
     start: { sagt: "Es soll Frost geben. Ich hol die Chilis rein.", antworten: [
       { text: "Alle auf einmal?", weiter: "k2" },
       { text: "Wohin denn damit?", weiter: "k3" } ] },
-    k2: { sagt: "Siebzehn Töpfe. Jane hat bei zwölf aufgehört zu zählen.", antworten: [
+    k2: { sagt: "Siebzehn Töpfe. Christiane hat bei zwölf aufgehört zu zählen.", antworten: [
       { text: "Aus Liebe oder Protest?", weiter: "k4" },
       { text: "Wo stehen die alle?", weiter: "k3" } ] },
     k3: { sagt: "Fensterbank, Flur, Bad. Einer steht auf dem Klavier.", antworten: [
       { text: "Spielt er auch?", weiter: "k5" },
       { text: "Und wo wohnt ihr jetzt?", weiter: "k4" } ] },
-    k4: { sagt: "Jane sagt, wir wohnen jetzt in einem Gewächshaus mit Sofa.", antworten: [
+    k4: { sagt: "Christiane sagt, wir wohnen jetzt in einem Gewächshaus mit Sofa.", antworten: [
       { text: "Klingt doch gemütlich.", weiter: "k6" },
       { text: "Hauptsache, das Sofa bleibt frei.", weiter: "k6" } ] },
-    k5: { sagt: "Nein. Aber wenn Jane spielt, wird er röter.", antworten: [
+    k5: { sagt: "Nein. Aber wenn Christiane spielt, wird er röter.", antworten: [
       { text: "Ein musikalischer Chili.", weiter: "k6" },
       { text: "Das ist Rührung.", weiter: "k6" } ] },
-    k6: { sagt: "Ich sag, wer Chilis im Haus hat, braucht weniger Heizung. Jane sagt, das stimmt nicht.", antworten: [
-      { text: "Jane hat meistens recht.", weiter: null },
+    k6: { sagt: "Ich sag, wer Chilis im Haus hat, braucht weniger Heizung. Christiane sagt, das stimmt nicht.", antworten: [
+      { text: "Christiane hat meistens recht.", weiter: null },
       { text: "Zieh lieber einen Pullover an.", weiter: null } ] }
   },
   schluss: "Ich muss los. Der Flur kriegt noch einen." },
@@ -627,17 +627,17 @@ D.anrufe2 = [
       { text: "Du bist ein Guter, Micha.", weiter: null },
       { text: "Dübel sind Liebe.", weiter: null } ] }
   },
-  schluss: "Ich geh Kisten heben. Aus den Knien, sagt Jane." },
+  schluss: "Ich geh Kisten heben. Aus den Knien, sagt Christiane." },
 
 { id: "micha-08", wer: "micha", thema: "Krimiabend",
   knoten: {
-    start: { sagt: "Jane und ich gucken heute Krimi. Hast du einen Tipp, wer’s war?", antworten: [
+    start: { sagt: "Christiane und ich gucken heute Krimi. Hast du einen Tipp, wer’s war?", antworten: [
       { text: "Welcher Krimi denn?", weiter: "k2" },
       { text: "Immer der Freundliche.", weiter: "k3" } ] },
     k2: { sagt: "Was mit Schnee. Kommissar, der nie lacht.", antworten: [
       { text: "Dann der Freundliche.", weiter: "k3" },
       { text: "Bleibst du diesmal wach?", weiter: "k4" } ] },
-    k3: { sagt: "Der Freundliche. Dann wär’s hier im Haus Jane.", antworten: [
+    k3: { sagt: "Der Freundliche. Dann wär’s hier im Haus Christiane.", antworten: [
       { text: "Das sag ich ihr.", weiter: "k5" },
       { text: "Oder der, der nascht.", weiter: "k5" } ] },
     k4: { sagt: "Letztes Mal zwölf Minuten. Ich steiger mich.", antworten: [
@@ -646,7 +646,7 @@ D.anrufe2 = [
     k5: { sagt: "Ich nehm alles zurück. Ich will heute noch Abendbrot.", antworten: [
       { text: "Wie lange hältst du durch?", weiter: "k4" },
       { text: "Wer erzählt dir dann das Ende?", weiter: "k6" } ] },
-    k6: { sagt: "Jane. Morgens beim Kaffee. Das ist der beste Teil.", antworten: [
+    k6: { sagt: "Christiane. Morgens beim Kaffee. Das ist der beste Teil.", antworten: [
       { text: "Das ist ja fast romantisch.", weiter: null },
       { text: "Dann schlaf schön.", weiter: null } ] }
   },
@@ -657,11 +657,11 @@ D.anrufe2 = [
     start: { sagt: "Neuer Rekord. Zahnstocherturm, einunddreißig Stockwerke.", antworten: [
       { text: "Wie hast du das geschafft?", weiter: "k2" },
       { text: "Und die Rouladen?", weiter: "k3" } ] },
-    k2: { sagt: "Ruhige Hand. Und Jane war einkaufen.", antworten: [
+    k2: { sagt: "Ruhige Hand. Und Christiane war einkaufen.", antworten: [
       { text: "Also ohne Aufsicht.", weiter: "k4" },
       { text: "Steht er noch?", weiter: "k5" } ] },
     k3: { sagt: "Die müssen jetzt mit Bindfaden auskommen.", antworten: [
-      { text: "Jane wird begeistert sein.", weiter: "k4" },
+      { text: "Christiane wird begeistert sein.", weiter: "k4" },
       { text: "Kunst geht vor.", weiter: "k5" } ] },
     k4: { sagt: "Sie hat ihn gesehen. Sie hat nur „Micha“ gesagt. In dem Ton.", antworten: [
       { text: "Den Ton kenn ich.", weiter: "k6" },
@@ -680,10 +680,10 @@ D.anrufe2 = [
     start: { sagt: "Rita. Ich brauch eine Schiedsrichterin. Es geht um Kuchen.", antworten: [
       { text: "Ich höre.", weiter: "k2" },
       { text: "Wer hat ihn gebacken?", weiter: "k3" } ] },
-    k2: { sagt: "Das letzte Stück Pflaumenkuchen. Jane sagt, das ist für dich.", antworten: [
-      { text: "Jane hat völlig recht.", weiter: "k4" },
+    k2: { sagt: "Das letzte Stück Pflaumenkuchen. Christiane sagt, das ist für dich.", antworten: [
+      { text: "Christiane hat völlig recht.", weiter: "k4" },
       { text: "Und was sagst du?", weiter: "k5" } ] },
-    k3: { sagt: "Jane. Und sie hat das letzte Stück schon für dich eingepackt.", antworten: [
+    k3: { sagt: "Christiane. Und sie hat das letzte Stück schon für dich eingepackt.", antworten: [
       { text: "Dann ist die Sache klar.", weiter: "k4" },
       { text: "Umsichtig, die Gute.", weiter: "k4" } ] },
     k4: { sagt: "Ich hab Alufolie drumgemacht. Ohne zu naschen.", antworten: [
@@ -692,7 +692,7 @@ D.anrufe2 = [
     k5: { sagt: "Ich sag nichts. Ich guck nur.", antworten: [
       { text: "Den Blick kenn ich.", weiter: "k4" },
       { text: "Zieht bei mir nicht.", weiter: "k4" } ] },
-    k6: { sagt: "Bei Kuchen bin ich bei Jane auf Platz zwei. Hinter dir.", antworten: [
+    k6: { sagt: "Bei Kuchen bin ich bei Christiane auf Platz zwei. Hinter dir.", antworten: [
       { text: "Platz zwei ist Silber.", weiter: null },
       { text: "Beim Werkzeug bist du Erster.", weiter: null } ] }
   },

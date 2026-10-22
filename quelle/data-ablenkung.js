@@ -146,7 +146,7 @@ D.stattDaddeln = [
   {"id":"SD159","titel":"Berlinisch für Bayern","text":"Schreib zehn Berliner Ausdrücke auf und übersetz sie für jemanden aus München. „Nu mach ma’ halblang“ zählt doppelt.","min":10,"tf":"ABC","kat":"Listen","haltung":"im Sitzen, im Liegen","t":"tagebuch"},
 
   /* ---------- Kontakt ---------- */
-  {"id":"SD169","titel":"Eine Karte mit Lücke","text":"Schreib Jane eine Karte, in der ein Wort fehlt, das sie erraten muss. Die Auflösung gibt es erst am Telefon.","min":10,"tf":"ABC","kat":"Kontakt","haltung":"im Sitzen","t":"brief"},
+  {"id":"SD169","titel":"Eine Karte mit Lücke","text":"Schreib Christiane eine Karte, in der ein Wort fehlt, das sie erraten muss. Die Auflösung gibt es erst am Telefon.","min":10,"tf":"ABC","kat":"Kontakt","haltung":"im Sitzen","t":"brief"},
   {"id":"SD170","titel":"Drei ungewöhnliche Fragen","text":"Schick Max drei Fragen, die ihm noch nie jemand gestellt hat, etwa: Welches Geräusch magst du am liebsten?","min":5,"tf":"ABC","kat":"Kontakt","haltung":"im Sitzen, im Liegen","t":"telefon"},
   {"id":"SD171","titel":"Kompliment mit Beleg","text":"Mach jemandem im Haus ein Kompliment, das so konkret ist, dass es unmöglich ausgedacht sein kann.","min":5,"tf":"ABC","kat":"Kontakt","haltung":"im Sitzen, im Stehen","t":"nachbar"},
   {"id":"SD172","titel":"Summ mal","text":"Summ eine Melodie als Sprachnachricht und lass raten, welches Lied das ist. Drei Versuche, dann wird aufgelöst.","min":3,"tf":"ABC","kat":"Kontakt","haltung":"im Sitzen, im Liegen","t":"telefon"},

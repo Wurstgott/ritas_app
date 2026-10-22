@@ -556,7 +556,7 @@ function skinRueck() {
    Kramladen als Laden mit Abteilungen
    ============================================================ */
 const LADEN_ABT = { "Wald & Garten": { id: "bild", name: "Fürs Bild", icon: "blume" }, "Spiel": { id: "spiele", name: "Spiele & Extras", icon: "karten" }, "Klänge": { id: "hoeren", name: "Zum Hören", icon: "glocke" }, "Zum Lesen": { id: "lesen", name: "Zum Lesen", icon: "buch" }, "Ausflüge": { id: "ausflug", name: "Für Ausflüge", icon: "rucksack" } };
-if (typeof D !== "undefined" && Array.isArray(D.laden) && !D.laden.some(x => x.id === "memory")) D.laden.splice(Math.max(0, D.laden.findIndex(x => x.id === "rueckenmotiv")) + 1, 0, { id: "memory", gruppe: "Spiel", name: "Figuren-Memory", preis: 70, text: "Rita, Max, Jane, Hühnchen und die anderen als Kartenpaare. Aufdecken, merken, finden – ohne Zeitdruck. Einmal am Tag gibt’s 3 Taler fürs Durchspielen.", icon: "karten" });
+if (typeof D !== "undefined" && Array.isArray(D.laden) && !D.laden.some(x => x.id === "memory")) D.laden.splice(Math.max(0, D.laden.findIndex(x => x.id === "rueckenmotiv")) + 1, 0, { id: "memory", gruppe: "Spiel", name: "Figuren-Memory", preis: 70, text: "Rita, Max, Christiane, Hühnchen und die anderen als Kartenpaare. Aufdecken, merken, finden – ohne Zeitdruck. Einmal am Tag gibt’s 3 Taler fürs Durchspielen.", icon: "karten" });
 /* Kleine Vorschaubilder für die Waren (64er Raster, Papier-Stil) */
 const WB = {
   patience: `<g transform="rotate(-12 24 34)"><rect x="12" y="16" width="24" height="34" rx="3" fill="#FBF8F1" stroke="#C9C3B6"/><path d="M24 26c-4 4-6 6-6 8.4a3 3 0 0 0 5 2.2l-1 4h4l-1-4a3 3 0 0 0 5-2.2c0-2.4-2-4.4-6-8.4Z" fill="#1C2620"/></g><g transform="rotate(10 40 32)"><rect x="28" y="14" width="24" height="34" rx="3" fill="#FBF8F1" stroke="#C9C3B6"/><path d="M40 38c-6-4-8-7-8-9.4a4 4 0 0 1 8-1 4 4 0 0 1 8 1c0 2.4-2 5.4-8 9.4Z" fill="#C8363A"/></g>`,
@@ -630,7 +630,7 @@ function bildWetterInhalt() {
    ============================================================ */
 const MEM = { karten: [], offen: [], gefunden: [], zuege: 0, sperre: false };
 const MEM_FIG = { rita: g => ritaSVG(g, { skin: false }), huhn: g => huhnSVG({ gr: g, kopf: true, skin: false }), max: g => maxSVG(g), jane: g => janeSVG(g), micha: g => michaSVG(g), greta: g => gretaSVG(g), pauli: g => pauliSVG(g), karin: g => karinKopfSVG(g) };
-const MEM_NAME = { rita: S && S.name || "Rita", huhn: "Hühnchen", max: "Max", jane: "Jane", micha: "Micha", greta: "Greta", pauli: "Pauli", karin: "Karin" };
+const MEM_NAME = { rita: S && S.name || "Rita", huhn: "Hühnchen", max: "Max", jane: "Christiane", micha: "Micha", greta: "Greta", pauli: "Pauli", karin: "Karin" };
 function memNeu(paare) {
   paare = paare === 8 ? 8 : 6; S.memory.paare = paare; speichern();
   const wer = Object.keys(MEM_FIG).sort(() => Math.random() - .5).slice(0, paare);

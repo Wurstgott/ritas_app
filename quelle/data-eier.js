@@ -200,7 +200,7 @@ D.eier = {
 },
 "max-erster-april": {
 "wer": "max",
-"text": "Wichtige Mitteilung: Die App kann ab heute Kuchen backen. … 1. April. Jane kann’s aber wirklich.",
+"text": "Wichtige Mitteilung: Die App kann ab heute Kuchen backen. … 1. April. Christiane kann’s aber wirklich.",
 "form": "brief",
 "selten": 1
 },

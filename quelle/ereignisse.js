@@ -1,5 +1,5 @@
 /* ============================================================
-   Zufällige Ereignisse: Max, Jane, Micha, Karin oder Hühnchen
+   Zufällige Ereignisse: Max, Christiane, Micha, Karin oder Hühnchen
    schauen kurz vorbei – mit sprechender Figur, Antworten und
    kleinen Effekten. Höchstens eins am Tag, nie am ersten Tag,
    nicht an Sparflamme-Tagen, abschaltbar mit den Überraschungen.
@@ -20,7 +20,7 @@ const EREIGNISSE = [
     antworten: [{ text: "Natürlich!", sagt: "Dann ist ja alles vorbereitet. Ho ho ho!", effekt: "schnee" }] },
   { id: "max-spotify", wer: "max", wenn: () => !S.spotify, zeilen: ["Ich hab gerade eine Playlist gemacht: „Ritas Sonntag“.", "Leider kannst du sie noch nicht hören …"],
     antworten: [{ text: "Erzähl mehr", sagt: "Ich hätte da ein Angebot.", aktion: "spotify-info" }, { text: "Ich hab ja YouTube", sagt: "Stimmt. Da findest du die meisten Lieder auch." }] },
-  /* ---------- Jane ---------- */
+  /* ---------- Christiane ---------- */
   { id: "jane-sonntag", wer: "jane", wann: { wochentag: 0, von: 10, bis: 15 }, zeilen: ["Rita! Der Braten ist im Ofen und ich hab wieder viel zu viel Soße gemacht.", "Wie immer eigentlich."],
     antworten: [{ text: "Heb mir was auf!", sagt: "Ist schon im Glas. Mit Deckel und Namen drauf.", effekt: "herzen" }, { text: "Was gibt’s dazu?", sagt: "Klöße. Und Rotkohl. Und Micha, der vorher nascht." }] },
   { id: "jane-kuchen", wer: "jane", zeilen: ["Ich hab einen Kuchen gebacken. Beim Stürzen ist er ein bisschen zerbrochen.", "Schmeckt aber. Micha hat schon zweimal probiert."],
@@ -28,7 +28,7 @@ const EREIGNISSE = [
   { id: "jane-krimi", wer: "jane", zeilen: ["Hast du den neuen Kommissar Beck gesehen?", "Ich hab den Täter in Minute zwölf erraten!"],
     antworten: [{ text: "Verrat bloß nichts!", sagt: "Meine Lippen sind versiegelt. Mmmh-mmh." }, { text: "Wo läuft der?", sagt: "In der Mediathek. Ich zeig’s dir.", aktion: "tv-auf" }] },
   { id: "jane-runde", wer: "jane", zeilen: ["Ich hab heute an unsere Runden im Forst gedacht.", "Mit Thermoskanne und Zimtschnecken. Weißt du noch?"],
-    antworten: [{ text: "Lass uns mal wieder!", sagt: "Gute Idee. Frag mich mal!", aktion: "liste:Jane fragen: Lust auf eine Forstrunde?", effekt: "herzen" }, { text: "Die Zimtschnecken!", sagt: "Die waren gut. Micha behauptet bis heute, er hätte nur eine gegessen." }] },
+    antworten: [{ text: "Lass uns mal wieder!", sagt: "Gute Idee. Frag mich mal!", aktion: "liste:Christiane fragen: Lust auf eine Forstrunde?", effekt: "herzen" }, { text: "Die Zimtschnecken!", sagt: "Die waren gut. Micha behauptet bis heute, er hätte nur eine gegessen." }] },
   { id: "jane-test", wer: "jane", wann: { monate: [10, 11, 12, 1, 2, 3] }, zeilen: ["Wenn ich das nächste Mal komme, mach ich vorher einen Test – versprochen.", "Und die gute Butter bring ich dann auch mit."],
     antworten: [{ text: "Du bist die Beste", sagt: "Ich weiß. Aber sag’s ruhig öfter.", effekt: "herzen" }, { text: "Und Kuchen?", sagt: "Rita. Ich bitte dich. Natürlich Kuchen." }] },
   { id: "jane-telefon", wer: "jane", zeilen: ["Ich hab eben was Unglaubliches beim Bäcker gehört.", "Aber das erzähl ich dir lieber am Telefon."],
@@ -38,7 +38,7 @@ const EREIGNISSE = [
     antworten: [{ text: "Die gelben, bitte", sagt: "Vernünftige Frau. Ich pack dir welche ein." }, { text: "Die roten! Ich bin mutig.", sagt: "Ich ruf schon mal vorsorglich die Feuerwehr.", effekt: "konfetti" }] },
   { id: "micha-werkzeug", wer: "micha", zeilen: ["Falls bei dir was klemmt oder tropft:", "Ich hab Werkzeug. Und am Wochenende nichts vor."],
     antworten: [{ text: "Der Wasserhahn tropft", sagt: "Dichtung. Kostet zwanzig Cent und eine Stunde Fluchen." }, { text: "Alles läuft", sagt: "Sehr gut. Dann geh ich wieder zu meinen Chilis." }] },
-  { id: "micha-gruss", wer: "micha", zeilen: ["Jane steht neben mir und sagt, ich soll schön grüßen.", "Also: schön grüßen!"],
+  { id: "micha-gruss", wer: "micha", zeilen: ["Christiane steht neben mir und sagt, ich soll schön grüßen.", "Also: schön grüßen!"],
     antworten: [{ text: "Grüß zurück!", sagt: "Mach ich. Sie hat übrigens schon wieder Kuchen gebacken.", effekt: "herzen" }] },
   /* ---------- Karin ---------- */
   { id: "karin-sotis", wer: "karin", wenn: () => typeof bvHeuteNeu === "function" && bvHeuteNeu(), zeilen: ["Hej Rita! Sotis hat heute einen Elch gesehen. Sagt sie.", "Ich glaube, es war der Briefkasten."],
@@ -102,7 +102,7 @@ const EREIGNISSE = [
   { id: "huhn-buch", wer: "huhn", zeilen: ["Ich hab heimlich in deinem Buch gelesen.", "Keine Sorge, ich hab das Lesezeichen wieder richtig reingelegt. Glaub ich."],
     antworten: [{ text: "Und? Gut?", sagt: "Zu wenig Hühner. Sonst prima.", aktion: "lesebegleiter" }, { text: "Hühnchen!", sagt: "Ich konnt nicht anders. Die Spannung!" }] },
 ];
-const ER_WER = { max: "Max", jane: "Jane", micha: "Micha", karin: "Karin", greta: "Greta", pauli: "Pauli", huhn: "Hühnchen" };
+const ER_WER = { max: "Max", jane: "Christiane", micha: "Micha", karin: "Karin", greta: "Greta", pauli: "Pauli", huhn: "Hühnchen" };
 function erFigur(wer, gr) {
   if (wer === "huhn") return huhnFrontSVG(gr);
   return { max: maxSVG, jane: janeSVG, micha: michaSVG, karin: karinKopfSVG, greta: gretaSVG, pauli: pauliSVG }[wer](gr);
@@ -153,7 +153,7 @@ function ereignisPruefen(anlass = "start") {
   S.erHeute.n++; S.erHeute.zuletzt = Date.now(); S.ereignisse[e.id] = h; speichern();
   setTimeout(() => { if (!SHEETS.length && !$(".ereignis")) ereignisZeigen(e); }, anlass === "tab" ? 900 + Math.random() * 1600 : 1400);
 }
-const ER_TSCHUESS = { max: "Tschüss, Max!", jane: "Tschüss, Jane!", micha: "Tschüss, Micha!", karin: "Hej då, Karin!", greta: "Tschüss, Greta!", pauli: "Tschüss, Pauli!", huhn: "Bis gleich, Hühnchen!" };
+const ER_TSCHUESS = { max: "Tschüss, Max!", jane: "Tschüss, Christiane!", micha: "Tschüss, Micha!", karin: "Hej då, Karin!", greta: "Tschüss, Greta!", pauli: "Tschüss, Pauli!", huhn: "Bis gleich, Hühnchen!" };
 function ereignisZeigen(e) {
   if (typeof e === "string") e = EREIGNISSE.find(x => x.id === e); if (!e || $(".ereignis")) return;
   const el = document.createElement("div"); el.className = "ereignis"; el.setAttribute("role", "dialog"); el.setAttribute("aria-label", `${ER_WER[e.wer]} schaut vorbei`);

@@ -128,7 +128,7 @@ D.eier2 = [
 { id: "e2-zufall-christiane-teig", wer: "christiane", form: "toast", selten: 0.12, wann: {typ:"zufall"},
   text: "Ich hab heute wieder zu viel Teig gemacht. Das passiert mir nur, wenn ich an Besuch denke." },
 { id: "e2-zufall-micha-gruss", wer: "micha", form: "zettel", selten: 0.05, wann: {typ:"zufall"},
-  text: "Schönen Gruß aus der Binger. Jane sagt, ich soll mehr schreiben, aber der Kuchen ist gerade angeschnitten." },
+  text: "Schönen Gruß aus der Binger. Christiane sagt, ich soll mehr schreiben, aber der Kuchen ist gerade angeschnitten." },
 { id: "e2-zufall-micha-kurz", wer: "micha", form: "toast", selten: 0.05, wann: {typ:"zufall"},
   text: "Gruß von Micha. Mehr steht hier nicht, das reicht ja auch." }
 ];
@@ -151,7 +151,7 @@ D.bingo = {
   ]
 };
 
-/* Sonntagsrätsel von Jane */
+/* Sonntagsrätsel von Christiane */
 D.raetsel = [
   { frage: "Woanders heißt er Berliner oder Krapfen. Wie sagt man in Berlin selbst dazu?", antwort: "Pfannkuchen", tipp: "Zu Silvester ist manchmal einer mit Senf dabei. Ich war’s nicht." },
   { frage: "Hamburg sagt Frikadelle, Bayern sagt Fleischpflanzerl. Was sagt Berlin?", antwort: "Bulette", tipp: "Klingt ein bisschen französisch, schmeckt sehr berlinisch." },

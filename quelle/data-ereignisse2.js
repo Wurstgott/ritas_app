@@ -38,15 +38,15 @@ D.ereignisse2 = [
   { id: "e2-max-advent", wer: "max", wann: { monat: 12, wochentag: 0 }, zeilen: ["Welcher Advent ist heute? Ich hab den Überblick verloren.", "Greta hat einen Kranz gebastelt. Aus Zweigen vom Wegesrand."],
     antworten: [{ text: "Zähl die Kerzen!", sagt: "Bei uns brennen alle vier. Aus Versehen.", effekt: "schnee" }, { text: "Schick ein Foto", sagt: "Mach ich. Der Kranz ist schöner als ich, sagt Greta." }] },
 
-  /* ---------- Jane ---------- */
+  /* ---------- Christiane ---------- */
   { id: "e2-jane-bank", wer: "jane", zeilen: ["Weißt du noch, als in der Bank die Kasse nicht stimmte?", "Vierzig Pfennig! Eine Stunde haben wir gesucht."],
     antworten: [{ text: "Lagen unterm Stuhl!", sagt: "Genau! Ich lach heute noch.", effekt: "konfetti" }, { text: "Du warst schuld!", sagt: "Niemals. Ich war die Ordentliche. Du die Mutige.", effekt: "herzen" }] },
   { id: "e2-jane-kipferl", wer: "jane", wann: { monate: [11, 12] }, zeilen: ["In der Binger riecht’s nach Vanillekipferln.", "Die erste Fuhre ist schon weg. Micha behauptet, er war’s nicht."],
-    antworten: [{ text: "Heb mir welche auf!", sagt: "Dose mit deinem Namen drauf. Diesmal mit Versteck.", effekt: "herzen" }, { text: "Rezept, bitte!", sagt: "Das ist geheim. Aber dir verrat ich’s.", aktion: "liste:Jane nach dem Kipferl-Rezept fragen" }] },
+    antworten: [{ text: "Heb mir welche auf!", sagt: "Dose mit deinem Namen drauf. Diesmal mit Versteck.", effekt: "herzen" }, { text: "Rezept, bitte!", sagt: "Das ist geheim. Aber dir verrat ich’s.", aktion: "liste:Christiane nach dem Kipferl-Rezept fragen" }] },
   { id: "e2-jane-morgen", wer: "jane", wann: { von: 7, bis: 10 }, zeilen: ["Guten Morgen! Ich hab schon Brötchen geholt.", "Und Micha ist noch nicht mal wach."],
     antworten: [{ text: "Weck ihn!", sagt: "Hab ich. Er sagt, er meditiert. Mit Schnarchen." }, { text: "Ich bin auch schon fit", sagt: "Natürlich. Du warst schon immer die Erste im Büro.", effekt: "herzen" }] },
   { id: "e2-jane-hofladen", wer: "jane", wann: { monate: [4, 5, 6, 7, 8, 9, 10] }, zeilen: ["Micha schwärmt schon wieder von deinem Hofladen.", "Der mit dem Kaffee am Stehtisch. Er sagt, da schmeckt er besser als bei mir. Frechheit."],
-    antworten: [{ text: "Fahrt doch mal mit!", sagt: "Gute Idee. Frag mich mal!", aktion: "liste:Jane und Micha fragen: Samstag zum Hofladen?", effekt: "herzen" }, { text: "Wie wird das Wetter?", sagt: "Schau mal nach. Für Stehtisch-Kaffee muss es ja nicht gleich Sommer sein.", aktion: "wetter" }] },
+    antworten: [{ text: "Fahrt doch mal mit!", sagt: "Gute Idee. Frag mich mal!", aktion: "liste:Christiane und Micha fragen: Samstag zum Hofladen?", effekt: "herzen" }, { text: "Wie wird das Wetter?", sagt: "Schau mal nach. Für Stehtisch-Kaffee muss es ja nicht gleich Sommer sein.", aktion: "wetter" }] },
   { id: "e2-jane-lila", wer: "jane", zeilen: ["Ich muss dich was fragen, und du musst ehrlich sein:", "Steht mir Lila?"],
     antworten: [{ text: "Hervorragend!", sagt: "Dann kauf ich den Schal. Du bist schuld.", effekt: "konfetti" }, { text: "Nimm lieber Grün", sagt: "Grün! Genau das hat Greta auch gesagt. Ihr steckt unter einer Decke." }] },
 
@@ -76,12 +76,12 @@ D.ereignisse2 = [
 
   /* ---------- Micha ---------- */
   { id: "e2-micha-laub", wer: "micha", wann: { monate: [10, 11] }, zeilen: ["Ich hab heute Laub gerecht.", "Dann kam der Wind und hat alles neu verteilt. Wir sind quitt."],
-    antworten: [{ text: "Wer hat gewonnen?", sagt: "Der Wind. Aber nur knapp nach Punkten." }, { text: "Lass es liegen", sagt: "Für die Igel. Genau so verkauf ich das Jane auch.", effekt: "herzen" }] },
-  { id: "e2-micha-ueberwintern", wer: "micha", wann: { monate: [11, 12, 1, 2] }, zeilen: ["Meine Chilis überwintern jetzt im Wohnzimmer.", "Jane sagt: sie oder die Chilis. Ich überlege noch."],
-    antworten: [{ text: "Die Chilis!", sagt: "Hab ich ihr auch gesagt. Seitdem koche ich selbst.", effekt: "konfetti" }, { text: "Jane natürlich!", sagt: "Klar. Aber das müssen die Chilis ja nicht wissen." }] },
-  { id: "e2-micha-raketen", wer: "micha", wann: { monat: 12, tag: 31 }, zeilen: ["Ich hab Raketen gekauft. Jane sagt: zu viele.", "Ich sag: Es sind genau so viele, wie in den Kofferraum gepasst haben."],
+    antworten: [{ text: "Wer hat gewonnen?", sagt: "Der Wind. Aber nur knapp nach Punkten." }, { text: "Lass es liegen", sagt: "Für die Igel. Genau so verkauf ich das Christiane auch.", effekt: "herzen" }] },
+  { id: "e2-micha-ueberwintern", wer: "micha", wann: { monate: [11, 12, 1, 2] }, zeilen: ["Meine Chilis überwintern jetzt im Wohnzimmer.", "Christiane sagt: sie oder die Chilis. Ich überlege noch."],
+    antworten: [{ text: "Die Chilis!", sagt: "Hab ich ihr auch gesagt. Seitdem koche ich selbst.", effekt: "konfetti" }, { text: "Christiane natürlich!", sagt: "Klar. Aber das müssen die Chilis ja nicht wissen." }] },
+  { id: "e2-micha-raketen", wer: "micha", wann: { monat: 12, tag: 31 }, zeilen: ["Ich hab Raketen gekauft. Christiane sagt: zu viele.", "Ich sag: Es sind genau so viele, wie in den Kofferraum gepasst haben."],
     antworten: [{ text: "Guten Rutsch!", sagt: "Dir auch, Rita! Eine zünd ich extra für dich.", effekt: "konfetti" }, { text: "Ich schau vom Fenster", sagt: "Bester Platz. Ich wink um Mitternacht Richtung Spandau.", effekt: "herzen" }] },
-  { id: "e2-micha-regal", wer: "micha", zeilen: ["Ich hab ein Regal gebaut. Es steht.", "Ein bisschen schief. Jane nennt es „Charakter“."],
+  { id: "e2-micha-regal", wer: "micha", zeilen: ["Ich hab ein Regal gebaut. Es steht.", "Ein bisschen schief. Christiane nennt es „Charakter“."],
     antworten: [{ text: "Ich brauch auch eins!", sagt: "Frag mich mal richtig. Aber „gerade“ kann ich nicht versprechen.", aktion: "liste:Micha wegen Regal fragen" }, { text: "Schief ist modern", sagt: "Siehste. Ich war meiner Zeit voraus." }] },
 
   /* ---------- Karin ---------- */

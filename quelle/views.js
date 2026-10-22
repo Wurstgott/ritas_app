@@ -84,7 +84,7 @@ function viewHeute() {
   if (S.huhn && tf) html += `<section class="abschnitt"><div class="huhn-karte" data-act="huhn-tap">${huhnSVG({ gr: 84, stimmung: "spricht" })}<div class="sprechblase"><span class="wer">Hühnchen</span>${esc(huehnchenSatz())}</div></div></section>`;
   const ruhig = tf === "C" || tf === "D";
   const post = postHeute();
-  if (post) { const von = EI_WER[post.wer] || "Max", gruss = post.wer === "christiane" ? "Deine Jane" : post.wer === "huhn" ? "Dein Hühnchen" : "Dein Max";
+  if (post) { const von = EI_WER[post.wer] || "Max", gruss = post.wer === "christiane" ? "Deine Christiane" : post.wer === "huhn" ? "Dein Hühnchen" : "Dein Max";
     html += post.offen
     ? `<section class="abschnitt"><div class="brief-papier"><span class="brief-marke" aria-hidden="true">${post.wer === "max" ? maxSVG(52) : post.wer === "christiane" ? janeSVG(52) : post.wer === "micha" ? michaSVG(52) : huhnSVG({ gr: 52, kopf: true })}</span><p class="brief-anrede">Liebe ${esc(S.name)},</p><p class="brief-text">${esc(post.text)}</p><p class="brief-gruss">${gruss} <span aria-hidden="true">♥</span></p>${post.extra ? `<button class="knopf klein leise" style="padding-left:0" data-act="post-gelesen">Zumachen</button>` : tschuessHTML()}</div></section>`
     : `<section class="abschnitt"><button class="umschlag" data-act="post-auf" aria-label="Post von ${von} – zum Öffnen antippen">${umschlagSVG(von)}<span class="umschlag-hinweis">Post von ${von} · zum Öffnen antippen</span></button></section>`; }
@@ -196,7 +196,7 @@ function tuerSheet(was) {
     html += `<div class="liste">
     ${zeileBtn("blatt", "Forst-Bingo", "Hühnchens Karte für diese Woche", `data-act="bingo-auf"`, "k-draussen")}
     ${zeileBtn("rucksack", "Ausflug planen", "Von nah bis weit, Ziele, Checkliste", `data-act="ausflug"`, "k-draussen")}
-    ${zeileBtn("haus", "In die Binger", "Zu Jane und Micha", `data-act="ziel" data-id="binger"`, "k-menschen")}
+    ${zeileBtn("haus", "In die Binger", "Zu Christiane und Micha", `data-act="ziel" data-id="binger"`, "k-menschen")}
     ${zeileBtn("tassen", "Angebote in Spandau", "Konzerte, Treffs, Feste – mit Terminen", `data-act="angebote"`, "k-menschen")}
     ${zeileBtn("schluessel", "Praktisches für unterwegs", "Euroschlüssel, Toiletten, Taxi", `data-act="praktisch"`, "k-draussen")}</div>`;
     sheet({ titel: "Draußen", inhalt: html, id: "tuer" }); return;
@@ -206,7 +206,7 @@ function tuerSheet(was) {
   if (hp) html += `<h3 style="margin-top:4px">Lesen</h3><div class="bogen streifen k-geist"><h3>${esc(hp.titel)}</h3><p class="klein">${S.hp.kapitel ? `Kapitel ${S.hp.kapitel} von ${hp.kapitel}` : A("Wo bist du gerade? Stell dein Kapitel ein.", "Wo sind Sie gerade? Stellen Sie Ihr Kapitel ein.")}</p><div class="fortschritt" aria-hidden="true"><i style="width:${Math.round(S.hp.kapitel / hp.kapitel * 100)}%;background:var(--flieder)"></i></div>
     <div class="zeile" style="margin-top:12px;flex-wrap:wrap"><button class="knopf klein zweit" data-act="kapitel">${ic("plus")} Ein Kapitel gelesen</button></div></div>`;
   html += `${S.buecherEigen.filter(x => x.status === "liest").map(x => `<div class="buch-zeile">${buchCover(x.titel, x.autor, 48)}<div style="flex:1;min-width:0"><div style="font-weight:700">${esc(x.titel)}</div><div class="zeile" style="gap:6px;margin-top:6px;flex-wrap:wrap"><button class="knopf klein zweit" data-act="buch-stueck" data-id="${x.id}">${ic("plus")} Ein Stück gelesen</button></div></div></div>`).join("")}<button class="knopf zweit voll" style="margin-top:10px" data-act="lesebegleiter">${ic("buch")} Bücherregal, Tipps, neues Buch</button>`;
-  html += `<h3 style="margin-top:20px">Zum Vergnügen</h3><div class="liste">${zeileBtn("plaudern", "Kurz plaudern", "Mit Hühnchen, Jane, Max und Co. – nur zum Spaß", `data-act="tel-auf"`, "k-menschen")}${zeileBtn("maske", "Film & Fernsehen", "Krimis und gute Filme aus der Mediathek, Tipps der Woche", `data-act="tv-auf"`, "k-geist")}${zeileBtn("tasse", "Gut durch den Winter", "Tees, Ingwer-Tricks, Heizen & Lüften, Besuch", `data-act="wi-auf"`, "k-ruhe")}${zeileBtn("funke", "Wissen", "Kurze Häppchen mit Quelle", `data-act="wissen"`, "k-geist")}${zeileBtn("sprechen", "Erzählfragen", "Zum Plaudern, mit Max oder beim Kaffee", `data-act="lebensbuch"`, "k-geist")}</div>
+  html += `<h3 style="margin-top:20px">Zum Vergnügen</h3><div class="liste">${zeileBtn("plaudern", "Kurz plaudern", "Mit Hühnchen, Christiane, Max und Co. – nur zum Spaß", `data-act="tel-auf"`, "k-menschen")}${zeileBtn("maske", "Film & Fernsehen", "Krimis und gute Filme aus der Mediathek, Tipps der Woche", `data-act="tv-auf"`, "k-geist")}${zeileBtn("tasse", "Gut durch den Winter", "Tees, Ingwer-Tricks, Heizen & Lüften, Besuch", `data-act="wi-auf"`, "k-ruhe")}${zeileBtn("funke", "Wissen", "Kurze Häppchen mit Quelle", `data-act="wissen"`, "k-geist")}${zeileBtn("sprechen", "Erzählfragen", "Zum Plaudern, mit Max oder beim Kaffee", `data-act="lebensbuch"`, "k-geist")}</div>
     <p class="klein" style="margin-top:8px">${WOCHENPLAN}</p>`;
   const aktiv = S.missionen.aktiv.map(a => ({ a, m: (D.missionen || []).find(x => x.id === a.id) })).filter(x => x.m);
   html += `<h3 style="margin-top:20px">Kleine Vorhaben</h3>${aktiv.length ? `<div class="liste">${aktiv.map(({ a, m }) => zeileBtn("funke", m.titel, `${a.tage?.length || 0} von ${m.tage} Tagen`, `data-act="mission" data-id="${m.id}"`, "k-mut")).join("")}</div>` : `<p class="klein">Ein Vorhaben für ein paar Tage – mit Kästchen zum Abhaken.</p>`}
@@ -219,7 +219,7 @@ function tuerSheet(was) {
 const notfallLeiste = act => `<button class="notfall-leiste" data-act="${act}">${ic("atem")}<span><span class="titel">Mein Notfallplan</span><span class="unter">Wenn’s eng wird – ruhig, Schritt für Schritt</span></span></button>`;
 /* Ideen kurz anteasern: erster Satz und Dauer, der Volltext steht im Ideen-Blatt */
 function ideeKurz(v) { const t = String(v.text || ""), m = /^(.+?[.!?…])(\s|$)/.exec(t); return `${m ? m[1] : t}${v.min ? " · " + v.min + " Min." : ""}`; }
-const WOCHENPLAN = "Montags neue Bingo-Karte · Dienstags und freitags Post von Karin · Sonntags Janes Rätsel und Max’ Wochenpost.";
+const WOCHENPLAN = "Montags neue Bingo-Karte · Dienstags und freitags Post von Karin · Sonntags Christianes Rätsel und Max’ Wochenpost.";
 const THEMEN_REIHE = ["Handy", "Kreativ", "Krimi", "Schwedisch", "Geschichte", "Essen", "Tee & Wärme", "Gut geschützt", "Lesen", "Hören", "Musik", "Lernen", "Listen", "Erinnern", "Kontakt", "Körper", "Sinne", "Hände", "Ordnen"];
 function ideenThemen() { const z = {}; (D.stattDaddeln || []).forEach(v => { if (v.kat) z[v.kat] = (z[v.kat] || 0) + 1; }); return Object.entries(z).sort((a, b) => { const ia = THEMEN_REIHE.indexOf(a[0]), ib = THEMEN_REIHE.indexOf(b[0]); return (ia < 0 ? 99 : ia) - (ib < 0 ? 99 : ib); }); }
 function ideenThemaSheet(kat) {
@@ -293,7 +293,7 @@ function viewTagebuch() {
   html += `<section class="abschnitt"><div class="bogen"><h3>Diese Woche</h3><p style="margin:0">${wo.length ? esc(wo.join(" · ")) : "Noch nichts eingetragen."}</p>
     <div class="zeile" style="margin-top:12px;flex-wrap:wrap"><button class="knopf klein zweit" data-act="moment">${ic("stern")} Schönster Moment heute</button>${tagDatum(h).getDay() === 0 || (tagDatum(h).getDay() === 1 && !S.rueckblick[kwVon(tagPlus(h, -1))]) ? `<button class="knopf klein leise" data-act="rueckblick">Wochenrückblick</button>` : ""}</div></div></section>`;
   html += rueckblickExtras(h);
-  if ((S.briefe || []).length) html += `<section class="abschnitt"><details class="bogen" data-id="briefe"><summary style="font-weight:700;cursor:pointer;min-height:44px;display:flex;align-items:center">${ic("brief")}&nbsp; Briefe (${S.briefe.length})</summary>${S.briefe.slice().reverse().map(b => `<div class="brief-papier" style="margin-top:12px;animation:none"><p class="brief-anrede">Liebe ${esc(S.name)},</p><p class="brief-text">${esc(b.text)}</p><p class="brief-gruss">${b.wer === "christiane" ? "Deine Jane" : b.wer === "huhn" ? "Dein Hühnchen" : "Dein Max"} <span aria-hidden="true">♥</span> · ${datumLang(b.tag)}</p></div>`).join("")}</details></section>`;
+  if ((S.briefe || []).length) html += `<section class="abschnitt"><details class="bogen" data-id="briefe"><summary style="font-weight:700;cursor:pointer;min-height:44px;display:flex;align-items:center">${ic("brief")}&nbsp; Briefe (${S.briefe.length})</summary>${S.briefe.slice().reverse().map(b => `<div class="brief-papier" style="margin-top:12px;animation:none"><p class="brief-anrede">Liebe ${esc(S.name)},</p><p class="brief-text">${esc(b.text)}</p><p class="brief-gruss">${b.wer === "christiane" ? "Deine Christiane" : b.wer === "huhn" ? "Dein Hühnchen" : "Dein Max"} <span aria-hidden="true">♥</span> · ${datumLang(b.tag)}</p></div>`).join("")}</details></section>`;
   // Tage
   const tage = [...new Set(S.eintraege.map(e => e.tag).concat(Object.keys(S.momente)))].sort().reverse();
   if (!tage.length) html += `<p>${A("Sobald du etwas einträgst, steht es hier – nach Tagen sortiert.", "Sobald Sie etwas eintragen, steht es hier – nach Tagen sortiert.")}</p>`;
@@ -416,7 +416,7 @@ function hilftSheet() {
   if (tf === "C" || tf === "D") { const lind = (D.stattDaddeln || []).filter(x => /Körper|Hören/.test(x.kat) && x.tf.includes(tf)); if (lind.length && !v.some(x => lind.includes(x))) v = [lind[Math.floor(Math.random() * lind.length)], ...v.slice(0, 2)]; }
   let html = `${notfallLeiste("ruhe-jetzt")}<p>${A("Drei Ideen für jetzt. Oder keine – auch gut.", "Drei Ideen für jetzt. Oder keine – auch gut.")}</p><div class="liste kurz-liste">${v.map(x => zeileBtn(katIcon(x.kat, x), x.titel, ideeKurz(x), `data-act="idee" data-id="${x.id}"`, "k-geist")).join("")}</div>`;
   if (S.spiel.an && S.gekauft.patience && (tf === "C" || tf === "D")) html += `<div class="bogen mulde" style="margin-top:14px"><p style="margin:0 0 8px">Spiel ruhig eine Runde Patience – nach 10 Minuten ist sie vorbei.</p><button class="knopf zweit voll" data-act="spiel">${ic("karten")} Waldpatience</button></div>`;
-  html += `<button class="knopf leise" data-act="hilft-neu">Andere Ideen</button><div class="liste" style="margin-top:12px">${zeileBtn("plaudern", "Kurz plaudern – zum Spaß", "Mit Hühnchen, Jane, Max und Co.", `data-act="tel-auf"`, "k-menschen")}${zeileBtn("briefkasten", "Post von Karin aus Vimmerby", "Briefwechsel auf Schwedisch", `data-act="bv-auf"`, "k-menschen")}${zeileBtn("maske", "Film & Fernsehen", "Krimis und gute Filme aus der Mediathek", `data-act="tv-auf"`, "k-geist")}</div>`;
+  html += `<button class="knopf leise" data-act="hilft-neu">Andere Ideen</button><div class="liste" style="margin-top:12px">${zeileBtn("plaudern", "Kurz plaudern – zum Spaß", "Mit Hühnchen, Christiane, Max und Co.", `data-act="tel-auf"`, "k-menschen")}${zeileBtn("briefkasten", "Post von Karin aus Vimmerby", "Briefwechsel auf Schwedisch", `data-act="bv-auf"`, "k-menschen")}${zeileBtn("maske", "Film & Fernsehen", "Krimis und gute Filme aus der Mediathek", `data-act="tv-auf"`, "k-geist")}</div>`;
   sheet({ titel: "Ablenkung?", inhalt: html, id: "hilft" });
 }
 function ideeSheet(id) {
@@ -735,7 +735,7 @@ function einstellungenInhalt() {
       <div class="chips" style="margin-top:10px">${chip(S.anrede === "du", "Du", `data-act="einst" data-k="anrede" data-v="du"`)}${chip(S.anrede === "sie", "Sie", `data-act="einst" data-k="anrede" data-v="sie"`)}</div>`)
     + einstGruppe("huhn", "geschenk", "Hühnchen und Überraschungen", "Wer spricht und wie oft",
       `${schalter(S.huhn, "Hühnchen zeigen und sprechen lassen", `data-act="einst-um" data-k="huhn"`)}
-      ${schalter(!S.eierAus, "Kleine Überraschungen", `data-act="eier-um"`, "Ab und zu melden sich Max, Hühnchen oder Jane")}`)
+      ${schalter(!S.eierAus, "Kleine Überraschungen", `data-act="eier-um"`, "Ab und zu melden sich Max, Hühnchen oder Christiane")}`)
     + einstGruppe("rueck", "glocke", "Ton, Vibration, Bewegung", "Rückmeldung beim Tippen",
       `${IOS ? "" : schalter(S.vib, "Vibration", `data-act="einst-um" data-k="vib"`)}
       ${schalter(S.ton, "Leiser Ton beim Eintragen", `data-act="einst-um" data-k="ton"`)}
@@ -998,7 +998,7 @@ function tschuessHTML() {
 }
 
 function listeHilfeSheet() {
-  sheet({ titel: "Meine To-do-Liste", inhalt: maxZettel(`<p>Das ist ganz einfach deine To-do-Liste – wie ein Zettel am Kühlschrank.</p><p>Schreib rein, was du vorhast: Blumen gießen, Jane anrufen, Rezept abholen, das nächste Kapitel. Ist es erledigt, tippst du drauf. Dann ist es abgehakt, zählt im Bild mit und steht im Rückblick.</p><p style="margin:0">Was nicht klappt, bleibt einfach stehen. Kein Stress, keine Frist.</p>`) });
+  sheet({ titel: "Meine To-do-Liste", inhalt: maxZettel(`<p>Das ist ganz einfach deine To-do-Liste – wie ein Zettel am Kühlschrank.</p><p>Schreib rein, was du vorhast: Blumen gießen, Christiane anrufen, Rezept abholen, das nächste Kapitel. Ist es erledigt, tippst du drauf. Dann ist es abgehakt, zählt im Bild mit und steht im Rückblick.</p><p style="margin:0">Was nicht klappt, bleibt einfach stehen. Kein Stress, keine Frist.</p>`) });
 }
 
 function postHeute() {

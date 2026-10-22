@@ -170,9 +170,9 @@ D.gruppen = [
    Jede Person hat ihr eigenes Fenster im Haus. Kein Zählen, kein „lange nicht gemeldet“. */
 D.menschenStart = [
   { id: "max", name: "Max", rolle: "Patensohn", farbe: "#C98A1B" },
-  { id: "christiane", name: "Jane", rolle: "beste Freundin", farbe: "#B5532F" },
+  { id: "christiane", name: "Christiane", rolle: "beste Freundin", farbe: "#B5532F" },
   { id: "daniel", name: "Daniel und Familie", rolle: "Sohn, in Schweden", farbe: "#3F6E8C" },
-  { id: "micha", name: "Micha", rolle: "Janes Mann", farbe: "#4A6B3A" },
+  { id: "micha", name: "Micha", rolle: "Christianes Mann", farbe: "#4A6B3A" },
   { id: "nachbarin", name: "Nachbarin", rolle: "im Haus", farbe: "#6B4A7A" }
 ];
 
@@ -204,7 +204,7 @@ D.stufen = [
   { w: 18500, name: "Der Pavillon", el: "pavillon",
     text: "Neben dem Tanzboden steht ein kleiner Pavillon. Darunter ist Platz für Musik und für Gäste." },
   { w: 26000, name: "Das Fest", el: "fest",
-    text: "Lichter zwischen den Häusern und ein langer Tisch mit Kuchen. Max, Jane und die Nachbarn sitzen mit dran." }
+    text: "Lichter zwischen den Häusern und ein langer Tisch mit Kuchen. Max, Christiane und die Nachbarn sitzen mit dran." }
 ];
 
 /* ---------- Mut-Leiter (Ausflüge) ---------- */

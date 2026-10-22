@@ -1,5 +1,5 @@
 /* ============================================================
-   Kleine Überraschungen: Max, Hühnchen und Jane melden sich
+   Kleine Überraschungen: Max, Hühnchen und Christiane melden sich
    ab und zu – an bestimmten Tagen, nach bestimmten Dingen, zufällig.
    Regeln: höchstens 1 Tages-Ereignis, dazu höchstens 2 nach Antippen/Abhaken;
    nicht am ersten Tag; an Sparflamme-Tagen nur die leisen; abschaltbar.
@@ -22,7 +22,7 @@ function eiErlaubt(id, art) {
   if (art === "extra" && S.eierTag.extra >= 2) return false;
   return eiWuerfel(id) < (e.selten ?? 1);
 }
-const EI_WER = { huhn: "Hühnchen", max: "Max", christiane: "Jane", micha: "Micha" };
+const EI_WER = { huhn: "Hühnchen", max: "Max", christiane: "Christiane", micha: "Micha" };
 function eiZeigen(id, art) {
   const e = D.eier[id]; eiZustand()[id] = heute();
   if (art === "tag") S.eierTag.tages++; else S.eierTag.extra++;

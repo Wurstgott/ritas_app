@@ -1,9 +1,9 @@
 /* ============================================================
-   Spaß-Telefon: mit Hühnchen, Max oder Jane plaudern.
+   Spaß-Telefon: mit Hühnchen, Max oder Christiane plaudern.
    Gespräche aus D.anrufe; noch nicht geführte kommen zuerst.
    Bei Max endet jedes Gespräch im Tschüss-Duell.
    ============================================================ */
-const TEL_WER = { huhn: "Hühnchen", max: "Max", jane: "Jane", greta: "Greta", pauli: "Pauli", micha: "Micha" };
+const TEL_WER = { huhn: "Hühnchen", max: "Max", jane: "Christiane", greta: "Greta", pauli: "Pauli", micha: "Micha" };
 const TEL_REIHE = ["huhn", "max", "jane", "greta", "pauli", "micha"];
 let TEL = null;
 

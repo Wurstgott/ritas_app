@@ -105,6 +105,7 @@ function fuelle(ist, soll) {
   }
 }
 function migrieren() {
+  try { (S.menschen || []).forEach(x => { if (x.id === "christiane" && x.name === "Jane") x.name = "Christiane"; }); } catch (e) { }
   const f = frisch();
   if (!S || typeof S !== "object" || Array.isArray(S)) S = f;
   const gvAlt = Number(S.gv) || 1;

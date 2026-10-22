@@ -105,7 +105,7 @@ function huhnFrontSVG(gr = 150, opt = {}) {
 </svg>`;
 }
 
-/* Christiane („Jane“): blonder Bob, rote runde Brille, pinke Jacke, blauer Schal */
+/* Christiane: blonder Bob, rote runde Brille, pinke Jacke, blauer Schal */
 function janeSVG(gr = 64) {
   return `<svg class="portrait jane" viewBox="0 0 100 100" style="width:${gr}px;height:${gr}px" aria-hidden="true">
   <circle cx="50" cy="50" r="48" fill="#F6E4E6"/>

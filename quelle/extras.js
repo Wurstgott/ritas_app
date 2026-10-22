@@ -84,9 +84,9 @@ function raetselHTML() {
   const R = raetselDerWoche(); if (!R) return "";
   const st = (S.raetsel || {})[R.kw] || {};
   if (st.weg) return "";
-  return `<section class="abschnitt"><div class="zettel-notiz raetsel"><span class="zettel-nadel" aria-hidden="true"></span><span class="klein" style="font-weight:700">Janes Sonntagsrätsel</span><p style="margin:4px 0 8px;font-family:Fraunces,Georgia,serif;font-size:1.08rem">${esc(R.frage)}</p>
+  return `<section class="abschnitt"><div class="zettel-notiz raetsel"><span class="zettel-nadel" aria-hidden="true"></span><span class="klein" style="font-weight:700">Christianes Sonntagsrätsel</span><p style="margin:4px 0 8px;font-family:Fraunces,Georgia,serif;font-size:1.08rem">${esc(R.frage)}</p>
     ${st.tipp ? `<p class="klein" style="margin:0 0 6px">Tipp: ${esc(R.tipp || "")}</p>` : ""}${st.geloest ? `<p style="margin:0 0 6px;font-weight:700">${esc(R.antwort)}</p>` : ""}
-    <div class="zeile" style="flex-wrap:wrap;gap:6px">${!st.tipp && R.tipp ? `<button class="knopf klein leise" data-act="raetsel" data-v="tipp">Tipp</button>` : ""}${!st.geloest ? `<button class="knopf klein leise" data-act="raetsel" data-v="loesen">Auflösung (nach dem Anruf bei Jane)</button>` : `<button class="knopf klein leise" data-act="raetsel" data-v="weg">Schön, danke</button>`}</div></div></section>`;
+    <div class="zeile" style="flex-wrap:wrap;gap:6px">${!st.tipp && R.tipp ? `<button class="knopf klein leise" data-act="raetsel" data-v="tipp">Tipp</button>` : ""}${!st.geloest ? `<button class="knopf klein leise" data-act="raetsel" data-v="loesen">Auflösung (nach dem Anruf bei Christiane)</button>` : `<button class="knopf klein leise" data-act="raetsel" data-v="weg">Schön, danke</button>`}</div></div></section>`;
 }
 function raetselAktion(d) { const R = raetselDerWoche(); if (!R) return; S.raetsel = S.raetsel || {}; const st = S.raetsel[R.kw] = S.raetsel[R.kw] || {}; st[d.v === "loesen" ? "geloest" : d.v] = true; speichern(); haptik("auswahl"); render({ halteScroll: true, ohneAnim: true }); }
 
@@ -94,7 +94,7 @@ function raetselAktion(d) { const R = raetselDerWoche(); if (!R) return; S.raets
    Schon gekaufte werden in skins.js (skinsMigrieren) einmalig als Taler zurückgezahlt. ---------- */
 function gutscheinSheet(id) {
   const g = (D.gutscheine || []).find(x => x.id === id); if (!g) return;
-  sheet({ titel: g.name, inhalt: `<p>${esc(g.text)}</p><p class="klein">Zum Einlösen diesen Text an Max oder Jane schicken:</p><div class="bogen mulde" id="gutschein-text">${esc(g.nachricht)}</div><button class="knopf zweit voll" style="margin-top:10px" data-act="kopieren" data-was="gutschein-text">Text kopieren</button>` });
+  sheet({ titel: g.name, inhalt: `<p>${esc(g.text)}</p><p class="klein">Zum Einlösen diesen Text an Max oder Christiane schicken:</p><div class="bogen mulde" id="gutschein-text">${esc(g.nachricht)}</div><button class="knopf zweit voll" style="margin-top:10px" data-act="kopieren" data-was="gutschein-text">Text kopieren</button>` });
 }
 
 /* ---------- Echte Post von Max aus dem Repo (post.json) ---------- */

@@ -1,4 +1,4 @@
-/* Spaß-Telefon: kleine Dialogspiele mit Hühnchen, Max und Jane.
+/* Spaß-Telefon: kleine Dialogspiele mit Hühnchen, Max und Christiane.
    Reines Datenobjekt. weiter:null = Gespräch endet nach dieser Antwort. */
 D.anrufe = [
 
@@ -650,7 +650,7 @@ D.anrufe = [
   },
   schluss: "Ich geh jetzt sortieren. Tschüss!" },
 
-{ id: "max-11", wer: "max", thema: "Geschenk für Jane",
+{ id: "max-11", wer: "max", thema: "Geschenk für Christiane",
   knoten: {
     start: { sagt: "Psst. Mama hat bald Geburtstag, und ich hab noch nichts. Du kennst sie doch am besten.", antworten: [
       { text: "Was Neues für die Küche?", weiter: "k2" },
@@ -990,7 +990,7 @@ D.anrufe = [
       { text: "Du hörst durch die Wand?", weiter: "k6" } ] },
     k5: { sagt: "Im Flur steht es dann und guckt mich an, jedes Mal, wenn ich vorbeigeh.", antworten: [
       { text: "Back was, dann vergisst du’s.", weiter: "k6" },
-      { text: "Pakete gucken nicht, Jane.", weiter: "k6" } ] },
+      { text: "Pakete gucken nicht, Christiane.", weiter: "k6" } ] },
     k6: { sagt: "Oh, es klingelt. Das ist er bestimmt, ich frag mal ganz nebenbei, was drin ist.", antworten: [
       { text: "Ganz nebenbei, natürlich.", weiter: null },
       { text: "Erzähl mir alles.", weiter: null } ] }
@@ -1066,7 +1066,7 @@ D.anrufe = [
   },
   schluss: "Gut, dann bis Donnerstag. Ich mach heute schon mal den Teig." },
 
-{ id: "jane-11", wer: "jane", thema: "Jane will tanzen",
+{ id: "jane-11", wer: "jane", thema: "Christiane will tanzen",
   knoten: {
     start: { sagt: "Du gibst doch Tanzstunden. Ich will auch mal, aber ich warn dich, ich trete.", antworten: [
       { text: "Wir fangen ganz langsam an.", weiter: "k2" },
@@ -1185,7 +1185,7 @@ D.anrufe = [
   knoten: {
     start: { sagt: "Du liest doch Harry Potter. Was ist dieses Butterbier? Ich will das mal machen.", antworten: [
       { text: "Süß und warm, mehr weiß keiner.", weiter: "k2" },
-      { text: "Das gibt’s nur im Buch, Jane.", weiter: "k3" } ] },
+      { text: "Das gibt’s nur im Buch, Christiane.", weiter: "k3" } ] },
     k2: { sagt: "Süß und warm, das kann ich. Ich denk an Milch, Karamell und ein Stück Butter.", antworten: [
       { text: "Und eine Prise Zimt.", weiter: "k4" },
       { text: "Klingt nach deiner Küche.", weiter: "k4" } ] },
