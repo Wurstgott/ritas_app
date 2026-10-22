@@ -15,7 +15,7 @@ function telBild(wer, gr) {
 function telAuswahlSheet() {
   const alle = D.anrufe || [], gef = S.anrufeGefuehrt || {};
   const zahl = w => alle.filter(a => a.wer === w).length, neu = w => alle.filter(a => a.wer === w && !gef[a.id]).length;
-  sheet({ titel: "Kurz plaudern", id: "telefon", inhalt: `<p class="klein" style="margin-top:0">Nur zum Spaß – niemand wird wirklich angerufen.</p>
+  sheet({ titel: "Kurz plaudern", id: "telefon", inhalt: `<div class="tel-kopf">${typeof altesTelefonSVG === "function" ? altesTelefonSVG(64) : ""}<p class="klein" style="margin:0">Nur zum Spaß – niemand wird wirklich angerufen. Wählscheibe drehen musst du auch nicht.</p></div>
     <div class="tel-wahl">${TEL_REIHE.filter(w => (D.anrufe || []).some(a => a.wer === w)).map(w => `<button class="tel-kontakt" data-act="tel-ruf" data-wer="${w}"><span class="tel-rund">${w === "huhn" ? huhnFrontSVG(56) : telBild(w, 56)}</span><span class="titel">${TEL_WER[w]}</span><span class="unter">${zahl(w) ? (neu(w) ? "hat was zu erzählen" : "alles schon gehört – nochmal?") : "bald"}</span></button>`).join("")}</div>
 ` });
 }

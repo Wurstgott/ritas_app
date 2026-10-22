@@ -68,7 +68,7 @@ D.taetigkeiten = [
     info: ["Gut vorbereitet geht die Stunde leichter von der Hand."] },
   { id: "besuch", draussenOpt: true, mutOpt: true, muehOpt: true, name: "Besuch (bekommen oder gemacht)", kurz: "Besuch", art: "person", std: 60, feld: "menschen", bild: "fenster", tf: "AB", icon: "tassen",
     info: ["Zusammen gewesen – am Küchentisch, unterwegs oder in der Binger."] },
-  { id: "telefon", muehOpt: true, name: "Telefoniert", kurz: "Telefoniert", art: "person", std: 20, feld: "menschen", bild: "fenster", tf: "ABCD", icon: "telefon",
+  { id: "telefon", muehOpt: true, name: "Telefonieren", kurz: "Telefonieren", art: "person", std: 20, feld: "menschen", bild: "fenster", tf: "ABCD", icon: "telefon",
     info: ["Telefoniert. Und bestimmt an alles gedacht, was du fragen wolltest."] },
   { id: "nachbar", name: "Gespräch im Haus", kurz: "Im Haus", art: "person", std: 15, feld: "menschen", bild: "fenster", tf: "ABC", icon: "haus",
     info: ["Ein Schwatz im Haus – so bleibt man auf dem Laufenden."] },
@@ -222,8 +222,6 @@ D.leiter = [
 D.checkliste = [
   { id: "wechsel", text: "Wechselsachen eingepackt" },
   { id: "leeren", text: "Vor dem Losgehen noch mal ins Bad" },
-  { id: "wc", text: "Toilette am Ziel und unterwegs überlegt" },
-  { id: "euro", text: "Euroschlüssel eingesteckt (falls vorhanden)" },
   { id: "wasser", text: "Wasser und etwas zu essen" },
   { id: "pause", text: "Pausenplatz überlegt (Bank, Café)" },
   { id: "bescheid", text: "Jemandem Bescheid gesagt" },
@@ -235,7 +233,7 @@ D.checkliste = [
 
 D.wennDann = [
   "Wenn es mir unterwegs zu viel wird, dann setze ich mich auf die nächste Bank und entscheide in Ruhe.",
-  "Wenn ich eine Toilette brauche, dann gehe ich ins nächste Café und frage freundlich.",
+  "Wenn ich eine Pause brauche, dann gehe ich ins nächste Café und bestelle mir etwas Warmes.",
   "Wenn ich losfahren will und zögere, dann packe ich zuerst nur die Tasche – der Rest kommt von allein.",
   "Wenn ich zurück bin, dann trage ich den Ausflug ein und schreibe einen Satz dazu.",
   "Wenn das Wetter umschlägt, dann nehme ich mir ein Taxi zurück und ärgere mich nicht."
@@ -278,30 +276,32 @@ D.massstab = [
 
 /* ---------- Kramladen (Taler) ---------- */
 D.laden = [
-  { id: "patience", gruppe: "Spiel", name: "Waldpatience", preis: 60, text: "Das bekannte Kartenspiel für eine Person: Alle Karten nach Farben von Ass bis König ablegen. Ohne Zeitdruck, jeder Zug lässt sich zurücknehmen.", icon: "karten" },
-  { id: "rueckenmotiv", gruppe: "Spiel", name: "Kartenrücken „Kiefernzapfen“", preis: 30, text: "Ein neues Muster für die Rückseite der Patience-Karten: Kiefernzapfen.", icon: "karten" },
+  { id: "patience", gruppe: "Spiel", name: "Waldpatience", preis: 60, text: "Das bekannte Kartenspiel für eine Person: alle Karten nach Farben von Ass bis König ablegen. Jeder Zug lässt sich zurücknehmen, und wenn die zehn Minuten um sind, legst du in Ruhe fertig.", icon: "karten" },
+  { id: "rueckenmotiv", gruppe: "Spiel", name: "Kartenrücken „Kiefernzapfen“", preis: 30, text: "Kiefernzapfen auf Tannengrün, auf der Rückseite der Patience-Karten. Die sammelt Hühnchen sonst im Forst.", icon: "karten" },
+  { id: "rueckendala", gruppe: "Spiel", name: "Kartenrücken „Dalapferd“", preis: 30, text: "Rote Dalapferdchen auf Blau, wie aus der Werkstatt bei Mora. Hühnchen zählt beim Spielen die Pferde mit.", icon: "karten" },
 
-  { id: "rotkehlchen", gruppe: "Wald & Garten", name: "Rotkehlchen", preis: 50, text: "Ein Rotkehlchen für dein Bild. Es sitzt morgens auf dem Zaun oder der Bank.", icon: "vogel" },
-  { id: "traenke", gruppe: "Wald & Garten", name: "Vogeltränke", preis: 40, text: "Für dein Bild: eine flache Steinschale am Rand der Wiese, aus der die Vögel trinken.", icon: "schale" },
-  { id: "igelhaus", gruppe: "Wald & Garten", name: "Igelhaus", preis: 60, text: "Für dein Bild: ein kleines Igelhaus aus Laub und Holz unter der Hecke.", icon: "igel" },
-  { id: "rosenbogen", gruppe: "Wald & Garten", name: "Rosenbogen", preis: 120, text: "Für dein Bild: ein Bogen mit Kletterrosen über dem Weg.", icon: "blume" },
-  { id: "haengematte", gruppe: "Wald & Garten", name: "Hängematte", preis: 150, text: "Für dein Bild: eine Hängematte zwischen zwei Kiefern.", icon: "decke" },
-  { id: "sternbilder", gruppe: "Wald & Garten", name: "Sternbilder", preis: 250, text: "In deinem Bild leuchten nachts Großer Wagen, Kassiopeia und Orion am Himmel.", icon: "stern" },
+  { id: "rotkehlchen", gruppe: "Wald & Garten", name: "Rotkehlchen", preis: 50, text: "Kommt morgens, setzt sich auf den Zaun und guckt, ob du schon wach bist.", icon: "vogel" },
+  { id: "traenke", gruppe: "Wald & Garten", name: "Vogeltränke", preis: 40, text: "Eine flache Steinschale am Wiesenrand. Die Spatzen baden darin, die Amsel trinkt nur. Sie hat Stil.", icon: "schale" },
+  { id: "igelhaus", gruppe: "Wald & Garten", name: "Igelhaus", preis: 60, text: "Ein Igelhaus aus Laub und Reisig unter der Hecke. Der Mieter zahlt in Schmatzgeräuschen.", icon: "igel" },
+  { id: "rosenbogen", gruppe: "Wald & Garten", name: "Rosenbogen", preis: 120, text: "Kletterrosen über dem Weg. Im Juni blühen sie, den Rest des Jahres tun sie wichtig.", icon: "blume" },
+  { id: "haengematte", gruppe: "Wald & Garten", name: "Hängematte", preis: 150, text: "Zwischen zwei Kiefern. Hühnchen hat sie schon getestet und ist nicht wieder rausgekommen.", icon: "decke" },
+  { id: "sternbilder", gruppe: "Wald & Garten", name: "Sternbilder", preis: 250, text: "Sobald es dunkel ist, stehen Großer Wagen, Kassiopeia und Orion über dem Haus. In Schweden heißt der Wagen übrigens Karlavagnen.", icon: "stern" },
 
-  { id: "klangschale", gruppe: "Klänge", name: "Timer-Gong: Klangschale", preis: 40, text: "Ein weicher Klang, wenn der Timer endet.", icon: "glocke" },
-  { id: "spieluhr", gruppe: "Klänge", name: "Timer-Gong: Spieluhr", preis: 40, text: "Drei helle Töne, wenn der Timer endet.", icon: "glocke" },
+  { id: "klangschale", gruppe: "Klänge", name: "Gong für den Timer: Klangschale", preis: 40, text: "Ein weicher, langer Ton, wenn die Zeit um ist. Kein Wecker-Schreck.", icon: "glocke" },
+  { id: "spieluhr", gruppe: "Klänge", name: "Gong für den Timer: Spieluhr", preis: 40, text: "Drei helle Töne wie aus einer alten Spieldose, wenn die Zeit um ist.", icon: "glocke" },
   { id: "regen", gruppe: "Klänge", name: "Hintergrundklang „Regen am Fenster“", preis: 80, text: "Leises Regenrauschen, solange der Timer läuft.", icon: "regen" },
   { id: "waldmorgen", gruppe: "Klänge", name: "Hintergrundklang „Waldmorgen“", preis: 80, text: "Wind in den Kiefern und ab und zu ein Vogel – leise, solange der Timer läuft.", icon: "blatt" },
-  { id: "takt", gruppe: "Klänge", name: "Tanz-Taktgeber", preis: 120, text: "Klickt den Takt für deine Tanzstunde: Walzer, Langsamer Walzer, Foxtrott, Cha-Cha. Das Tempo stellst du selbst ein.", icon: "note" },
+  { id: "takt", gruppe: "Klänge", name: "Tanz-Taktgeber", preis: 60, text: "Klickt den Takt für deine Tanzstunde: Langsamer und Wiener Walzer, Foxtrott, Discofox, Cha-Cha-Cha, Rumba. Das Tempo bestimmst du.", icon: "note" },
 
-  { id: "gedichte1", gruppe: "Zum Lesen", name: "Gedichte: Jahreszeiten", preis: 40, text: "Vier kurze Gedichte zu den Jahreszeiten, von Mörike, Heine und Morgenstern.", icon: "feder" },
-  { id: "gedichte2", gruppe: "Zum Lesen", name: "Gedichte: Unterwegs", preis: 40, text: "Drei Gedichte übers Unterwegssein, von Goethe, Ringelnatz und Eichendorff.", icon: "feder" },
-  { id: "rezepte1", gruppe: "Zum Lesen", name: "Rezeptheft „Einfach & warm“", preis: 50, text: "Fünf einfache warme Gerichte mit wenig Arbeit und wenig Abwasch.", icon: "topf" },
+  { id: "gedichte1", gruppe: "Zum Lesen", name: "Gedichte: Jahreszeiten", preis: 40, text: "Vier kurze Gedichte, eins für jede Jahreszeit: von Mörike, Storm und Morgenstern.", icon: "feder" },
+  { id: "gedichte2", gruppe: "Zum Lesen", name: "Gedichte: Unterwegs", preis: 40, text: "Drei Gedichte für unterwegs, zum Mitnehmen im Kopf: Goethe, Ringelnatz, Eichendorff.", icon: "feder" },
+  { id: "rezepte1", gruppe: "Zum Lesen", name: "Rezeptheft „Einfach und warm“", preis: 50, text: "Fünf einfache warme Gerichte mit wenig Arbeit und wenig Abwasch.", icon: "topf" },
   { id: "rezepte2", gruppe: "Zum Lesen", name: "Rezeptheft „Kuchen für Besuch“", preis: 50, text: "Fünf Kuchen, die sicher gelingen – für den nächsten Besuch.", icon: "kuchen" },
-  { id: "briefe", gruppe: "Zum Lesen", name: "Briefanfänge an Herzensmenschen", preis: 60, text: "Erste Sätze für Karten und Briefe – den Rest schreibst du.", icon: "brief" },
-  { id: "fragen", gruppe: "Zum Lesen", name: "Fragekarten fürs Telefonat", preis: 50, text: "25 Fragen für Telefonate, zum Beispiel: „Was hat dich diese Woche zum Lachen gebracht?“", icon: "telefon" },
-  { id: "tanzkarten", gruppe: "Zum Lesen", name: "Tanzschritt-Karten zum Unterrichten", preis: 80, text: "Grundschritte für Langsamen Walzer, Foxtrott, Cha-Cha-Cha und Rumba – zum Nachlesen für deine Tanzstunde.", icon: "fuss" },
-  { id: "orte2", gruppe: "Ausflüge", name: "Ausflugspaket „Weiter weg“", preis: 100, text: "Mehr Ausflugsziele für einen halben oder ganzen Tag – jeweils mit Hinweisen zu Toiletten und Bänken.", icon: "karte" }
+  { id: "rezepte3", gruppe: "Zum Lesen", name: "Rezeptheft „Schwedisch backen“", preis: 50, text: "Kanelbullar, Kladdkaka, Chokladbollar und Lussekatter für den Dezember. Fika kann kommen.", icon: "kuchen" },
+  { id: "briefe", gruppe: "Zum Lesen", name: "Erste Sätze für Briefe", preis: 60, text: "Der erste Satz ist immer der schwerste. Hier sind fünfzehn. Den Rest kannst du sowieso.", icon: "brief" },
+  { id: "fragen", gruppe: "Zum Lesen", name: "Fangfragen fürs Telefon", preis: 50, text: "25 Fragen, bei denen am anderen Ende erst gestutzt und dann gelacht wird. Zum Beispiel: „Wenn du einen Tag lang Kommissar wärst – wen würdest du verhören?“", icon: "telefon" },
+  { id: "tanzkarten", gruppe: "Zum Lesen", name: "Tanzkarten mit Geschichten", preis: 80, text: "Hambo, Schottis, Bugg und der Froschtanz zu Midsommar, dazu Geschichten zu Walzer, Foxtrott und Cha-Cha-Cha. Mit Musik zum Anhören. Die Schritte kennst du ja.", icon: "fuss" },
+  { id: "orte2", gruppe: "Ausflüge", name: "Ausflugspaket „Weiter weg“", preis: 60, text: "Ziele für einen halben oder ganzen Tag, ein Stück weiter raus. Mit allem, was man vorher wissen will.", icon: "karte" }
 ];
 
 /* ---------- Hühnchen: wo es steht (je Bildort) ---------- */

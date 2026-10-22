@@ -1,0 +1,70 @@
+
+/* ============================================================
+   Tipp-Rückmeldungen (feedback.js) – farbneutral über currentColor und --fb-*-Tokens.
+   Beim Redesign genügt es, die Tokens neu zu belegen.
+   ============================================================ */
+:root {
+  --fb-nav: var(--moos);                 /* gleitender Zeiger unter der aktiven Lasche */
+  --fb-erfolg-grund: var(--moos);        /* Haken-Plakette */
+  --fb-erfolg-tinte: var(--auf-moos);
+  --fb-welle: .16;                       /* Deckkraft der Welle */
+}
+@property --r { syntax: "<length>"; inherits: false; initial-value: 0px; }
+
+/* neu in HAPSEL: braucht ein eigenes Bezugssystem fürs iOS-label.hap */
+.link-knopf { position: relative; }
+
+/* eigene Ebene über dem Element (unter dem iOS-label.hap, z 6) */
+.fb-ebene { position: absolute; inset: 0; z-index: 5; overflow: hidden; border-radius: inherit; pointer-events: none; }
+/* Aktion: matte Welle in currentColor, 16 % → 0, 600 ms */
+.fb-welle { position: absolute; border-radius: 50%; background: currentColor; opacity: var(--fb-welle); transform: scale(0); animation: fb-welle .6s cubic-bezier(.2,.6,.3,1) forwards; }
+@keyframes fb-welle { 70% { opacity: calc(var(--fb-welle) * .6); } to { transform: scale(1); opacity: 0; } }
+
+/* Auswahl: der neue Zustand läuft vom Fingerpunkt ein */
+.fill-in { isolation: isolate; }
+.fill-in > .fb-fuell { position: absolute; inset: 0; z-index: -1; border-radius: inherit; pointer-events: none;
+  clip-path: circle(var(--r) at var(--fx, 50%) var(--fy, 50%)); animation: fb-r .36s cubic-bezier(.3,.7,.3,1) forwards; }
+.fill-in > .fb-fuell.puls { z-index: 4; background: currentColor; opacity: .2; animation: fb-r .36s cubic-bezier(.3,.7,.3,1) forwards, fb-aus .5s ease-out forwards; }
+@keyframes fb-r { from { --r: 0px; } to { --r: 460px; } }
+@keyframes fb-aus { 0%, 50% { opacity: .2; } to { opacity: 0; } }
+
+/* Fehler: einmaliges Seitwärtszucken, höchstens 4 px (translate stört kein transform) */
+.fb-zuck { animation: fb-zuck .34s ease-out; }
+@keyframes fb-zuck { 15% { translate: -4px 0; } 35% { translate: 4px 0; } 55% { translate: -3px 0; } 75% { translate: 2px 0; } to { translate: 0 0; } }
+
+/* Erfolg: ein Haken zeichnet sich (nur wenn kein Toast-Haken und kein Stempel kommt) */
+.fb-haken { position: fixed; z-index: 120; width: 46px; height: 46px; margin: -23px 0 0 -23px; border-radius: 50%; pointer-events: none;
+  background: var(--fb-erfolg-grund); color: var(--fb-erfolg-tinte); box-shadow: 0 6px 18px rgba(0,0,0,.18);
+  display: grid; place-items: center; animation: fb-haken-ein .9s ease-out forwards; }
+.fb-haken svg { width: 30px; height: 30px; }
+.fb-haken path { stroke-dasharray: 30; stroke-dashoffset: 30; animation: fb-strich .32s .08s ease-out forwards; }
+@keyframes fb-haken-ein { 0% { transform: scale(.6); opacity: 0; } 18% { transform: scale(1.06); opacity: 1; } 30% { transform: scale(1); } 75% { opacity: 1; } to { transform: scale(.96); opacity: 0; } }
+@keyframes fb-strich { to { stroke-dashoffset: 0; } }
+
+/* Navigation: Abdunkeln beim Drücken + gleitender Zeiger */
+nav.tabs button.gedrueckt { background-image: linear-gradient(color-mix(in srgb, currentColor 12%, transparent), color-mix(in srgb, currentColor 12%, transparent)); }
+nav.tabs .fb-tabzeiger { position: absolute; left: 0; top: -6px; height: 4px; border-radius: 0 0 4px 4px; background: var(--fb-nav); z-index: 3; pointer-events: none;
+  transition: transform .32s cubic-bezier(.3,.8,.3,1), width .32s cubic-bezier(.3,.8,.3,1); }
+nav.tabs.fb-gleit button[aria-current="page"]::before { opacity: 0; }
+
+/* Schalter: der Daumen streckt sich beim Drücken (wie ein echter Toggle) */
+.schalter::after { transition: transform .22s cubic-bezier(.3,.8,.3,1.15), width .15s ease; }
+.schalter-zeile.gedrueckt .schalter::after { width: 34px; }
+.schalter-zeile.gedrueckt .schalter.an::after { transform: translateX(22px); }
+
+/* Auswahl-Chips sinken beim Drücken leicht ein */
+.chip.gedrueckt { transform: scale(.97); }
+:where(.chip) { transition: transform .09s ease; }
+
+/* Wischen bricht ab: ab 10 px kein gedrücktes Aussehen mehr */
+.nopress.gedrueckt, .tuer.nopress:active, .tuer-gross.nopress:active, .tel-karte-knopf.nopress:active { transform: none !important; }
+.chip.nopress:active, nav.tabs button.nopress { background-image: none; }
+
+/* Bewegung reduziert: keine Effekte (feedback.js erzeugt dann auch keine) */
+@media (prefers-reduced-motion: reduce) {
+  .fb-ebene, .fb-haken, .fill-in > .fb-fuell { display: none !important; }
+  .fb-zuck { animation: none !important; }
+  nav.tabs .fb-tabzeiger { transition: none; }
+}
+:root[data-motion="ruhig"] .fb-ebene, :root[data-motion="ruhig"] .fb-haken, :root[data-motion="ruhig"] .fill-in > .fb-fuell { display: none !important; }
+:root[data-motion="ruhig"] nav.tabs .fb-tabzeiger { transition: none; }

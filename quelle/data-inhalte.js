@@ -768,8 +768,8 @@ D.wissen = [
 },
 {
 "id": "W10",
-"titel": "Natur und Wohlbefinden: In einer berühmten Krankenhausstudie von 1984 erholten sich Operierte mit Blick auf …",
-"text": "In einer berühmten Krankenhausstudie von 1984 erholten sich Operierte mit Blick auf Bäume etwas schneller und brauchten weniger starke Schmerzmittel als Patienten mit Blick auf eine Ziegelwand. Die Studie war klein, aber sie hat die Architektur von Kliniken verändert. Der Fensterplatz zählt.",
+"titel": "Der Blick ins Grüne",
+"text": "Schon der Blick ins Grüne tut gut: In Studien erholten sich Menschen mit Blick auf Bäume schneller als mit Blick auf eine Mauer. Der Fensterplatz zählt.",
 "beleg": "mittel",
 "quelle": "https://doi.org/10.1126/science.6143402",
 "quelleName": "Ulrich 1984, Science"
@@ -1264,7 +1264,7 @@ D.missionen = [
 "titel": "Ein Ausflug mit Plan B",
 "text": "Tag 1–5 dienen der Planung (geht an S-Tagen), Tag 6 oder 7 ist der Ausflug am G-Tag. Gegen die Angst vor dem „halben Tag weit weg“.",
 "tage": 7,
-"wennDann": "Wenn ich Angst vor der Strecke bekomme, dann schaue ich auf meinen Plan-B-Zettel: Pausenplatz, Toiletten, Taxinummer, wen ich anrufen kann.",
+"wennDann": "Wenn ich Angst vor der Strecke bekomme, dann schaue ich auf meinen Plan-B-Zettel: Pausenplatz, Taxinummer, wen ich anrufen kann.",
 "tf": "ABC",
 "t": "gehen"
 },

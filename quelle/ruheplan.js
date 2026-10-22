@@ -1,5 +1,5 @@
 /* ============================================================
-   Mein Notfallplan – für Momente, in denen es eng wird.
+   Mein Notfallplan – bei Unruhe, Anspannung und dergleichen.
    Bewusst allgemein formuliert (zu Hause oder unterwegs), ohne Anlass zu benennen.
    Es wird nie erfasst, WANN es eng war – nur das Üben zählt als Eintrag.
    Grundlage: „Mein kleiner Notfallplan bei Angst und Panik“ (von Max mitgegeben).
@@ -51,7 +51,7 @@ function ruheUnterwegsListe() { const R = ruheP(); return [...D.ruhe.unterwegs.f
 function ruheSheet() { sheet({ titel: "Mein Notfallplan", inhalt: ruheInhalt(), id: "ruhe" }); }
 function ruheInhalt() {
   const R = ruheP(), hilft = ruheHilftListe();
-  return `<p>${A("Wenn es eng wird, zu Hause oder unterwegs: Hier steht, was dir dann hilft. Am besten ab und zu an einem ruhigen Tag durchgehen – dann sitzt es, wenn du es brauchst.", "Wenn es eng wird, zu Hause oder unterwegs: Hier steht, was Ihnen dann hilft. Am besten ab und zu an einem ruhigen Tag durchgehen – dann sitzt es, wenn Sie es brauchen.")}</p>
+  return `<p>${A("Bei Unruhe, Anspannung und dergleichen, zu Hause oder unterwegs: Hier steht, was dir dann hilft. Am besten ab und zu an einem ruhigen Tag durchgehen – dann sitzt es, wenn du es brauchst.", "Bei Unruhe, Anspannung und dergleichen, zu Hause oder unterwegs: Hier steht, was Ihnen dann hilft. Am besten ab und zu an einem ruhigen Tag durchgehen – dann sitzt es, wenn Sie es brauchen.")}</p>
     <button class="knopf haupt voll" data-act="ruhe-jetzt">${ic("atem")} Jetzt Schritt für Schritt</button>
     <h3 style="margin-top:20px">Üben</h3><div class="liste">
       ${zeileBtn("atem", "Atmen üben", "2 Minuten: länger aus- als einatmen", `data-act="ruhe-atmen"`, "k-ruhe")}

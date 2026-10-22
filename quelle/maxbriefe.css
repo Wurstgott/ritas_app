@@ -1,0 +1,71 @@
+
+/* ============================================================
+   Briefe von Max & Geburtstag (maxbriefe.js)
+   ============================================================ */
+:root { --mb-gold: #C9922E; --mb-glanz: rgba(255, 196, 92, .30); }
+@media (prefers-color-scheme: dark) { :root:not([data-theme="light"]) { --mb-gold: #E8B65A; --mb-glanz: rgba(255, 190, 90, .16); --mb-mix: 93%; --mb-warm: #C8732E; } }
+:root[data-theme="dark"] { --mb-gold: #E8B65A; --mb-glanz: rgba(255, 190, 90, .16); --mb-mix: 93%; --mb-warm: #C8732E; }
+
+/* ---------- Festlicht am Geburtstag: ein warmer Schimmer über allem ---------- */
+html[data-fest="geburtstag"] body { background: color-mix(in srgb, var(--papier) 93%, #F2C14E); }
+@media (prefers-color-scheme: dark) { :root:not([data-theme="light"])[data-fest="geburtstag"] body { background: color-mix(in srgb, var(--papier) 95%, #C8732E); } }
+:root[data-theme="dark"][data-fest="geburtstag"] body { background: color-mix(in srgb, var(--papier) 95%, #C8732E); }
+html[data-fest="geburtstag"] body::after {
+  content: ""; position: fixed; inset: 0; pointer-events: none; z-index: 2;
+  background: radial-gradient(130% 60% at 50% -8%, var(--mb-glanz), transparent 62%), radial-gradient(90% 50% at 50% 108%, color-mix(in srgb, var(--mb-glanz) 60%, transparent), transparent 70%);
+  mix-blend-mode: multiply; animation: mb-schimmer 9s ease-in-out infinite alternate;
+}
+@media (prefers-color-scheme: dark) { :root:not([data-theme="light"])[data-fest="geburtstag"] body::after { mix-blend-mode: screen; } }
+:root[data-theme="dark"][data-fest="geburtstag"] body::after { mix-blend-mode: screen; }
+@keyframes mb-schimmer { from { opacity: .75; } to { opacity: 1; } }
+html[data-fest="geburtstag"] .buehne { box-shadow: 0 0 0 2px color-mix(in srgb, var(--mb-gold) 55%, transparent), 0 0 26px var(--mb-glanz), var(--schatten-2); }
+html[data-fest="geburtstag"] .buehne canvas { filter: sepia(.16) saturate(1.14) brightness(1.04); }
+@media (prefers-color-scheme: dark) { :root:not([data-theme="light"])[data-fest="geburtstag"] .buehne canvas { filter: brightness(.92) sepia(.2) saturate(1.1); } }
+:root[data-theme="dark"][data-fest="geburtstag"] .buehne canvas { filter: brightness(.92) sepia(.2) saturate(1.1); }
+html[data-fest="geburtstag"] .gruss-heute h1 { text-shadow: 0 0 18px var(--mb-glanz); }
+
+/* ---------- Torte ---------- */
+.mb-fest { position: relative; text-align: center; overflow: hidden;
+  background: color-mix(in srgb, var(--bogen) var(--mb-mix, 90%), var(--mb-warm, #F2C14E)); box-shadow: 0 0 0 1.5px color-mix(in srgb, var(--mb-gold) 45%, transparent), var(--schatten-1), var(--saum); }
+.mb-fest-titel { font-size: 1.35rem; margin: 2px 0 6px; color: var(--tinte); }
+.mb-torte-buehne { position: relative; display: flex; justify-content: center; align-items: flex-end; }
+.mb-torte { position: relative; display: block; width: min(100%, 300px); padding: 0; margin: 0 auto; background: none; border: 0; cursor: pointer; color: inherit; border-radius: 16px; -webkit-tap-highlight-color: transparent; }
+.mb-torte:focus-visible { outline: 3px solid var(--fokus); outline-offset: 2px; }
+.mb-torte:active .mb-torte-svg { transform: scale(.985); }
+.mb-torte-svg { display: block; width: 100%; height: auto; transition: transform .15s; overflow: visible; }
+.mb-torte-huhn { position: absolute; left: 0; bottom: 4px; z-index: 1; pointer-events: none; }
+.mb-torte-hinweis { margin: 4px 0 0; }
+.mb-flamme { transform-box: fill-box; transform-origin: 50% 90%; animation: mb-flackern 1.6s ease-in-out infinite alternate; animation-delay: calc(var(--i, 0) * -.37s); transition: opacity .3s, transform .35s; }
+@keyframes mb-flackern { 0% { transform: scale(1, 1) rotate(-2deg); } 35% { transform: scale(.94, 1.06) rotate(2deg); } 70% { transform: scale(1.04, .95) rotate(-1deg); } 100% { transform: scale(.97, 1.03) rotate(1.5deg); } }
+.mb-rauch { opacity: 0; stroke-dasharray: 40; stroke-dashoffset: 40; }
+.mb-torte-svg.pustet .mb-flamme { animation: none; transform: skewX(-25deg) scale(.6, .5); opacity: .35; }
+.mb-torte-svg.aus .mb-flamme { opacity: 0; animation: none; }
+.mb-torte-svg.aus .mb-rauch { animation: mb-rauch 1.8s ease-out forwards; animation-delay: calc(var(--i, 0) * .08s); }
+.mb-torte-svg.aus:not(.pustet) .mb-rauch { animation: none; opacity: 0; }
+@keyframes mb-rauch { 0% { opacity: 0; stroke-dashoffset: 40; transform: translateY(0); } 25% { opacity: .8; } 100% { opacity: 0; stroke-dashoffset: 0; transform: translateY(-14px); } }
+.mb-konfetti { position: fixed; z-index: 80; width: 8px; height: 5px; border-radius: 1.5px; pointer-events: none;
+  animation: mb-konfetti 2.7s cubic-bezier(.2,.6,.4,1) forwards; }
+@keyframes mb-konfetti {
+  0% { transform: translate(0, 0) rotate(0); opacity: 1; }
+  30% { transform: translate(calc(var(--dx) * .6), var(--hoch)) rotate(calc(var(--dreh) * .4)); opacity: 1; }
+  100% { transform: translate(var(--dx), var(--fall)) rotate(var(--dreh)); opacity: 0; } }
+@media (prefers-reduced-motion: reduce) { .mb-flamme, html[data-fest="geburtstag"] body::after { animation: none !important; } .mb-torte-svg.aus .mb-rauch { animation: none; opacity: 0; } }
+:root[data-motion="ruhig"] .mb-flamme, :root[data-motion="ruhig"][data-fest="geburtstag"] body::after { animation: none !important; }
+
+/* ---------- Umschlag & Brief ---------- */
+button.mb-umschlag { position: relative; }
+.mb-umschlag-gb .mb-umschlag-bild { filter: drop-shadow(0 0 10px var(--mb-glanz)) drop-shadow(0 3px 0 rgba(28,38,32,.12)); }
+.mb-brief { padding-top: 22px; background-image: none; }
+.mb-brief .brief-marke svg { display: block; }
+.mb-brief-gb { border-color: color-mix(in srgb, var(--mb-gold) 70%, var(--umschlag-rand)); }
+.mb-ort { margin: 0 70px 8px 0; font-family: Fraunces, Georgia, serif; font-style: italic; font-size: .9rem; color: var(--tinte-2); }
+.mb-wusstest { position: relative; display: flex; gap: 10px; align-items: flex-start; margin: 10px 0 14px; padding: 12px 12px 10px; border-radius: 10px;
+  background: color-mix(in srgb, var(--bogen) 82%, var(--licht)); border: 1.5px dashed color-mix(in srgb, var(--licht) 70%, var(--umschlag-rand)); transform: rotate(-.6deg); }
+.mb-wusstest > .icon { flex: none; width: 28px; height: 28px; color: var(--ocker); margin-top: 2px; }
+.mb-wusstest-text { margin: 0 0 8px; font-size: 1rem; line-height: 1.45; }
+.mb-wusstest .knopf { position: relative; }
+.mb-wusstest .knopf .icon { width: 18px; height: 18px; }
+.mb-ps { font-size: .98rem; margin-top: 10px; }
+.mb-zeig { animation: mb-zeig 1.2s ease-in-out 2; border-radius: 14px; }
+@keyframes mb-zeig { 50% { box-shadow: 0 0 0 4px var(--licht); } }
+@media (prefers-reduced-motion: reduce) { .mb-zeig { animation: none; box-shadow: 0 0 0 4px var(--licht); } }

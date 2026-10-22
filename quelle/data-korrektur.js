@@ -72,12 +72,10 @@
   const O = D.ausflugsziele;
   O.forEach(z => {
     z.anreise = z.anreise.split(/;\s*/).filter(a => !/E-Roller|E-Scooter/i.test(a)).join("; ");
-    for (const k of ["text", "anreise", "wc", "baenke", "ruhig", "saison", "kosten", "gehen"]) if (typeof z[k] === "string")
-      z[k] = z[k].replace(/\s*\(\s*(Termin jährlich prüfen|Adressen prüfen|prüfen)\s*\)/gi, " (vorher nachsehen)").replace(/unbekannt – prüfen und in der App selbst eintragen lassen/g, "unbekannt").replace(/⚠️/g, "").replace(/infektarm/g, "ruhig und luftig").replace(/ab Waldkrankenhaus/g, "ab der Haltestelle in der Nähe").replace(/Haltestelle Waldkrankenhaus/g, "Haltestelle in der Nähe").replace(/\s{2,}/g, " ").trim();
+    for (const k of ["text", "anreise", "baenke", "ruhig", "saison", "kosten", "gehen"]) if (typeof z[k] === "string")
+      z[k] = z[k].replace(/\s*\(\s*(Termin jährlich prüfen|Adressen prüfen|prüfen)\s*\)/gi, " (vorher nachsehen)").replace(/unbekannt – prüfen und in der App selbst eintragen lassen/g, "unbekannt").replace(/⚠️/g, "").replace(/infektarm/g, "ruhig und luftig").replace(/\s{2,}/g, " ").trim();
   });
-  { const z = O.find(x => /waldkrankenhaus/i.test(x.id)); if (z) Object.assign(z, { name: "Waldrand-Runde vor der Tür", text: "Ein kurzer, immer gleicher Weg am Waldrand in den südlichen Spandauer Forst. Deine feste kleine Runde, die immer geht.", wc: "unterwegs keine – vorher zu Hause", anreise: "zu Fuß" }); }
-  O.forEach(z => { if (/krankenhaus/i.test(z.wc)) z.wc = z.wc.replace(/[^.;]*krankenhaus[^.;]*/gi, "").trim() || "vorher zu Hause"; });
-  { const z = O.find(x => x.id === "lasszinssee"); if (z) { z.leiter = 4; z.text += " Unterwegs keine Toilette – vorher bei Heidis Landgasthaus."; } }
+  { const z = O.find(x => x.id === "lasszinssee"); if (z) z.leiter = 4; }
   O.forEach(z => { if (["teufelsbruch", "kuhlake-uferweg"].includes(z.id)) z.leiter = 4; });
   { const z = O.find(x => x.id === "hausgarten-wohnanlage"); if (z) z.text = "Zehn Minuten draußen auf einer Bank sitzen, mit Tee oder Buch. Zählt jedes Mal als kleiner Ausflug – so oft du willst."; }
   { const z = O.find(x => /freudstr/.test(x.id)); if (z) z.text = z.text.replace(/Ein guter Ort, um Tanzpartner[^.]*\./, "Ein guter Ort für Gespräche bei Kaffee und Musik zum Zuhören."); }
@@ -86,14 +84,12 @@
   D.angebote.forEach(a => { if (/Flinke Füße/.test(a.name)) a.text += " Zuschauen und Musik hören zählt genauso."; if (/Fitness/.test(a.name)) a.text += " Vorher mit der Physiotherapie klären, welche Teile passen."; });
   D.runden = D.runden.map(r => {
     if (/Kuhlake/.test(r.name)) return { ...r, km: "frei wählbar – schön: bis zur Kreuztränke und zurück, etwa 3 km", text: "Am Bach entlang, Buchen und Eichen, mit etwas Glück ein Eisvogel. Rastplatz an der Kreuztränke. Umkehren geht jederzeit." };
-    if (/Spandauer-Forst-Runde/.test(r.name)) return { ...r, name: "Wildgehege bis Laßzinssee", km: "etwa 6 km hin und zurück", text: "Für gute Tage – oder in zwei Hälften an zwei Tagen. Unterwegs keine Toilette, vorher bei Heidis Landgasthaus." };
+    if (/Spandauer-Forst-Runde/.test(r.name)) return { ...r, name: "Wildgehege bis Laßzinssee", km: "etwa 6 km hin und zurück", text: "Für gute Tage – oder in zwei Hälften an zwei Tagen." };
     return r;
   });
-  { const p = D.praktisch.find(x => x.titel === "Bus"); if (p) p.text = p.text.replace("Ab Waldkrankenhaus", "Ab der Haltestelle in der Nähe"); }
 
   /* ---------- Laden-Inhalte ---------- */
-  D.tanzkarten = D.tanzkarten.filter(k => !/Wiener/.test(k.tanz));
-  D.tanzkarten.forEach(k => k.tipp += " Zum Zeigen reicht oft das Zählen und Erklären.");
+  /* Tanzkarten: seit dem Laden-Lektorat Geschichten und Musik statt Grundschritte (data-laden.js) */
   D.briefe.forEach(b => { b.anfang = b.anfang.replace("Ich wollte dir schon lange einmal sagen, wie gut es mir tut, dass es dich gibt.", "Ich musste heute an dich denken und habe mich gefreut, dass es dich gibt.").replace("– das vergesse ich dir nicht.", "– daran denke ich heute noch gern."); });
 
   /* ---------- Tageshinweise: Jahreszeit beachten ---------- */

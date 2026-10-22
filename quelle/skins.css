@@ -219,3 +219,72 @@ header.kopf { position: relative; }
 .sheet[data-id="schrank"] .ks-fig > svg { width: 64px !important; height: 64px !important; }
 .sheet[data-id="schrank"] .ks-fig-name { margin-top: 0; }
 .sheet[data-id="schrank"] .ks-fig .klein { overflow-wrap: normal; word-break: normal; hyphens: auto; }
+
+/* ===== Laden-Lektorat 22.10. ===== */
+/* Ziel-Ring um die Münze der Plakette */
+.taler-plakette.tp-ziel .muenze { box-sizing: content-box; padding: 2px; margin-left: -1px; border-radius: 50%; background: conic-gradient(var(--moos) var(--tp-p, 0%), rgba(122,90,58,.22) 0); }
+/* Kleiderschrank: Figurenwahl ohne Abschneiden, „zur Probe“ als eigenes Etikett */
+.sheet[data-id="schrank"] .ks-fig { gap: 6px; padding: 6px 4px; }
+.sheet[data-id="schrank"] .ks-fig > svg { width: 56px !important; height: 56px !important; }
+.sheet[data-id="schrank"] .ks-fig-name { font-size: .98rem; }
+.sheet[data-id="schrank"] .ks-fig .klein { font-size: .8rem; line-height: 1.2; }
+.ks-probe-marke { align-self: flex-start; margin-top: 3px; padding: 2px 7px; border-radius: 8px; background: var(--licht, #F2C36B); color: #3A2A08; font: 800 .68rem/1.2 Nunito, system-ui, sans-serif; letter-spacing: .03em; text-transform: uppercase; }
+/* Beschreibung im Fuß nicht mehr kürzen – die Pointe steht am Ende */
+.ks-fuss-text .klein { display: block; -webkit-line-clamp: unset; overflow: visible; }
+.sk-fortschritt { padding: 2px 2px 0; }
+.sk-fortschritt .gk-balken { height: 10px; margin-top: 2px; }
+.sk-fortschritt .gk-balken > i { background: var(--ocker, #B8801E); }
+/* Sammelreihen: Teile antippbar, mit Köpfchen (wem gehört’s?) */
+.ks-punkt { position: relative; min-height: 44px; padding: 4px 10px 4px 4px; gap: 6px; border: 0; font: inherit; font-size: .82rem; cursor: pointer; text-align: left; }
+.ks-punkt .icon { width: 16px; height: 16px; flex: none; }
+.ks-punkt-kopf { display: grid; place-items: center; width: 32px; height: 32px; flex: none; border-radius: 50%; background: var(--mulde); overflow: hidden; }
+.ks-punkt-kopf svg { width: 30px !important; height: 30px !important; }
+.ks-punkt-text { display: flex; flex-direction: column; line-height: 1.15; }
+.ks-punkt-wer { font-size: .68rem; font-weight: 700; color: var(--tinte-2); text-transform: uppercase; letter-spacing: .03em; }
+.ks-punkt.bald { opacity: .75; }
+.ks-reihe-satz { margin: -2px 0 8px; font-style: italic; color: var(--tinte-2); }
+/* Kramladen: Hühnchen an der Kasse */
+.laden-huhn { display: flex; align-items: center; gap: 8px; margin: 10px 0 0; font-size: .9rem; line-height: 1.35; }
+.laden-huhn .huhn { flex: none; }
+.laden-huhn .wer { font-weight: 800; color: var(--moos); }
+.goenn-leiste .gl-gratis { display: inline-block; margin-top: 4px; padding: 2px 8px; border-radius: 8px; background: rgba(91,138,71,.16); color: var(--moos); font-size: .78rem; font-weight: 800; }
+/* Schaufenster der Woche */
+.schaufenster { position: relative; display: flex; align-items: center; gap: 14px; width: 100%; padding: 12px; border: 0; border-radius: 16px; background: var(--bogen); color: var(--tinte); font: inherit; text-align: left; cursor: pointer; box-shadow: var(--schatten-2), var(--saum), inset 0 0 0 2px rgba(184,128,30,.3); }
+.sf-glas { flex: none; display: grid; place-items: center; padding: 6px; border-radius: 12px; background: linear-gradient(135deg, #8A5A2B, #B07A44); box-shadow: inset 0 0 0 2px rgba(255,255,255,.2); }
+.sf-glas .ware-svg { width: 84px; height: 84px; border-radius: 8px; }
+.sf-text { display: flex; flex-direction: column; align-items: flex-start; gap: 6px; min-width: 0; }
+.sf-naechste { margin: 8px 2px 4px; color: var(--tinte-2); }
+#abt-fenster { margin-bottom: 14px; }
+/* Bald im Laden */
+.bald-kachel { cursor: default; box-shadow: var(--saum), inset 0 0 0 1.5px rgba(122,90,58,.18); background: transparent; }
+.bald-kachel .portrait { border-radius: 50%; }
+.halle-ab { color: var(--tinte-2); font-style: italic; }
+.halle-verlauf { display: flex; gap: 6px; align-items: flex-start; color: var(--moos); font-weight: 700; }
+.halle-verlauf .icon { width: 16px; height: 16px; flex: none; margin-top: 2px; }
+.halle-nachricht { font-family: Fraunces, Georgia, serif; font-size: .98rem; }
+/* Kleiderschrank als Tür nebenan – klar getrennt vom Laden */
+.laden-nebenan { margin-top: 22px; padding-top: 16px; border-top: 3px dashed rgba(122,90,58,.35); }
+.nebenan-schild { margin: 0 0 8px; text-align: center; color: var(--tinte-2); font-style: italic; }
+.nebenan-tuer { flex-direction: row; min-height: 0; width: 100%; gap: 12px; padding: 12px 14px; text-align: left; border-radius: 22px 22px 12px 12px; }
+.nebenan-tuer .lt-bild { flex: none; height: auto; margin: 0; }
+.nebenan-text { display: flex; flex-direction: column; gap: 2px; flex: 1; min-width: 0; }
+.nebenan-tuer .pfeil { width: 22px; height: 22px; flex: none; color: var(--moos); }
+/* Tanzkarten: Musik-Links */
+.tanz-musik { display: flex; flex-wrap: wrap; gap: 6px; margin: 4px 0 8px; }
+.tanz-musik .knopf { min-height: 44px; }
+/* Patience: Kartenrücken aus dem Laden */
+.karte.zu.r-zapfen::after { background: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 20 28'%3E%3Cellipse cx='10' cy='15' rx='4.6' ry='7' fill='%23A0703F'/%3E%3Cpath d='M6 12h8M5.6 15h8.8M6 18h8M8 9l4 12M12 9l-4 12' stroke='%236B4A30' stroke-width='.7'/%3E%3Cpath d='M10 8V5' stroke='%236B4A30' stroke-width='1.1'/%3E%3C/svg%3E") center / 62% auto no-repeat, #234f3a; }
+.karte.zu.r-dala { background: #1F3E66; }
+.karte.zu.r-dala::after { background: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 20 20'%3E%3Cpath d='M3 11l1.6-2h5.2l1.1-2.4-.7-1.8 2 .3 1.8 1.8-.4 1.8-1.1.3-.7 2.4v4.8h-1.4l-.3-3h-4.8l-.3 3H4.6v-3.4Z' fill='%23C8363A'/%3E%3Cpath d='M5.6 10q1.8-1 3.6 0' stroke='%23FBF8F1' stroke-width='.8' fill='none'/%3E%3C/svg%3E") center / 70% auto no-repeat, #2F5E8E; }
+/* iPhone-Befund: Abteilungs-Chips – sichtbares Weiterscroll-Zeichen, sanftes Einrasten, letzter Chip ganz erreichbar */
+.laden-chips { scroll-snap-type: x proximity; padding-right: 40px; -webkit-overflow-scrolling: touch; }
+.laden-chips .chip { scroll-snap-align: start; scroll-margin-left: 4px; }
+.laden-chips-rahmen::after { content: "›"; display: flex; align-items: center; justify-content: flex-end; padding-right: 20px; width: 40px; right: -18px; font: 800 1.5rem/1 Nunito, system-ui, sans-serif; color: var(--moos); background: linear-gradient(90deg, rgba(0,0,0,0), var(--bogen) 55%); transition: opacity .2s; }
+.laden-chips-rahmen.am-ende::after { opacity: 0; }
+/* Münze an der Kasse und in der Plakette: drehen beim Antippen */
+.muenze-knopf { position: relative; display: grid; place-items: center; flex: none; width: 52px; height: 52px; padding: 0; border: 0; border-radius: 50%; background: none; cursor: pointer; perspective: 260px; -webkit-tap-highlight-color: transparent; }
+.muenze-knopf:focus-visible { outline: 3px solid var(--fokus); outline-offset: 2px; }
+.taler-plakette .tp-pille { perspective: 200px; }
+.muenze.dreht { animation: muenz-dreh .95s cubic-bezier(.2,.7,.3,1); transform-style: preserve-3d; }
+@keyframes muenz-dreh { 0% { transform: rotateY(0) scale(1); } 40% { transform: rotateY(540deg) scale(1.12); } 100% { transform: rotateY(1080deg) scale(1); } }
+@media (prefers-reduced-motion: reduce) { .muenze.dreht { animation: none; } }

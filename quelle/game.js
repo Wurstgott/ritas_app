@@ -154,7 +154,7 @@ function spielEnde(zeitUm) {
 
 /* ---------- Darstellung ---------- */
 function karteHTML(k, attrs, top) {
-  if (!k.up) return `<div class="karte zu" style="top:${top}px" aria-hidden="true"></div>`;
+  if (!k.up) return `<div class="karte zu${typeof rueckenKlasse === "function" ? rueckenKlasse() : ""}" style="top:${top}px" aria-hidden="true"></div>`;
   const F = FARBEN[k.s];
   const sel = gewaehlt && attrs.includes(gewaehlt.attr) ? " gewaehlt" : "";
   return `<button class="karte ${F.rot ? "rot" : ""} f${k.s}${sel}" style="top:${top}px" ${attrs} aria-label="${WERT[k.w]} ${F.n}"><span class="w">${WERT[k.w]}</span><svg class="f" viewBox="0 0 24 24"><path fill="currentColor" d="${F.p}"/></svg><svg class="gross" viewBox="0 0 24 24"><path fill="currentColor" d="${F.p}"/></svg></button>`;
@@ -165,7 +165,7 @@ function spielRender() {
   const vZu = Math.round(kb * .24), vAuf = Math.round(kb * .56);
   let h = `<div class="tisch" style="--kb:${kb}px"><div class="reihe" style="gap:4px">`;
   // Stapel + Ablage (Waste)
-  h += `<button class="platz" data-act="g-stapel" aria-label="${G.stock.length ? "Karte ziehen" : "Stapel neu auflegen"}" style="border:0;cursor:pointer;padding:0">${G.stock.length ? `<div class="karte zu" style="top:0"></div>` : `<svg viewBox="0 0 24 24" style="width:60%;height:60%;color:var(--tinte-2)" aria-hidden="true"><path fill="currentColor" d="M12 5V2L7 6.5 12 11V8a5 5 0 1 1-5 5H5a7 7 0 1 0 7-8Z"/></svg>`}</button>`;
+  h += `<button class="platz" data-act="g-stapel" aria-label="${G.stock.length ? "Karte ziehen" : "Stapel neu auflegen"}" style="border:0;cursor:pointer;padding:0">${G.stock.length ? `<div class="karte zu${typeof rueckenKlasse === "function" ? rueckenKlasse() : ""}" style="top:0"></div>` : `<svg viewBox="0 0 24 24" style="width:60%;height:60%;color:var(--tinte-2)" aria-hidden="true"><path fill="currentColor" d="M12 5V2L7 6.5 12 11V8a5 5 0 1 1-5 5H5a7 7 0 1 0 7-8Z"/></svg>`}</button>`;
   h += `<div class="platz" style="background:transparent;box-shadow:none">${G.waste.length ? karteHTML(oben(G.waste), `data-act="g-karte" data-q="waste"`, 0) : ""}</div><div></div>`;
   for (let f = 0; f < 4; f++) { const a = G.found[f]; h += `<div class="platz" aria-label="Ablage ${FARBEN[f].n}">${a.length ? karteHTML(oben(a), `data-act="g-nix"`, 0).replace("<button", "<div").replace("</button>", "</div>") : `<svg viewBox="0 0 24 24" style="position:absolute;inset:22%;color:var(--mulde-2)" aria-hidden="true"><path fill="currentColor" d="${FARBEN[f].p}"/></svg>`}</div>`; }
   h += `</div><div class="reihe" style="gap:4px;margin-top:12px">`;

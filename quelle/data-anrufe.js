@@ -742,28 +742,22 @@ D.anrufe = [
   },
   schluss: "Ich schieb’s jetzt nach Hause. Tschüss!" },
 
-{ id: "max-15", wer: "max", thema: "Der Bart",
+{ id: "max-15", wer: "max", thema: "Bart gestutzt",
   knoten: {
-    start: { sagt: "Ich lass mir einen Bart wachsen. Bis jetzt sind’s ein paar Haare, aber die sind entschlossen.", antworten: [
-      { text: "Warum denn ein Bart?", weiter: "k2" },
-      { text: "Was sagt Greta dazu?", weiter: "k3" } ] },
-    k2: { sagt: "Ich will ein bisschen erwachsener aussehen. Beim Bäcker sagen sie immer noch „junger Mann“ zu mir.", antworten: [
-      { text: "Das sagen die zu jedem.", weiter: "k4" },
-      { text: "Freu dich doch drüber.", weiter: "k4" } ] },
-    k3: { sagt: "Sie sagt, es kratzt. Und dass sie es mir zuliebe zwei Wochen aushält.", antworten: [
-      { text: "Zwei Wochen sind fair.", weiter: "k5" },
-      { text: "Kluge Frau, mit Frist.", weiter: "k5" } ] },
-    k4: { sagt: "Ja, aber ich will einmal „der Herr“ hören. Nur einmal.", antworten: [
-      { text: "Dann zieh ein Jackett an.", weiter: "k6" },
-      { text: "Der Herr Max. Na bitte.", weiter: "k6" } ] },
-    k5: { sagt: "Ich zähl schon die Tage. Sie auch, glaub ich.", antworten: [
-      { text: "Ich wett auf Greta.", weiter: "k6" },
-      { text: "Zeig ihn mir vorher noch.", weiter: "k6" } ] },
-    k6: { sagt: "Danke. Beim nächsten Besuch zeig ich ihn dir, bring vorsichtshalber die Lupe mit.", antworten: [
-      { text: "Die liegt eh beim Rätsel.", weiter: null },
-      { text: "Ich freu mich auf jedes Haar.", weiter: null } ] }
+    start: { sagt: "Ich hab mir heute selbst den Bart gestutzt. Links sieht’s super aus.", antworten: [
+      { text: "Und rechts?", weiter: "k2" },
+      { text: "Was sagt Greta?", weiter: "k3" } ] },
+    k2: { sagt: "Rechts ist … kürzer. Ich hab versucht, es anzugleichen. Dann war links kürzer.", antworten: [
+      { text: "Hör auf, solange noch was dran ist.", weiter: "k4" },
+      { text: "Das kenn ich vom Pony-Schneiden.", weiter: "k4" } ] },
+    k3: { sagt: "Sie hat mich angeguckt, den Kopf schief gelegt und gesagt: „Mutig.“", antworten: [
+      { text: "Mutig ist nie ein Kompliment.", weiter: "k4" },
+      { text: "Kluge Frau, diplomatisch.", weiter: "k4" } ] },
+    k4: { sagt: "Ich geh nächste Woche zum Friseur. Bis dahin halte ich beim Videotelefonieren den Kopf ein bisschen schräg.", antworten: [
+      { text: "Dann zeig mir die gute Seite.", weiter: null },
+      { text: "Ich seh dich auch schief gern.", weiter: null } ] }
   },
-  schluss: "Ich geh mal in den Spiegel gucken. Tschüss!" },
+  schluss: "Ich üb jetzt meinen Schrägblick. Tschüss!" },
 
 { id: "max-16", wer: "max", thema: "Pizza-Verwechslung",
   knoten: {

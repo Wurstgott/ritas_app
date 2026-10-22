@@ -374,9 +374,9 @@ D.anrufe2 = [
   },
   schluss: "Rosa und ich drehen jetzt eine Runde. Tschau, Rita!" },
 
-{ id: "pauli-07", wer: "pauli", thema: "Hermines Elfenverein",
+{ id: "pauli-07", wer: "pauli", thema: "Hermines B.ELFE.R.",
   knoten: {
-    start: { sagt: "Max sagt, du liest Harry Potter, Band vier. Ist das der mit Hermines Elfenverein?", antworten: [
+    start: { sagt: "Max sagt, du liest Harry Potter, Band vier. Ist das der, in dem Hermine B.ELFE.R. gründet, den Bund für Elfenrechte?", antworten: [
       { text: "Genau der. Keiner will mitmachen.", weiter: "k2" },
       { text: "Woher weißt du das denn?", weiter: "k3" } ] },
     k2: { sagt: "Typisch. Sie hat recht, und alle finden sie anstrengend.", antworten: [
@@ -388,10 +388,10 @@ D.anrufe2 = [
     k4: { sagt: "Echt? Wobei denn?", antworten: [
       { text: "Ich hab immer gesagt, was nicht stimmt.", weiter: "k6" },
       { text: "Bei jeder Betriebsversammlung.", weiter: "k6" } ] },
-    k5: { sagt: "Und strickt den Elfen Mützen. Ich find das super, die gibt einfach nicht auf.", antworten: [
+    k5: { sagt: "Und verkauft trotzdem weiter ihre Anstecker. Ich find das super, die gibt einfach nicht auf.", antworten: [
       { text: "Strick doch mit.", weiter: "k6" },
       { text: "Davon kann man was lernen.", weiter: "k6" } ] },
-    k6: { sagt: "Okay, ich leih mir Band vier aus. Dann reden wir drüber.", antworten: [
+    k6: { sagt: "Okay, ich les Band vier nochmal. Dann reden wir drüber.", antworten: [
       { text: "Aber nichts verraten, ich bin mittendrin.", weiter: null },
       { text: "Ich freu mich drauf.", weiter: null } ] }
   },

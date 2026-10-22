@@ -94,14 +94,32 @@ function kiefer(ctx, x, y, h, r, farbeKrone, farbeStamm, tiefe) {
   const a1 = y - h * (.55 + r() * .15), dir = r() < .5 ? -1 : 1;
   poly(stamm, [[x, a1], [x + dir * h * .16, a1 - h * .08], [x + dir * h * .16, a1 - h * .065], [x, a1 + h * .02]], null);
   papier(ctx, stamm, farbeStamm, tiefe * .7, { saum: true });
-  const krone = new Path2D(), n = 4 + Math.floor(r() * 3);
+  const gross = h > 300, krone = new Path2D(), n = gross ? 9 + Math.floor(r() * 3) : 4 + Math.floor(r() * 3);
   for (let i = 0; i < n; i++) {
-    const bx = x + (r() - .5) * h * .36, by = y - h * (.74 + r() * .22), rx = h * (.08 + r() * .07), ry = rx * (.38 + r() * .14);
+    // große Vordergrund-Kiefern: mehr, dichter gestaffelte Büschel, damit die Krone eine geschlossene Form hat
+    const bx = x + (r() - .5) * h * (gross ? .3 : .36), by = y - h * (gross ? .75 + (i / n) * .19 + r() * .03 : .74 + r() * .22), rx = h * (gross ? .075 + r() * .05 : .08 + r() * .07), ry = rx * (gross ? .45 + r() * .12 : .38 + r() * .14);
     fetzen(krone, bx, by, rx, ry, r, 15);
   }
   fetzen(krone, x + dir * h * .17, a1 - h * .085, h * .075, h * .03, r, 11);
   papier(ctx, krone, farbeKrone, tiefe, { saum: true });
+  // Nadelbüschel: hellere Oberseiten und ein paar dunkle Unterseiten – die Krone soll nicht wie ein flacher Klecks wirken
+  if (h > 300) {
+    const hell = new Path2D(), dunkel = new Path2D(), m = n + 1;
+    for (let i = 0; i < m; i++) {
+      const bx = x + (r() - .5) * h * .3, by = y - h * (.76 + r() * .2), rx = h * (.05 + r() * .045), ry = rx * (.34 + r() * .1);
+      nadeln(hell, bx - rx * .1, by - ry * .45, rx, ry, r);
+      nadeln(dunkel, bx + rx * .15, by + ry * .55, rx * .8, ry * .45, r);
+    }
+    const lh = LICHT.nacht > 0 ? .06 : .12;
+    ctx.save(); ctx.fillStyle = mix(farbeKrone, "#0E1A12", .35); ctx.globalAlpha = .55; ctx.fill(dunkel); ctx.restore();
+    ctx.save(); ctx.fillStyle = mix(farbeKrone, "#B7C98F", lh); ctx.fill(hell); ctx.restore();
+    ctx.save(); ctx.globalAlpha = .7; ctx.fillStyle = mix(farbeKrone, "#D9E2A6", lh + .08); const top = new Path2D();
+    for (let i = 0; i < Math.ceil(m / 2); i++) { const bx = x + (r() - .5) * h * .26, by = y - h * (.8 + r() * .16), rx = h * (.03 + r() * .025); nadeln(top, bx, by - rx * .3, rx, rx * .3, r); }
+    ctx.fill(top); ctx.restore();
+  }
 }
+/* Büschel – gleicher Papier-Stil wie die Krone, nur kleiner */
+function nadeln(p, cx, cy, rx, ry, r) { fetzen(p, cx, cy, rx, ry, r, 15); }
 /* Laubbaum-Krone aus Kreisen (gleiche Farbe → eine Fläche) */
 function krone(ctx, cx, cy, rad, n, r, farbe, tiefe) {
   const p = new Path2D();
@@ -746,12 +764,12 @@ function bank(ctx, x, y, s) {
 /* ---------- Figuren aus Papier: Rita, Max, Christiane, Micha (nach Fotos stilisiert, keine Porträts) ---------- */
 const FIGUREN = {
   rita: { haut: "#F0C9AA", haar: "#B9AB8E", strähne: "#DCD6C8", oben: "#22304A", unten: "#8FA9C4", schuh: "#C9A27E", gross: 1 },
-  max: { haut: "#E6B593", haar: "#6B4A30", oben: "#1E1E22", unten: "#3A3F4A", schuh: "#2A2A2A", locken: true, undercut: false, gross: 1.08 },
+  max: { haut: "#E6B593", haar: "#6B4A30", oben: "#5E6168", unten: "#3A3F4A", schuh: "#2A2A2A", locken: true, undercut: false, bart: "#8A5A3A", kette: "#D7DADF", gross: 1.08 },
   christiane: { haut: "#EBBE9E", haar: "#E3CF94", oben: "#8E2B4F", unten: "#2A3550", schuh: "#3A2A22", brille: "#C0282A", tuch: "#2B3A66", gross: .98 },
   micha: { haut: "#E0AE8C", haar: null, oben: "#1F2D4F", unten: "#4A4A4A", schuh: "#2A2A2A", gross: 1.05 }
 };
 function figur(ctx, x, y, s, wer, opt = {}) {
-  const F = FIGUREN[wer] || FIGUREN.rita; s *= F.gross;
+  const F = FIGUREN[wer] || (typeof avatarFigur === "function" && avatarFigur(wer)) || FIGUREN.rita; s *= F.gross;
   ctx.save(); ctx.translate(x, y); ctx.scale(s, s);
   if (LICHT.nacht > .3) ctx.filter = `brightness(${1 - LICHT.nacht * .35})`;
   ctx.fillStyle = "rgba(20,28,24,.25)"; ctx.beginPath(); ctx.ellipse(0, 1, 13, 3.2, 0, 0, TAU); ctx.fill();
@@ -771,6 +789,9 @@ function figur(ctx, x, y, s, wer, opt = {}) {
   if (F.locken) { if (F.undercut) { ctx.fillStyle = "#6A5646"; ctx.beginPath(); ctx.ellipse(-6.6, -67, 1.6, 4, 0, 0, TAU); ctx.ellipse(6.6, -67, 1.6, 4, 0, 0, TAU); ctx.fill(); }
     ctx.fillStyle = F.haar; for (const [hx, hy, hr] of [[-4.5, -73, 3.4], [-1, -76, 3.8], [3.5, -75.5, 3.6], [6, -72, 3], [0, -72, 3]]) { ctx.beginPath(); ctx.arc(hx, hy, hr, 0, TAU); ctx.fill(); } }
   else if (F.haar) { const h = new Path2D(); h.moveTo(-8.6, -60); h.quadraticCurveTo(-10, -76, 0, -76); h.quadraticCurveTo(10, -76, 8, -62); h.lineTo(6, -62); h.quadraticCurveTo(6, -71, 0, -71); h.quadraticCurveTo(-6, -71, -6, -62); h.closePath(); ctx.fillStyle = F.haar; ctx.fill(h); if (F.strähne) { ctx.strokeStyle = F.strähne; ctx.lineWidth = 1.2; ctx.beginPath(); ctx.moveTo(-5, -73); ctx.quadraticCurveTo(0, -75, 5, -72); ctx.stroke(); } }
+  if (F.frisur && typeof avFigurExtras === "function") avFigurExtras(ctx, F, flaeche); // eigene Herzensmenschen (avatar.js)
+  if (F.bart) { ctx.fillStyle = F.bart; ctx.beginPath(); ctx.moveTo(-6.6, -67); ctx.quadraticCurveTo(-6.4, -59.6, 0, -59); ctx.quadraticCurveTo(6.4, -59.6, 6.6, -67); ctx.quadraticCurveTo(4, -63.4, 0, -63.8); ctx.quadraticCurveTo(-4, -63.4, -6.6, -67); ctx.fill(); }
+  if (F.kette) { ctx.strokeStyle = F.kette; ctx.lineWidth = .9; ctx.beginPath(); ctx.moveTo(-2.6, -58.6); ctx.quadraticCurveTo(0, -56.4, 2.6, -58.6); ctx.stroke(); }
   if (F.brille) { ctx.strokeStyle = F.brille; ctx.lineWidth = 1.3; ctx.beginPath(); ctx.arc(-3, -67, 2.4, 0, TAU); ctx.moveTo(5.4, -67); ctx.arc(3, -67, 2.4, 0, TAU); ctx.stroke(); }
   if (opt.muetze) { const m = new Path2D(); m.moveTo(-7.6, -70); m.quadraticCurveTo(-8, -80, 0, -80.6); m.quadraticCurveTo(8, -80, 7.6, -70); m.closePath(); ctx.fillStyle = "#C8463B"; ctx.fill(m); ctx.fillStyle = "#EFE7D6"; ctx.fillRect(-8, -72, 16, 3); ctx.beginPath(); ctx.arc(0, -81.6, 2.4, 0, TAU); ctx.fill();
     flaeche([[-6, -59], [6, -59], [5, -55], [-5, -55]], "#C8463B"); flaeche([[2, -56], [5, -44], [2, -45]], "#C8463B"); }
@@ -783,7 +804,7 @@ function figur(ctx, x, y, s, wer, opt = {}) {
 /* Wer heute in der Lichtung steht: Rita immer, Herzensmenschen nach einem gemeinsamen Eintrag (3 Tage lang) */
 function figurenHeute() {
   const h = heute(), grenze = tagPlus(h, -2), dabei = [];
-  for (const e of S.eintraege) if (e.tag >= grenze && e.tag <= h && e.person && FIGUREN[e.person] && !dabei.includes(e.person)) dabei.push(e.person);
+  for (const e of S.eintraege) if (e.tag >= grenze && e.tag <= h && e.person && (FIGUREN[e.person] || (typeof avatarFigur === "function" && avatarFigur(e.person))) && !dabei.includes(e.person)) dabei.push(e.person);
   return dabei.slice(-2);
 }
 function huehnchenPos(ort) {

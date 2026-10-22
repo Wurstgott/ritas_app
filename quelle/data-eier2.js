@@ -185,24 +185,18 @@ D.raetsel = [
   { frage: "Brötchen, Semmel, Weck. Und wie sagt man in Berlin?", antwort: "Schrippe", tipp: "Weil sie oben eingeschnitten, also „geschrippt“ ist." }
 ];
 
-/* Echtes für Taler (alles von Max, aus Halle oder für den nächsten Besuch) */
+/* Kleine Überraschungen aus Halle für Taler – bewusst keine gemeinsame Zeit (die gibt’s sowieso, ganz ohne Taler) */
 D.gutscheine = [
-  { id: "g-karte-halle", name: "Postkarte aus Halle", preis: 300,
-    text: "Max schickt dir eine echte Postkarte aus Halle, mit Briefmarke und Klatsch auf der Rückseite.",
+  { id: "g-karte-halle", name: "Postkarte aus Halle", preis: 300, icon: "brief", jedenMonat: true,
+    text: "Max schickt dir eine echte Postkarte aus Halle, mit Briefmarke und Klatsch auf der Rückseite. Gibt’s immer wieder, eine im Monat.",
     nachricht: "Lieber Max, ich löse meinen Postkarten-Gutschein ein! Ich guck ab morgen jeden Tag in den Briefkasten. Bitte mit schönem Motiv, Händel geht auch." },
-  { id: "g-klatsch-telefon", name: "Eine Stunde Telefon-Klatsch", preis: 500,
-    text: "Max ruft an und erzählt eine Stunde lang alles, was es Neues gibt. Das Tschüss am Ende zählt nicht mit.",
-    nachricht: "Lieber Max, ich löse meinen Klatsch-Gutschein ein. Eine ganze Stunde Neuigkeiten, bitte. Wann rufst du an?" },
-  { id: "g-halloren", name: "Mitbringsel aus Halle", preis: 600,
-    text: "Beim nächsten Besuch bringt Max eine Schachtel Halloren-Kugeln mit. Hühnchen bekommt keine.",
-    nachricht: "Lieber Max, ich löse meinen Halloren-Gutschein ein! Bring sie beim nächsten Besuch mit. Ich zähl nach, ob unterwegs welche verschwunden sind." },
-  { id: "g-tschuess-revanche", name: "Tschüss-Duell-Revanche", preis: 700,
-    text: "Eine offizielle Revanche im Tschüss-Duell. Max verspricht, diesmal nicht zuerst aufzulegen. Angeblich.",
-    nachricht: "Lieber Max, ich fordere hiermit meine Tschüss-Revanche ein! Ruf an, wenn du dich traust. Ich hab geübt." },
-  { id: "g-handy-besuch", name: "Max richtet’s ein", preis: 800,
-    text: "Beim nächsten Besuch richtet Max etwas an deinem Handy ein, in Ruhe und so oft erklärt, wie du magst.",
-    nachricht: "Lieber Max, ich löse meinen Handy-Gutschein ein! Beim nächsten Besuch hätte ich gern das hier eingerichtet: … Bring Geduld mit, ich hab Kekse." },
-  { id: "g-spaziergang", name: "Forst-Spaziergang mit Max", preis: 900,
-    text: "Wenn Max das nächste Mal da ist, gehen wir zusammen in den Forst. Du bestimmst Weg und Tempo.",
-    nachricht: "Lieber Max, ich löse meinen Spaziergang-Gutschein ein! Wann bist du das nächste Mal in Berlin? Der Forst wartet, ich auch." }
+  { id: "g-haendel-huhn", name: "Hühnchen trifft Händel", preis: 400, icon: "stern",
+    text: "Max bastelt ein Papier-Hühnchen, hält es auf dem Halleschen Marktplatz neben den Händel und schickt dir das Foto. Ob Händel guckt, ist nicht garantiert.",
+    nachricht: "Lieber Max, ich löse meinen Beweisfoto-Gutschein ein! Hühnchen will Händel kennenlernen. Bitte mit Papier-Hühnchen und ohne Ausreden." },
+  { id: "g-halloren", name: "Halloren-Kugeln per Post", preis: 600, icon: "geschenk",
+    text: "Max schickt dir eine Schachtel Halloren-Kugeln mit der Post, aus Halle, seit 1804. Hühnchen bekommt keine.",
+    nachricht: "Lieber Max, ich löse meinen Halloren-Gutschein ein! Ab in die Post damit. Ich zähl nach, ob unterwegs welche verschwunden sind." }
 ];
+/* im Kramladen als eigenes Regal „Aus Halle“ */
+D.laden = D.laden || [];
+for (const g of D.gutscheine) if (!D.laden.some(x => x.id === g.id)) D.laden.push({ id: g.id, name: g.name, preis: g.preis, text: g.text, icon: g.icon, gruppe: "Aus Halle", gutschein: true, jedenMonat: !!g.jedenMonat });

@@ -116,7 +116,7 @@ const neu = [
 "wo": "Zitadelle Spandau, Gotischer Saal, Am Juliusturm 64, 13599 Berlin",
 "text": "Geige und Harfe im alten Gemäuer – festlich, ruhig und genau richtig, um die Adventszeit einzuläuten.",
 "kosten": "Karten online oder an der Kasse – Preis vorher erfragen",
-"wc": "Aufzug und barrierefreies WC in der Zitadelle",
+"wc": null,
 "tel": null,
 "quelle": "https://www.visitberlin.de/de/event/harfenklaenge-zur-weihnacht-1",
 "pruefen": false
@@ -128,7 +128,7 @@ const neu = [
 "wo": "Ev. Johannesstift, Schönwalder Allee 26, 13587 Berlin",
 "text": "Spirituals und Psalmen, praktisch um die Ecke im Johannesstift – kurze Anfahrt, große Stimmen.",
 "kosten": "erfragen",
-"wc": "WC auf dem Stiftsgelände",
+"wc": null,
 "tel": null,
 "quelle": "https://www.visitberlin.de/de/event/gospelkombinat-greifswald",
 "pruefen": true
@@ -140,7 +140,7 @@ const neu = [
 "wo": "Ev. Johannesstift, Schönwalder Allee 26, 13587 Berlin",
 "text": "„Jauchzet, frohlocket“ mit Chor und Orchester direkt in deiner Nachbarschaft. Freie Platzwahl – also früh da sein und den Lieblingsplatz am Gang sichern.",
 "kosten": "25 € (Vorverkauf im Johannesstift, u. a. Buchhandlung)",
-"wc": "WC auf dem Stiftsgelände",
+"wc": null,
 "tel": null,
 "quelle": "https://www.visitberlin.de/de/event/weihnachtsoratorium-0",
 "pruefen": false
@@ -248,7 +248,7 @@ const neu = [
 "wo": "Zitadelle Spandau, Am Juliusturm 64, 13599 Berlin",
 "text": "Am ersten Sonntag im Monat ist der Eintritt (fast immer) frei, und um 14 Uhr gibt es eine szenische Führung im mittelalterlichen Kostüm. Vormittags ist es am ruhigsten.",
 "kosten": "Eintritt frei; Führung 4,50 €",
-"wc": "Aufzug und barrierefreies WC (laut visitBerlin)",
+"wc": null,
 "tel": null,
 "quelle": "https://www.visitberlin.de/de/event/zitadellensonntag",
 "pruefen": false
@@ -284,7 +284,7 @@ const neu = [
 "wo": "Ev. Johannesstift, Schönwalder Allee 26, 13587 Berlin",
 "text": "Der ruhige, nachbarschaftliche Weihnachtsmarkt direkt bei dir um die Ecke: Kunsthandwerk, Kaffee, gemeinsames Singen. Mittags ist am meisten Platz.",
 "kosten": "Eintritt frei",
-"wc": "WC auf dem Stiftsgelände",
+"wc": null,
 "tel": null,
 "quelle": "https://www.berlin.de/weihnachtsmarkt/5698904-3496862-christmas-market-evangelisches-johanness.html",
 "pruefen": false
@@ -294,9 +294,9 @@ const neu = [
 "kategorie": "Feste & Märkte",
 "wann": "23.11.–22.12.2026; So–Do 11–20, Fr/Sa 11–22 Uhr. Ruhigste Zeit: werktags 11–14 Uhr",
 "wo": "Altstadt Spandau, Markt / Reformationsplatz, 13597 Berlin",
-"text": "Einer der größten Märkte Berlins – am entspanntesten an einem Wochentag gleich ab 11 Uhr, bevor es voll wird. WC-Tipp: barrierefreie Berliner Toilette am Lindenufer, ein paar Schritte entfernt.",
+"text": "Einer der größten Märkte Berlins – am entspanntesten an einem Wochentag gleich ab 11 Uhr, bevor es voll wird.",
 "kosten": "Eintritt frei",
-"wc": "Berliner Toilette am Lindenufer (barrierefrei, mit Euroschlüssel)",
+"wc": null,
 "tel": null,
 "quelle": "https://www.visitberlin.de/de/event/spandauer-weihnachtsmarkt",
 "pruefen": true
@@ -368,7 +368,7 @@ const neu = [
 "wo": "Ev. Johannesstift, Schönwalder Allee 26, 13587 Berlin",
 "text": "Sechs Abende Weben direkt in deiner Nachbarschaft – am Ende hältst du etwas Selbstgemachtes in der Hand. Unschlagbar günstig.",
 "kosten": "5 €",
-"wc": "WC auf dem Stiftsgelände",
+"wc": null,
 "tel": "030 90279 5000",
 "quelle": "https://www.berlin.de/vhs/volkshochschulen/spandau/vhs_spandauherbst26.pdf",
 "pruefen": false

@@ -62,20 +62,31 @@ function ritaSVG(gr = 40, opt = {}) {
 
 /* Porträt Max: dunkle Locken oben, kurze Seiten (leichter Undercut), etwas länger im Nacken, breites Lachen. */
 function maxSVG(gr = 64) {
+  /* nach Foto: wuschelige braune Locken, blaugraue Augen, kurzer Vollbart mit Schnurrbart, kleine Creole links, enge Silberkette mit Herz, Strickpulli */
   return `<svg class="portrait max" viewBox="0 0 100 100" style="width:${gr}px;height:${gr}px" aria-hidden="true">
   <circle cx="50" cy="50" r="48" fill="#E7EDE4"/>
-  <path d="M12 100 Q14 76 50 74 Q86 76 88 100Z" fill="#1E1E22"/>
-  <path d="M42 68 L58 68 L57 78 Q50 82 43 78Z" fill="#E2AE8A"/>
+  <path d="M12 100 Q14 77 50 75 Q86 77 88 100Z" fill="#5E6168"/>
+  <g stroke="#7E2E3A" stroke-width="3.2"><path d="M30 80 L27 100"/><path d="M70 80 L73 100"/></g>
+  <g stroke="#2A2E3A" stroke-width="1.6"><path d="M22 85 L19 100"/><path d="M40 77.5 L39 100"/><path d="M60 77.5 L61 100"/><path d="M78 85 L81 100"/></g>
+  <path d="M38 76 Q50 84 62 76 L60.5 74.6 Q50 81 39.5 74.6Z" fill="#232A44"/>
+  <path d="M42 66 L58 66 L57.5 76 Q50 80.5 42.5 76Z" fill="#E2AE8A"/>
+  <path d="M41.6 72.4 Q50 78.6 58.4 72.4" stroke="#C9CCD2" stroke-width="1.5" fill="none" stroke-dasharray="1.6 .6"/>
+  <path d="M50 77.2 l-2.4 -2.2 a1.5 1.5 0 0 1 2.4 -1.6 a1.5 1.5 0 0 1 2.4 1.6Z" fill="#D7DADF" stroke="#A9ADB5" stroke-width=".4"/>
+  <ellipse cx="31.6" cy="50" rx="2.6" ry="4" fill="#DDA585"/><ellipse cx="68.4" cy="50" rx="2.6" ry="4" fill="#DDA585"/>
+  <circle cx="69.4" cy="54.6" r="1.3" fill="none" stroke="#C9CCD2" stroke-width=".7"/>
   <ellipse cx="50" cy="50" rx="18" ry="22" fill="#E6B593"/>
   <path d="M31 50 Q29 36 35 29 L37 52Z" fill="#7A5A40"/><path d="M69 50 Q71 36 65 29 L63 52Z" fill="#7A5A40"/>
   <g fill="#6B4A30"><circle cx="36" cy="33" r="6.5"/><circle cx="64" cy="33" r="6.5"/><circle cx="38" cy="28" r="7"/><circle cx="46" cy="23" r="8"/><circle cx="55" cy="22" r="8"/><circle cx="63" cy="27" r="7"/><circle cx="43" cy="32" r="6"/><circle cx="57" cy="31" r="6"/><circle cx="50" cy="28" r="7"/></g>
   <g fill="#5A3C26"><circle cx="41" cy="34" r="4"/><circle cx="59" cy="34" r="4"/><circle cx="33" cy="38" r="3.4"/><circle cx="67" cy="38" r="3.4"/><circle cx="48" cy="33.5" r="3.2"/><circle cx="53" cy="17" r="4"/></g><g fill="#80603F"><circle cx="45" cy="22" r="2.2"/><circle cx="57" cy="21" r="2"/><circle cx="51" cy="27" r="1.8"/></g>
-  <path d="M40.5 41.8 Q44 40.4 47.2 41.6 M52.8 41.6 Q56 40.4 59.5 41.8" stroke="#6B4A30" stroke-width="1.2" fill="none" stroke-linecap="round"/>
-  <g class="augen"><ellipse cx="44" cy="46.2" rx="3.2" ry="1.9" fill="#FFFDF5"/><circle cx="44.3" cy="46.400000000000006" r="1.75" fill="#4A86AE"/><circle cx="44.3" cy="46.400000000000006" r=".8" fill="#1C2620"/><circle cx="44.9" cy="45.800000000000004" r=".45" fill="#fff"/><path d="M40.4 46.400000000000006 Q44 43.0 47.6 46.400000000000006" stroke="#3A2A22" stroke-width="1.1" fill="none" stroke-linecap="round"/><path d="M41.4 48.7 Q44 49.800000000000004 46.6 48.7" stroke="#D59F82" stroke-width=".7" fill="none" stroke-linecap="round"/><ellipse cx="56" cy="46.2" rx="3.2" ry="1.9" fill="#FFFDF5"/><circle cx="56.3" cy="46.400000000000006" r="1.75" fill="#4A86AE"/><circle cx="56.3" cy="46.400000000000006" r=".8" fill="#1C2620"/><circle cx="56.9" cy="45.800000000000004" r=".45" fill="#fff"/><path d="M52.4 46.400000000000006 Q56 43.0 59.6 46.400000000000006" stroke="#3A2A22" stroke-width="1.1" fill="none" stroke-linecap="round"/><path d="M53.4 48.7 Q56 49.800000000000004 58.6 48.7" stroke="#D59F82" stroke-width=".7" fill="none" stroke-linecap="round"/></g>
+  <path d="M58 19 Q62 13 66 15 M33 31 Q29 30 30 26" stroke="#6B4A30" stroke-width="1.5" fill="none" stroke-linecap="round"/>
+  <path d="M37 36 Q42 31 47 35 Q44 37.5 41 40 Q40 37 37 36Z M47 35 Q53 30 60 34 Q56 35.5 54 38.6 Q51 35.6 47 35Z M59 34 Q63 32 65.4 36 Q62 36.6 61 39 Q60.4 36 59 34Z" fill="#6B4A30"/>
+  <path d="M40.5 41.4 Q44 39.8 47.4 41.2 M52.6 41.2 Q56 39.8 59.5 41.4" stroke="#5A3C26" stroke-width="1.6" fill="none" stroke-linecap="round"/>
+  <g class="augen"><ellipse cx="44" cy="46.2" rx="3.2" ry="1.9" fill="#FFFDF5"/><circle cx="44.3" cy="46.400000000000006" r="1.75" fill="#7F9EAD"/><circle cx="44.3" cy="46.400000000000006" r=".8" fill="#1C2620"/><circle cx="44.9" cy="45.800000000000004" r=".45" fill="#fff"/><path d="M40.4 46.400000000000006 Q44 43.0 47.6 46.400000000000006" stroke="#3A2A22" stroke-width="1.1" fill="none" stroke-linecap="round"/><path d="M41.4 48.7 Q44 49.800000000000004 46.6 48.7" stroke="#D59F82" stroke-width=".7" fill="none" stroke-linecap="round"/><ellipse cx="56" cy="46.2" rx="3.2" ry="1.9" fill="#FFFDF5"/><circle cx="56.3" cy="46.400000000000006" r="1.75" fill="#7F9EAD"/><circle cx="56.3" cy="46.400000000000006" r=".8" fill="#1C2620"/><circle cx="56.9" cy="45.800000000000004" r=".45" fill="#fff"/><path d="M52.4 46.400000000000006 Q56 43.0 59.6 46.400000000000006" stroke="#3A2A22" stroke-width="1.1" fill="none" stroke-linecap="round"/><path d="M53.4 48.7 Q56 49.800000000000004 58.6 48.7" stroke="#D59F82" stroke-width=".7" fill="none" stroke-linecap="round"/></g>
   <path d="M50.2 48.5 Q48.4 53.2 50.8 54" stroke="#C98E6E" stroke-width="1" fill="none" stroke-linecap="round"/>
-  <path d="M35 56 Q36 70 50 72 Q64 70 65 56 Q60 66 50 66.5 Q40 66 35 56Z" fill="#8A6A55" opacity=".09"/>
-  <g class="mund"><path d="M42 57.5 Q50 65.5 58 57.5 Q50 59.4 42 57.5Z" fill="#8A2E26"/><path d="M43.4 57.9 Q50 60 56.6 57.9 L55.8 59.3 Q50 61 44.2 59.3Z" fill="#FFFDF5"/></g>
-  <ellipse cx="38" cy="54" rx="3.4" ry="2" fill="#E07F62" opacity=".35"/><ellipse cx="62" cy="54" rx="3.4" ry="2" fill="#E07F62" opacity=".35"/>
+  <path d="M33.2 53 Q34 66 42 70.6 Q50 73.6 58 70.6 Q66 66 66.8 53 Q65.4 58.6 62.4 61 Q57.4 58.2 50 58.6 Q42.6 58.2 37.6 61 Q34.6 58.6 33.2 53Z" fill="#9A6440" opacity=".8"/>
+  <path d="M42.6 57.4 Q46 55 50 56 Q54 55 57.4 57.4 Q54 57 50 57.8 Q46 57 42.6 57.4Z" fill="#87553A" opacity=".9"/>
+  <g class="mund"><path d="M44.4 59 Q50 60.4 55.6 59 Q53.6 62.8 50 63 Q46.4 62.8 44.4 59Z" fill="#D88A84"/><path d="M44 58.8 Q50 60.6 56 58.8" stroke="#8A3A34" stroke-width=".8" fill="none" stroke-linecap="round"/></g>
+  <ellipse cx="38" cy="53" rx="3" ry="1.6" fill="#E07F62" opacity=".25"/><ellipse cx="62" cy="53" rx="3" ry="1.6" fill="#E07F62" opacity=".25"/>
 </svg>`;
 }
 

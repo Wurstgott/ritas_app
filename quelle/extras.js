@@ -94,7 +94,7 @@ function raetselAktion(d) { const R = raetselDerWoche(); if (!R) return; S.raets
    Schon gekaufte werden in skins.js (skinsMigrieren) einmalig als Taler zurückgezahlt. ---------- */
 function gutscheinSheet(id) {
   const g = (D.gutscheine || []).find(x => x.id === id); if (!g) return;
-  sheet({ titel: g.name, inhalt: `<p>${esc(g.text)}</p><p class="klein">Zum Einlösen diesen Text an Max oder Christiane schicken:</p><div class="bogen mulde" id="gutschein-text">${esc(g.nachricht)}</div><button class="knopf zweit voll" style="margin-top:10px" data-act="kopieren" data-was="gutschein-text">Text kopieren</button>` });
+  wareSheet(id); // Einlösen per WhatsApp an Max, mit Datum (laden2.js)
 }
 
 /* ---------- Echte Post von Max aus dem Repo (post.json) ---------- */
@@ -102,7 +102,7 @@ function gutscheinSheet(id) {
 function angeboteAnwenden() {
   const A = S.angeboteRepo; if (!A || !Array.isArray(A.angebote) || !A.stand || (D.angeboteStand && A.stand < D.angeboteStand)) return;
   D.angeboteStand = A.stand; if (Array.isArray(A.kategorien)) D.angeboteKat = A.kategorien;
-  D.angebote = A.angebote.filter(x => x && typeof x.name === "string" && ["text", "wann", "wo", "kosten", "tel", "quelle", "kategorie", "luft", "wc"].every(k => x[k] == null || typeof x[k] === "string" || typeof x[k] === "number")).map(x => { const y = { ...x, id: "an-" + angebotId(x.name) }; for (const k of ["text", "wann", "wo", "kosten", "tel", "quelle", "kategorie", "luft", "wc"]) if (typeof y[k] === "number") y[k] = String(y[k]); return y; });
+  D.angebote = A.angebote.filter(x => x && typeof x.name === "string" && ["text", "wann", "wo", "kosten", "tel", "quelle", "kategorie", "luft", "wc"].every(k => x[k] == null || typeof x[k] === "string" || typeof x[k] === "number")).map(x => { const y = { ...x, id: "an-" + angebotId(x.name) }; for (const k of ["text", "wann", "wo", "kosten", "tel", "quelle", "kategorie", "luft", "wc"]) if (typeof y[k] === "number") y[k] = String(y[k]); y.wc = null; if (y.text) y.text = y.text.replace(/\s*(WC|Toiletten?)-?Tipp:[^.]*\./gi, "").trim(); return y; }); // Toiletten sind kein Thema (Max)
 }
 function angeboteLaden() {
   if (!/github\.io$/.test(location.hostname)) return;
@@ -126,6 +126,11 @@ function postLaden() {
       gross.innerHTML = gross.innerHTML.replace("</svg>", `<g class="kuss-mund"><path d="M46.6 63.4 Q48.4 61.2 50 62.6 Q51.6 61.2 53.4 63.4 Q51.8 66.4 50 66.2 Q48.2 66.4 46.6 63.4Z" fill="#B23A35"/><path d="M47.4 63.8 Q50 64.6 52.6 63.8" stroke="#7E2420" stroke-width=".6" fill="none"/></g><path class="kuss-zwinker" d="M53.4 47.8 Q56.5 49.6 59.6 47.8" stroke="#3A2A22" stroke-width="1.2" fill="none" stroke-linecap="round"/></svg>`);
       gross._bis = Date.now() + 2200;
       for (let i = 0; i < 3; i++) { const h = document.createElement("span"); h.className = "kuss-herz"; h.textContent = "♥"; h.style.left = (100 + i * 14) + "px"; h.style.top = (98 - i * 4) + "px"; h.style.animationDelay = (500 + i * 220) + "ms"; h.style.setProperty("--dx", (24 + i * 16) + "px"); gross.appendChild(h); }
+    } else if (window._ritaMal.length >= 3) { // drittes Mal: zwinkern, dann herzhaft lachen
+      gross.classList.add("pg-lach"); gross._bis = Date.now() + 2900;
+      gross.innerHTML = gross.innerHTML.replace("</svg>", `<path class="lach-zwinker" d="M53.4 47.8 Q56.5 49.6 59.6 47.8" stroke="#3A2A22" stroke-width="1.3" fill="none" stroke-linecap="round"/><g class="lach-gesicht"><path d="M40.4 48.6 Q43.5 45 46.6 48.6 M53.4 48.6 Q56.5 45 59.6 48.6" stroke="#3A2A22" stroke-width="1.5" fill="none" stroke-linecap="round"/><path d="M41.6 61.4 Q50 60.2 58.4 61.4 Q57.2 70.6 50 71 Q42.8 70.6 41.6 61.4Z" fill="#8A2E26"/><path d="M42.6 61.6 Q50 60.8 57.4 61.6 L56.9 63.2 Q50 64 43.1 63.2Z" fill="#FFFDF5"/><path d="M45.4 68.2 Q50 66.2 54.6 68.2 Q52.6 70.2 50 70.3 Q47.4 70.2 45.4 68.2Z" fill="#D9675C"/><ellipse cx="38.6" cy="56" rx="3.8" ry="2.2" fill="#E07F62" opacity=".5"/><ellipse cx="61.4" cy="56" rx="3.8" ry="2.2" fill="#E07F62" opacity=".5"/></g></svg>`);
+      ["Ha", "ha", "ha!"].forEach((t, i) => { const h = document.createElement("span"); h.className = "lach-ha"; h.textContent = t; h.style.left = (112 + i * 18) + "px"; h.style.top = (40 + i * 16) + "px"; h.style.animationDelay = (900 + i * 260) + "ms"; gross.appendChild(h); });
+      window._ritaMal = [];
     } else if ((window._ritaGewunken || 0) < 2 || Math.random() < .6) { window._ritaGewunken = (window._ritaGewunken || 0) + 1; gross._bis = Date.now() + 2300; const verz = (180 + Math.random() * 250) / 1000;
       const arm = `<defs><clipPath id="pg-clip"><circle cx="50" cy="50" r="49.2"/></clipPath></defs><g clip-path="url(#pg-clip)"><g class="winkarm" style="animation-delay:${verz}s"><g class="winkunter" style="animation-delay:${verz + .25}s"><path d="M78 108 Q79 90 82 73" stroke="#141D30" stroke-width="11.6" stroke-linecap="round" fill="none"/><path d="M78 108 Q79 90 82 73" stroke="#22304A" stroke-width="10" stroke-linecap="round" fill="none"/><path d="M77.6 73.6 Q82 71.6 86.4 73.6" stroke="#3A4B6B" stroke-width="2.4" stroke-linecap="round" fill="none"/><g class="winkhand" style="animation-delay:${verz + .25}s"><g transform="translate(-2 4) translate(166 0) scale(-1 1)"><path d="M78 66 Q76 60 77 54 Q77.5 52 79 53 L79.6 58 L79.5 50 Q80 48 81.4 49 L81.8 57 L82.4 48.6 Q83.2 47 84.4 48.4 L84.2 57 L85.4 51 Q86.6 49.8 87.4 51.2 L86.6 60 Q88.6 57.6 90 58.6 Q90.6 60 88.6 62.6 Q86 67 82 67.6 Q79.6 67.8 78 66Z" fill="#F0C9AA" stroke="#D49A7C" stroke-width=".5"/></g></g></g></g></g>`;
       gross.innerHTML = gross.innerHTML.replace("</svg>", arm + "</svg>"); }
@@ -238,14 +243,14 @@ function tbMerkHTML() {
 }
 function tagebuchKarte(h) {
   if (S.tbModus === "frueher") { const fr = tbFrueherFragen(), f = fr[(S.tbDreh || 0) % fr.length], schon = eintraegeAm(h).some(e => e.t === "tagebuch");
-    return `<section class="abschnitt"><div class="bogen streifen k-geist tb-karte"><h3 style="margin:0">Für dein Tagebuch</h3><div class="chips tb-modus">${chip(false, "Heute", `data-act="tb-modus" data-v="heute"`)}${chip(true, "Von früher", `data-act="tb-modus" data-v="frueher"`)}</div>
+    return `<section class="abschnitt"><div class="bogen streifen k-geist tb-karte"><h3 style="margin:0">Für dein Tagebuch</h3><div class="chips tb-modus">${chip(false, "Heute", `data-act="tb-modus" data-v="heute"`)}${chip(true, "Früher", `data-act="tb-modus" data-v="frueher"`)}</div>
       <p class="serif tb-frage" style="margin-top:10px">${esc(f)}</p>
       <div class="zeile" style="gap:8px;flex-wrap:wrap;margin-top:10px">${schon ? "" : `<button class="knopf klein haupt" data-act="tb-geschrieben">${ic("feder")} Hab’s aufgeschrieben</button>`}<button class="knopf klein leise" data-act="tb-andere">Andere Frage</button></div>${tbMerkHTML()}</div></section>`; }
   const tag = tbTag(h), es = eintraegeAm(tag).filter(e => e.t !== "tagebuch" && e.notiz !== "App eingerichtet");
   const was = [...new Set(es.map(e => e.t === "abgehakt" ? e.notiz : e.t === "planung" ? `Ausflug geplant (${e.titel || ""})`.replace(" ()", "") : (e.person && (S.menschen.find(m => m.id === e.person) || {}).name ? `${tat(e.t).kurz || tat(e.t).name} (${S.menschen.find(m => m.id === e.person).name})` : tat(e.t).kurz || tat(e.t).name)))].filter(Boolean);
   const fr = tbFragen(tag), i = (S.tbDreh || 0) % fr.length, schon = eintraegeAm(h).some(e => e.t === "tagebuch");
   const wann = tag === h ? "Heute" : "Gestern";
-  return `<section class="abschnitt"><div class="bogen streifen k-geist tb-karte"><h3 style="margin:0">Für dein Tagebuch</h3><div class="chips tb-modus">${chip(true, "Heute", `data-act="tb-modus" data-v="heute"`)}${chip(false, "Von früher", `data-act="tb-modus" data-v="frueher"`)}</div><div style="height:8px"></div>
+  return `<section class="abschnitt"><div class="bogen streifen k-geist tb-karte"><h3 style="margin:0">Für dein Tagebuch</h3><div class="chips tb-modus">${chip(true, "Heute", `data-act="tb-modus" data-v="heute"`)}${chip(false, "Früher", `data-act="tb-modus" data-v="frueher"`)}</div><div style="height:8px"></div>
     ${was.length ? `<p class="klein" style="margin:0 0 8px"><span style="font-weight:700">${wann} in der App:</span> ${esc(was.join(", "))}</p>` : `<p class="klein" style="margin:0 0 8px">Noch nichts eingetragen – eine Frage gibt’s trotzdem.</p>`}
     <p class="serif tb-frage">${esc(fr[i])}</p>
     ${schon ? `<p class="klein" style="margin:10px 0 0">✓ Heute schon ins Tagebuch geschrieben. Hühnchen liest nicht mit, Ehrenwort.</p><div class="zeile" style="margin-top:8px"><button class="knopf klein leise" data-act="tb-andere">Andere Frage</button></div>`

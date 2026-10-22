@@ -49,7 +49,7 @@ function eierTag() {
   const zuletzt = S.zuletztOffen && S.zuletztOffen !== heute() ? Math.round((tagDatum(heute()) - tagDatum(S.zuletztOffen)) / 864e5) : 0;
   const km = S.eintraege.filter(e => tat(e.t).art === "km").reduce((s, e) => s + (e.km || 0), 0), n = S.eintraege.length;
   const kandidaten = [];
-  if (S.geburtstag && S.geburtstag === `${String(m).padStart(2, "0")}-${String(t).padStart(2, "0")}`) kandidaten.push("max-geburtstag");
+  if (S.geburtstag && S.geburtstag === `${String(m).padStart(2, "0")}-${String(t).padStart(2, "0")}` && typeof mbIstGeburtstag !== "function") kandidaten.push("max-geburtstag"); // sonst kommt der Geburtstagsbrief aus maxbriefe.js
   if (m === 12 && t === 24 && h >= 12) kandidaten.push("christiane-weihnachten");
   if (m === 12 && t === 31 && h >= 18) kandidaten.push("max-silvester");
   if (m === 4 && t === 1) kandidaten.push("max-erster-april");

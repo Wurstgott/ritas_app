@@ -1,6 +1,6 @@
 /* Ritas App – offline: Zwischenspeicher sofort, frisch aus dem Netz nachladen (höchstens 2,5 s warten).
    Nur eigene Dateien; fremde Anfragen (z. B. Wetter) gehen unverändert ins Netz. */
-const C = "ritas-app-v16";
+const C = "ritas-app-v17";
 self.addEventListener("install", e => { e.waitUntil(caches.open(C).then(c => c.addAll(["./", "./index.html", "./manifest.json", "./icon-192.png", "./icon-512.png", "./icon-180.png"]))); self.skipWaiting(); });
 self.addEventListener("activate", e => e.waitUntil(caches.keys().then(ks => Promise.all(ks.filter(k => k !== C).map(k => caches.delete(k)))).then(() => self.clients.claim())));
 self.addEventListener("fetch", e => {

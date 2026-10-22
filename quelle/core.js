@@ -77,7 +77,10 @@ function frisch() {
     spiel: { an: true, frei: false, limit: 4, limitNeu: null, limitAb: "", marken: 0, tag: "", genutzt: 0, geschenkt: 0, laufend: null, restSek: 0, rueckenmotiv: false },
     hp: { band: 4, kapitel: 0 },
     installKarte: "", nachherTag: "", meilensteine: {},
-    letzteSicherung: ""
+    goenn: { ausgestellt: -1, gesehen: 0, karten: [], ideen: [] }, // Gönn-Karten (goennen.js); -1 = noch nie gezählt
+    letzteSicherung: "",
+    geburtstag: "12-07", entdeckt: {}, // Briefe von Max (maxbriefe.js)
+    maxBriefe: { archiv: [], gbMigr: 0, entMigr: 0, letzteEmpf: "", puste: "", gbTaler: "", benutzt: {} }
   };
 }
 let LADEFEHLER = null;   // unlesbarer Stand: Rohtext wird gesichert, Notfall-Ansicht statt Überschreiben
@@ -116,14 +119,22 @@ function migrieren() {
   const TAG = /^\d{4}-\d{2}-\d{2}$/;
   S.eintraege = S.eintraege.filter(e => e && typeof e === "object" && typeof e.t === "string" && TAG.test(e.tag || ""));
   S.liste = S.liste.filter(x => x && typeof x === "object" && typeof x.text === "string");
-  S.menschen = S.menschen.filter(m => m && typeof m === "object" && m.id && m.name);
+  S.menschen = S.menschen.filter(m => m && typeof m === "object" && (typeof m.id === "string" || typeof m.id === "number") && String(m.id) && (typeof m.name === "string" || typeof m.name === "number") && String(m.name).trim());
+  { const ids = new Set(); S.menschen = S.menschen.filter(m => { m.id = String(m.id); m.name = String(m.name); if (ids.has(m.id)) return false; ids.add(m.id); return true; }); } // ids als Text, doppelte raus
+  S.menschen.forEach(m => { if (typeof m.rolle !== "string") m.rolle = ""; if (m.avatar != null && (typeof m.avatar !== "object" || Array.isArray(m.avatar) || (typeof avatarGueltig === "function" && !avatarGueltig(m.avatar)))) delete m.avatar; }); // Gesicht (avatar.js): Kaputtes fällt auf die Initiale zurück
   S.menschen.forEach((m, i) => { if (typeof m.farbe !== "string" || !/^#[0-9a-f]{6}$/i.test(m.farbe)) m.farbe = ["#7A5A9A", "#3F7A6A", "#9A6A3A", "#5A7A9A", "#9A4A5A"][i % 5]; });
   S.plaene = S.plaene.filter(p => p && typeof p === "object" && p.id && D.leiter && D.leiter[Number(p.leiter) - 1]);
   S.missionen.aktiv = S.missionen.aktiv.filter(a => a && typeof a === "object" && a.id).map(a => ({ ...a, tage: Array.isArray(a.tage) ? a.tage : [] }));
   if (!Number.isFinite(S.taler)) S.taler = 0;
+  { const g = S.goenn; // Gönn-Karten: defensiv aufräumen
+    if (!Number.isFinite(g.ausgestellt)) g.ausgestellt = -1; else g.ausgestellt = Math.max(-1, Math.floor(g.ausgestellt));
+    if (!Number.isFinite(g.gesehen)) g.gesehen = 0;
+    g.karten = g.karten.filter(k => k && typeof k === "object" && typeof k.id === "string" && typeof k.text === "string" && k.text && TAG.test(k.tag || "")).map(k => ({ ...k, nr: Number.isFinite(k.nr) ? k.nr : 0, idx: Number.isFinite(k.idx) ? k.idx : 0, z: typeof k.z === "string" ? k.z : "" }));
+    g.ideen = [...new Set(g.ideen.filter(t => typeof t === "string" && t.trim()).map(t => t.trim().slice(0, 90)))].slice(0, 80); }
   S.gekauft.patience = true;
   if (!S.eintraege.some(e => e.person === "tanzschueler")) S.menschen = S.menschen.filter(m => m.id !== "tanzschueler");
   if (Array.isArray(S.checkliste) && !S.checkliste.some(c => c.id === "maske")) { const i = S.checkliste.findIndex(c => c.id === "desinf"); S.checkliste.splice(i < 0 ? S.checkliste.length : i, 0, { id: "maske", text: "FFP2-Maske eingesteckt (und eine Ersatzmaske)", an: false }); }
+  if (Array.isArray(S.checkliste)) S.checkliste = S.checkliste.filter(c => c.eigen || !["wc", "euro"].includes(c.id)); // Toiletten sind kein Thema (Max)
   if (Array.isArray(S.checkliste)) S.checkliste.forEach(c => { const neu = (D.checkliste || []).find(x => x.id === c.id); if (neu && c.text !== neu.text && !c.eigen) c.text = neu.text; });
   if (gvAlt < 3) { if (S.hp && S.hp.band < 4 && !S.hp.kapitel && !S.eintraege.some(e => e.t === "buchfertig" && /Harry Potter/.test(e.titel || ""))) S.hp.band = 4; if (!Array.isArray(S.buecherEigen)) S.buecherEigen = []; }
   if (!Array.isArray(S.buecherEigen)) S.buecherEigen = [];
@@ -134,6 +145,7 @@ function migrieren() {
   const grenze = Date.now() - 30 * 864e5;
   S.geloescht = (S.geloescht || []).filter(e => (e.weg || 0) > grenze);
   if (typeof skinsMigrieren === "function") try { skinsMigrieren(); } catch (e) { } // Kleiderschrank, Bild-Spielereien (skins.js)
+  if (typeof mbMigrieren === "function") try { mbMigrieren(); } catch (e) { } // Briefe von Max, Geburtstag (maxbriefe.js)
   speichern();
 }
 
@@ -219,18 +231,29 @@ function modell() {
 }
 
 /* ---------- Haptik ---------- */
-const VIB = { atemaus: [8, 80, 8], auswahl: 10, aktion: 12, erfolg: [10, 60, 14], achtung: [24, 60, 24], stufe: [12, 60, 12, 60, 30] };
+const VIB = { atemaus: [8, 80, 8], auswahl: 10, aktion: 12, erfolg: [10, 60, 14], achtung: [24, 60, 24], stufe: [12, 60, 12, 60, 30], taler: [6, 45, 8] };
+/* Während eines Tipps sammelt feedback.js (fbMelde) die Wünsche und gibt danach GENAU EINE Rückmeldung:
+   Erfolg/Fehler/Stufe aus dem Handler schlagen die Familie des Elements (Auswahl 10, Aktion 12, Navigation/Schalter –). */
 function haptik(art) {
+  if (typeof fbMelde === "function" && fbMelde(art)) return;
+  vibriere(art);
+}
+function vibriere(art) {
   if (!S.vib || REDUCED()) return;
   if (navigator.userActivation && !navigator.userActivation.hasBeenActive) return; // ohne Nutzergeste blockt der Browser ohnehin
   try { if (navigator.vibrate) navigator.vibrate(VIB[art] || 10); } catch (e) { }
 }
 /* iOS: echter Schalter unter einem label erzeugt den System-Tick (ab iOS 18) */
-const HAPSEL = ".ks-teil,.ks-fig,.ks-karte,.taler-plakette,.laden-schrank,.bild-wetter-knopf,.mem-karte,.wetter-chip,.tel-leiste,.tuer-gross,.notfall-leiste,.tel-kontakt,.tel-karte-knopf,.exkurs-karte,.bingo-feld,.huhn-karte,.tuer,.logo-knopf,.knopf,.kachel,.tf,.chip,.liste-zeile,nav.tabs button,.karte:not(.zu),.fach:not(.leer),.schalter-zeile";
+const HAPSEL = ".link-knopf,button.umschlag,.buehne button.ueber,.mb-torte,.mb-umschlag,.av-wahl,.av-farbe,.av-knopf,.ks-teil,.ks-fig,.ks-karte,.taler-plakette,.laden-schrank,.bild-wetter-knopf,.mem-karte,.wetter-chip,.tel-leiste,.tuer-gross,.notfall-leiste,.tel-kontakt,.tel-karte-knopf,.goenn-leiste,.ware-kachel:not(.bald-kachel),.laden-tuer,.muenze-knopf,.ks-punkt,.schaufenster,.exkurs-karte,.bingo-feld,.huhn-karte,.tuer,.logo-knopf,.knopf,.kachel,.tf,.chip,.liste-zeile,nav.tabs button,.karte:not(.zu),.fach:not(.leer),.schalter-zeile";
 function armHaptics() {
-  if (!IOS || !S.vib) return;
+  if (!IOS) return;
+  // Vibration aus oder Bewegung reduziert: keine Haptik, auch kein iOS-Tick
+  if (!S.vib || REDUCED()) { $$("label.hap").forEach(l => l.remove()); return; }
   $$(HAPSEL).forEach(el => {
     if (el.querySelector(":scope>label.hap") || el.disabled) return;
+    // Kein Label über eigenen Knöpfen/Feldern (sonst schluckt es auf dem iPhone deren Tipps) und keins auf Zeilen ohne Aktion
+    if (el.querySelector("button, a[href], input:not([switch]), select, textarea, [data-act], [data-tab]")) return;
+    if (el.matches(".liste-zeile") && !el.matches("button, a, label, [data-act]")) return;
     if (getComputedStyle(el).position === "static") el.style.position = "relative";
     const l = document.createElement("label"); l.className = "hap"; l.setAttribute("aria-hidden", "true");
     l.addEventListener("click", e => { if (e.target === l) e.stopPropagation(); });
@@ -244,6 +267,7 @@ let AC = null;
 function audio() { if (!AC) { try { AC = new (window.AudioContext || window.webkitAudioContext)(); } catch (e) { } } if (AC && AC.state === "suspended") AC.resume(); return AC; }
 function ton(art, zwang) {
   if ((!S.ton && !zwang) || !audio()) return;
+  if (typeof fbTonMelde === "function") fbTonMelde(art);
   const t0 = AC.currentTime + .01;
   const noten = { erfolg: [[523.25, 0], [783.99, .12]], achtung: [[220, 0]], klangschale: [[392, 0], [588, 0], [784, 0]], spieluhr: [[1046.5, 0], [1318.5, .28], [1568, .56]], ende: [[659.25, 0], [880, .2]] }[art] || [[523.25, 0]];
   const lang = art === "klangschale" ? 4.5 : art === "spieluhr" ? 1.6 : .45;
@@ -270,7 +294,8 @@ function toast(text, opt = {}) {
   const [kopf, ...weiter] = String(text).split("\n");
   t.innerHTML = `${haken}<div class="text">${esc(kopf)}${weiter.filter(Boolean).map(z => `<small>${esc(z)}</small>`).join("")}</div>${opt.rueck || opt.knopf ? `<div class="toast-knoepfe">` : `<div class="toast-knoepfe" hidden>`}${opt.rueck ? `<button class="knopf rueck-mini" data-act="toast-rueck">Rückgängig</button>` : ""}<button class="knopf zu" data-act="toast-zu" aria-label="Schließen" hidden>Schließen</button>${opt.rueck && !opt.knopf ? `<button class="knopf daumen mit-text" data-act="toast-daumen" aria-label="Danke, Hühnchen">${DAUMEN_SVG}<span>Danke!</span></button>` : ""}${opt.knopf ? `<button class="knopf" data-act="${opt.knopf.act}">${esc(opt.knopf.text)}</button>` : ""}</div>`;
   t._rueck = opt.rueck;
-  t.addEventListener("click", ev => { if (!ev.target.closest("button")) { t.classList.add("weg"); setTimeout(() => t.remove(), 250); } });
+  const t0 = Date.now(); // ein Doppeltipp auf den Knopf darunter soll die Meldung nicht gleich wieder schließen
+  t.addEventListener("click", ev => { if (Date.now() - t0 < 600) return; if (!ev.target.closest("button")) { t.classList.add("weg"); setTimeout(() => t.remove(), 250); } });
   document.body.appendChild(t);
   hebeToast();
   armHaptics();
@@ -312,6 +337,7 @@ function sheet(opt) {
   const sh = document.createElement("div"); sh.className = "sheet" + (opt.voll ? " voll" : "");
   sh.setAttribute("role", "dialog"); sh.setAttribute("aria-modal", "true"); sh.setAttribute("aria-label", opt.titel || "Fenster"); sh.tabIndex = -1;
   if (opt.id) sh.dataset.id = opt.id;
+  if (opt.id && typeof mbGeoeffnet === "function") try { mbGeoeffnet(opt.id); } catch (e) { } // „Entdeckt“-Merker (maxbriefe.js)
   sh.innerHTML = `${opt.voll ? "" : `<div class="griff" aria-hidden="true"></div>`}
     <div class="sheet-kopf"><h2>${esc(opt.titel || "")}</h2>${opt.ohneZu ? "" : `<button class="knopf klein leise" data-act="sheet-zu">Schließen</button>`}</div>
     <div class="sheet-inhalt">${opt.inhalt || ""}</div>${opt.fuss ? `<div class="sheet-fuss">${opt.fuss}</div>` : ""}`;
@@ -387,36 +413,31 @@ function ziehZumSchliessen(sh) {
 }
 
 /* ---------- Tippen: Abbruch bei Wischen, gedrückt-Zustand, Doppel-Sperre ---------- */
-const TAPSEL = ".knopf,.kachel,.tf,.chip,.liste-zeile,nav.tabs button,.karte,.fach,.schalter-zeile,.buehne button.ueber";
+/* Alle antippbaren Familien (feedback.js). Bild/Leinwand bleiben draußen: Lupe und langes Drücken regeln das selbst. */
+const TAPSEL = ".knopf,.kachel,.tf,.chip,.liste-zeile,nav.tabs button,.karte,.fach,.schalter-zeile,.buehne button.ueber,button,a[href],[data-act],[data-tab],summary,[role=switch]";
+const TAP_NICHT = "canvas,#bild-gross,input,textarea,select";
 let tg = null, abbrechenBis = 0;
 addEventListener("pointerdown", e => {
   abbrechenBis = 0;
-  const el = e.target.closest(TAPSEL); if (!el || el.disabled) { tg = null; return; }
+  const el = e.target.closest && e.target.closest(TAPSEL); if (!el || el.disabled || el.matches(TAP_NICHT)) { tg = null; return; }
   tg = { el, x: e.clientX, y: e.clientY, moved: false };
-  el.classList.add("gedrueckt"); el._seit = performance.now();
+  el.classList.remove("nopress"); el.classList.add("gedrueckt"); el._seit = performance.now();
 }, { passive: true, capture: true });
 addEventListener("pointermove", e => {
   if (!tg || tg.moved) return;
-  if (Math.hypot(e.clientX - tg.x, e.clientY - tg.y) > 16) { tg.moved = true; tg.el.classList.remove("gedrueckt"); }
+  // ab 10 px Bewegung ist es kein Tippen mehr: gedrücktes Aussehen weg, Loslassen löst nichts aus
+  if (Math.hypot(e.clientX - tg.x, e.clientY - tg.y) > 10) { tg.moved = true; tg.el.classList.remove("gedrueckt"); tg.el.classList.add("nopress"); }
 }, { passive: true, capture: true });
 function loesen(e) {
   if (!tg) return;
   const el = tg.el, rest = Math.max(0, 120 - (performance.now() - (el._seit || 0)));
-  setTimeout(() => el.classList.remove("gedrueckt"), rest);
+  setTimeout(() => el.classList.remove("gedrueckt", "nopress"), rest);
   if (tg.moved) abbrechenBis = performance.now() + 600;
-  else if (e && e.type === "pointerup") welle(el, e.clientX, e.clientY);
-  tg = null;
+  tg = null;   // Welle, Füllung usw. macht feedback.js beim Klick – genau eine Rückmeldung pro Tipp
 }
 addEventListener("pointerup", loesen, { passive: true, capture: true });
 addEventListener("pointercancel", e => { if (tg) { tg.moved = true; } loesen(e); }, { passive: true, capture: true });
 addEventListener("click", e => { if (performance.now() < abbrechenBis) { abbrechenBis = 0; e.preventDefault(); e.stopImmediatePropagation(); } }, true);
-function welle(el, x, y) {
-  if (REDUCED() || el.classList.contains("tf") || el.classList.contains("karte")) return;
-  const r = el.getBoundingClientRect(), d = Math.max(r.width, r.height) * 2.2;
-  const w = document.createElement("span"); w.className = "welle";
-  w.style.cssText = `width:${d}px;height:${d}px;left:${x - r.left - d / 2}px;top:${y - r.top - d / 2}px`;
-  el.appendChild(w); setTimeout(() => w.remove(), 650);
-}
 const sperre = new WeakMap();
 function gesperrt(el) {
   if (el.dataset && (el.dataset.act === "huhn-tap" || el.dataset.act === "tschuess")) return false;
