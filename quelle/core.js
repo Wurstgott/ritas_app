@@ -279,7 +279,18 @@ function vibriere(art) {
 }
 /* iOS: echter Schalter unter einem label erzeugt den System-Tick (ab iOS 18) */
 const HAPSEL = ".wo-tag:not(.zukunft),.rb-karteikarte,.rb-postkarte,.abendblatt .tb-modus .chip,.abend-leiste,.wm-text,.jf-tag:not(.jf-zukunft),.jf-flicken:not(.zukunft),.rg-knopf,.rg-skip,.rg-muenze,.rg-huhn,.rg-einst,.c-entdecken,.c-fach,.c-kasten,.c-ruhe-kachel,.link-knopf,button.umschlag,.buehne button.ueber,.mb-torte,.mb-umschlag,.av-wahl,.av-farbe,.av-knopf,.ks-teil,.ks-fig,.ks-karte,.taler-plakette,.laden-schrank,.bild-wetter-knopf,.fh-dose,.fh-ding,.fh-album-knopf,.mem-karte,.wetter-chip,.tel-leiste,.tuer-gross,.notfall-leiste,.tel-kontakt,.tel-karte-knopf,.goenn-leiste,.ware-kachel:not(.bald-kachel),.laden-tuer,.muenze-knopf,.ks-punkt,.schaufenster,.exkurs-karte,.bingo-feld,.huhn-karte,.tuer,.logo-knopf,.knopf,.kachel,.tf,.chip,.liste-zeile,nav.tabs button,.karte:not(.zu),.fach:not(.leer),.schalter-zeile";
+/* Store-Links: auf iPhone/iPad zum App Store statt Play Store (Rita: Android, Max: iPhone) */
+function storeAnpassen() {
+  if (!IOS) return;
+  document.querySelectorAll('a[href*="play.google.com/store"]').forEach(a => {
+    const name = a.textContent.replace(/\s*(im|aus dem) Play Store.*$/i, "").replace(/↗/g, "").trim();
+    a.href = "https://apps.apple.com/de/search?term=" + encodeURIComponent(name);
+  });
+  const w = document.createTreeWalker(document.body, NodeFilter.SHOW_TEXT);
+  for (let n; (n = w.nextNode());) if (n.nodeValue.includes("Play Store")) n.nodeValue = n.nodeValue.replace(/Play Store/g, "App Store");
+}
 function armHaptics() {
+  try { storeAnpassen(); } catch (e) { }
   if (!IOS) return;
   // Vibration aus oder Bewegung reduziert: keine Haptik, auch kein iOS-Tick
   if (!S.vib || REDUCED()) { $$("label.hap").forEach(l => l.remove()); return; }
@@ -715,7 +726,8 @@ const WARE_QUELLE = {
   "g-halloren": `<rect class="R" x="4" y="13" width="40" height="27" rx="3"/><rect class="c" x="7" y="16" width="34" height="21" rx="2"/><g class="H"><circle cx="13" cy="22" r="3.4"/><circle cx="21" cy="22" r="3.4"/><circle cx="29" cy="22" r="3.4"/><circle cx="37" cy="22" r="3.4"/><circle cx="13" cy="31" r="3.4"/><circle cx="21" cy="31" r="3.4"/><circle cx="29" cy="31" r="3.4"/><circle cx="37" cy="31" r="3.4"/></g><g class="w" opacity=".5"><circle cx="12" cy="21" r="1"/><circle cx="20" cy="21" r="1"/><circle cx="28" cy="21" r="1"/><circle cx="36" cy="21" r="1"/><circle cx="12" cy="30" r="1"/><circle cx="20" cy="30" r="1"/><circle cx="28" cy="30" r="1"/><circle cx="36" cy="30" r="1"/></g><path class="y" d="M22 13h4v27h-4z"/><path class="y" d="M24 13c-3-5-9-6-9-2 0 2 5 3 9 2Zm0 0c3-5 9-6 9-2 0 2-5 3-9 2Z"/>`,
   orte2: ICF_QUELLE.karte,
   traenke: ICF_QUELLE.schale,
-  rotkehlchen: ICF_QUELLE.vogel,
+  /* Illu 1.11.: Rotkehlchen sitzt wieder auf dem Zaun („setzt sich auf den Zaun“) */
+  rotkehlchen: ICF_QUELLE.vogel.replace('<path class="H" d="M4 40h40v3H4z"/>', '<path class="e" d="M7 34l2.4-3 2.4 3v13H7zM21.6 34l2.4-3 2.4 3v13h-4.8zM36.2 34l2.4-3 2.4 3v13h-4.8zM3 43.6h42V46H3z"/><path class="H" d="M3 39h42v3H3z"/>'),
   rezepte1: ICF_QUELLE.topf,
   rezepte2: ICF_QUELLE.kuchen
 };
