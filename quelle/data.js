@@ -304,19 +304,6 @@ D.laden = [
   { id: "orte2", gruppe: "Ausflüge", name: "Ausflugspaket „Weiter weg“", preis: 60, text: "Ziele für einen halben oder ganzen Tag, ein Stück weiter raus. Mit allem, was man vorher wissen will.", icon: "karte" }
 ];
 
-/* ---------- Hühnchen: wo es steht (je Bildort) ---------- */
-D.huehnchenOrt = {
-  weg: "Hühnchen steht heute am Weg.",
-  fenster: "Hühnchen steht heute vor dem Haus.",
-  tanz: "Hühnchen steht heute am Rand des Tanzbodens.",
-  eiche: "Hühnchen sitzt heute unter der Leseeiche.",
-  quelle: "Hühnchen sitzt heute an der Quelle.",
-  wiese: "Hühnchen steht heute in der Wiese.",
-  horizont: "Hühnchen schaut heute zum Horizont.",
-  mut: "Hühnchen steht heute bei den Glühwürmchen.",
-  bank: "Hühnchen sitzt heute auf der Bank."
-};
-
 /* ---------- Ruhe-Timer: Vorlagen ---------- */
 D.timerVorlagen = [
   { id: "lesen", name: "Lesen", min: 10 },

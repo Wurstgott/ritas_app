@@ -4,7 +4,10 @@
    danach verschwinden gemerkte Sendungen von selbst.
    ============================================================ */
 let TV_TAB = "mediathek", TV_GENRE = "Alle";
-function tvDaten() { const R = S.tvRepo; return R && R.stand && (!D.tv || R.stand >= D.tv.stand) ? R : (D.tv || { mediathek: [], fernsehen: [] }); }
+function tvDaten() { const R = REPO.tv, T = R && R.stand && (!D.tv || R.stand >= D.tv.stand) ? R : (D.tv || { mediathek: [], fernsehen: [] }); return tvDuKlein(T); }
+/* „Du/Dir/Dein“ aus dem Sonntags-Job mitten im Satz klein (einmal je geladenem Stand, nur im Speicher) */
+const TV_KLEIN = new WeakSet();
+function tvDuKlein(T) { if (!T || TV_KLEIN.has(T)) return T; TV_KLEIN.add(T); for (const k of ["mediathek", "fernsehen"]) (Array.isArray(T[k]) ? T[k] : []).forEach(x => { if (x && typeof x.text === "string") x.text = duKlein(x.text); }); return T; }
 function tvId(x) { return "tv-" + angebotId((x.titel || "") + (x.datum || "") + (x.zeit || "") + (x.sender || "")); }
 function tvAufraeumen() {
   const h = heute(); if (!Array.isArray(S.tvMerk)) S.tvMerk = [];
@@ -14,7 +17,7 @@ function tvAufraeumen() {
 }
 function tvLaden() {
   if (!/github\.io$/.test(location.hostname)) return;
-  fetch("tv.json", { cache: "no-store" }).then(r => r.ok ? r.json() : null).then(T => { if (T && typeof T.stand === "string" && Array.isArray(T.mediathek) && (!S.tvRepo || S.tvRepo.stand !== T.stand)) { const ok = x => x && typeof x === "object" && typeof x.titel === "string" && ["text", "sender", "datum", "zeit", "link", "genre", "bis", "art", "laenge"].every(k => x[k] == null || typeof x[k] === "string"); T.mediathek = T.mediathek.filter(ok); T.fernsehen = (Array.isArray(T.fernsehen) ? T.fernsehen : []).filter(ok); S.tvRepo = T; speichern(); } }).catch(() => { });
+  fetch("tv.json", { cache: "no-store" }).then(r => r.ok ? r.json() : null).then(T => { if (T && typeof T.stand === "string" && Array.isArray(T.mediathek) && (!REPO.tv || REPO.tv.stand !== T.stand)) { const ok = x => x && typeof x === "object" && typeof x.titel === "string" && ["text", "sender", "datum", "zeit", "link", "genre", "bis", "art", "laenge"].every(k => x[k] == null || typeof x[k] === "string"); T.mediathek = T.mediathek.filter(ok); T.fernsehen = (Array.isArray(T.fernsehen) ? T.fernsehen : []).filter(ok); repoSchreiben("tv", T); } }).catch(() => { });
 }
 function tvKurzDatum(t) { const h = heute(); return t === h ? "Heute" : t === tagPlus(h, 1) ? "Morgen" : datumLang(t).replace(/ \d{4}$/, ""); }
 function tvKarte(x, art) {

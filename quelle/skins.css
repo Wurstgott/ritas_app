@@ -289,3 +289,58 @@ header.kopf { position: relative; }
 @keyframes muenz-dreh { 0% { transform: rotateY(0) scale(1); } 40% { transform: rotateY(540deg) scale(1.12); } 100% { transform: rotateY(1080deg) scale(1); } }
 @media (prefers-reduced-motion: reduce) { .muenze.dreht { animation: none; } }
 .laden-tuer { min-width: 0; overflow-wrap: anywhere; hyphens: auto; } .laden-tuer .lt-bild { max-width: 100%; overflow: hidden; }
+/* V3 (Verschlankung, 1.11.): fünf Abteilungs-Reiter, alle auf einen Blick (umbrechen statt seitlich scrollen); es ist immer nur EINE Abteilung zu sehen */
+.laden-chips-rahmen::after { content: none; display: none; }
+.laden-chips-rahmen .laden-chips { flex-wrap: wrap; overflow: visible; gap: 8px; margin: 4px 0 8px; padding: 2px 0 4px; scroll-snap-type: none; }
+.laden-chips-rahmen .laden-chips { display: grid; grid-template-columns: 1fr 1fr; }
+.laden-chips .laden-reiter { justify-content: center; gap: 6px; min-width: 0; min-height: 52px; padding: 6px 10px; font-size: 1rem; line-height: 1.2; text-align: center; overflow-wrap: anywhere; hyphens: auto; }
+.laden-chips .laden-reiter:first-child { grid-column: 1 / -1; }
+html[data-size="3"] .laden-chips-rahmen .laden-chips { grid-template-columns: 1fr; }
+.laden-chips .laden-reiter svg.ic-f { width: 26px; height: 26px; flex: none; }
+.laden-chips .laden-reiter[aria-pressed="true"] { background: var(--moos); color: var(--auf-moos); box-shadow: inset 0 0 0 1.5px var(--moos), var(--kante, 0 2px 0 rgba(0,0,0,.15)); }
+.laden-chips .laden-reiter[aria-pressed="true"] svg.ic-f, .laden-reiter[aria-pressed="true"] .reiter-huhn { border-radius: 50%; background: var(--bogen); padding: 2px; }
+.laden-reiter .reiter-huhn { display: inline-grid; place-items: center; flex: none; width: 28px; height: 28px; border-radius: 50%; }
+.laden-reiter .reiter-huhn svg { width: 24px !important; height: 24px !important; }
+.laden-teil[hidden] { display: none !important; }
+.laden-teil > .laden-abt:first-child { margin-top: 8px; }
+/* „Aus Halle“: eigener, ruhiger Block (Postkarten-Ton, Zeilen statt Kacheln) */
+.halle-block { margin-top: 24px; padding: 12px 12px 14px; border-radius: 16px; background: var(--mulde); box-shadow: inset 0 0 0 1.5px var(--linie-fein, rgba(122,90,58,.25)); }
+.halle-block .abt-schild { margin-top: 0; }
+.halle-erklaer { margin: 0 2px 10px; color: var(--tinte-2); text-align: center; }
+.halle-block .regal { grid-template-columns: 1fr; gap: 8px; padding: 0; }
+.halle-block .ware-kachel { flex-direction: row; justify-content: flex-start; align-items: center; gap: 12px; min-height: 64px; padding: 8px 12px; text-align: left; }
+.halle-block .ware-bild { flex: none; width: 52px; height: 52px; }
+.halle-block .ware-bild .ware-svg { width: 40px; height: 40px; }
+.halle-block .ware-name { flex: 1; min-width: 0; }
+.halle-block .preis-schild, .halle-block .ks-hat, .halle-block .halle-ab { flex: none; }
+/* V3: Regale im Laden etwas kompakter (gleiche Waren, kleinerer Teller), „Bald im Laden“ als ruhige Zeilen */
+.laden-teil .ware-kachel { gap: 6px; padding: 10px 8px 12px; }
+.laden-teil .ware-bild { width: 72px; height: 72px; }
+.laden-teil .ware-bild .ware-svg { width: 50px; height: 50px; }
+.laden-teil .abt-schild { margin: 6px 0 10px; }
+#abt-bald .regal { grid-template-columns: 1fr; gap: 6px; padding: 0 0 6px; }
+#abt-bald .bald-kachel { flex-direction: row; align-items: center; justify-content: flex-start; gap: 12px; min-height: 0; padding: 6px 12px; text-align: left; }
+#abt-bald .bald-kachel .ware-bild { flex: none; width: 52px; height: 52px; }
+#abt-bald .bald-kachel .ware-bild svg { width: 44px !important; height: 44px !important; }
+#abt-bald .bald-kachel .ware-name { flex: 1; min-width: 0; }
+#abt-bald .bald-kachel .klein { flex: none; max-width: 40%; text-align: right; }
+#abt-bald .laden-huhn { margin: 0 0 8px; }
+/* V3: Regale dreispaltig (wie Fächer im Ladenregal), bei „Sehr groß“ zweispaltig */
+.laden-teil .regal { grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 8px; }
+.laden-teil .ware-kachel { padding: 8px 4px 10px; }
+.laden-teil .ware-bild { width: 64px; height: 64px; }
+.laden-teil .ware-bild .ware-svg { width: 44px; height: 44px; }
+.laden-teil .ware-name { font-size: .86rem; line-height: 1.2; overflow-wrap: break-word; hyphens: auto; -webkit-hyphens: auto; }
+html[data-size="3"] .laden-teil .regal { grid-template-columns: 1fr 1fr; }
+html[data-size="3"] .laden-teil .ware-name { font-size: .92rem; }
+.laden-teil .halle-block .regal, .laden-teil #abt-bald .regal { grid-template-columns: 1fr; }
+.laden-teil .halle-block .ware-kachel, .laden-teil #abt-bald .bald-kachel { padding: 8px 12px; }
+.laden-teil .halle-block .ware-bild, .laden-teil #abt-bald .ware-bild { width: 52px; height: 52px; }
+.laden-teil .halle-block .ware-name, .laden-teil #abt-bald .ware-name { font-size: .95rem; }
+/* Zeilen-Regale (Bald, Halle): Bild links über zwei Zeilen, rechts Name und darunter Datum bzw. Preis – auch bei „Sehr groß“ */
+html .laden-teil .halle-block .regal, html .laden-teil #abt-bald .regal { grid-template-columns: 1fr; }
+.laden-teil .halle-block .ware-kachel, .laden-teil #abt-bald .bald-kachel { display: grid; grid-template-columns: auto minmax(0, 1fr); column-gap: 12px; row-gap: 4px; align-items: center; justify-items: start; }
+.laden-teil .halle-block .ware-bild, .laden-teil #abt-bald .ware-bild { grid-row: span 2; }
+.laden-teil .halle-block .ware-name, .laden-teil #abt-bald .ware-name { align-self: end; }
+.laden-teil #abt-bald .bald-kachel .klein { max-width: none; text-align: left; align-self: start; }
+.laden-teil .halle-block .ware-kachel > :nth-child(3) { align-self: start; }

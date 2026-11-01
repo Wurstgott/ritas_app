@@ -136,12 +136,13 @@ D.eier2 = [
 /* Forst-Bingo von Hühnchen */
 D.bingo = {
   draussen: [
-    "Specht gehört", "Eichhörnchen gesehen", "Bank mit Aussicht", "Fliegenpilz entdeckt", "Eichel aufgehoben",
-    "Einen Hund begrüßt", "Kiefernduft geschnuppert", "Buntes Blatt gefunden", "Krähen gezählt", "Weiches Moos angefasst",
-    "Sonne im Gesicht", "Jemandem zugenickt", "Pfütze elegant umrundet", "Spinnennetz mit Tau", "Amsel singen gehört",
-    "Kraniche am Himmel", "Erste Knospe gesehen", "Kiefernzapfen eingesteckt", "Wolke wie Tier", "Stock wie Zauberstab",
-    "Schmetterling gesehen", "Brombeeren entdeckt", "Wildschweinspuren gesehen", "Schnee unter Schuhen", "Raureif auf Gras",
-    "Neuen Weg probiert", "Blume am Wegrand", "Kuckuck gehört", "Kurz stehen geblieben", "Wasser plätschern gehört"
+    // Text allein = ganzjährig; { t, m } = nur in diesen Monaten (1–12), damit kein Feld unerfüllbar ist
+    "Specht gehört", "Eichhörnchen gesehen", "Bank mit Aussicht", { t: "Fliegenpilz entdeckt", m: [8, 9, 10, 11] }, { t: "Eichel aufgehoben", m: [9, 10, 11, 12] },
+    "Einen Hund begrüßt", "Kiefernduft geschnuppert", { t: "Buntes Blatt gefunden", m: [9, 10, 11] }, "Krähen gezählt", "Weiches Moos angefasst",
+    "Sonne im Gesicht", "Jemandem zugenickt", "Pfütze elegant umrundet", { t: "Spinnennetz mit Tau", m: [8, 9, 10] }, { t: "Amsel singen gehört", m: [2, 3, 4, 5, 6, 7] },
+    { t: "Kraniche am Himmel", m: [2, 3, 4, 9, 10, 11] }, { t: "Erste Knospe gesehen", m: [2, 3, 4] }, "Kiefernzapfen eingesteckt", "Wolke wie Tier", "Stock wie Zauberstab",
+    { t: "Schmetterling gesehen", m: [4, 5, 6, 7, 8, 9] }, { t: "Brombeeren entdeckt", m: [7, 8, 9] }, "Wildschweinspuren gesehen", { t: "Schnee unter Schuhen", m: [12, 1, 2] }, { t: "Raureif auf Gras", m: [11, 12, 1, 2, 3] },
+    "Neuen Weg probiert", { t: "Blume am Wegrand", m: [4, 5, 6, 7, 8, 9, 10] }, { t: "Kuckuck gehört", m: [4, 5, 6] }, "Kurz stehen geblieben", "Wasser plätschern gehört"
   ],
   drinnen: [
     "Vogel am Fenster", "Ein Lied mitgesummt", "Tee frisch aufgebrüht", "Fenster kurz geöffnet",

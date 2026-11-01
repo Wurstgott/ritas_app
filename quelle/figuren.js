@@ -427,7 +427,6 @@ function maxLacht(el, opt = {}) {
     return true;
   } catch (e) { return false; }
 }
-const figLacht = maxLacht;
 
 /* Ab und zu macht eine sichtbare Figur etwas Kleines: lächeln – und je nach Person:
    Christiane rückt die Brille zurecht, Micha nickt, Greta zwinkert, Max und Dani ziehen kurz die Brauen hoch.

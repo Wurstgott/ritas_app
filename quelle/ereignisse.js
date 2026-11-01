@@ -110,6 +110,7 @@ function erFigur(wer, gr) {
 function erPasst(e) {
   const d = jetzt(), w = e.wann || {};
   if (w.monat && d.getMonth() + 1 !== w.monat) return false;
+  if (w.advent && !(typeof festHeute === "function" && festHeute(d).advent)) return false; // Adventssonntage (der 1. kann im November liegen)
   if (w.tag && d.getDate() !== w.tag) return false;
   if (w.geburtstag && !(S.geburtstag && S.geburtstag === heute().slice(5))) return false;
   if (w.ostern && !(typeof osterSonntag === "function" && heute() === osterSonntag(d.getFullYear()))) return false;

@@ -11,7 +11,6 @@ function mbS() { if (!S.maxBriefe || typeof S.maxBriefe !== "object" || Array.is
 const mbTage = (a, b) => Math.round((tagDatum(b) - tagDatum(a)) / 864e5);
 function mbDatum(tag) { const d = tagDatum(tag); return `${d.getDate()}. ${MONAT[d.getMonth()]}`; }
 function mbUnd(arr) { return arr.length < 2 ? arr.join("") : arr.slice(0, -1).join(", ") + " und " + arr[arr.length - 1]; }
-function mbZahl(n) { return ["null", "ein", "zwei", "drei", "vier", "fünf", "sechs", "sieben", "acht", "neun", "zehn", "elf", "zwölf"][n] || String(n); }
 function mbMal(n) { return n === 1 ? "einmal" : `${n} Mal`; }
 /* Text aus einem Vorrat wählen: fest nach Schlüssel, aber nicht dasselbe wie in den letzten Briefen */
 function mbWaehle(arr, key, art) {
@@ -186,7 +185,7 @@ const MB_FUNKTIONEN = [
   { id: "tagebuch", text: "dass unter „Rückblick“ jeden Abend eine Frage fürs Tagebuch wartet? Wahlweise auch eine von früher. Fürs Papier-Tagebuch, die App liest nicht mit.", knopf: "Zur Tagebuchfrage" },
   { id: "kramladen", text: "dass du mit deinen Talern im Kramladen einkaufen kannst? Sachen fürs Bild, kleine Spiele, Klänge. Hühnchen hat sich auch schon was ausgeguckt.", knopf: "Zum Kramladen" },
   { id: "kleiderschrank", text: "dass es unter „Zuhause“ einen Kleiderschrank gibt? Hühnchen als Detektiv, du mit Sonnenhut. Ich sag nur: Wikingerhelm.", knopf: "Zum Kleiderschrank" },
-  { id: "goennen", text: "dass im Kramladen „Gönn dir was“-Karten liegen? Kleine Sachen, die einfach nur schön sind. Ohne Grund, ohne Haken.", knopf: "Gönn dir was" },
+  { id: "goennen", text: "dass ab und zu eine Gönn-Karte für dich auftaucht? Kleine Sachen, die einfach nur schön sind. Ohne Grund, ohne Haken. Alle liegen unter „Zuhause“ in deiner Sammlung.", knopf: "Gönn-Karten" },
   { id: "gesicht", text: "dass du den Leuten in der App Gesichter basteln kannst? Frisur, Brille, Ohrringe. In den Einstellungen unter „Herzensmenschen“. Ich bin gespannt, was du draus machst.", knopf: "Gesichter basteln" },
   { id: "notfall", text: "dass unter „Ideen“ ein Notfallplan liegt? Den richtest du dir in Ruhe so ein, wie er zu dir passt. Wie ein Zettel im Portemonnaie: Man muss ihn nicht brauchen, aber er ist da.", knopf: "Notfallplan ansehen" },
   { id: "huhn", text: "dass Hühnchen dir was zeigt, wenn du den Finger länger draufhältst? Ich verrat nicht, was. Probier’s auf „Heute“.", knopf: "Zu Hühnchen" },
@@ -200,8 +199,8 @@ const MB_LIEBLING = [
   { id: "l-wissen", text: "Ich les selbst gern die Wissen-Häppchen unter „Ideen“. Gestern hab ich gelernt, dass ich vorher nichts wusste.", knopf: "Wissen" },
   { id: "l-bingo", text: "Das Forst-Bingo ist mein heimlicher Favorit. Eichhörnchen, Specht, Pilz: Wer zuerst eine Reihe hat, darf angeben.", knopf: "Forst-Bingo" },
   { id: "l-vorhaben", text: "Unter „Ideen“ gibt’s kleine Vorhaben mit Kästchen zum Abhaken. Ganz ohne Eile. Ich hab mir selbst eins vorgenommen, verrate aber nicht, welches.", knopf: "Vorhaben" },
-  { id: "l-setzkasten", text: "Mein Lieblingsort in der App ist der Setzkasten. Da liegt von jedem Ausflug ein kleines Andenken. Wie eine Vitrine, nur ohne Staub.", knopf: "Setzkasten" },
-  { id: "l-stufen", text: "Schau mal wieder unter „Alle Stufen“ nach. Da steht, was im Bild schon dazugekommen ist. Ich find, es ist eine ganze Menge.", knopf: "Alle Stufen" },
+  { id: "l-setzkasten", text: "Mein Lieblingsort in der App ist der Setzkasten in deiner Sammlung unter „Zuhause“. Da liegt von jedem Ausflug ein kleines Andenken. Wie eine Vitrine, nur ohne Staub.", knopf: "Setzkasten" },
+  { id: "l-stufen", text: "Schau mal wieder in deiner Sammlung unter „Alle Stufen“ nach. Da steht, was im Bild schon dazugekommen ist. Ich find, es ist eine ganze Menge.", knopf: "Alle Stufen" },
   { id: "l-woche", text: "Sonntags gibt’s den Wochenrückblick. Ich mag den, weil da drinsteht, was gut war, und sonst nichts.", knopf: "Wochenrückblick" },
   { id: "l-hp", text: "Der Harry-Potter-Lesebegleiter merkt sich dein Kapitel. Hermine wäre stolz. Ich auch.", knopf: "Lesebegleiter" },
   { id: "l-ausflug", text: "Ausflüge kann man in der App vorher planen, mit Checkliste und allem. Ich plane meine immer erst, wenn ich schon da bin. Das ist der Unterschied zwischen uns.", knopf: "Ausflug planen" },
@@ -511,11 +510,11 @@ function mbZiel(id) {
     plaudern: typeof telAktion === "function" && akt("tel-auf"), karin: typeof bvAktion === "function" && akt("bv-auf"), tv: typeof tvAktion === "function" && akt("tv-auf"),
     buecher: typeof lesebegleiterSheet === "function" && akt("lesebegleiter"), winter: typeof winterAktion === "function" && akt("wi-auf"), angebote: akt("angebote"),
     tagebuch: typeof tbAktion === "function" && (() => { if (typeof RB === "object") RB.offen = heute(); if (TAB === "tagebuch") render({ ohneAnim: true }); tab("tagebuch", "#abend")(); }), kramladen: () => ladenSheet(),
-    kleiderschrank: typeof skAktion === "function" && (() => skAktion("sk-schrank", {}, null)), goennen: typeof gkSheet === "function" && (() => gkSheet()),
+    kleiderschrank: typeof skAktion === "function" && (() => skAktion("sk-schrank", {}, null)), goennen: typeof gkSheet === "function" && (() => (typeof sammlungFach === "function" ? sammlungFach(gkSheet) : gkSheet())),
     gesicht: typeof avatarEditor === "function" && (() => { const m = (S.menschen || []).find(x => x.id === "nachbarin" && !personFest(x)) || (S.menschen || []).find(x => x.id !== "daniel" && !personFest(x)); if (m) avatarEditor(m.id); else { EINST_OFFEN = new Set(["menschen"]); einstellungenSheet(); } }), notfall: typeof ruheAktion === "function" && akt("ruhe-plan"),
     huhn: S.huhn !== false && (() => tab("heute", ".huhn-karte")()), bild: () => tab("lichtung", "#buehne-gross")(), wetter: typeof skAktion === "function" && (() => skAktion("sk-wetter", {}, null)),
     "l-moment": typeof rbSchoenSheet === "function" ? (() => rbSchoenSheet()) : akt("moment"), "l-lebensbuch": akt("lebensbuch"), "l-wissen": akt("wissen"), "l-bingo": typeof bingoSheet === "function" && (() => bingoSheet()), "l-vorhaben": akt("missionen"),
-    "l-setzkasten": akt("setzkasten"), "l-stufen": akt("stufen"), "l-woche": akt("rueckblick"), "l-hp": akt("lesebegleiter"), "l-ausflug": akt("ausflug")
+    "l-setzkasten": () => (typeof sammlungFach === "function" ? sammlungFach(setzkastenSheet) : akt("setzkasten")()), "l-stufen": () => (typeof sammlungFach === "function" ? sammlungFach(stufenSheet) : akt("stufen")()), "l-woche": akt("rueckblick"), "l-hp": akt("lesebegleiter"), "l-ausflug": akt("ausflug")
   };
   return Z[id] || null;
 }

@@ -21,6 +21,8 @@ function tagVon(d = new Date()) { const z = new Date(d); return `${z.getFullYear
 function heute() { return tagVon(jetzt()); }
 let ZEITVERSATZ = 0;               // für Tests
 function jetzt() { return new Date(Date.now() + ZEITVERSATZ); }
+// Testzugang: ?zeit=JJJJ-MM-TTTHH:MM stellt die Uhr (nur für Prüfungen). Steht ganz vorn, damit schon laden(), frisch() und migrieren() mit der Testzeit rechnen.
+try { const z0 = new URLSearchParams(location.search).get("zeit"); if (z0) { const z = new Date(z0); if (!isNaN(z)) ZEITVERSATZ = z - Date.now(); } } catch (e) { }
 function tagDatum(tag) { const [y, m, d] = tag.split("-").map(Number); return new Date(y, m - 1, d, 12); }
 function tagPlus(tag, n) { const d = tagDatum(tag); d.setDate(d.getDate() + n); return tagVon(d); }
 const WOCHENTAG = ["Sonntag", "Montag", "Dienstag", "Mittwoch", "Donnerstag", "Freitag", "Samstag"];
@@ -97,8 +99,26 @@ let SPEICHERFEHLER_GEMELDET = false;
 function speichern() {
   if (LADEFEHLER) return; // den alten Rohtext nicht überschreiben, solange die Notfall-Ansicht offen ist
   try { localStorage.setItem(KEY, JSON.stringify(S)); }
-  catch (e) { if (!SPEICHERFEHLER_GEMELDET) { SPEICHERFEHLER_GEMELDET = true; setTimeout(() => { try { toast("Speichern klappt gerade nicht – bitte Max Bescheid sagen."); } catch (x) { } }, 50); } }
+  catch (e) { if (!SPEICHERFEHLER_GEMELDET) { SPEICHERFEHLER_GEMELDET = true; setTimeout(() => { try { toast("Speichern klappt gerade nicht – bitte Max Bescheid sagen.\nAm besten jetzt eine Sicherung machen.", { knopf: { act: "sicherung-kurz", text: "Sicherung" }, dauer: 20000 }); } catch (x) { } }, 50); } }
 }
+/* Sonntags-Daten aus dem Repo (angebote.json, tv.json, post.json) liegen in eigenen Schlüsseln statt in S:
+   Sie kommen jede Woche neu, gehören nicht in die Sicherung und machen speichern() nicht schwerer. */
+const REPO_KEY = { angebote: KEY + "-angebote", tv: KEY + "-tv", post: KEY + "-post" };
+function repoLesen(n) { try { const r = localStorage.getItem(REPO_KEY[n]); return r ? JSON.parse(r) : null; } catch (e) { return null; } }
+function repoSchreiben(n, v) { REPO[n] = v; try { localStorage.setItem(REPO_KEY[n], JSON.stringify(v)); return true; } catch (e) { return false; } }
+const REPO = { angebote: repoLesen("angebote"), tv: repoLesen("tv"), post: repoLesen("post") };
+/* Alte Stände (und alte Sicherungen) hatten die Kopien in S: einmal umziehen. Aus S gelöscht wird nur, was sicher im eigenen Schlüssel liegt. */
+function repoUmziehen() {
+  for (const [alt, n] of [["angeboteRepo", "angebote"], ["tvRepo", "tv"], ["postRepo", "post"]]) {
+    if (!(alt in S)) continue;
+    const v = S[alt], R = REPO[n];
+    const neuer = v && typeof v === "object" && (!R || (n === "post" ? !Array.isArray(R) || !R.length : !(R.stand >= v.stand)));
+    if (neuer && !repoSchreiben(n, v)) continue;
+    delete S[alt];
+  }
+}
+/* Du, Dir, Dein … mitten im Satz klein (wie sonst in der App); am Satzanfang bleibt es groß */
+const duKlein = s => typeof s === "string" ? s.replace(/(?<=[^.!?:…„“"»(\s][  ]+)(Du|Dir|Dich|Dein\w*)\b/g, w => w.toLowerCase()) : s;
 /* Fehlende oder kaputte Felder rekursiv aus dem frischen Stand auffüllen (null im Soll = beliebig) */
 function fuelle(ist, soll) {
   for (const k in soll) {
@@ -113,12 +133,17 @@ function migrieren() {
   const f = frisch();
   if (!S || typeof S !== "object" || Array.isArray(S)) S = f;
   const gvAlt = Number(S.gv) || 1;
-  if (S.hp && typeof S.hp.band === "string") S.hp.band = Number(S.hp.band);
+  // Lesestand als Text (z. B. aus einer alten Sicherung) vor dem Auffüllen in Zahlen wandeln, sonst ersetzt fuelle() ihn durch 0
+  if (S.hp && typeof S.hp === "object") { if (typeof S.hp.band === "string") S.hp.band = Number(S.hp.band); if (typeof S.hp.kapitel === "string") S.hp.kapitel = Number(S.hp.kapitel.replace(",", ".")) || 0; }
   fuelle(S, f);
-  S.hp.band = clamp(Number(S.hp.band) || 4, 1, 7);
-  S.hp.kapitel = Math.max(0, Number(S.hp.kapitel) || 0);
+  { const b = Number(S.hp.band); S.hp.band = Number.isInteger(b) && b >= 1 && b <= 7 ? b : 4; } // ungültiger Band → Standard (Band 4)
+  S.hp.kapitel = Math.max(0, Math.floor(Number(S.hp.kapitel) || 0));
+  try { repoUmziehen(); } catch (e) { } // Angebote/TV/Post-Kopien aus S in eigene Schlüssel
   const TAG = /^\d{4}-\d{2}-\d{2}$/;
   S.eintraege = S.eintraege.filter(e => e && typeof e === "object" && typeof e.t === "string" && TAG.test(e.tag || ""));
+  // Strecken ohne gültige km (alte oder eingespielte Stände): aus den Minuten schätzen, sonst 1 km – nie „NaN km“
+  S.eintraege.forEach(e => { if (Number.isFinite(e.km) || tat(e.t).art !== "km") return; const k = typeof e.km === "string" ? Number(e.km.replace(",", ".")) : NaN;
+    e.km = Number.isFinite(k) && k > 0 ? k : Number.isFinite(e.min) && e.min > 0 ? Math.max(.5, Math.round(e.min / 15 * 2) / 2) : 1; });
   S.liste = S.liste.filter(x => x && typeof x === "object" && typeof x.text === "string");
   // Fremde/kaputte Personen reparieren statt still löschen: Name wird Text, fehlende oder doppelte ids werden neu vergeben
   S.menschen = S.menschen.filter(m => m && typeof m === "object" && !Array.isArray(m));
@@ -355,6 +380,8 @@ function sheet(opt) {
   ebene.append(schleier, sh);
   const vorher = document.activeElement;
   SHEETS.push({ sh, schleier, vorher, onclose: opt.onclose, id: opt.id });
+  // Doppeltipp-Schutz: Wurde das Fenster gerade per Tipp geöffnet, zählt ein zweiter Tipp an derselben Stelle in den ersten ca. 400 ms nicht (auch nicht auf dem Schleier)
+  sh._auf = performance.now(); sh._tipp = TIPP_LETZT && sh._auf - TIPP_LETZT.t < 1000 ? TIPP_LETZT : null;
   document.body.style.overflow = "hidden";
   setTimeout(() => { sh.focus({ preventScroll: true }); }, 30);
   ziehZumSchliessen(sh);
@@ -362,6 +389,14 @@ function sheet(opt) {
   histPlanen();
   return sh;
 }
+let TIPP_LETZT = null; // letzter Fingerdruck (Zeit, Ort) – für den Doppeltipp-Schutz frisch geöffneter Fenster
+addEventListener("pointerdown", e => { TIPP_LETZT = { t: performance.now(), x: e.clientX, y: e.clientY }; }, true);
+addEventListener("click", e => {
+  const o = SHEETS[SHEETS.length - 1], sh = o && o.sh; if (!sh || !sh._tipp || !(sh.contains(e.target) || o.schleier === e.target)) return;
+  const T = TIPP_LETZT; if (!T || T.t <= sh._auf || T.t - sh._auf > 450) return;           // nur ein neuer Tipp kurz (ca. 400 ms) nach dem Öffnen
+  if (Math.hypot(T.x - sh._tipp.x, T.y - sh._tipp.y) > 60) return;                         // woanders getippt: gewollt
+  e.preventDefault(); e.stopImmediatePropagation();
+}, true);
 addEventListener("pointerdown", () => {
   window._letzterTipp = Date.now();
   // Selbstheilung: Fenster oder Schleier, die nicht (mehr) im Stapel stehen, dürfen keine Tipps schlucken
@@ -473,8 +508,8 @@ addEventListener("click", e => { if (performance.now() < abbrechenBis) { abbrech
 const sperre = new WeakMap();
 function gesperrt(el) {
   if (el.dataset && (el.dataset.act === "huhn-tap" || el.dataset.act === "tschuess")) return false;
-  const t = performance.now(), l = sperre.get(el) || 0;
-  if (t - l < 600) return true; sperre.set(el, t); return false;
+  const t = performance.now(); // erst sperren, wenn das Element schon einmal getippt wurde (sonst gälten direkt nach dem Laden alle als gesperrt)
+  if (sperre.has(el) && t - sperre.get(el) < 600) return true; sperre.set(el, t); return false;
 }
 
 /* ---------- Icons (gefüllte Silhouetten, 24er Raster) ---------- */
@@ -696,17 +731,3 @@ function ic(name, cls = "icon") {
   const p = IC[name] || IC.stern; return `<svg class="${cls}" viewBox="0 0 24 24" aria-hidden="true"><path fill="currentColor" d="${p}"/></svg>`;
 }
 
-/* ---------- Hühnchen (Ton-Figur, ockergelb, gesprenkelt) ---------- */
-function huehnchenSVG(gr = 40) {
-  return `<svg class="huehnchen-mini" style="width:${gr}px;height:${gr}px" viewBox="0 0 48 48" aria-hidden="true">
-    <ellipse cx="24" cy="44" rx="14" ry="2.6" fill="rgba(0,0,0,.18)"/>
-    <path d="M10 30c0-8 6-14 14-14 2 0 3.6.3 5 1l1.6-7.2c.4-2 1.8-3.4 3.6-3.4 2.2 0 3.8 2 3.6 4.4l-.3 2.6 3.5 1.3-3.6 1.6c-.6 5.4-1.6 10.6-3.2 13.7H38c0 6-6 10.5-14 10.5S10 37 10 30Z" fill="#B8552F"/>
-    <path d="M14 28c5-4 11-4 15-1-3 4-9 6-15 4Z" fill="#E9D3AE"/>
-    <path d="M15.5 29c4-2 8-2.5 12-1.5" stroke="#7A2A1B" stroke-width="1" fill="none"/>
-    <circle cx="18" cy="28.6" r="1.3" fill="#2F6B9A"/><circle cx="22.5" cy="27.4" r="1.1" fill="#C98A1B"/><circle cx="26.5" cy="28.2" r="1.2" fill="#3E7A4A"/><circle cx="16" cy="37" r="1" fill="#2F6B9A"/><circle cx="29" cy="36" r="1" fill="#C98A1B"/>
-    <path d="M33.2 6.4c.6-1.8 2.4-2.6 3.6-1.6-1-.2-1.3.8-.7 1.6.9-1 2.6-.6 2.8.8-1.4-.6-2.4.4-2.4 1.6h-3.6l.3-2.4Z" fill="#9A2A1A"/>
-    <circle cx="35.4" cy="11" r="1.1" fill="#1C2620"/>
-    <path d="M38.8 12.2l3.4 1.3-3.6 1.2z" fill="#E2A93B"/>
-    <path d="M12 26c-1.6-.6-3-2.2-3.4-4.4 2 .8 3.6 1.2 5 1" fill="#9A3E22"/>
-  </svg>`;
-}

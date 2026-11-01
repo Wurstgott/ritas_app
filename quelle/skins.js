@@ -403,9 +403,9 @@ function festHeute(d = jetzt()) {
   const y = d.getFullYear(), m = d.getMonth() + 1, t = d.getDate(), tag = tagVon(d), md = `${String(m).padStart(2, "0")}-${String(t).padStart(2, "0")}`;
   const o = skOstern(y), od = Math.round((tagDatum(tag) - tagDatum(tagVon(o))) / 864e5);
   const mitt = (() => { for (let x = 19; x <= 25; x++) { const dd = new Date(y, 5, x, 12); if (dd.getDay() === 5) return x; } return 0; })();
-  return { advent: tag >= skAdvent(y) && m === 12 && t <= 23, weihnachten: m === 12 && t >= 24 && t <= 26, lucia: m === 12 && t === 13, silvester: m === 12 && t === 31, neujahr: m === 1 && t === 1,
+  return { advent: tag >= skAdvent(y) && tag <= `${y}-12-23`, weihnachten: m === 12 && t >= 24 && t <= 26, lucia: m === 12 && t === 13, silvester: m === 12 && t === 31, neujahr: m === 1 && t === 1,
     ostern: od >= -1 && od <= 1, ostersonntag: od === 0, halloween: m === 10 && t === 31, midsommar: m === 6 && (t === mitt || t === mitt + 1),
-    geburtstag: !!S.geburtstag && S.geburtstag === md, winterzeit: (tag >= skAdvent(y) && m === 12) };
+    geburtstag: !!S.geburtstag && S.geburtstag === md, winterzeit: tag >= skAdvent(y) }; // 1. Advent kann im November liegen
 }
 function festSkin(fig) {
   const f = festHeute();
@@ -582,14 +582,6 @@ function figurMini(fig, id, gr) {
   const s = id && SKIN_MAP[id], kopf = !s || s.fach === "kopf" || s.fach === "augen";
   return huhnSVG({ gr, kopf, skin: id || null });
 }
-function kleiderschrankKarte() {
-  const neu = D_SKINS.some(s => skNeu(s));
-  return `<section class="abschnitt"><button class="ks-karte" data-act="sk-schrank" aria-label="Kleiderschrank öffnen">
-    <span class="ks-titel">${ic("buegel")} Kleiderschrank${neu ? ` <span class="ks-marke">Neu</span>` : ""}${ic("pfeil", "pfeil")}</span>
-    <span class="ks-karte-zeile"><span class="ks-karte-figs" aria-hidden="true">${ritaSVG(56)}${huhnSVG({ gr: 62 })}</span>
-    <span class="ks-karte-text"><span class="klein">${esc(S.name || "Rita")}: ${esc(skOutfit("rita"))}<br>Hühnchen: ${esc(skOutfit("huhn"))}</span>
-    <span class="ks-naechst">${MUENZE()}<span>${esc(naechstesText())}</span></span></span></span></button></section>`;
-}
 function zweiTueren() {
   const neu = D_SKINS.some(s => skNeu(s));
   return `<section class="abschnitt"><div class="tueren-zwei">
@@ -680,21 +672,41 @@ function skFortschritt(preis, t, satz) {
   const n = Math.max(0, Math.ceil(preis - t)), pct = Math.min(100, Math.round(t / preis * 100));
   return `<div class="sk-fortschritt"><span class="gk-balken" role="img" aria-label="${pct} Prozent"><i style="width:${pct}%"></i></span><p class="klein" style="margin:6px 0 0">Noch <b>${n} Taler</b>, ${esc(satz)}.</p></div>`;
 }
+/* V3 (Verschlankung, 1.11.): fünf Abteilungen statt zehn. Die Reiter zeigen immer nur EINE davon (statt durchs ganze Blatt zu springen),
+   S.ladenAbt merkt sich die zuletzt gewählte. „Aus Halle“ ist ein eigener ruhiger Block im Schaufenster, der Kleiderschrank bleibt die Tür ganz unten.
+   Regale (Unter-Schilder) bleiben wie gehabt: abt = Regal-ids aus LADEN_ABT, die in diese Abteilung gehören. Unbekannte Gruppen landen bei „Lesen und Unterwegs“. */
+const LADEN_TEILE = [
+  { id: "fenster", name: "Schaufenster und Halle", icon: "stern" },
+  { id: "bild", name: "Fürs Bild", icon: "blume", abt: ["bild"] },
+  { id: "spiele", name: "Spiele und Klänge", icon: "karten", abt: ["spiele", "hoeren"] },
+  { id: "lesen", name: "Lesen und Unterwegs", icon: "buch", abt: ["lesen", "ausflug"], rest: true },
+  { id: "fuerhuhn", name: "Für Hühnchen" }
+];
+function ladenTeile() { return LADEN_TEILE.filter(x => x.id !== "fuerhuhn" || (typeof fhRegal === "function" && typeof fhAn === "function" && fhAn())); }
+function ladenTeilAktiv() { const v = S.ladenAbt; return ladenTeile().some(x => x.id === v) ? v : "fenster"; }
+/* Trennstellen für lange Wörter im dreispaltigen Regal (nur Anzeige; weiche Trennstriche, die Namen selbst bleiben unverändert) */
+const WARE_TRENN = { Hintergrundklang: "Hinter\u00adgrund\u00adklang", Rezeptheft: "Rezept\u00adheft", Ausflugspaket: "Ausflugs\u00adpaket", Kartenrücken: "Karten\u00adrücken", Kiefernzapfen: "Kiefern\u00adzapfen", Klangschale: "Klang\u00adschale", Waldpatience: "Wald\u00adpatience", Jahreszeiten: "Jahres\u00adzeiten", Geschichten: "Ge\u00adschich\u00adten", Waldmorgen: "Wald\u00admorgen", Schwedisch: "Schwe\u00addisch", Taktgeber: "Takt\u00adgeber", Sternbilder: "Stern\u00adbilder", Vogeltränke: "Vogel\u00adtränke", Hängematte: "Hänge\u00admatte", Rotkehlchen: "Rot\u00adkehlchen", Rosenbogen: "Rosen\u00adbogen", Prinsesstårta: "Prinsess\u00adtårta", Wärmflasche: "Wärm\u00adflasche", Strickbezug: "Strick\u00adbezug", Parkettwachs: "Parkett\u00adwachs", Diskokugel: "Disko\u00adkugel", Knäckebrot: "Knäcke\u00adbrot" };
+function wareTrenn(s) { return String(s).replace(/[A-Za-zÄÖÜäöüßå]{9,}/g, w => WARE_TRENN[w] || w); }
+function wareKachel(x, t) {
+  const hat = (S.gekauft || {})[x.id], hs = x.gutschein && typeof halleSchild === "function" ? halleSchild(x, t) : "";
+  return `<button class="ware-kachel${hat ? " hat" : ""}" data-act="sk-ware" data-id="${x.id}"><span class="ware-bild">${wareBild(x, 60)}</span><span class="ware-name">${esc(wareTrenn(x.name))}</span>${hs || (hat ? `<span class="ks-hat">${ic("haken")} Gehört dir</span>` : `<span class="preis-schild${t >= x.preis ? " geht" : ""}">${MUENZE()}${x.preis}</span>`)}</button>`;
+}
 function kramladenInhalt() {
   const t = talerStand();
   const abt = []; for (const x of D.laden || []) { if (SK_GUTSCHEINE[x.id]) continue; const a = LADEN_ABT[x.gruppe] || { id: "x" + hash32(x.gruppe), name: x.gruppe, icon: "stern" }; let e = abt.find(y => y.id === a.id); if (!e) { e = { ...a, waren: [] }; abt.push(e); } e.waren.push(x); }
+  const teile = ladenTeile(), an = ladenTeilAktiv(), bekannt = new Set(LADEN_TEILE.flatMap(x => x.abt || []).concat("halle"));
+  const regal = a => `<section class="laden-abt" id="abt-${a.id}"><h3 class="abt-schild">${ic(a.icon)} ${esc(a.name)}</h3><div class="regal">${a.waren.map(x => wareKachel(x, t)).join("")}</div><div class="regal-brett" aria-hidden="true"></div></section>`;
+  const teil = (id, inhalt) => `<div class="laden-teil" id="teil-${id}" data-teil="${id}"${id === an ? "" : " hidden"}>${inhalt}</div>`;
+  const halle = abt.find(a => a.id === "halle");
+  const halleBlock = halle ? `<section class="laden-abt halle-block" id="abt-halle"><h3 class="abt-schild">${ic("brief")} Aus Halle</h3><p class="klein halle-erklaer">Kleine echte Überraschungen von Max, mit der Post. Eingelöst wird mit einer Signal-Nachricht an ihn.</p><div class="regal">${halle.waren.map(x => wareKachel(x, t)).join("")}</div></section>` : "";
   const satz = LADEN_HUHN[hash32("laden" + heute()) % LADEN_HUHN.length];
   let h = `<div class="laden-front"><div class="markise" aria-hidden="true"></div><div class="laden-kasse"><button class="muenze-knopf" data-act="sk-muenze" aria-label="Münze drehen">${MUENZE("muenze gross")}</button><span><span class="zahl" style="font-weight:700;font-size:1.25em">${t} Taler</span><br><span class="klein">Gibt’s für alles, was du einträgst, und fürs Spielen im Bild. Verfallen nie – anders als Quark.</span></span></div>${S.huhn ? `<p class="laden-huhn">${huhnSVG({ gr: 40, kopf: true })}<span><span class="wer">Hühnchen</span> ${esc(satz)}</span></p>` : ""}<p class="laden-naechst">${ic("stern")}<span>${esc(naechstesText())}</span></p></div>`;
-  h += `<div class="laden-chips-rahmen"><div class="chips laden-chips">${[{ id: "fenster", name: "Schaufenster" }, ...abt, { id: "bald", name: "Bald im Laden" }, ...(typeof fhRegal === "function" && S.huhn ? [{ id: "fuerhuhn", name: "Für Hühnchen" }] : []), { id: "nebenan", name: "Nebenan: Kleiderschrank" }].map(a => `<button class="chip" data-act="sk-abt" data-v="${a.id}">${esc(a.name)}</button>`).join("")}</div></div>`;
-  if (typeof sfRegal === "function") h += sfRegal();
-  for (const a of abt) {
-    h += `<section class="laden-abt" id="abt-${a.id}"><h3 class="abt-schild">${ic(a.icon)} ${esc(a.name)}</h3><div class="regal">${a.waren.map(x => {
-      const hat = (S.gekauft || {})[x.id], hs = x.gutschein && typeof halleSchild === "function" ? halleSchild(x, t) : "";
-      return `<button class="ware-kachel${hat ? " hat" : ""}" data-act="sk-ware" data-id="${x.id}"><span class="ware-bild">${wareBild(x, 60)}</span><span class="ware-name">${esc(x.name)}</span>${hs || (hat ? `<span class="ks-hat">${ic("haken")} Gehört dir</span>` : `<span class="preis-schild${t >= x.preis ? " geht" : ""}">${MUENZE()}${x.preis}</span>`)}</button>`;
-    }).join("")}</div><div class="regal-brett" aria-hidden="true"></div></section>`;
-  }
-  if (typeof baldRegal === "function") h += baldRegal();
-  if (typeof fhRegal === "function") h += fhRegal(); // Für Hühnchen (huhnfutter.js): unter Schaufenster und Skins
+  // Reiter (goennen.js hängt seit dem Umbau V2 nichts mehr davor ein)
+  h += `<div class="laden-chips-rahmen"><div class="chips laden-chips" role="group" aria-label="Abteilungen">${teile.map(a => `<button class="chip laden-reiter" data-act="sk-abt" data-v="${a.id}" aria-pressed="${a.id === an}">${a.icon ? ic(a.icon) : `<span class="reiter-huhn" aria-hidden="true">${huhnSVG({ gr: 24, kopf: true, skin: false })}</span>`}<span>${esc(a.name)}</span></button>`).join("")}</div></div>`;
+  h += teil("fenster", (typeof sfRegal === "function" ? sfRegal() : "") + (typeof baldRegal === "function" ? baldRegal() : "") + halleBlock);
+  // je Abteilung EIN Regal mit dem Abteilungsschild (Waren in der bisherigen Reihenfolge der Gruppen)
+  for (const tl of LADEN_TEILE) if (tl.abt) { const w = abt.filter(a => tl.abt.includes(a.id) || (tl.rest && !bekannt.has(a.id))).flatMap(a => a.waren); h += teil(tl.id, w.length ? regal({ id: tl.id, name: tl.name, icon: tl.icon, waren: w }) : ""); }
+  if (teile.some(x => x.id === "fuerhuhn")) h += teil("fuerhuhn", fhRegal()); // Für Hühnchen (huhnfutter.js); fhKaufen ersetzt #abt-fuerhuhn darin
   const neu = D_SKINS.some(skNeu);
   h += `<section class="laden-abt laden-nebenan" id="abt-nebenan"><p class="klein nebenan-schild">Eine Tür weiter</p><button class="laden-tuer nebenan-tuer" data-act="sk-schrank"><span class="lt-bild" aria-hidden="true">${ritaSVG(50)}${huhnSVG({ gr: 54 })}</span><span class="nebenan-text"><span class="lt-titel">Nebenan: Kleiderschrank${neu ? ` <span class="ks-marke">Neu</span>` : ""}</span><span class="lt-unter">Hüte, Brillen und Outfits für dich und Hühnchen. Anprobieren kostet nichts.</span></span>${ic("pfeil", "pfeil")}</button></section>`;
   return h;
@@ -813,17 +825,18 @@ function zuhauseZusatz() {
   if ((S.gekauft || {}).memory) h += `<section class="abschnitt"><div class="liste">${zeileBtn("karten", "Figuren-Memory", "Paare finden, ohne Zeitdruck", `data-act="sk-memory"`, "k-geist")}</div></section>`;
   return h;
 }
-/* Abteilungs-Chips: Ziel selbst ausrechnen und scrollTop am Blatt setzen (iOS scrollt mit scrollIntoView/smooth im Blatt nicht zuverlässig) */
-function skAbtScroll(v) {
-  const z = document.getElementById("abt-" + v); if (!z) return;
-  const sc = z.closest(".sheet-inhalt") || z.closest(".sheet"); if (!sc) { z.scrollIntoView(); return; }
-  const ch = sc.querySelector(".laden-chips-rahmen"), klebt = ch && getComputedStyle(ch).position === "sticky";
-  const ziel = Math.max(0, Math.min(sc.scrollHeight - sc.clientHeight, sc.scrollTop + z.getBoundingClientRect().top - sc.getBoundingClientRect().top - (klebt ? ch.offsetHeight : 0) - 10));
+/* Abteilungs-Reiter (V3): genau EINE Abteilung zeigen, die Wahl merken. Kein Springen durchs Blatt.
+   Steht die Reiterleiste schon über dem Blattrand, rückt das Blatt so, dass die Reiter wieder oben zu sehen sind
+   (scrollTop direkt setzen – iOS scrollt mit scrollIntoView im Blatt nicht zuverlässig). Rückmeldung: Familie „auswahl“ (feedback.js, .chip). */
+function skAbtZeigen(v, el) {
+  const sh = (el && el.closest(".sheet")) || document; if (!ladenTeile().some(x => x.id === v)) return;
+  const ziel = sh.querySelector(`.laden-teil[data-teil="${v}"]`); if (!ziel) return;
+  if (S.ladenAbt !== v) { S.ladenAbt = v; speichern(); }
   haptik("auswahl");
-  if (REDUCED()) { sc.scrollTop = ziel; return; }
-  const von = sc.scrollTop, t0 = performance.now(), ms = 380;
-  const f = now => { const k = Math.min(1, (now - t0) / ms), e = 1 - Math.pow(1 - k, 3); sc.scrollTop = von + (ziel - von) * e; if (k < 1) requestAnimationFrame(f); };
-  requestAnimationFrame(f);
+  sh.querySelectorAll(".laden-teil").forEach(x => { x.hidden = x !== ziel; });
+  sh.querySelectorAll(".laden-chips [data-act=sk-abt]").forEach(c => c.setAttribute("aria-pressed", String(c.dataset.v === v)));
+  const sc = ziel.closest(".sheet-inhalt") || ziel.closest(".sheet"), ch = sh.querySelector(".laden-chips-rahmen");
+  if (sc && ch) { const oben = ch.getBoundingClientRect().top - sc.getBoundingClientRect().top; if (oben < 0) sc.scrollTop = Math.max(0, sc.scrollTop + oben - 10); }
 }
 /* Münze antippen: dreht sich wie eine echte Münze um die senkrechte Achse, mit kleinem Klimpern */
 function muenzKlimpern() {
@@ -854,7 +867,7 @@ function skAktion(a, d, el) {
     case "sk-alleaus": for (const f of ["rita", "huhn"]) { S.skins[f] = null; if (festSkin(f)) S.skins.festAus[f] = heute(); } KS.probe = {}; KS.sel = null; speichern(); figurenAktualisieren(); ksNeu("huhn"); skRender(); break;
     case "sk-ziel": S.skins.ziel = d.id || null; speichern(); ksNeu(); { const sh = aktuellesSheet(); if (sh && sh.dataset.id === "ware") { const wid = d.id || (el.closest(".sheet") && el.closest(".sheet").dataset.ware); sheetZu(); if (wid) setTimeout(() => wareSheet(wid), 240); } } plaketteMalen(talerStand(), true); if (d.id) toast(`Gemerkt. Der Ring um die Münze oben füllt sich, bis es reicht.`); break;
     case "sk-auto": S.skins.auto = !S.skins.auto; speichern(); figurenAktualisieren(); ksNeu(); skRender(); break;
-    case "sk-abt": skAbtScroll(d.v); break;
+    case "sk-abt": skAbtZeigen(d.v, el); break;
     case "sk-muenze": muenzeDrehen(el.querySelector(".muenze") || el); break;
     case "sk-wetter": sheet({ titel: "Wetter im Bild", id: "bildwetter", inhalt: bildWetterInhalt() }); break;
     case "sk-wetter-setz": S.bildWetter = SK_WETTER.includes(d.v) ? d.v : "echt"; speichern(); sheetInhalt(bildWetterInhalt()); skRender(); haptik("auswahl"); break;

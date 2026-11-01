@@ -87,7 +87,7 @@ function fhRegal() {
     <p class="laden-huhn">${huhnSVG({ gr: 40, kopf: true })}<span><span class="wer">Hühnchen</span> ${esc(satz)}</span></p>
     <p class="klein fh-erklaer">Kleinigkeiten zum Mitbringen. Sie landen in Hühnchens Dose auf „Heute“. Dort tippst du drauf, dann bekommt Hühnchen sie.</p>
     <div class="regal">${FH_WAREN.map(w => { const n = z.dose[w.id] || 0;
-      return `<button class="ware-kachel fh-ware" data-act="fh-ware" data-id="${w.id}"><span class="ware-bild">${fhBild(w.id, 60)}</span><span class="ware-name">${esc(w.name)}</span><span class="preis-schild${t >= w.preis ? " geht" : ""}">${MUENZE()}${w.preis}</span>${n ? `<span class="klein fh-indose">${n} in der Dose</span>` : ""}</button>`; }).join("")}</div><div class="regal-brett" aria-hidden="true"></div>
+      return `<button class="ware-kachel fh-ware" data-act="fh-ware" data-id="${w.id}"><span class="ware-bild">${fhBild(w.id, 60)}</span><span class="ware-name">${esc(typeof wareTrenn === "function" ? wareTrenn(w.name) : w.name)}</span><span class="preis-schild${t >= w.preis ? " geht" : ""}">${MUENZE()}${w.preis}</span>${n ? `<span class="klein fh-indose">${n} in der Dose</span>` : ""}</button>`; }).join("")}</div><div class="regal-brett" aria-hidden="true"></div>
     ${album ? `<button class="fh-album-knopf" data-act="fh-album">${fhAlbumSymbol()}<span><span class="lt-titel">Hühnchens Fotoalbum</span><span class="klein">Besondere Momente mit Outfit</span></span>${ic("pfeil", "pfeil")}</button>` : ""}</section>`;
 }
 function fhWareSheet(id) {

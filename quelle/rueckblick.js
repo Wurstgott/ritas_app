@@ -227,7 +227,7 @@ function rbWocheHTML() {
   }).join("");
   const wr = d.getDay() === 0 || (d.getDay() === 1 && !S.rueckblick[kwVon(tagPlus(h, -1))]);
   return `<section class="abschnitt rb-woche"><h2>Diese Woche</h2><div class="wo-streifen">${streifen}</div>
-    <p class="wo-zeile">${zeile.length ? esc(zeile.join(" · ")) : "Diese Woche steht noch nichts drin."}</p>
+    ${n && typeof strichHTML === "function" ? `<div class="wo-striche klein" aria-hidden="true">${strichHTML(n)}</div>` : ""}<p class="wo-zeile">${zeile.length ? esc(zeile.join(" · ")) : "Diese Woche steht noch nichts drin."}</p>
     ${wr ? `<div class="zeile wo-knoepfe"><button class="knopf klein zweit" data-act="rueckblick">${ic("stern")} Wochenrückblick</button></div>` : ""}</section>`;
 }
 

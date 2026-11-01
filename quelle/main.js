@@ -150,6 +150,28 @@ async function kopieren(text, meldung = "Kopiert.") {
   try { await navigator.clipboard.writeText(text); toast(meldung); }
   catch (e) { const ta = document.createElement("textarea"); ta.value = text; document.body.appendChild(ta); ta.select(); try { document.execCommand("copy"); toast(meldung); } catch (x) { toast("Kopieren ging nicht. Bitte lange auf den Text tippen."); } ta.remove(); }
 }
+/* Sicherung absichern: Browser bitten, die Daten nicht bei Platzmangel zu räumen (Android/Chrome entscheidet still) */
+function datenBehalten() {
+  try { if (S.onboard && navigator.storage && navigator.storage.persist) navigator.storage.persisted().then(p => p || navigator.storage.persist()).catch(() => { }); } catch (e) { }
+}
+/* Sanfte Erinnerung: letzte Sicherung älter als 30 Tage (oder nie, bei mehr als 20 Einträgen) – höchstens einmal pro Woche, wegtippbar */
+function sicherungFaellig() {
+  if (!S.onboard || LADEFEHLER || S.eintraege.length <= 20) return false;
+  const h = heute(), seit = S.letzteSicherung || S.start || h;
+  if (seit > tagPlus(h, -30)) return false;
+  return !S.sicherungErinnert || S.sicherungErinnert <= tagPlus(h, -7);
+}
+function sicherungErinnern() {
+  if (!sicherungFaellig() || SHEETS.length || $(".toast") || document.hidden || !(S.tf || {})[heute()]) return; // nicht über der offenen Morgenfrage
+  S.sicherungErinnert = heute(); speichern();
+  toast(A("Magst du mal wieder eine Sicherung machen?", "Mögen Sie mal wieder eine Sicherung machen?") + "\n" + A("Dann sind deine Einträge doppelt aufgehoben.", "Dann sind Ihre Einträge doppelt aufgehoben."), { knopf: { act: "sicherung-kurz", text: "Sichern" }, dauer: 12000 });
+}
+function sicherungKurzSheet() {
+  $$(".toast").forEach(t => t.remove());
+  const datei = /github\.io$/.test(location.hostname) || location.protocol === "file:";
+  sheet({ titel: "Sicherung", id: "sicherung-kurz", inhalt: `<p>${S.letzteSicherung ? `Zuletzt gesichert: ${datumLang(S.letzteSicherung)}.` : "Noch keine Sicherung gemacht."}</p><p class="klein">${A("Die Sicherung ist eine kleine Datei mit allen Einträgen. Leg sie zum Beispiel in eine Mail an dich oder schick sie Max.", "Die Sicherung ist eine kleine Datei mit allen Einträgen. Legen Sie sie zum Beispiel in eine Mail an sich oder schicken Sie sie Max.")}</p>`,
+    fuss: `<div class="stapel">${datei ? `<button class="knopf haupt voll" data-act="sichern-datei">Sicherung speichern</button>` : ""}<button class="knopf ${datei ? "zweit" : "haupt"} voll" data-act="sichern-kopie">Sicherung kopieren</button><button class="knopf leise voll" data-act="sicherung-spaeter">Später</button></div>` });
+}
 function dateiSpeichern() {
   const blob = new Blob([sicherungText()], { type: "application/json" });
   const name = `ritas-app-sicherung-${heute()}.json`;
@@ -330,7 +352,6 @@ function aktion(a, d, el, ev) {
 
     /* Lichtung */
     case "laden": alleSheetsZu(); ladenSheet(); break;
-    case "kaufen": kaufenFrage(d.id); break;
     case "kaufen-ja": { const x = D.laden.find(y => y.id === d.id); if (!x || S.gekauft[x.id] || talerStand() < x.preis || (x.gutschein && typeof halleGesperrt === "function" && halleGesperrt(x))) break; S.taler -= x.preis; S.talerAusgegeben += x.preis; S.gekauft[x.id] = heute(); if (x.id === "patience") S.spiel.marken += 3; if (typeof nachLadenKauf === "function") nachLadenKauf(x); speichern(); sheetZu(); haptik("erfolg"); ton("erfolg");
       setTimeout(() => { sheetInhalt(ladenInhalt()); const imBild = x.gruppe === "Wald & Garten"; window._kaufZeigen = imBild ? x.id : null;
         toast(`Gehört dir: ${x.name}.${x.id === "rotkehlchen" ? "\nEs kommt am liebsten morgens." : x.id === "sternbilder" ? "\nZu sehen, wenn es dunkel ist." : x.gutschein ? "\nTipp auf „Einlösen“, dann geht die Nachricht an Max." : /^rueck/.test(x.id) ? "\nLiegt ab jetzt auf den Patience-Karten." : ""}`, { rueck: "kauf:" + x.id, erfolg: true, knopf: imBild ? { text: "Im Bild ansehen", act: "kauf-zeigen" } : x.gutschein ? { text: "Einlösen", act: "sk-ware-letzte" } : null }); render({ halteScroll: true, ohneAnim: true }); }, 260); break; }
@@ -349,7 +370,6 @@ function aktion(a, d, el, ev) {
     case "lebensbuch": lebensbuchSheet(); break;
 
     /* Tagebuch */
-    case "moment": momentSheet(); break;
     case "moment-speichern": { const t = $("#moment-text").value.trim(); eierMoment(t); const h = heute(); const neu = !S.momente[h]; if (t) S.momente[h] = t; else delete S.momente[h]; if (t && neu) S.taler += 1; speichern(); sheetZu(); render({ halteScroll: true, ohneAnim: true }); if (t) toast(neu ? "Aufgeschrieben.\n+1 Taler" : "Aufgeschrieben.", { erfolg: true }); break; }
     case "rueckblick": rueckblickSheet(); break;
     case "rueckblick-fertig": { const kw = kwVon(heute()); const neu = !S.rueckblick[kw]; S.rueckblick[kw] = heute(); S.wennDann = $("#vorsatz").value.trim(); if (neu) S.taler += 10; if (S.hinweis.tag === heute()) S.hinweis.zu = true; speichern(); sheetZu(); render({ halteScroll: true, ohneAnim: true }); toast(neu ? "Woche angeschaut.\n+10 Taler" : "Gespeichert.", { erfolg: true }); break; }
@@ -407,6 +427,8 @@ function aktion(a, d, el, ev) {
     case "ueber": ueberSheet(); break;
     case "schnell": S.schnellGeaendert = true; S.schnell[Number(d.i)] = d.v; speichern(); sheetInhalt(aktuellesSheet()?.dataset.id === "helfer" ? helferInhalt() : einstellungenInhalt()); render({ halteScroll: true, ohneAnim: true }); break;
     case "sichern-datei": dateiSpeichern(); break;
+    case "sicherung-kurz": sicherungKurzSheet(); break;
+    case "sicherung-spaeter": S.sicherungErinnert = heute(); speichern(); sheetZu(); break;
     case "sichern-kopie": kopieren(sicherungText(), "Sicherung kopiert. Am besten in eine Notiz oder Mail einfügen."); S.letzteSicherung = heute(); speichern(); break;
     case "einspielen-text": { const s = sicherungPruefen($("#import-text").value); if (s) sicherungFrage(s); else { toast("Das sieht nicht wie eine Sicherung von Ritas App aus."); haptik("achtung"); } break; }
     case "einspielen-ja": { if (!window._import) break; const vorher = JSON.stringify(S); S = window._import; window._import = null; try { migrieren(); eigeneRegistrieren(); alleSheetsZu(); render(); } catch (err) { S = JSON.parse(vorher); speichern(); alleSheetsZu(); render(); toast("Diese Sicherung ließ sich nicht lesen. Es bleibt alles, wie es war."); break; } toast("Sicherung eingespielt.", { erfolg: true }); break; }
@@ -504,15 +526,15 @@ function start() {
   if (LADEFEHLER) { themaAnwenden(); notfall(LADEFEHLER, true); return; }
   migrieren(); eigeneRegistrieren();
   themaAnwenden();
-  // Testzugang: ?t=JJJJ-MM-TTTHH:MM setzt die Uhr (nur für Prüfungen)
-  const q = new URLSearchParams(location.search);
-  if (q.get("zeit")) { const z = new Date(q.get("zeit")); if (!isNaN(z)) ZEITVERSATZ = z - Date.now(); }
+  // Testzugang ?zeit=… wird schon ganz oben in core.js gesetzt (vor laden/migrieren)
   try { eierTag(); render(); } catch (err) { notfall(err); return; }
   try { ereignisPruefen(); } catch (e) { }
   ["gesturestart", "gesturechange"].forEach(t => document.addEventListener(t, e => e.preventDefault(), { passive: false }));
   postLaden(); try { angeboteAnwenden(); } catch (e) { } angeboteLaden(); tvLaden(); wetterLaden().then(W => { if (W) render({ halteScroll: true, ohneAnim: true }); });
   if (!S.onboard) setTimeout(onboardingSheet, 300);
   else if (S.timer) setTimeout(() => { wachHalten(); if (timerRest() <= 0) timerSheet(); }, 400);
+  else setTimeout(sicherungErinnern, 6000);
+  datenBehalten();
   addEventListener("resize", () => { clearTimeout(window._rs); window._rs = setTimeout(() => bilderZeichnen(), 150); });
   document.addEventListener("visibilitychange", () => { if (!document.hidden) { try { eierTag(); } catch (e) { } render({ halteScroll: true, ohneAnim: true }); try { ereignisPruefen(); } catch (e) { } } });
   // Bild alle 10 Minuten neu (Sonnenstand)
@@ -533,8 +555,16 @@ function start() {
    damit Rita nicht tagelang die alte Fassung sieht. Beim Zurückkehren in die App wird nach Updates geschaut. */
 try {
   if ("serviceWorker" in navigator && /github\.io$/.test(location.hostname)) {
-    const hatteSW = !!navigator.serviceWorker.controller; let neuGeladen = false;
-    navigator.serviceWorker.addEventListener("controllerchange", () => { if (!hatteSW || neuGeladen) return; neuGeladen = true; location.reload(); });
+    const hatteSW = !!navigator.serviceWorker.controller; let neuGeladen = false, updateBereit = false;
+    // Neu laden nur, wenn nichts verloren gehen kann: kein Fenster offen, kein Timer, kein Eingabefeld aktiv oder angefangen. Sonst später noch einmal schauen.
+    const ruhig = () => {
+      if (SHEETS.length || (S && S.timer) || document.querySelector(".ereignis:not(.weg)")) return false;
+      const a = document.activeElement; if (a && a.matches && a.matches("input, textarea, select, [contenteditable=true]")) return false;
+      return !$$("input.text, textarea").some(x => !x.readOnly && x.value !== x.defaultValue);
+    };
+    const vielleichtNeu = () => { if (!updateBereit || neuGeladen || !ruhig()) return; neuGeladen = true; location.reload(); };
+    navigator.serviceWorker.addEventListener("controllerchange", () => { if (!hatteSW || neuGeladen) return; updateBereit = true; vielleichtNeu(); if (!neuGeladen) setInterval(vielleichtNeu, 3000); });
+    document.addEventListener("visibilitychange", vielleichtNeu);
     navigator.serviceWorker.register("sw.js", { updateViaCache: "none" }).then(reg => {
       document.addEventListener("visibilitychange", () => { if (document.visibilityState === "visible") reg.update().catch(() => { }); });
     }).catch(() => { });

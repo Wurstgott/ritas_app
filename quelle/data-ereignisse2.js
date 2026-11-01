@@ -35,7 +35,7 @@ D.ereignisse2 = [
     antworten: [{ text: "Revanche!", sagt: "Ich wärm mich schon auf. Tschü… nein, noch nicht!", aktion: "tel:max" }, { text: "Das war Absicht", sagt: "Ich weiß. Meinerseits auch.", effekt: "herzen" }] },
   { id: "e2-max-klausur", wer: "max", selten: .4, zeilen: ["Beim Ausräumen hab ich meine alte Matheklausur gefunden.", "Die Nachschreibklausur, für die du mit mir gepaukt hast. Eine Zwei!"],
     antworten: [{ text: "Ich weiß noch!", sagt: "Ich auch. Du hattest mehr Geduld als mein Taschenrechner.", effekt: "herzen" }, { text: "Rahm sie ein!", sagt: "Kommt in Leipzig an die Wand. Ehrenplatz." }] },
-  { id: "e2-max-advent", wer: "max", wann: { monat: 12, wochentag: 0 }, zeilen: ["Welcher Advent ist heute? Ich hab den Überblick verloren.", "Greta hat einen Kranz gebastelt. Aus Zweigen vom Wegesrand."],
+  { id: "e2-max-advent", wer: "max", wann: { advent: true, wochentag: 0 }, zeilen: ["Welcher Advent ist heute? Ich hab den Überblick verloren.", "Greta hat einen Kranz gebastelt. Aus Zweigen vom Wegesrand."],
     antworten: [{ text: "Zähl die Kerzen!", sagt: "Bei uns brennen alle vier. Aus Versehen.", effekt: "schnee" }, { text: "Schick ein Foto", sagt: "Mach ich. Der Kranz ist schöner als ich, sagt Greta." }] },
 
   /* ---------- Christiane ---------- */

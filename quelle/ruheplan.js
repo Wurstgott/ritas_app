@@ -45,7 +45,6 @@ function ruheP() { if (!S.ruhe) S.ruhe = frisch().ruhe; const u = S.ruhe.unterwe
 const notfallKlein = () => "";
 function ruheSatz() { const R = ruheP(); return R.satzEigen || D.ruhe.saetze[R.satz || 0]; }
 function ruheHilftListe() { const R = ruheP(); return [...D.ruhe.hilft.filter(h => R.hilft.includes(h.id)).map(h => h.text), ...(R.eigene || [])]; }
-function ruheUnterwegsListe() { const R = ruheP(); return [...D.ruhe.unterwegs.filter(h => R.unterwegs.includes(h.id)).map(h => h.text), ...(R.unterwegsEigen || [])]; }
 
 /* ---------- Übersicht ---------- */
 function ruheSheet() { sheet({ titel: "Mein Notfallplan", inhalt: ruheInhalt(), id: "ruhe" }); }

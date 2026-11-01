@@ -27,7 +27,8 @@ const TEILEN_BLAETTER = {
   "rb-schoen": "Was war heute schön", "rb-archiv": "Rückblick-Archiv", "rb-alle": "Rückblick alle", "rb-zuletzt": "Zuletzt",
   "jf-tag": "Tagesfarbe", "hp-pinnwand": "Akte Pinnwand", funde: "Fundstücke", rede: "Redensarten", einst: "Einstellungen",
   helfer: "Technik & Sicherung", wunsch: "Wunsch an Max", eigenes: "Eigene Tätigkeit", tuer: "Ideen-Tür", thema: "Ideen-Thema",
-  fenster: "Schaufenster", takt: "Takt", spotify: "Spotify-Info", teilen: "Nutzung teilen"
+  fenster: "Schaufenster", takt: "Takt", spotify: "Spotify-Info", teilen: "Nutzung teilen",
+  sammlung: "Meine Sammlung", stoeber: "Stöberkiste"
 };
 const TEILEN_TABS = { heute: "Heute", ideen: "Ideen", lichtung: "Zuhause", tagebuch: "Rückblick" };
 
@@ -93,7 +94,7 @@ function teilenDaten() {
   const kats = Object.entries(kat).sort((a, b) => b[1].g - a[1].g);
   const dunkel = S.theme === "dark" || (S.theme !== "light" && matchMedia("(prefers-color-scheme: dark)").matches);
   const B = {}; // Bereiche: { label, ja, info, kurz }
-  const KL = { mitbringsel: "Mitbringsel", lupe: "Lupe/Funkeln", rundgang: "Rundgang", tv: "TV", winter: "Winter", gesicht: "Gesichter", huhn: "Hühnchen halten", maxbriefe: "Max-Briefe", raetsel: "Rätsel", rede: "Redensarten", ereignisse: "Besuch", buecher: "Bücherregal", tagebuch: "Tagebuch-Frage", wetter: "Wetter", akte: "Akte", bingo: "Bingo", dank: "Dankbar", schoen: "Schön-Momente", kramladen: "Kramladen", kleiderschrank: "Kleiderschrank", karin: "Karin", patience: "Patience", plaudern: "Plaudern", goennen: "Gönn-Karten", tagesfarben: "Tagesfarben", notfall: "Notfallplan", angebote: "Angebote", memory: "Memory", wunsch: "Wunsch" };
+  const KL = { mitbringsel: "Mitbringsel", lupe: "Lupe/Funkeln", rundgang: "Rundgang", tv: "TV", winter: "Winter", gesicht: "Gesichter", huhn: "Hühnchen halten", maxbriefe: "Max-Briefe", raetsel: "Rätsel", rede: "Redensarten", ereignisse: "Besuch", buecher: "Bücherregal", tagebuch: "Tagebuch-Frage", wetter: "Wetter", akte: "Akte", bingo: "Bingo", dank: "Dankbar", schoen: "Schön-Momente", kramladen: "Kramladen", kleiderschrank: "Kleiderschrank", karin: "Karin", patience: "Patience", plaudern: "Plaudern", goennen: "Gönn-Karten", sammlung: "Sammlung", tagesfarben: "Tagesfarben", notfall: "Notfallplan", angebote: "Angebote", memory: "Memory", wunsch: "Wunsch" };
   const add = (k, label, ja, info, kurz) => { B[k] = { label, kl: KL[k], ja: !!ja, info: info || "", kurz: kurz == null ? (ja ? 1 : 0) : kurz }; };
   const ent = tlObj(S.entdeckt), off = T.offen, z = T.z;
   // Kurz plaudern: Anrufe pro Figur (gezählt) und verschiedene Gespräche (aus dem Telefon-Zähler)
@@ -138,6 +139,7 @@ function teilenDaten() {
     T._fh = `${g}/${gg}`;
   } catch (e) { add("mitbringsel", "Mitbringsel für Hühnchen", false); }
   const gkn = S.goenn && Array.isArray(S.goenn.karten) ? S.goenn.karten.length : 0; add("goennen", "Gönn-Karten", gkn || ent.goennen, `${gkn} gesammelt`, gkn);
+  add("sammlung", "Meine Sammlung (Zuhause)", tlN(off.sammlung), `${tlN(off.sammlung)}× geöffnet`, tlN(off.sammlung));
   const jfn = S.jf && S.jf.tage && typeof S.jf.tage === "object" ? Object.keys(S.jf.tage).length : 0; add("tagesfarben", "Tagesfarben", jfn, `${tlTagen(jfn)} gewählt${S.jf && S.jf.an === false ? " (ausgeschaltet)" : ""}`, jfn);
   const rg = S.rundgang && typeof S.rundgang === "object" ? S.rundgang : null;
   add("rundgang", "Rundgang mit Max", rg && (rg.fertig || rg.gesehen), rg ? (rg.fertig ? "abgeschlossen" : rg.gesehen ? "angefangen, nicht beendet" : "eingeladen, nicht gestartet") : "noch nie", rg && rg.fertig ? 2 : rg && rg.gesehen ? 1 : 0);

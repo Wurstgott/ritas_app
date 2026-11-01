@@ -1,7 +1,8 @@
 /* ============================================================
    Rote Zahl an den Tabs (Max, 22.10. 14:06)
    - Zeigt, wie viel es auf einem anderen Tab Neues gibt: Funkeln im Bild (Zuhause),
-     neuer Brief von Karin oder ein neues Aktenblatt (Ideen), Brief von Max oder neue Gönn-Karte (Heute).
+     neuer Brief von Karin oder ein neues Aktenblatt (Ideen), Brief von Max oder neue Gönn-Karte (Heute, Platz „Neu für dich“).
+   - Neues Fundstück (rueckblick.js) → Zuhause: dort trägt die Karte „Meine Sammlung“ und darin das Fach „Fundstücke“ ein „Neu“.
    - Jede Neuigkeit hat einen festen Schlüssel. Wer den Tab ansieht, hat alle seine Schlüssel gesehen → Zahl weg.
    - Der Rückblick (tagebuch) bekommt NIE eine Zahl.
    - Die Tabs werden bei jedem render() neu gebaut: ein MutationObserver hängt die Zahl danach wieder an.

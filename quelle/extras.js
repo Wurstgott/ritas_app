@@ -34,10 +34,17 @@ function eier2Tagesform(v) { eiVersuch(Object.entries(D.eierWann).filter(([, w])
   eierTagesform = function (v) { f0(v); try { eier2Tagesform(v); } catch (x) { } }; }
 
 /* ---------- Forst-Bingo von Hühnchen (jede Woche neu) ---------- */
+/* Felder passend zur Jahreszeit: { t, m:[Monate] } nur in diesen Monaten, reiner Text immer */
+function bingoPool(monat = jetzt().getMonth() + 1) { return (D.bingo?.draussen || []).filter(f => typeof f === "string" || (f && (!Array.isArray(f.m) || f.m.includes(monat)))).map(f => typeof f === "string" ? f : f.t); }
+function bingoAusserSaison(text, monat) { const f = (D.bingo?.draussen || []).find(x => x && typeof x === "object" && x.t === text); return !!(f && Array.isArray(f.m) && !f.m.includes(monat)); }
 function bingoKarte() {
   const kw = kwVon(heute()); S.bingo = S.bingo || {};
+  if (S.bingo[kw] && Array.isArray(S.bingo[kw].felder)) { // ältere Karte dieser Woche: nur noch nicht angekreuzte Felder der falschen Jahreszeit tauschen
+    const B = S.bingo[kw], mo = jetzt().getMonth() + 1, frei = bingoPool(mo).filter(t => !B.felder.includes(t)), r = rnd("bingo-saison" + kw);
+    B.felder.forEach((t, i) => { if (!(B.an || [])[i] && bingoAusserSaison(t, mo) && frei.length) { B.felder[i] = frei.splice(Math.floor(r() * frei.length), 1)[0]; } });
+  }
   if (!S.bingo[kw]) {
-    const pool = (D.bingo?.draussen || []).slice(), ersatz = (D.bingo?.drinnen || []).slice(), r = rnd("bingo" + kw + S.seed);
+    const pool = bingoPool(), ersatz = (D.bingo?.drinnen || []).slice(), r = rnd("bingo" + kw + S.seed);
     for (let i = pool.length - 1; i > 0; i--) { const j = Math.floor(r() * (i + 1)); [pool[i], pool[j]] = [pool[j], pool[i]]; }
     for (let i = ersatz.length - 1; i > 0; i--) { const j = Math.floor(r() * (i + 1)); [ersatz[i], ersatz[j]] = [ersatz[j], ersatz[i]]; }
     S.bingo[kw] = { felder: pool.slice(0, 9), ersatz: ersatz.slice(0, 9), an: Array(9).fill(false), drinnen: Array(9).fill(false), linien: 0, voll: false };
@@ -100,19 +107,22 @@ function gutscheinSheet(id) {
 /* ---------- Echte Post von Max aus dem Repo (post.json) ---------- */
 /* Angebote: jeden Sonntag frisch (angebote.json im Repo) */
 function angeboteAnwenden() {
-  const A = S.angeboteRepo; if (!A || !Array.isArray(A.angebote) || !A.stand || (D.angeboteStand && A.stand < D.angeboteStand)) return;
+  const A = REPO.angebote; if (!A || !Array.isArray(A.angebote) || !A.stand || (D.angeboteStand && A.stand < D.angeboteStand)) { angeboteDuKlein(); return; }
   D.angeboteStand = A.stand; if (Array.isArray(A.kategorien)) D.angeboteKat = A.kategorien;
   D.angebote = A.angebote.filter(x => x && typeof x.name === "string" && ["text", "wann", "wo", "kosten", "tel", "quelle", "kategorie", "luft", "wc"].every(k => x[k] == null || typeof x[k] === "string" || typeof x[k] === "number")).map(x => { const y = { ...x, id: "an-" + angebotId(x.name) }; for (const k of ["text", "wann", "wo", "kosten", "tel", "quelle", "kategorie", "luft", "wc"]) if (typeof y[k] === "number") y[k] = String(y[k]); y.wc = null; if (y.text) y.text = y.text.replace(/\s*(WC|Toiletten?)-?Tipp:[^.]*\./gi, "").trim(); return y; }); // Toiletten sind kein Thema (Max)
+  angeboteDuKlein();
 }
+/* „Du/Dir/Dein“ aus dem Sonntags-Job mitten im Satz klein, wie überall in der App (eingebaute und frisch geladene Angebote) */
+function angeboteDuKlein() { (D.angebote || []).forEach(x => { if (x && typeof x.text === "string") x.text = duKlein(x.text); }); }
 function angeboteLaden() {
   if (!/github\.io$/.test(location.hostname)) return;
-  fetch("angebote.json", { cache: "no-store" }).then(r => r.ok ? r.json() : null).then(A => { if (A && Array.isArray(A.angebote) && A.stand && (!S.angeboteRepo || S.angeboteRepo.stand !== A.stand)) { S.angeboteRepo = A; speichern(); angeboteAnwenden(); } }).catch(() => { });
+  fetch("angebote.json", { cache: "no-store" }).then(r => r.ok ? r.json() : null).then(A => { if (A && Array.isArray(A.angebote) && A.stand && (!REPO.angebote || REPO.angebote.stand !== A.stand)) { repoSchreiben("angebote", A); angeboteAnwenden(); } }).catch(() => { });
 }
 function postLaden() {
   if (!/github\.io$/.test(location.hostname)) return;
-  fetch("post.json", { cache: "no-store" }).then(r => r.ok ? r.json() : []).then(arr => { if (Array.isArray(arr)) { S.postRepo = arr.filter(b => b && typeof b.text === "string" && /^\d{4}-\d{2}-\d{2}$/.test(b.datum || "")); speichern(); } }).catch(() => { });
+  fetch("post.json", { cache: "no-store" }).then(r => r.ok ? r.json() : []).then(arr => { if (Array.isArray(arr)) { repoSchreiben("post", arr.filter(b => b && typeof b.text === "string" && /^\d{4}-\d{2}-\d{2}$/.test(b.datum || ""))); } }).catch(() => { });
 }
-{ const m0 = maxPost; maxPost = function () { const h = heute(); const r = (S.postRepo || []).filter(b => b.datum <= h && !(S.briefe || []).some(x => x.text === b.text)).sort((a, b) => a.datum < b.datum ? -1 : 1)[0]; return r ? r.text : m0(); }; }
+{ const m0 = maxPost; maxPost = function () { const h = heute(); const r = (Array.isArray(REPO.post) ? REPO.post : []).filter(b => b.datum <= h && !(S.briefe || []).some(x => x.text === b.text)).sort((a, b) => a.datum < b.datum ? -1 : 1)[0]; return r ? r.text : m0(); }; }
 
 /* ---------- Ritas Porträt: Finger drauf halten (oder Maus drüber) = groß daneben, blinzelt und lächelt ---------- */
 { let zeitV = 0, gross = null, lange = false;
@@ -241,23 +251,6 @@ function tbMerkHTML() {
   return `<div class="tb-merk"><p class="klein" style="margin:12px 0 6px"><span style="font-weight:700">Merkzettel</span> – fällt dir tagsüber was ein? Kurz notieren, abends ins Tagebuch übertragen. Dann verschwindet’s hier wieder.</p>
     ${M.map(m => `<div class="tb-merk-zeile"><span>${esc(m.text)}</span><button class="knopf klein leise" data-act="tb-merk-weg" data-id="${m.id}" aria-label="Übertragen">${ic("haken")} übertragen</button></div>`).join("")}
     <div class="zeile" style="gap:6px;margin-top:6px"><input id="tb-merk-neu" class="text" maxlength="120" placeholder="Stichwort" style="flex:1;min-width:0"><button class="knopf klein zweit" data-act="tb-merk-neu" aria-label="Merken">${ic("plus")}</button></div></div>`;
-}
-function tagebuchKarte(h) {
-  if (S.tbModus === "frueher") { const fr = tbFrueherFragen(), f = fr[(S.tbDreh || 0) % fr.length], schon = eintraegeAm(h).some(e => e.t === "tagebuch");
-    return `<section class="abschnitt"><div class="bogen streifen k-geist tb-karte"><h3 style="margin:0">Für dein Tagebuch</h3><div class="chips tb-modus">${chip(false, "Heute", `data-act="tb-modus" data-v="heute"`)}${chip(true, "Früher", `data-act="tb-modus" data-v="frueher"`)}</div>
-      <p class="serif tb-frage" style="margin-top:10px">${esc(f)}</p>
-      <div class="zeile" style="gap:8px;flex-wrap:wrap;margin-top:10px">${schon ? "" : `<button class="knopf klein haupt" data-act="tb-geschrieben">${ic("feder")} Hab’s aufgeschrieben</button>`}<button class="knopf klein leise" data-act="tb-andere">Andere Frage</button></div>${tbMerkHTML()}</div></section>`; }
-  const tag = tbTag(h), es = eintraegeAm(tag).filter(e => e.t !== "tagebuch" && e.notiz !== "App eingerichtet");
-  const was = [...new Set(es.map(e => e.t === "abgehakt" ? e.notiz : e.t === "planung" ? `Ausflug geplant (${e.titel || ""})`.replace(" ()", "") : (e.person && (S.menschen.find(m => m.id === e.person) || {}).name ? `${tat(e.t).kurz || tat(e.t).name} (${S.menschen.find(m => m.id === e.person).name})` : tat(e.t).kurz || tat(e.t).name)))].filter(Boolean);
-  const fr = tbFragen(tag), i = (S.tbDreh || 0) % fr.length, schon = eintraegeAm(h).some(e => e.t === "tagebuch");
-  const wann = tag === h ? "Heute" : "Gestern";
-  return `<section class="abschnitt"><div class="bogen streifen k-geist tb-karte"><h3 style="margin:0">Für dein Tagebuch</h3><div class="chips tb-modus">${chip(true, "Heute", `data-act="tb-modus" data-v="heute"`)}${chip(false, "Früher", `data-act="tb-modus" data-v="frueher"`)}</div><div style="height:8px"></div>
-    ${was.length ? `<p class="klein" style="margin:0 0 8px"><span style="font-weight:700">${wann} in der App:</span> ${esc(was.join(", "))}</p>` : `<p class="klein" style="margin:0 0 8px">Noch nichts eingetragen – eine Frage gibt’s trotzdem.</p>`}
-    <p class="serif tb-frage">${esc(fr[i])}</p>
-    ${schon ? `<p class="klein" style="margin:10px 0 0">✓ Heute schon ins Tagebuch geschrieben. Hühnchen liest nicht mit, Ehrenwort.</p><div class="zeile" style="margin-top:8px"><button class="knopf klein leise" data-act="tb-andere">Andere Frage</button></div>`
-      : `<div class="zeile" style="gap:8px;flex-wrap:wrap;margin-top:10px"><button class="knopf klein haupt" data-act="tb-geschrieben">${ic("feder")} Hab’s aufgeschrieben</button><button class="knopf klein leise" data-act="tb-andere">Andere Frage</button></div>`}
-    ${tbMerkHTML()}
-  </div></section>`;
 }
 function tbAktion(a, d) {
   if (a === "tb-modus") { S.tbModus = d.v; speichern(); render({ halteScroll: true, ohneAnim: true }); return; }

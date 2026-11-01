@@ -764,13 +764,6 @@ function figurenPlaetze(pos0, n, M) {
 }
 function easeOut(x) { return 1 - Math.pow(1 - clamp(x, 0, 1), 3); }
 
-function laterne(ctx, x, y, i, nacht, g = 1) {
-  const farben = ["#E2A93B", "#C9563A", "#E8C66A", "#B5532F"];
-  const p = new Path2D(); ellipse(p, x, y + 10 * g, 8 * g, 11 * g);
-  ctx.strokeStyle = "#3A3028"; ctx.lineWidth = 1; ctx.beginPath(); ctx.moveTo(x, y - 4); ctx.lineTo(x, y); ctx.stroke();
-  papier(ctx, p, farben[i % farben.length], 1.5);
-  if (nacht > .25) gluehen(ctx, x, y + 10, 26 * g, nacht * .9);
-}
 function gluehen(ctx, x, y, r, k) {
   const g = ctx.createRadialGradient(x, y, 0, x, y, r); g.addColorStop(0, `rgba(242,195,107,${.55 * k})`); g.addColorStop(1, "rgba(242,195,107,0)");
   ctx.save(); ctx.globalCompositeOperation = "screen"; ctx.fillStyle = g; ctx.fillRect(x - r, y - r, r * 2, r * 2); ctx.restore();
@@ -1361,7 +1354,7 @@ function schneemannMalen(ctx, x, y, s, teil = 1) {
 /* ============================================================
    Effekt-Ebene über dem großen Bild: Wetter, Funkeln, Animationen
    ============================================================ */
-const FX = { cv: null, ctx: null, raf: 0, teil: [], anim: [], sichtbar: true, letzt: 0, art: "", geo: null, w: 0, h: 0, dpr: 1, io: null };
+const FX = { cv: null, ctx: null, raf: 0, teil: [], anim: [], sichtbar: true, letzt: 0, art: "", geo: null, w: 0, h: 0, dpr: 1, io: null, ruhe: 0, takt: 32 };
 function fxP(a) { const g = FX.geo; return [g.ox + a[0] * g.sk, g.oy + a[1] * g.sk]; }
 function fxK() { return clamp((FX.geo ? FX.geo.sk : .36) / .36, .8, 1.8); }
 function fxEinrichten(canvas) {
@@ -1384,20 +1377,26 @@ function fxTeilchen() {
   if (BW.art === "wolken") for (let i = 0; i < 3; i++) FX.teil.push({ x: r() * w, y: h * (.05 + r() * .22), v: .06 + r() * .1, s: .7 + r() * .6, wolke: 1 });
   if (BW.wind > 26 && !["regen", "schnee"].includes(BW.art)) { const SA = SZ.SA || SAISON.sommer, L = SA.laub || ["#C98A3E", "#A55A2E"]; for (let i = 0; i < 9; i++) FX.teil.push({ x: r() * w, y: h * (.4 + r() * .5), v: 1.2 + r() * 1.6, ph: r() * TAU, blatt: L[i % L.length] }); }
 }
+/* Die Schleife läuft nur, solange sich etwas bewegt (Wetter, Funkeln, Feuerwerk, Animation). Sonst hält sie an
+   und schaut alle 5 s still nach; render, Kauf, Animation, Sichtbarkeit und Wetterwechsel stoßen sie sofort wieder an. */
 function fxLos() {
   if (FX.raf || !FX.cv) return;
+  clearTimeout(FX.ruhe); FX.ruhe = 0;
   const f = now => {
     FX.raf = 0; if (!FX.cv || !FX.cv.isConnected) return;
     if (document.hidden || !FX.sichtbar) return;
-    if (now - FX.letzt >= 32) { FX.letzt = now; try { fxMalen(now); } catch (e) { } }
+    let bewegt = true;
+    if (now - FX.letzt >= FX.takt) { FX.letzt = now; try { const r = fxMalen(now); bewegt = !!r; FX.takt = r === 1 ? 66 : 32; } catch (e) { FX.takt = 32; } } // nur langsames Funkeln: 15 statt 30 Bilder/s
+    if (!bewegt && !FX.anim.length) { FX.ruhe = setTimeout(() => { FX.ruhe = 0; fxLos(); }, 5000); return; }
     if (!REDUCED() || FX.anim.length) FX.raf = requestAnimationFrame(f);
   };
   FX.raf = requestAnimationFrame(f);
 }
 document.addEventListener("visibilitychange", () => { if (!document.hidden) fxLos(); });
 function fxMalen(now) {
-  const g = FX.ctx, w = FX.w, h = FX.h, ruhig = REDUCED(); if (!g || !FX.geo) return;
+  const g = FX.ctx, w = FX.w, h = FX.h, ruhig = REDUCED(); if (!g || !FX.geo) return false;
   g.setTransform(FX.dpr, 0, 0, FX.dpr, 0, 0); g.clearRect(0, 0, w, h);
+  let bewegt = FX.teil.length > 0, langsam = false; // Rückgabe: 2 = Bewegung, 1 = nur langsames Pulsieren, false = nichts zu malen
   // Wetter
   for (const p of FX.teil) {
     if (p.wolke) { if (!ruhig) p.x += p.v; if (p.x > w + 90) p.x = -90; g.save(); g.globalAlpha = (FX.geo.nacht || 0) > .3 ? .45 : .55; g.fillStyle = (FX.geo.nacht || 0) > .3 ? "#56658A" : "#F7F5EE"; g.beginPath(); for (let k = 0; k < 4; k++) g.ellipse(p.x + (k - 1.5) * 26 * p.s, p.y - (k === 1 || k === 2 ? 9 : 0) * p.s, 24 * p.s, 13 * p.s, 0, 0, TAU); g.fill(); g.restore(); continue; }
@@ -1407,18 +1406,19 @@ function fxMalen(now) {
     if (p.rr) { if (!ruhig) { p.y += p.v; p.ph += .02; p.x += Math.sin(p.ph) * .35; } if (p.y > h + 4) { p.y = -4; p.x = Math.random() * w; } g.fillStyle = "rgba(255,255,255,.92)"; g.beginPath(); g.arc(p.x, p.y, p.rr, 0, TAU); g.fill(); }
   }
   // Silvester-Funkeln
-  if (typeof festHeute === "function") { const F = festHeute(), hh = jetzt().getHours(); if ((F.silvester && hh >= 18) || (F.neujahr && hh < 1)) fxFeuerwerk(g, now); }
+  if (typeof festHeute === "function") { const F = festHeute(), hh = jetzt().getHours(); if ((F.silvester && hh >= 18) || (F.neujahr && hh < 1)) { fxFeuerwerk(g, now); bewegt = true; } }
   // FUN-09: was heute im Kramladen fürs Bild gekauft wurde, leuchtet sanft auf
   { const G = S.gekauft || {}, h0 = heute(), hh = jetzt().getHours(), n = (FX.geo.nacht || 0) > .3;
     const ORTE = { traenke: [190, 728], igelhaus: [252, 662], rosenbogen: wegPunkt(.3).slice(0, 2).map((v, i) => i ? v - 26 : v), haengematte: [172, 632], rotkehlchen: hh >= 5 && hh < 12 ? [560, PARK.vorn - 12] : null, sternbilder: n ? [240, 120] : null };
-    for (const id in ORTE) if (G[id] === h0 && ORTE[id]) { const [x, y] = fxP(ORTE[id]), pu = ruhig ? .7 : .55 + .45 * Math.sin(now / 420), r = 26 * k;
+    for (const id in ORTE) if (G[id] === h0 && ORTE[id]) { langsam = true; const [x, y] = fxP(ORTE[id]), pu = ruhig ? .7 : .55 + .45 * Math.sin(now / 420), r = 26 * fxK(); // fxK(): k ist hier noch nicht deklariert
       const gr = g.createRadialGradient(x, y, 0, x, y, r); gr.addColorStop(0, `rgba(255,240,190,${.5 * pu})`); gr.addColorStop(1, "rgba(255,240,190,0)"); g.fillStyle = gr; g.beginPath(); g.arc(x, y, r, 0, TAU); g.fill();
       g.strokeStyle = `rgba(242,195,107,${.9 * pu})`; g.lineWidth = 2; g.setLineDash([4, 4]); g.beginPath(); g.arc(x, y, r * .8, 0, TAU); g.stroke(); g.setLineDash([]); } }
   // Funkeln an den Spielereien des Tages
   const st = bildSpielStand(), k = fxK();
-  for (const s of spieleAktiv()) { if (st.erledigt[s.id]) continue; const a = s.anker(); if (!a) continue; const [x, y] = fxP(a); funkeln(g, x, y, k, ruhig ? 0 : now / 1000 + hash32(s.id) % 7); }
+  for (const s of spieleAktiv()) { if (st.erledigt[s.id]) continue; const a = s.anker(); if (!a) continue; langsam = true; const [x, y] = fxP(a); funkeln(g, x, y, k, ruhig ? 0 : now / 1000 + hash32(s.id) % 7); }
   // Laufende Animationen
   FX.anim = FX.anim.filter(an => { const t = clamp((now - an.t0) / an.dauer, 0, 1); try { an.mal(g, ruhig ? 1 : t, an.P, k * 1.3, an); } catch (e) { } if (t >= 1 || ruhig && now - an.t0 > 1800) { if (an.fertig) an.fertig(); return false; } return true; });
+  return bewegt || FX.anim.length > 0 ? 2 : langsam ? 1 : false;
 }
 function stern4(g, x, y, r) { g.beginPath(); g.moveTo(x, y - r); g.quadraticCurveTo(x + r * .18, y - r * .18, x + r, y); g.quadraticCurveTo(x + r * .18, y + r * .18, x, y + r); g.quadraticCurveTo(x - r * .18, y + r * .18, x - r, y); g.quadraticCurveTo(x - r * .18, y - r * .18, x, y - r); g.fill(); }
 function funkeln(g, x, y, k, t) {

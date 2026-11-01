@@ -7,9 +7,25 @@ import datetime, pathlib, re, json
 d = pathlib.Path(__file__).parent
 stamp = datetime.datetime.now().strftime("%Y-%m-%d %H:%M")
 
+# --- Datei-Listen: genau EINMAL definiert (Reihenfolge trägt Logik: spätere Dateien patchen frühere) ---
+CSS = ["fonts.css", "app.css", "skins.css", "goennen.css", "maxbriefe.css", "feedback.css", "hp.css", "design.css",
+       "rundgang.css", "nachtrag.css", "huhnfutter.css", "figuren.css", "jahrfarben.css", "tabzahl.css", "rueckblick.css", "teilen.css"]
+DATA = ["data.js", "data-orte.js", "data-inhalte.js", "data-laden.js", "data-korrektur.js", "data-sprache.js", "data-lektorat.js",
+        "data-ablenkung.js", "data-winter.js", "data-angebote.js", "data-eier.js", "data-eier2.js", "data-anrufe.js", "data-anrufe2.js",
+        "data-brevvan.js", "data-ereignisse2.js", "data-anrufe3.js", "data-feinschliff.js", "data-hp.js"]
+APP = ["core.js", "feedback.js", "skins.js", "figuren.js", "avatar.js", "scene.js", "views.js", "ruheplan.js", "eigenes.js", "eier.js",
+       "extras.js", "telefon.js", "brevvan.js", "buecher.js", "hp.js", "tv.js", "winter.js", "ereignisse.js", "wunsch.js", "wetter.js",
+       "game.js", "goennen.js", "laden2.js", "huhnfutter.js", "maxbriefe.js", "dank.js", "jahrfarben.js", "rede.js", "main.js",
+       "rundgang.js", "tabzahl.js", "rueckblick.js", "teilen.js"]
+# data-angebote.js ist nur der Notfall-Stand: Gibt es angebote.json, ersetzt der Build D.angebote ohnehin vollständig.
+if (d / "angebote.json").exists(): DATA.remove("data-angebote.js")
+_fehlt = [f for f in ["app.html"] + CSS + DATA + APP if not (d / f).exists()]
+if _fehlt:
+    raise SystemExit("BUILD ABGEBROCHEN – Datei fehlt: " + ", ".join(_fehlt))
+
 shell = (d / "app.html").read_text()
-css = (d / "fonts.css").read_text() + (d / "app.css").read_text() + ((d / "skins.css").read_text() if (d / "skins.css").exists() else "") + ((d / "goennen.css").read_text() if (d / "goennen.css").exists() else "") + ((d / "maxbriefe.css").read_text() if (d / "maxbriefe.css").exists() else "") + ((d / "feedback.css").read_text() if (d / "feedback.css").exists() else "") + ((d / "hp.css").read_text() if (d / "hp.css").exists() else "") + ((d / "design.css").read_text() if (d / "design.css").exists() else "") + ((d / "rundgang.css").read_text() if (d / "rundgang.css").exists() else "") + ((d / "nachtrag.css").read_text() if (d / "nachtrag.css").exists() else "") + ((d / "huhnfutter.css").read_text() if (d / "huhnfutter.css").exists() else "") + ((d / "figuren.css").read_text() if (d / "figuren.css").exists() else "") + ((d / "jahrfarben.css").read_text() if (d / "jahrfarben.css").exists() else "") + ((d / "tabzahl.css").read_text() if (d / "tabzahl.css").exists() else "") + ((d / "rueckblick.css").read_text() if (d / "rueckblick.css").exists() else "") + ((d / "teilen.css").read_text() if (d / "teilen.css").exists() else "")  # Gestaltung C2, dann Rundgang mit Max
-data = "\n".join((d / f).read_text() for f in ["data.js","data-orte.js","data-inhalte.js","data-laden.js","data-korrektur.js","data-sprache.js","data-lektorat.js","data-ablenkung.js", "data-winter.js","data-angebote.js","data-eier.js","data-eier2.js","data-anrufe.js", "data-anrufe2.js", "data-brevvan.js", "data-ereignisse2.js", "data-anrufe3.js", "data-feinschliff.js", "data-hp.js"] if (d / f).exists())
+css = "".join((d / f).read_text() for f in CSS)  # Gestaltung C2, dann Rundgang mit Max
+data = "\n".join((d / f).read_text() for f in DATA)
 _tj = d / "tv.json"
 if _tj.exists():
     import json as _json2
@@ -19,18 +35,20 @@ if _aj.exists():
     import json as _json
     _a = _json.loads(_aj.read_text())
     data += "\n/* Angebote aus angebote.json */\n(function(){var A=" + _json.dumps(_a, ensure_ascii=False) + ";D.angeboteStand=A.stand;if(A.kategorien)D.angeboteKat=A.kategorien;D.angebote=A.angebote.map(function(x){return Object.assign({},x,{id:'an-'+angebotId(x.name)})});})();\n"
-app = "\n".join((d / f).read_text() for f in ["core.js","feedback.js","skins.js","figuren.js","avatar.js","scene.js","views.js","ruheplan.js","eigenes.js","eier.js","extras.js","telefon.js", "brevvan.js", "buecher.js", "hp.js", "tv.js", "winter.js", "ereignisse.js", "wunsch.js", "wetter.js","game.js","goennen.js","laden2.js","huhnfutter.js","maxbriefe.js","dank.js","jahrfarben.js","rede.js","main.js","rundgang.js","tabzahl.js","rueckblick.js","teilen.js"]).replace("__BUILD__", stamp)
+app = "\n".join((d / f).read_text() for f in APP).replace("__BUILD__", stamp)
 # --- Schriften verkleinern (QA-17): Kaushan Script fällt weg (von Satisfy verdrängt),
-#     alle übrigen werden auf die Zeichen reduziert, die in der App vorkommen (+ Latin-1/Ext-A, Typo-Zeichen, Pfeile).
+#     alle übrigen werden auf die Zeichen reduziert, die in der App vorkommen (+ Latin-1 mit äöüß/åäö/é, Typo-Zeichen, Pfeile).
+#     Latin Ext-A (U+0100–017F) ist nicht mehr pauschal dabei: Was davon in den Texten steht, kommt über `text` mit.
 def _fonts_klein(css_all, text):
     import base64, io
     try:
         from fontTools import subset as _ss
         from fontTools.ttLib import TTFont
     except Exception:
+        print("WARNUNG: fontTools fehlt – Schriften werden NICHT verkleinert (pip install fonttools)")
         return css_all
     zeichen = {ord(c) for c in text if ord(c) >= 32}
-    zeichen |= set(range(0x20, 0x7F)) | set(range(0xA0, 0x180)) | set(range(0x2010, 0x2028)) | {0x20AC, 0x2122, 0x2190, 0x2191, 0x2192, 0x2193, 0x2197, 0x2713, 0x2731, 0x2665, 0x266A, 0x266B}
+    zeichen |= set(range(0x20, 0x7F)) | set(range(0xA0, 0x100)) | set(range(0x2010, 0x2028)) | {0x20AC, 0x2122, 0x2190, 0x2191, 0x2192, 0x2193, 0x2197, 0x2713, 0x2731, 0x2665, 0x266A, 0x266B}
     def neu(m):
         block = m.group(0)
         if "Kaushan" in block: return ""
@@ -55,15 +73,17 @@ for _f in sorted(d.glob("*.js")):
 # --- Akte Feuerkelch: Spoiler- und Regelprüfung (Register, Vorgriffswörter, dunkle Kapitel, Fragen-Takt)
 def _hp_pruefen():
     import subprocess, shutil
-    if not shutil.which("node") or not (d / "data-hp.js").exists(): return
+    if not shutil.which("node"):
+        print("WARNUNG: node fehlt – HP-Prüfung NICHT gelaufen"); return
     js = ("const vm=require('vm'),fs=require('fs');const ctx={console,S:{}};vm.createContext(ctx);"
           "for(const f of JSON.parse(process.argv[1])){if(fs.existsSync(f))vm.runInContext(fs.readFileSync(f,'utf8'),ctx,{filename:f});}"
           "const r=vm.runInContext('D.hpPruefen(D.hpFremdTexte())',ctx);console.log(JSON.stringify(r));")
-    files = [str(d / f) for f in ["data.js","data-orte.js","data-inhalte.js","data-laden.js","data-korrektur.js","data-sprache.js","data-lektorat.js","data-ablenkung.js","data-winter.js","data-angebote.js","data-eier.js","data-eier2.js","data-anrufe.js","data-anrufe2.js","data-brevvan.js","data-ereignisse2.js","data-feinschliff.js","data-hp.js"]]
+    files = [str(d / f) for f in DATA]  # dieselbe Liste wie im Bundle (auch data-anrufe3.js)
     try:
-        r = json.loads(subprocess.run(["node", "-e", js, json.dumps(files)], capture_output=True, text=True, timeout=60).stdout)
+        p = subprocess.run(["node", "-e", js, json.dumps(files)], capture_output=True, text=True, timeout=60)
+        r = json.loads(p.stdout)
     except Exception as ex:
-        print("HP-Prüfung nicht gelaufen:", ex); return
+        print("WARNUNG: HP-Prüfung NICHT gelaufen:", ex, (p.stderr[-800:] if "p" in locals() else "")); return
     for w in r["warnungen"]: print("HP-Warnung (Altlast):", w)
     for f in r["fehler"]: print("HP-FEHLER:", f)
     print("HP-Prüfung:", "OK" if not r["fehler"] else f"{len(r['fehler'])} Fehler")
@@ -98,4 +118,9 @@ art = '<title>Ritas App</title>\n<meta name="claude:viewport-fit-sides" content=
 (d / "dist" / "app.html").write_text(art)
 (d / "dist" / "test.html").write_text(doc(""))
 (d / "repo" / "index.html").write_text(doc(PWA))
+# Sonntags-Daten auch neben index.html legen: Der Abruf der App findet sie dann (kein 404), und der Service Worker
+# legt sie beim ersten Abruf in seinen Laufzeit-Cache (offline verfügbar).
+import shutil as _sh
+for _j in ["angebote.json", "tv.json"]:
+    if (d / _j).exists(): _sh.copyfile(d / _j, d / "repo" / _j)
 print("built", stamp, len(art.encode()) // 1024, "KB")

@@ -112,15 +112,14 @@ function gkKarteHTML(k) {
 
 /* ---------- Ansicht ---------- */
 function gkInhalt() {
-  const g = S.goenn, ges = gkGesammelt(), noch = gkNoch(), anteil = Math.round(((GK_SCHRITT - noch) / GK_SCHRITT) * 100);
+  const g = S.goenn; // ohne Countdown (V2): Die Karte kommt als Überraschung, gezählt wird weiter im Hintergrund
   const offen = gkOffen().slice().reverse(), zeig = GK.alle ? offen : offen.slice(0, 3);
-  let h = `<p class="gk-intro">Für je ${GK_SCHRITT} Taler, die du sammelst, liegt hier eine Gönn-Karte bereit, von dir für dich. Kostet nichts: Deine Taler bleiben, wo sie sind. Die Karte ist nur der Schubs.</p>`;
-  h += `<div class="gk-stand"><div class="zeile zwischen"><span>Schon gesammelt: <b>${ges} Taler</b></span></div><div class="gk-balken" role="img" aria-label="Noch ${noch} Taler bis zur nächsten Karte"><i style="width:${anteil}%"></i></div><p class="klein" style="margin:6px 0 0">Noch ${noch} Taler sammeln, dann liegt die ${g.karten.length ? "nächste" : "erste"} Karte da – geschenkt.</p></div>`;
+  let h = `<p class="gk-intro">Ab und zu liegt hier eine Gönn-Karte für dich, als Überraschung. Von dir für dich. Sie kostet nichts, deine Taler bleiben, wo sie sind. Die Karte ist nur der Schubs.</p>`;
   if (zeig.length) {
     if (S.huhn && offen.some(k => k.tag === heute() && gkStatus(k).s === "offen")) h += `<p class="gk-huhn">${huhnSVG({ gr: 44, kopf: true })}<span>Hühnchen: „Neue Karte! Den Stempel hab ich schon draufgehauen.“</span></p>`;
     h += zeig.map(gkKarteHTML).join("");
     if (offen.length > zeig.length) h += `<button class="knopf leise voll" data-act="gk-alle">Noch ${offen.length - zeig.length} ältere ${offen.length - zeig.length === 1 ? "Karte" : "Karten"} – laufen nicht weg</button>`;
-  } else h += `<p class="klein gk-leer">${g.karten.length ? "Gerade liegt keine Karte offen. Die nächste kommt von allein." : "Deine erste Karte kommt von allein, sobald die Taler zusammen sind."}</p>`;
+  } else h += `<p class="klein gk-leer">${g.karten.length ? "Gerade liegt keine Karte offen. Die nächste kommt von allein, als Überraschung." : "Die erste Karte kommt von allein, als Überraschung."}</p>`;
   // Ritas eigene Liste
   h += `<h3 class="gk-h">Das gönn ich mir</h3><p class="klein" style="margin:0 0 8px">Deine eigenen Ideen. Die kommen zuerst auf die Karten.</p>`;
   h += g.ideen.length ? `<div class="liste">${g.ideen.map((t, i) => `<div class="gk-idee"><span>${esc(t)}</span><button class="knopf zweit" data-act="gk-idee-weg" data-i="${i}" aria-label="${esc(t)} streichen">${ic("schliessen")}</button></div>`).join("")}</div>` : "";
@@ -138,24 +137,20 @@ function gkSheet() {
 }
 function gkNeuZeigen() { const sh = aktuellesSheet(); if (sh && sh.dataset.id === "goennen") sheetInhalt(gkInhalt()); }
 
-/* Leiste im Kramladen (oben, unter der Kasse) */
-function gkLeiste() {
-  const noch = gkNoch(), anteil = Math.round(((GK_SCHRITT - noch) / GK_SCHRITT) * 100), neu = gkNeu(), offen = gkOffen().length;
-  return `<button class="goenn-leiste" data-act="gk-auf">${gkStempel("gk-stempel-leiste")}<span class="gl-text"><span class="gl-titel">Gönn dir was${neu ? ` <span class="ks-marke">Neue Karte</span>` : ""}</span><span class="gl-unter">${offen ? `${offen === 1 ? "Eine Gönn-Karte liegt" : offen + " Gönn-Karten liegen"} bereit · die nächste kommt in ${noch} Talern` : `Noch ${noch} Taler sammeln, dann liegt die ${S.goenn.karten.length ? "nächste" : "erste"} Karte da`}</span><span class="gl-gratis">Geschenkt – kostet keine Taler</span><span class="gk-balken klein-balken" aria-hidden="true"><i style="width:${anteil}%"></i></span></span>${ic("pfeil", "pfeil")}</button>`;
-}
-/* Dezenter Hinweis auf „Heute“, über der To-do-Liste – bis die Karte angesehen oder weggelegt ist */
+/* Die Leiste mit Countdown im Kramladen gibt es nicht mehr (V2): keine zweite Währung, keine Zählerei an der Kasse. */
+/* Überraschung im Platz „Neu für dich“ auf „Heute“ (views.js neuFuerDichHTML) – bis die Karte angesehen oder weggelegt ist */
 function gkHinweisHTML() {
   if (!S.goenn || !gkNeu() || !S.onboard) return "";
-  return `<section class="abschnitt"><div class="goenn-hinweis">${gkStempel("gk-stempel-leiste")}<p>Eine neue Gönn-Karte liegt für dich bereit.</p><div class="gk-reihe"><button class="knopf klein zweit" data-act="gk-auf">Ansehen</button><button class="knopf klein leise" data-act="gk-hinweis-weg">Später</button></div></div></section>`;
+  return `<section class="abschnitt"><div class="goenn-hinweis">${gkStempel("gk-stempel-leiste")}<p>Überraschung: Eine Gönn-Karte liegt für dich bereit.</p><div class="gk-reihe"><button class="knopf klein zweit" data-act="gk-auf">Ansehen</button><button class="knopf klein leise" data-act="gk-hinweis-weg">Später</button></div></div></section>`;
 }
-function gkPlakette() { const el = document.getElementById("taler-plakette"); if (el) el.classList.toggle("gk-neu", !!(S.goenn && gkNeu())); }
+function gkPlakette() { const el = document.getElementById("taler-plakette"); if (el) el.classList.remove("gk-neu"); } // kein roter Punkt mehr an der Taler-Plakette (V2/V7)
 
 /* ---------- Aktionen ---------- */
 function gkAktion(a, d, el) {
   const k = d.id ? S.goenn.karten.find(x => x.id === d.id) : null;
   switch (a) {
     case "gk-auf": { const sh = aktuellesSheet(); if (sh && sh.dataset.id === "goennen") break; gkSheet(); break; }
-    case "gk-hinweis-weg": S.goenn.gesehen = S.goenn.ausgestellt; speichern(); render({ halteScroll: true, ohneAnim: true }); toast("Liegt im Kramladen unter „Gönn dir was“. Läuft nicht weg."); break;
+    case "gk-hinweis-weg": S.goenn.gesehen = S.goenn.ausgestellt; speichern(); render({ halteScroll: true, ohneAnim: true }); toast("Liegt unter „Zuhause“ in „Meine Sammlung“. Läuft nicht weg."); break;
     case "gk-mach": {
       if (!k || gkStatus(k).s !== "offen") break;
       S.liste = S.liste || []; S.liste.push({ id: "l" + Date.now().toString(36), text: k.text, goenn: k.id, neu: heute() });
@@ -202,6 +197,5 @@ document.addEventListener("keydown", ev => {
 }; }
 { const n0 = nachEintrag; nachEintrag = function (r, text) { if (r && r.e && r.e.goenn) text = `Gegönnt: ${String(r.e.notiz || "").replace(/[.!?]+$/, "")}.`; return n0(r, text); }; }
 { const t0 = eintragText; eintragText = function (e) { return e && e.t === "abgehakt" && e.goenn ? `Gegönnt: ${e.notiz || "etwas Schönes"}` : t0(e); }; }
-{ const l0 = listeHTML; listeHTML = function () { let h = ""; try { h = gkHinweisHTML(); } catch (e) { } return h + l0(); }; }
-if (typeof kramladenInhalt === "function") { const k0 = kramladenInhalt; kramladenInhalt = function () { const h = k0(); let l = ""; try { l = gkLeiste(); } catch (e) { return h; } const m = '<div class="laden-chips-rahmen">'; return h.includes(m) ? h.replace(m, l + m) : l + h; }; }
+/* Der Hinweis steht nicht mehr über der To-do-Liste und die Karte nicht mehr in der Kasse: beides läuft über „Neu für dich“ und die Sammlung. */
 if (typeof plaketteMalen === "function") { const p0 = plaketteMalen; plaketteMalen = function (n, zwang) { p0(n, zwang); try { gkPlakette(); } catch (e) { } }; }

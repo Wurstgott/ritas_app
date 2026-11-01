@@ -21,34 +21,8 @@
   const TITEL = { W01: "Jede Bewegung zählt", W02: "Bewegung und Stimmung", W03: "Bewegung gegen Erschöpfung", W04: "Gehen: genug ist genug", W05: "Gleichgewicht trainieren", W06: "Bewegung nach Tagesform", W07: "Zwei Stunden Natur pro Woche", W08: "Waldbaden", W09: "Was der Wald bewirkt", W10: "Der Blick ins Grüne", W11: "Vögel hören tut gut", W12: "Staunspaziergänge", W13: "Tanzen und Gedächtnis", W14: "Neue Tanzfolgen lernen", W15: "Tanzen bei Vergesslichkeit", W16: "Kunst, Tanz und Gesundheit", W17: "Die 68-%-Lese-Legende", W18: "Lesen hält wach", W19: "Lesen und Gedächtnis", W20: "Hören zählt wie Lesen", W21: "Eingebunden sein", W22: "Verbundenheit", W23: "Geben tut gut", W24: "Kultur ist kein Luxus", W25: "Kleine Begegnungen zählen", W26: "Bewegung und Schlaf", W27: "Wenn der Schlaf nicht kommt", W28: "Gut geschlafen ist halb gewonnen", W29: "Abends lieber Papier", W30: "Warum Ablenkung wirkt", W31: "Selbst ausgesuchte Musik", W32: "Ablenkung, die einnimmt", W33: "Handyspiele, ehrlich betrachtet", W34: "Musik entspannt", W35: "Musik tut gut", W36: "Lieder aus der Jugend", W37: "Dankesbriefe", W38: "Dankbarkeit – ehrlich", W39: "Neugier und Lernen", W40: "Etwas Neues lernen" };
   W.forEach(w => { if (TITEL[w.id]) w.titel = TITEL[w.id]; w.text = w.text.replace(/\s*\((vgl\.|siehe) [A-Z]+\d+[^)]*\)/g, ""); });
 
-  /* ---------- Statt Daddeln ---------- */
-  const SD = D.stattDaddeln;
-  setze(SD, "SD28", { titel: "Deine Physio-Übung im Sitzen", text: "Eine Übung aus deinem Physio-Blatt, die im Sitzen geht. Mehr braucht es heute nicht.", t: "ruecken" });
-  setze(SD, "SD30", { titel: "Deine Gleichgewichtsübung", text: "Mach die Gleichgewichtsübung, die dir deine Physiotherapie gezeigt hat, mit beiden Händen in Griffnähe. Hast du keine, frag beim nächsten Termin danach.", tf: "AB" });
-  setze(SD, "SD41", { titel: "Ein Weg, den ich liebe", text: "Erinnere dich an einen Lieblingsweg – zu Fuß oder mit dem Auto – und erzähl ihn jemandem.", tf: "AB" });
-  setze(SD, "SD38", { tf: "ABC", text: "Beantworte eine der Erzählfragen – schriftlich, als Sprachaufnahme oder nur im Kopf." });
-  ["SD06", "SD15", "SD16", "SD22", "SD24", "SD37", "SD40", "SD41", "SD42", "SD44", "SD45", "SD46", "SD48", "SD52", "SD53", "SD58"].forEach(id => { const x = SD.find(y => y.id === id); if (x) x.tf = x.tf.replace("D", "") || "ABC"; });
-  SD.forEach(x => { x.text = x.text.replace(/\s*\((vgl\.|siehe|Teil) [^)]*\)/g, "").replace(/aus Teil 3/g, "aus dem Wissen").replace(/Emil, /g, "Kästner, ").replace(/; morgen kommen zwei dazu\./, "; wenn du magst, morgen zwei weitere."); });
-  SD.push({ id: "SD61", titel: "Einfach liegen bleiben", text: "Decke, Wärmflasche, Augen zu. Das ist heute genug.", min: 0, tf: "CD", kat: "Körper sanft", haltung: "im Liegen", t: "ruhe" });
-
-  /* ---------- Vorhaben ---------- */
-  const M = D.missionen;
-  const kuerzel = s => s.replace(/\s*\((SD|W|Z|M)\d+[^)]*\)/g, "").replace(/\s*Begründung: W\d+\.?/g, "").replace(/\bNur G\/M\b\.?/g, "Für gute Tage und Tage, an denen es geht.").replace(/\bG\/M\b\.?/g, "An guten Tagen und wenn es geht.")
-    .replace(/einen G-Tag/g, "einen guten Tag").replace(/am G-Tag/g, "an einem guten Tag").replace(/G-Tag/g, "guter Tag").replace(/an S-Tagen/g, "an leisen Tagen").replace(/S-Tagen/g, "leisen Tagen")
-    .replace(/Ideal für S\/P-Phasen\./g, "Gut für leise Tage.").replace(/Ziel:/g, "Zum Beispiel:").replace(/\s{2,}/g, " ").trim();
-  M.forEach(m => { m.text = kuerzel(m.text).replace(/Wegen der Immunsuppression/g, "Zur Sicherheit").replace(/Wegen Knochen und Stoma:?/g, "Zur Sicherheit:"); m.wennDann = kuerzel(m.wennDann); });
-  SD.forEach(x => { x.text = x.text.replace(/\(?(SD|W|Z|M)\d+\)?/g, "").replace(/\s{2,}/g, " ").replace(/\s+([.,;])/g, "$1"); });
-  setze(M, "M04", { text: "Schritte lassen sich im Sitzen planen. Beim Vorführen reicht es, zu zählen und zu erklären; Drehungen übt der Schüler mit seiner Tanzpartnerin. Vorschlag: Langsamer Walzer, Grundschritt.", wennDann: "Wenn mein Schüler zur Stunde klingelt, dann zeige ich zuerst die neue Figur und danach die alte." });
-  setze(M, "M07", { text: "An leisen Tagen: auslassen. Das Vorhaben wartet.", tf: "ABC" });
-  setze(M, "M11", { text: "Geht auch im Liegen. Vorschlag: Mörike, „Er ist’s“, oder Eichendorff, „Wünschelrute“." });
-  setze(M, "M13", { text: "Tag 1: mit dem Behandlungsteam klären, ob das für dich passt. Danach nur an guten Tagen, nur in Begleitung, mit Helm.", tf: "A", t: "eroller" });
-  setze(M, "M14", { text: "Für alle Tagesformen. Es gibt keine Strafe und keine Zählung.", wennDann: "Wenn ich die Spiele-App öffnen will, dann öffne ich zuerst „Ablenkung?“ und schaue eine Idee an; danach spiele ich, wenn ich mag." });
-  setze(M, "M17", { text: "Für einen guten Tag: einen Randplatz und ein Taxi einplanen." });
-  setze(M, "M18", { text: "Nur mit Übungen, die dir die Physiotherapie gezeigt hat. Hände immer in Griffnähe.", wennDann: "Wenn der Wasserkocher läuft, dann mache ich am Tresen meine Gleichgewichtsübung von der Physio.", tf: "AB" });
-  setze(M, "M20", { text: "An guten Tagen und wenn es geht. An leisen Tagen geht es auch am Fenster.", tf: "ABC" });
-  setze(M, "M28", { text: "Die ersten Tage dienen der Planung (geht auch an leisen Tagen), der Ausflug selbst an einem guten Tag. Für mehr Sicherheit bei längeren Ausflügen." });
-  setze(M, "M29", { text: "Pausentage sind normal; die Strecke wartet. An leisen Tagen zählt jeder kleine Weg." });
-  setze(M, "M30", { text: "Die Gastgeberin legt die Musik auf und gibt den Takt an, gern im Sitzen. Und vielleicht tanzt dein Schüler zum ersten Mal vor Publikum." });
+  /* Statt Daddeln, Vorhaben, Monate, Zitate und Tageshinweise: Korrekturen sind in die späteren Fassungen
+     (data-lektorat.js, data-ablenkung.js) eingegangen; die alten Listen werden nicht mehr mitgeliefert. */
 
   /* ---------- Erzählfragen (statt „Lebensbuch“) ---------- */
   D.lebensbuch.forEach(l => { l.frage = l.frage.replace(/\s*\*?\((Chochinov|nach Chochinov)[^)]*\)\*?/gi, "").replace(/\s*\*\s*$/, "").trim(); });
@@ -63,10 +37,6 @@
     return b;
   });
   D.buecher.push({ titel: "Als ich ein kleiner Junge war", autor: "Erich Kästner", text: "Kästner erzählt von seiner Dresdner Kindheit – warm, witzig und in kurzen Kapiteln." });
-
-  /* ---------- Monate & Zitate ---------- */
-  D.monate.forEach(m => m.impulse.forEach(i => { i.text = i.text.replace(/Verabschiede die Mauersegler/g, "Hör den Mauerseglern noch zu, bevor sie nach Afrika ziehen").replace(/dann sind sie auf dem Weg nach Afrika\./g, "dann sind sie schon unterwegs.").replace(/beim Abschied zu/g, "beim Aufbruch zu"); }));
-  D.zitate = D.zitate.filter(z => !/Nietzsche|Luxemburg|Lichtenberg|Claudius/.test(z.autor));
 
   /* ---------- Orte ---------- */
   const O = D.ausflugsziele;
@@ -91,11 +61,4 @@
   /* ---------- Laden-Inhalte ---------- */
   /* Tanzkarten: seit dem Laden-Lektorat Geschichten und Musik statt Grundschritte (data-laden.js) */
   D.briefe.forEach(b => { b.anfang = b.anfang.replace("Ich wollte dir schon lange einmal sagen, wie gut es mir tut, dass es dich gibt.", "Ich musste heute an dich denken und habe mich gefreut, dass es dich gibt.").replace("– das vergesse ich dir nicht.", "– daran denke ich heute noch gern."); });
-
-  /* ---------- Tageshinweise: Jahreszeit beachten ---------- */
-  const SAISON = [[/färben sich die Eichen|Kraniche/, [9, 10, 11]], [/Im November/, [11]], [/Im Winter|Spuren im Schnee/, [12, 1, 2]], [/ab Ende Dezember/, [12, 1]], [/Im März/, [3]], [/Im Mai/, [5]], [/Im Juni/, [6]], [/Im September/, [9]], [/Moos im Forst ist im Herbst/, [10, 11]]];
-  D.tageshinweise = D.tageshinweise.filter(t => !/nicht mit Fleiß/.test(t)).map(t => {
-    if (/Heute schon etwas getrunken/.test(t)) t = "Ein Glas Wasser in Reichweite ist eine kleine Pflege.";
-    const s = SAISON.find(([r]) => r.test(t)); return s ? { text: t, monate: s[1] } : { text: t };
-  });
 })();

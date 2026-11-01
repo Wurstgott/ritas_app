@@ -119,14 +119,19 @@ function viewHeute() {
     : `<section class="abschnitt"><button class="umschlag" data-act="post-auf" aria-label="Post von ${von} – zum Öffnen antippen">${umschlagSVG(von)}<span class="umschlag-hinweis">Post von ${von} · zum Öffnen antippen</span></button></section>`; }
   if (typeof mbHeutePost === "function") html += mbHeutePost(); // Brief von Max (maxbriefe.js)
   if (ruhig) html += `<section class="abschnitt"><button class="kachel breit k-ruhe" data-act="hilft">${ic("windrad")}<span><span class="titel">Ablenkung?</span><br><span class="unter">Wenn der Rücken zwickt oder das Handyspiel lockt.</span></span></button></section>`;
-  // Was Rita jeden Tag tut, steht oben: To-do-Liste und Eintragen – dann das Bild und der Rest
-  html += listeHTML();
-  html += `<section class="abschnitt"><h2>Eintragen</h2><div class="kacheln">${schnellHeute(tf).map(id => { const t = tat(id); return kachel(t, zuletztText(id), `data-act="eintragen" data-t="${id}"`); }).join("")}</div>
+  // Morgenseite (V1): Eintragen gleich nach Hühnchen und Post, die Rückmeldung „Heute eingetragen“ direkt darunter,
+  // dann die To-do-Liste und EIN Platz „Neu für dich“ – danach Bild und der Rest
+  html += `<section class="abschnitt" id="eintragen-heute"><h2>Eintragen</h2><div class="kacheln">${schnellHeute(tf).map(id => { const t = tat(id); return kachel(t, zuletztText(id), `data-act="eintragen" data-t="${id}"`); }).join("")}</div>
     <button class="knopf haupt voll" style="margin-top:12px" data-act="alles">${ic("plus")} Etwas anderes eintragen</button></section>`;
+  const ohneHaken = liste.filter(e => e.t !== "abgehakt");
+  if (ohneHaken.length) {
+    html += `<section class="abschnitt"><h2>Heute eingetragen</h2><div class="liste">${ohneHaken.slice().reverse().map(e => eintragZeile(e, true, true)).join("")}</div></section>`;
+  }
+  html += listeHTML();
+  html += neuFuerDichHTML(tf);
   const st = D.stufen[stufe()];
   html += `<section class="abschnitt"><div class="buehne flach" id="buehne-heute"><canvas id="bild-heute" role="img" aria-label="${esc(bildBeschreibung(modell()).join(" "))}"></canvas><button class="ueber" data-tab="lichtung" aria-label="Das Bild groß ansehen"></button></div>
     <p class="klein" style="margin-top:8px">${esc(st.name)}${!S.eintraege.some(x => (x.w || 0) > 0) ? " · bald wächst hier was" : modell().letzte && D.orte[modell().letzte] ? ` · zuletzt gewachsen: ${esc(D.orte[modell().letzte].name.replace(/^(Der|Die|Das) /, m => m.toLowerCase()))}` : ""}</p></section>`;
-  html += zettelHTML();
   html += raetselHTML();
   html += tvHeuteHTML();
   html += abendkarteHTML(tf);
@@ -134,21 +139,6 @@ function viewHeute() {
   if (typeof abendLeisteHTML === "function") html += abendLeisteHTML();
   if (tf === "A") html += draussenVorschlagHTML();
   if (!ruhig) html += `<section class="abschnitt"><button class="kachel breit k-ruhe" data-act="hilft">${ic("windrad")}<span><span class="titel">Ablenkung?</span><br><span class="unter">Wenn der Rücken zwickt oder das Handyspiel lockt.</span></span></button></section>`;
-  // Heute eingetragen
-  const ohneHaken = liste.filter(e => e.t !== "abgehakt");
-  if (ohneHaken.length) {
-    html += `<section class="abschnitt"><h2>Heute eingetragen</h2><div class="liste">${ohneHaken.slice().reverse().map(e => eintragZeile(e, true, true)).join("")}</div></section>`;
-  }
-
-  // Hinweis des Tages (höchstens einer)
-  const tagNr = Math.round((tagDatum(h) - tagDatum(S.start)) / 864e5);
-  const postDa = !!postHeute();
-  const hw = tf && tagNr >= 3 && !postDa && !(S.zettel && S.zettel.tag === h && !S.zettel.weg) ? hinweisDesTages() : null;
-  if (hw) html += `<section class="abschnitt"><div class="hinweis" role="note"><p style="margin:0">${hw.html}</p><div class="zeile zwischen">${hw.knopf || ""}<button class="knopf klein leise" data-act="hinweis-weg" data-id="${hw.id}" data-fuer-immer="${hw.immer ? 1 : 0}">${hw.immer ? "Passt so" : "Danke"}</button></div></div></section>`;
-
-  // App aufs Handy legen
-  if (!istInstalliert() && S.onboard && h !== S.start && S.installKarte !== "nie" && (!S.installKarte || S.installKarte <= h) && S.eintraege.length >= 1)
-    html += `<section class="abschnitt"><div class="bogen streifen"><h3>Die App aufs Handy legen</h3><p class="klein">Dann findest du sie wie jede andere App auf dem Startbildschirm.</p><div class="zeile"><button class="knopf klein zweit" data-act="install">Anleitung zeigen</button><button class="knopf klein leise" data-act="install-spaeter">Später</button></div></div></section>`;
   html += telKarteHTML();
   html += `<p style="text-align:center;margin:18px 0 6px"><button class="link-knopf" data-act="wunsch-auf">Wunsch oder Idee für die App? Schreib Max!</button></p>`;
   html += `<p class="ersteller-fuss">Mit Liebe ausgedacht von Carlo Maximilian Engeländer für seine Patentante Rita</p>`;
@@ -178,6 +168,46 @@ function timerKarte() {
   return `<section class="abschnitt"><div class="bogen streifen k-geist"><h3>Timer: ${esc(T.name)}</h3><p class="klein">${T.pause ? "Pausiert." : rest > 0 ? `Läuft bis ${new Date(Date.now() + rest * 1000).toLocaleTimeString("de-DE", { hour: "2-digit", minute: "2-digit" })} Uhr.` : "Die Zeit ist um."}</p><button class="knopf zweit voll" data-act="timer-zeigen">${ic("uhr")} Timer öffnen</button></div></section>`;
 }
 
+/* ---------- „Neu für dich“: EIN Platz auf „Heute“, höchstens eine Karte am Tag (V1) ----------
+   Feste Rangfolge: Zettel (gilt nur heute) · neue Gönn-Karte · Hinweis auf die Sammlung (einmalig) · Hinweis des Tages
+   (Wochenrückblick am Sonntag, Pause nach viel Bewegung, Tageshinweis) · App aufs Handy legen.
+   Die erste gezeigte Karte gilt für den ganzen Tag. Ist sie weggelegt, kommt heute keine andere mehr –
+   außer etwas Wichtigeres taucht erst später auf (z. B. eine Gönn-Karte nach einem Eintrag). Zustand: S.neuFuer = { tag, id } */
+function neuOhneRahmen(html) { return String(html || "").replace(/^\s*<section class="abschnitt">/, "").replace(/<\/section>\s*$/, ""); }
+function neuFuerDichKandidaten(tf) {
+  const h = heute(), k = [];
+  try { if (typeof zettelHTML === "function") { const z = zettelHTML(); if (z) k.push({ id: "zettel", html: neuOhneRahmen(z) }); } } catch (e) { }
+  try { if (typeof gkHinweisHTML === "function") { const g = gkHinweisHTML(); if (g) k.push({ id: "gk:" + S.goenn.ausgestellt, html: neuOhneRahmen(g) }); } } catch (e) { }
+  try { const sm = sammlungHinweisHTML(); if (sm) k.push({ id: "sammlung", html: sm }); } catch (e) { }
+  const tagNr = Math.round((tagDatum(h) - tagDatum(S.start)) / 864e5);
+  const hw = tf && tagNr >= 3 && !postHeute() ? hinweisDesTages() : null;
+  if (hw) k.push({ id: "hw:" + hw.id, html: `<div class="hinweis" role="note"><p style="margin:0">${hw.html}</p><div class="zeile zwischen">${hw.knopf || ""}<button class="knopf klein leise" data-act="hinweis-weg" data-id="${hw.id}" data-fuer-immer="${hw.immer ? 1 : 0}">${hw.immer ? "Passt so" : "Danke"}</button></div></div>` });
+  if (!istInstalliert() && S.onboard && h !== S.start && S.installKarte !== "nie" && (!S.installKarte || S.installKarte <= h) && S.eintraege.length >= 1)
+    k.push({ id: "install", html: `<div class="bogen streifen"><h3>Die App aufs Handy legen</h3><p class="klein">Dann findest du sie wie jede andere App auf dem Startbildschirm.</p><div class="zeile"><button class="knopf klein zweit" data-act="install">Anleitung zeigen</button><button class="knopf klein leise" data-act="install-spaeter">Später</button></div></div>` });
+  return k;
+}
+function neuFuerDichHTML(tf) {
+  if (!S.onboard) return "";
+  const h = heute(), k = neuFuerDichKandidaten(tf); let n = S.neuFuer && typeof S.neuFuer === "object" ? S.neuFuer : null;
+  if (!k.length) return "";
+  const PRIO = { zettel: 0, gk: 1, sammlung: 2, hw: 3, install: 4 }, prio = id => PRIO[String(id).split(":")[0]] ?? 9;
+  let karte;
+  if (!n || n.tag !== h) karte = k[0];
+  else if (k[0].id !== n.id && prio(k[0].id) < prio(n.id)) karte = k[0]; // später dazugekommen und wichtiger
+  else karte = k.find(x => x.id === n.id) || null;                         // sonst: die Karte von heute oder (weggelegt) keine
+  if (!karte) return "";
+  if (!n || n.tag !== h || n.id !== karte.id) S.neuFuer = { tag: h, id: karte.id }; // wird beim nächsten speichern() mitgesichert
+  return `<section class="abschnitt neu-fuer-dich" aria-labelledby="nfd-h"><h2 id="nfd-h" class="nfd-kopf">Neu für dich</h2>${karte.html}</section>`;
+}
+/* Einmaliger Hinweis: Briefe, Setzkasten und Fundstücke liegen jetzt in „Meine Sammlung“ */
+function sammlungHinweisHTML() {
+  const sm = S.sammlung || {};
+  if (sm.offen || sm.hinweisWeg || !S.onboard) return "";
+  const hat = (S.maxBriefe && (S.maxBriefe.archiv || []).length) || (S.fundstuecke || []).length || (S.briefe || []).length || (S.goenn && (S.goenn.karten || []).length) || modell().ausfluege.length;
+  if (!hat) return "";
+  return `<div class="hinweis nfd-sammlung" role="note">${S.huhn ? `<span class="nfd-huhn" aria-hidden="true">${huhnSVG({ gr: 40, kopf: true })}</span>` : ""}<p style="margin:0">${A("Briefe von Max, Setzkasten und Fundstücke liegen jetzt zusammen unter „Zuhause“ in „Meine Sammlung“. Alles ist noch da.", "Briefe von Max, Setzkasten und Fundstücke liegen jetzt zusammen unter „Zuhause“ in „Meine Sammlung“. Alles ist noch da.")}</p><div class="zeile zwischen"><button class="knopf klein zweit" data-act="sammlung">Zur Sammlung</button><button class="knopf klein leise" data-act="sammlung-hinweis-weg">Danke</button></div></div>`;
+}
+
 /* ---------- Hinweis des Tages ---------- */
 function hinweisDesTages() {
   const h = heute(), d = tagDatum(h), weg = S.hinweis.weg || {};
@@ -200,33 +230,36 @@ function hinweisDesTages() {
 /* ============================================================
    IDEEN
    ============================================================ */
-/* Ideen als Schaufenster (Gestaltung C2): „Heute entdecken“ (neuer Karin-Brief hat Vorrang),
-   Drinnen/Draußen als Emaille-Türen, „Was es hier alles gibt“ mit Markisen-Fächern, Stöberkiste statt Schlagwortliste */
+/* Ideen als Schaufenster (Gestaltung C2, Umbau V4): „Heute entdecken“ (neuer Karin-Brief hat Vorrang) · Jetzt vielleicht ·
+   Notfallplan · EIN Raster mit den Überschriften „Drinnen“ und „Draußen“ (früher Türen UND Kacheln) · Stöberkiste hinter einem Knopf.
+   Kramladen und Tagebuch stehen nicht mehr hier: Sie haben ihren Platz unter „Zuhause“ bzw. „Rückblick“. */
 function cFunde() {
-  const A2 = (du, sie) => (typeof A === "function" ? A(du, sie) : du);
   const neuPost = typeof bvHeuteNeu === "function" && bvHeuteNeu();
   const f = [
-    { id: "tel", act: `data-act="fenster" data-ziel="tel-auf"`, icon: "telefon", ton: "falu", titel: "Kurz plaudern", text: "Mit Hühnchen, Christiane, Max und Co. – nur zum Spaß" },
-    { id: "post", act: `data-act="fenster" data-ziel="bv-auf"`, icon: "briefkasten", ton: "dala", titel: "Post aus Vimmerby", text: neuPost ? "Karin hat geschrieben – auf Schwedisch, mit Übersetzung" : "Briefe von Karin auf Schwedisch, mit Übersetzung", marke: neuPost ? "Neu" : "" },
-    { id: "tv", act: `data-act="fenster" data-ziel="tv-auf"`, icon: "fernseher", ton: "senf", titel: "Film & Fernsehen", text: "Krimis und gute Filme aus der Mediathek" },
-    { id: "buch", act: `data-act="fenster" data-ziel="lesebegleiter"`, icon: "buch", ton: "pflaume", titel: "Bücher & Hörbücher", text: "Dein Bücherregal, Tipps, das nächste Buch" },
-    { id: "winter", act: `data-act="fenster" data-ziel="wi-auf"`, icon: "tasse", ton: "petrol", titel: "Gut durch den Winter", text: "Tees, Ingwer-Tricks, Heizen und Lüften" },
-    { id: "angebote", act: `data-act="fenster" data-ziel="angebote"`, icon: "tassen", ton: "falu", titel: "Angebote in Spandau", text: "Konzerte, Treffs und Feste mit Terminen" },
-    { id: "bingo", act: `data-act="fenster" data-ziel="bingo-auf"`, icon: "bingo", ton: "moos", titel: "Forst-Bingo", text: "Hühnchens Karte für diese Woche" },
-    { id: "ausflug", act: `data-act="fenster" data-ziel="ausflug"`, icon: "rucksack", ton: "moos", titel: "Ausflug planen", text: "Von nah bis weit, mit Checkliste" },
-    { id: "tagebuch", act: `data-act="fenster" data-ziel="abend-zu"`, icon: "tagebuch", ton: "pflaume", titel: "Tagebuch", text: A2("Eine Frage für deinen Abend, was schön war, Farbe", "Eine Frage für Ihren Abend, was schön war, Farbe") },
-    { id: "wissen", act: `data-act="fenster" data-ziel="wissen"`, icon: "funke", ton: "senf", titel: "Wissen", text: "Kurze Häppchen, mit Quelle" },
-    { id: "vorhaben", act: `data-act="fenster" data-ziel="missionen"`, icon: "stern", ton: "dala", titel: "Kleine Vorhaben", text: "Ein paar Tage dranbleiben, mit Kästchen" }
+    { id: "buch", ort: "drinnen", act: `data-act="fenster" data-ziel="lesebegleiter"`, icon: "buch", ton: "pflaume", titel: "Lesen & Akte", text: "Bücherregal, Harry Potter, Akte Feuerkelch" },
+    { id: "tel", ort: "drinnen", act: `data-act="fenster" data-ziel="tel-auf"`, icon: "telefon", ton: "falu", titel: "Kurz plaudern", text: "Mit Hühnchen, Christiane, Max und Co." },
+    { id: "post", ort: "drinnen", act: `data-act="fenster" data-ziel="bv-auf"`, icon: "briefkasten", ton: "dala", titel: "Post aus Vimmerby", text: neuPost ? "Karin hat geschrieben – mit Übersetzung" : "Karin schreibt auf Schwedisch", marke: neuPost ? "Neu" : "" },
+    { id: "tv", ort: "drinnen", act: `data-act="fenster" data-ziel="tv-auf"`, icon: "fernseher", ton: "senf", titel: "Film & Fernsehen", text: "Krimis und Filme aus der Mediathek" },
+    { id: "winter", ort: "drinnen", act: `data-act="fenster" data-ziel="wi-auf"`, icon: "tasse", ton: "petrol", titel: "Gut durch den Winter", text: "Tees, Ingwer, Heizen und Lüften" },
+    { id: "wissen", ort: "drinnen", act: `data-act="fenster" data-ziel="wissen"`, icon: "funke", ton: "senf", titel: "Wissen", text: "Kurze Häppchen mit Quelle" },
+    { id: "erzaehl", ort: "drinnen", act: `data-act="fenster" data-ziel="lebensbuch"`, icon: "sprechen", ton: "pflaume", titel: "Erzähl\u00ADfragen", text: "Zum Plaudern, mit Max oder beim Kaffee" },
+    { id: "vorhaben", ort: "drinnen", act: `data-act="fenster" data-ziel="missionen"`, icon: "stern", ton: "dala", titel: "Kleine Vorhaben", text: "Ein paar Tage dranbleiben" },
+    ...(S.spiel && S.spiel.an ? [{ id: "spiel", ort: "drinnen", act: `data-act="fenster" data-ziel="spiel"`, icon: "karten", ton: "petrol", titel: "Wald\u00ADpatience", text: "Eine ruhige Runde Karten" }] : []),
+    { id: "timer", ort: "drinnen", act: `data-act="fenster" data-ziel="timer-neu"`, icon: "uhr", ton: "falu", titel: "Timer", text: "Eine Sache für ein paar Minuten" },
+    { id: "bingo", ort: "draussen", act: `data-act="fenster" data-ziel="bingo-auf"`, icon: "bingo", ton: "moos", titel: "Forst-Bingo", text: "Hühnchens Karte für diese Woche" },
+    { id: "ausflug", ort: "draussen", act: `data-act="fenster" data-ziel="ausflug"`, icon: "rucksack", ton: "moos", titel: "Ausflug planen", text: "Von nah bis weit, mit Checkliste" },
+    { id: "angebote", ort: "draussen", act: `data-act="fenster" data-ziel="angebote"`, icon: "tassen", ton: "falu", titel: "Angebote in Spandau", text: "Konzerte, Treffs und Feste" },
+    { id: "binger", ort: "draussen", act: `data-act="ziel" data-id="binger"`, icon: "haus", ton: "dala", titel: "In die Binger", text: "Zu Christiane und Micha" },
+    { id: "praktisch", ort: "draussen", act: `data-act="fenster" data-ziel="praktisch"`, icon: "schluessel", ton: "senf", titel: "Prak\u00ADtisches", text: "Taxi, Bus, Fahrdienste" }
   ];
-  if (S.spiel && S.spiel.an) f.push({ id: "spiel", act: `data-act="fenster" data-ziel="spiel"`, icon: "karten", ton: "petrol", titel: "Waldpatience", text: "Eine ruhige Runde Karten" });
-  f.push({ id: "laden", act: `data-act="fenster" data-ziel="laden"`, icon: "laden", ton: "falu", titel: "Kramladen", text: "Taler ausgeben: Bilder, Spiele, Kostüme" });
   return f;
 }
 function cTag() { return Math.round(tagDatum(heute()) / 864e5); }
+function cFachHTML(x) { return `<button class="c-fach c-fach-klein c-ton-${x.ton}" ${x.act} aria-label="${esc(x.titel + (x.marke ? " – " + x.marke : "") + ": " + x.text)}"><span class="c-fach-bild" aria-hidden="true">${ic(x.icon)}</span>${x.marke ? `<span class="ks-marke c-fach-marke">${esc(x.marke)}</span>` : ""}<span class="c-fach-titel">${esc(x.titel)}</span><span class="c-fach-text">${esc(x.text)}</span></button>`; }
 function viewIdeen() {
   const tf = S.tf[heute()] || "B";
   const form = D.tagesformen.find(f => f.id === tf);
-  const F = cFunde(), post = F.find(x => x.id === "post" && x.marke), top = post || F[cTag() % F.length];
+  const F = cFunde(), post = F.find(x => x.id === "post" && x.marke), wahl = F.filter(x => x.id !== "timer" && x.id !== "praktisch"), top = post || wahl[cTag() % wahl.length];
   const topTon = top.ton === "senf" || top.ton === "moos" ? "dala" : top.ton; // Drinnen = Senf, Draußen = Moos
   let html = `<div class="gruss c-kopf"><span class="c-kicker">Schaufenster</span><h1>Ideen</h1><div class="datum">${S.tf[heute()] ? `${A("Passend zu deinem Tag", "Passend zu Ihrem Tag")}: ${esc(form.name)}` : A("Für einen gemächlichen Tag", "Für einen gemächlichen Tag")}</div></div>`;
   html += `<section class="abschnitt"><button class="c-entdecken c-ton-${topTon}" ${top.act}>${top.marke ? `<span class="ks-marke c-entdecken-marke">Neuer Brief</span>` : ""}
@@ -234,17 +267,20 @@ function viewIdeen() {
     <span class="c-teller" aria-hidden="true">${ic(top.icon)}</span>
     <span class="c-titel">${esc(top.titel)}</span><span class="c-text">${esc(top.text)}</span>
     <span class="c-los">Anschauen${ic("pfeil", "pfeil")}</span></button></section>`;
-  html += `<section class="abschnitt"><div class="tueren-gross">
-    <button class="tuer-gross drinnen" data-act="tuer" data-v="drinnen"><span class="tg-bild" aria-hidden="true">${ic("lampe")}</span><span class="titel">Drinnen</span><span class="unter">Lesen, Telefon, Filme, Tee, Patience</span></button>
-    <button class="tuer-gross draussen" data-act="tuer" data-v="draussen"><span class="tg-bild" aria-hidden="true">${ic("rucksack")}</span><span class="titel">Draußen</span><span class="unter">Ausflüge, Bingo, Binger, Angebote</span></button>
-  </div>${notfallLeiste("ruhe-plan")}</section>`;
   const vorschl = vorschlaege(tf, 3, "ideen" + heute() + (S._mischen || 0));
   html += `<section class="abschnitt"><h2>Jetzt vielleicht</h2><div class="liste kurz-liste">${vorschl.map(v => zeileBtn(katIcon(v.kat, v), v.titel, ideeKurz(v), `data-act="idee" data-id="${v.id}"`, "k-geist")).join("")}</div>
-    <p class="c-mitte"><button class="knopf leise" data-act="mischen">Andere Ideen zeigen</button></p></section>`;
-  html += `<section class="abschnitt"><h2>Was es hier alles gibt</h2><div class="c-fenster">${F.filter(x => x !== top).map(x => `<button class="c-fach c-ton-${x.ton}" ${x.act}><span class="c-fach-bild" aria-hidden="true">${ic(x.icon)}</span>${x.marke ? `<span class="ks-marke c-fach-marke">${esc(x.marke)}</span>` : ""}<span class="c-fach-titel">${esc(x.titel)}</span><span class="c-fach-text">${esc(x.text)}</span></button>`).join("")}</div></section>`;
+    <p class="c-mitte"><button class="knopf leise" data-act="mischen">Andere Ideen zeigen</button></p>${notfallLeiste("ruhe-plan")}</section>`;
+  const raster = ort => F.filter(x => x.ort === ort && x !== top).map(cFachHTML).join("");
+  html += `<section class="abschnitt c-raster-drinnen"><h2 class="c-ort c-ort-drinnen">${ic("lampe")}Drinnen</h2><div class="c-fenster">${raster("drinnen")}</div><p class="klein c-wochenplan">${WOCHENPLAN}</p></section>`;
+  html += `<section class="abschnitt c-raster-draussen"><h2 class="c-ort c-ort-draussen">${ic("rucksack")}Draußen</h2><div class="c-fenster">${raster("draussen")}</div></section>`;
   const th = ideenThemen(), summe = th.reduce((a, [, n]) => a + n, 0);
-  html += `<section class="abschnitt c-stoeber"><h2>Stöberkiste</h2><p class="c-unter">${summe} kleine Ideen, nach Themen sortiert. Einfach reingreifen.</p><div class="c-setzkasten">${th.map(([k, n]) => `<button class="c-kasten" data-act="idee-thema" data-v="${esc(k)}">${ic(katIcon(k))}<span class="c-kasten-name">${esc(k)}</span><span class="c-kasten-zahl zahl">${n}</span></button>`).join("")}</div></section>`;
+  html += `<section class="abschnitt c-stoeber"><button class="kachel breit c-stoeber-knopf" data-act="stoeberkiste">${ic("kiste")}<span><span class="titel">Stöberkiste</span><br><span class="unter">${summe} kleine Ideen in ${th.length} Themen – einfach reingreifen</span></span>${ic("pfeil", "pfeil")}</button></section>`;
   return html;
+}
+/* Stöberkiste: die Themen als Setzkasten, eine Ebene tiefer */
+function stoeberkisteSheet() {
+  const th = ideenThemen(), summe = th.reduce((a, [, n]) => a + n, 0);
+  sheet({ titel: "Stöberkiste", id: "stoeber", inhalt: `<p class="klein" style="margin-top:0">${summe} kleine Ideen, nach Themen sortiert. Antippen, dann stehen sie da.</p><div class="c-setzkasten">${th.map(([k, n]) => `<button class="c-kasten" data-act="idee-thema" data-v="${esc(k)}">${ic(katIcon(k))}<span class="c-kasten-name">${esc(k)}</span><span class="c-kasten-zahl zahl">${n}</span></button>`).join("")}</div>` });
 }
 function tuerSheet(was) {
   const tf = S.tf[heute()] || "B";
@@ -277,13 +313,18 @@ const notfallLeiste = act => `<button class="notfall-leiste" data-act="${act}">$
 /* Ideen kurz anteasern: erster Satz und Dauer, der Volltext steht im Ideen-Blatt */
 function ideeKurz(v) { const t = String(v.text || ""), m = /^(.+?[.!?…])(\s|$)/.exec(t); return `${m ? m[1] : t}${v.min ? " · " + v.min + " Min." : ""}`; }
 const WOCHENPLAN = "Montags neue Bingo-Karte · Dienstags und freitags Post von Karin · Sonntags Christianes Rätsel und Max’ Wochenpost.";
-const THEMEN_REIHE = ["Handy", "Kreativ", "Krimi", "Schwedisch", "Geschichte", "Essen", "Tee & Wärme", "Gut geschützt", "Lesen", "Hören", "Musik", "Lernen", "Listen", "Erinnern", "Kontakt", "Körper", "Sinne", "Hände", "Ordnen"];
-function ideenThemen() { const z = {}; (D.stattDaddeln || []).forEach(v => { if (v.kat) z[v.kat] = (z[v.kat] || 0) + 1; }); return Object.entries(z).sort((a, b) => { const ia = THEMEN_REIHE.indexOf(a[0]), ib = THEMEN_REIHE.indexOf(b[0]); return (ia < 0 ? 99 : ia) - (ib < 0 ? 99 : ib); }); }
+/* Stöberkiste: 12 Themen statt 19. Max’ 10 Pflicht-Themen (die ersten zehn) bleiben mit Namen und eigenem Fach;
+   die kleinen Themen sind zusammengelegt. Die Ideen selbst (v.kat in den Daten) bleiben unverändert. */
+const THEMEN_REIHE = ["Handy", "Kreativ", "Krimi", "Schwedisch", "Geschichte", "Essen", "Tee & Wärme", "Gut geschützt", "Lesen", "Hören", "Körper & Sinne", "Neugier"];
+const THEMEN_GRUPPE = { "Hände": "Kreativ", "Erinnern": "Geschichte", "Musik": "Hören", "Körper": "Körper & Sinne", "Sinne": "Körper & Sinne", "Lernen": "Neugier", "Listen": "Neugier", "Ordnen": "Neugier", "Kontakt": "Neugier" };
+function themaVon(kat) { return THEMEN_GRUPPE[kat] || kat; }
+function ideenThemen() { const z = {}; (D.stattDaddeln || []).forEach(v => { if (v.kat) { const t = themaVon(v.kat); z[t] = (z[t] || 0) + 1; } }); return Object.entries(z).sort((a, b) => { const ia = THEMEN_REIHE.indexOf(a[0]), ib = THEMEN_REIHE.indexOf(b[0]); return (ia < 0 ? 99 : ia) - (ib < 0 ? 99 : ib); }); }
 function ideenThemaSheet(kat) {
-  const arr = (D.stattDaddeln || []).filter(v => v.kat === kat);
+  kat = themaVon(kat); // alte Themennamen (z. B. aus älteren Verweisen) landen im neuen Fach
+  const arr = (D.stattDaddeln || []).filter(v => themaVon(v.kat) === kat);
   sheet({ titel: kat, id: "thema", inhalt: `<p class="klein" style="margin-top:0">${arr.length} Ideen. Antippen, dann steht alles da.</p><div class="liste kurz-liste">${arr.map(v => zeileBtn(katIcon(v.kat, v), v.titel, ideeKurz(v), `data-act="idee" data-id="${v.id}"`, "k-geist")).join("")}</div>` });
 }
-function katIcon(kat, v) { { const k0 = (kat || "").toLowerCase(); if (k0.includes("krimi")) return "lupe"; if (k0.includes("körper")) return "matte"; if (k0.includes("hände")) return "pinsel"; } if (/list/i.test(kat || "")) return "feder"; if (v && /karte|brief|post/i.test(v.titel + v.text)) return "brief"; const k = (kat || "").toLowerCase(); if (k.includes("handy")) return "handy"; if (k.includes("tee")) return "waerme"; if (k.includes("geschützt")) return "schild"; if (k.includes("essen")) return "topf"; if (k.includes("krimi")) return "maske"; if (k.includes("kreativ")) return "pinsel"; if (k.includes("schwed")) return "sprechen"; if (k.includes("geschicht")) return "lesezeichen"; return k.includes("les") ? "buch" : k.includes("hör") ? "kopfhoerer" : k.includes("hand") || k.includes("händ") ? "pinsel" : k.includes("kontakt") ? "telefon" : k.includes("körper") ? "matte" : k.includes("sinn") ? "blume" : k.includes("erinn") ? "feder" : k.includes("ordn") ? "kiste" : k.includes("lern") ? "funke" : k.includes("musik") || k.includes("tanz") ? "note" : "stern"; }
+function katIcon(kat, v) { { const k0 = (kat || "").toLowerCase(); if (k0.includes("krimi")) return "lupe"; if (k0.includes("körper")) return "matte"; if (k0.includes("hände")) return "pinsel"; if (k0 === "neugier") return "funke"; } if (/list/i.test(kat || "")) return "feder"; if (v && /karte|brief|post/i.test(v.titel + v.text)) return "brief"; const k = (kat || "").toLowerCase(); if (k.includes("handy")) return "handy"; if (k.includes("tee")) return "waerme"; if (k.includes("geschützt")) return "schild"; if (k.includes("essen")) return "topf"; if (k.includes("krimi")) return "maske"; if (k.includes("kreativ")) return "pinsel"; if (k.includes("schwed")) return "sprechen"; if (k.includes("geschicht")) return "lesezeichen"; return k.includes("les") ? "buch" : k.includes("hör") ? "kopfhoerer" : k.includes("hand") || k.includes("händ") ? "pinsel" : k.includes("kontakt") ? "telefon" : k.includes("körper") ? "matte" : k.includes("sinn") ? "blume" : k.includes("erinn") ? "feder" : k.includes("ordn") ? "kiste" : k.includes("lern") ? "funke" : k.includes("musik") || k.includes("tanz") ? "note" : "stern"; }
 function vorschlaege(tf, n, key) {
   const pool = (D.stattDaddeln || []).filter(v => (v.tf || "ABCD").includes(tf) && (tf !== "D" || /Hören|Körper|Sinne|Musik|Lesen/.test(v.kat)) && (tf !== "C" || !/Ordnen/.test(v.kat)));
   const r = rnd(key), a = pool.slice();
@@ -303,24 +344,89 @@ function viewLichtung() {
   const w = wSumme();
   const anteil = naechste ? clamp((w - S0.w) / (naechste.w - S0.w), 0, 1) : 1;
   let html = `<div class="gruss"><h1>Zuhause</h1><div class="datum">${A("Dein Bild. Es wächst mit allem, was du einträgst.", "Ihr Bild. Es wächst mit allem, was Sie eintragen.")}</div></div>`;
-  html += `<section class="abschnitt"><div class="buehne" id="buehne-gross"><canvas id="bild-gross" role="img" aria-label="${esc(bildBeschreibung(M).join(" "))}"></canvas></div><p class="klein entdeck-hinweis${entdecktZahl() ? " gefunden" : ""}" id="entdeck-hinweis">${esc(entdecktZahl() ? entdecktText() : A("Tipp aufs Bild, dann erfährst du mehr – wo’s funkelt, passiert was. Finger drauf halten und herumfahren: Da versteckt sich noch mehr.", "Tippen Sie aufs Bild, dann erfahren Sie mehr – wo’s funkelt, passiert was. Finger drauf halten und herumfahren: Da versteckt sich noch mehr."))}</p></section>`;
+  // Unter dem Bild: der Lupen-Tipp, bis zum ersten Fund (danach zählt die Sammlung) – und das Bild in Worten (Barrierefreiheit)
+  html += `<section class="abschnitt"><div class="buehne" id="buehne-gross"><canvas id="bild-gross" role="img" aria-label="${esc(bildBeschreibung(M).join(" "))}"></canvas></div>${entdecktZahl() ? "" : `<p class="klein entdeck-hinweis" id="entdeck-hinweis">${esc(A("Tipp aufs Bild, dann erfährst du mehr – wo’s funkelt, passiert was. Finger drauf halten und herumfahren: Da versteckt sich noch mehr.", "Tippen Sie aufs Bild, dann erfahren Sie mehr – wo’s funkelt, passiert was. Finger drauf halten und herumfahren: Da versteckt sich noch mehr."))}</p>`}<p class="bild-worte"><button class="link-knopf" data-act="bildliste">Das Bild in Worten</button></p></section>`;
   if (typeof zuhauseZusatz === "function") html += zuhauseZusatz(); // Funkeln, Wetter im Bild, Kleiderschrank (skins.js)
   html += `<section class="abschnitt"><div class="bogen stufe-karte"><div class="stufe-nr">Stufe ${st + 1} von ${D.stufen.length}</div><h2>${esc(S0.name)}</h2><p>${esc(S0.text)}</p>
-    ${naechste ? `<div class="fortschritt" role="img" aria-label="Weg zur nächsten Stufe"><i style="width:${Math.round(anteil * 100)}%"></i></div><p class="klein" style="margin-top:6px">Als Nächstes: ${esc(naechste.name)}</p>` : `<p class="klein">Das Bild wächst weiter mit allem, was du tust.</p>`}</div>`;
-  if (M.km > 0) { const ziel = [...D.massstab].reverse().find(z => M.km >= z.km); html += `<div class="bogen streifen k-bewegung"><p style="margin:0"><span class="zahl" style="font-weight:700">${fmt(M.km)} km</span> gegangen${ziel ? ` – so weit wie ${esc(ziel.ziel)}` : ""}.</p>${massstabZeile(M.km)}</div>`; }
-  html += `</section>`;
-  // Zuhause = Bild und Sammlung (Wissen und Erzählfragen stehen jetzt unter Ideen › Drinnen)
-  html += `<section class="abschnitt"><h2>Rund ums Bild</h2><div class="liste">
-    ${zeileBtn("treppe", "Alle Stufen", "Was schon dazugekommen ist", `data-act="stufen"`)}
-    ${zeileBtn("liste", "Bild als Liste", "Was im Bild zu sehen ist, in Worten", `data-act="bildliste"`)}
-    ${zeileBtn("setzkasten", "Setzkasten", M.ausfluege.length ? `${M.ausfluege.length} ${M.ausfluege.length === 1 ? "Andenken" : "Andenken"} von Ausflügen` : "Andenken von Ausflügen", `data-act="setzkasten"`, "k-draussen")}
-    ${typeof fundZeileHTML === "function" ? fundZeileHTML() : ""}
-    ${typeof zuhauseZusatz === "function" ? "" : zeileBtn("kiste", "Kramladen", `Sachen fürs Bild, Spiele, Klänge · ${talerText(talerStand())}`, `data-act="laden"`, "k-mut")}</div></section>`;
-  if (typeof mbZuhauseHTML === "function") html += mbZuhauseHTML(); // Briefe von Max (maxbriefe.js)
+    ${naechste ? `<div class="fortschritt" role="img" aria-label="Weg zur nächsten Stufe"><i style="width:${Math.round(anteil * 100)}%"></i></div><p class="klein" style="margin-top:6px">Als Nächstes: ${esc(naechste.name)}</p>` : `<p class="klein">Das Bild wächst weiter mit allem, was du tust.</p>`}</div></section>`;
+  // Meine Sammlung (V2): Briefe, Setzkasten, Fundstücke, Gönn-Karten, Entdeckt, Glühwürmchen, Stufen, km – eine Karte statt sechs Zeilen
+  html += sammlungKarteHTML();
+  if (typeof zuhauseZusatz !== "function") html += `<section class="abschnitt"><div class="liste">${zeileBtn("kiste", "Kramladen", `Sachen fürs Bild, Spiele, Klänge · ${talerText(talerStand())}`, `data-act="laden"`, "k-mut")}</div></section>`;
   const gekauft = gekaufteInhalteZeilen();
   if (gekauft) html += `<section class="abschnitt"><h2>Gekauft im Kramladen</h2><div class="liste">${gekauft}</div></section>`;
   return html;
 }
+/* ---------- Meine Sammlung (V2) ----------
+   Alles, was nur zählt oder aufbewahrt, liegt hier – nichts wurde gelöscht, alle Zahlen und Archive bleiben.
+   Zustand: S.sammlung = { offen: erster Besuch (Tag), hinweisWeg: Hinweis auf „Heute“ weggelegt (Tag) } */
+function sammlungS() { if (!S.sammlung || typeof S.sammlung !== "object" || Array.isArray(S.sammlung)) S.sammlung = {}; return S.sammlung; }
+function sammlungDaten() {
+  const M = modell(), h = heute();
+  const briefe = (S.maxBriefe && Array.isArray(S.maxBriefe.archiv)) ? S.maxBriefe.archiv.length : 0, post = (S.briefe || []).length;
+  const funde = (S.fundstuecke || []).length, siege = Number(S.tschuessSiege) || 0, gk = S.goenn && Array.isArray(S.goenn.karten) ? S.goenn.karten.length : 0;
+  let ent = 0, entG = 0; try { ent = entdecktZahl(); entG = entdeckFest().length; } catch (e) { }
+  const fundNeu = (S.fundstuecke || []).some(x => x && x.tag === h), gkNeu0 = !!(S.goenn && typeof gkNeu === "function" && gkNeu());
+  return { M, briefe, post, funde, siege, gk, ent, entG, andenken: M.ausfluege.length, gluehw: M.mut || 0, km: M.km || 0, fundNeu, gkNeu: gkNeu0 };
+}
+const zahlWort = (n, eins, mehr) => `${n} ${n === 1 ? eins : mehr}`;
+function sammlungKarteHTML() {
+  const d = sammlungDaten(), z = [];
+  if (d.funde) z.push(zahlWort(d.funde, "Fundstück", "Fundstücke"));
+  if (d.briefe) z.push(zahlWort(d.briefe, "Brief von Max", "Briefe von Max"));
+  if (d.andenken) z.push(zahlWort(d.andenken, "Andenken", "Andenken"));
+  if (d.gk) z.push(zahlWort(d.gk, "Gönn-Karte", "Gönn-Karten"));
+  if (d.gluehw) z.push(zahlWort(d.gluehw, "Glühwürmchen", "Glühwürmchen"));
+  const neu = d.fundNeu;
+  return `<section class="abschnitt"><button class="kachel breit sammlung-kachel" data-act="sammlung">${ic("setzkasten")}<span class="sk-text"><span class="titel">Meine Sammlung</span><span class="unter">Briefe, Andenken, Fundstücke und mehr</span>${z.length ? `<span class="sk-zahlen">${esc(z.join(" · "))}</span>` : ""}</span>${neu ? `<span class="ks-marke sk-neu">Neu</span>` : ""}${ic("pfeil", "pfeil")}</button></section>`;
+}
+function sammlungInhalt() {
+  const d = sammlungDaten(), sm = sammlungS(), M = d.M, st = stufe();
+  const fach = (icon, name, zahl, act, neu) => `<button class="c-kasten sm-fach" ${act}>${ic(icon)}<span class="c-kasten-name">${esc(name)}</span><span class="sm-zahl">${esc(zahl)}</span>${neu ? `<span class="ks-marke sm-neu">Neu</span>` : ""}</button>`;
+  let h = "";
+  if (!sm.offen && S.huhn) h += `<div class="huhn-karte sm-huhn">${huhnSVG({ gr: 64, stimmung: "spricht" })}<div class="sprechblase"><span class="wer">Hühnchen</span>Hab aufgeräumt. Alles noch da – nur ordentlicher. Ich bin sehr stolz.</div></div>`;
+  h += `<p class="klein" style="margin-top:0">${A("Was du in der App gesammelt hast, liegt hier zusammen. Antippen zum Ansehen.", "Was Sie in der App gesammelt haben, liegt hier zusammen. Antippen zum Ansehen.")}</p><div class="c-setzkasten sm-kasten">`;
+  h += fach("brief", "Briefe von Max", d.briefe ? zahlWort(d.briefe, "Brief", "Briefe") : "noch keiner", `data-act="mb-ablage"`);
+  if (d.post) h += fach("brief", "Kurze Post", zahlWort(d.post, "Zettel", "Zettel"), `data-act="rb-kurzepost"`);
+  h += fach("setzkasten", "Setzkasten", d.andenken ? `${zahlWort(d.andenken, "Andenken", "Andenken")} von Ausflügen` : "Andenken von Ausflügen", `data-act="setzkasten"`);
+  h += fach("stern", "Fund\u00ADstücke", d.funde || d.siege ? `${zahlWort(d.funde, "Sache", "Sachen")} gefunden` : "noch nichts", `data-act="rb-funde"`, d.fundNeu);
+  h += fach("geschenk", "Gönn-Karten", d.gk ? zahlWort(d.gk, "Karte", "Karten") : "kommen von allein", `data-act="gk-auf"`, d.gkNeu);
+  h += fach("lupe", "Im Bild entdeckt", d.entG ? `${d.ent} von ${d.entG}` : "", `data-act="sm-bild"`);
+  h += fach("funke", "Glüh\u00ADwürmchen", d.gluehw ? `${d.gluehw} im Bild` : "noch keins", `data-act="sm-gluehw"`);
+  h += fach("lichtung", "Alle Stufen", `Stufe ${st + 1} von ${D.stufen.length}`, `data-act="stufen"`);
+  h += `</div>`;
+  if (d.km > 0) { const ziel = [...D.massstab].reverse().find(z => d.km >= z.km); h += `<h3 style="margin-top:18px">Unterwegs</h3><button class="bogen streifen k-bewegung sm-km" data-act="sm-km"><p style="margin:0"><span class="zahl" style="font-weight:700">${fmt(d.km)} km</span> gegangen${ziel ? ` – so weit wie ${esc(ziel.ziel)}` : ""}.</p>${massstabZeile(d.km)}</button>`; }
+  h += `<div class="liste" style="margin-top:14px">${zeileBtn("liste", "Das Bild in Worten", "Was im Bild zu sehen ist, als Liste", `data-act="bildliste"`)}</div>`;
+  return h;
+}
+function sammlungSheet() {
+  const sm = sammlungS(), erst = !sm.offen;
+  sheet({ titel: "Meine Sammlung", id: "sammlung", inhalt: sammlungInhalt(), onclose: () => setTimeout(() => { if (!SHEETS.length) render({ halteScroll: true, ohneAnim: true }); }, 250) });
+  if (erst) { sm.offen = heute(); speichern(); }
+}
+/* Aus Briefen, Rundgang und Hinweisen: erst die Sammlung, darüber das Fach – „Schließen“ führt zurück in die Sammlung */
+function sammlungFach(los) {
+  const auf = () => { const sh = aktuellesSheet(); if (!sh || sh.dataset.id !== "sammlung") sammlungSheet(); if (los) setTimeout(los, 260); };
+  if (SHEETS.length) { alleSheetsZu(); setTimeout(() => { if (TAB !== "lichtung") wechsleTab("lichtung"); setTimeout(auf, 120); }, 260); }
+  else { if (TAB !== "lichtung") wechsleTab("lichtung"); setTimeout(auf, 120); }
+}
+function gluehwSheet() {
+  const n = modell().mut || 0;
+  sheet({ titel: "Glühwürmchen", inhalt: `<p>${n ? `Im Bild leuchten ${n === 1 ? "ein Glühwürmchen" : n + " Glühwürmchen"} am Waldrand und über der Wiese – am besten zu sehen, wenn es dunkel ist.` : "Am Waldrand im Bild ist noch Platz für Glühwürmchen."}</p><p class="klein">Ein neues kommt von allein dazu, wenn du „Etwas zum ersten Mal gemacht“ oder „E-Roller gefahren“ einträgst.</p>` });
+}
+function umbauAktion(a, d, el) {
+  switch (a) {
+    case "sammlung": { const sh = aktuellesSheet(); if (sh && sh.dataset.id === "sammlung") return true; if (SHEETS.length) { alleSheetsZu(); setTimeout(sammlungSheet, 260); } else sammlungSheet(); haptik("auswahl"); return true; }
+    case "sammlung-hinweis-weg": sammlungS().hinweisWeg = heute(); speichern(); haptik("auswahl"); render({ halteScroll: true, ohneAnim: true }); return true;
+    case "sm-bild": alleSheetsZu(); setTimeout(() => { if (TAB !== "lichtung") wechsleTab("lichtung"); setTimeout(() => { const b = $("#buehne-gross"); if (b) b.scrollIntoView({ block: "center", behavior: REDUCED() ? "auto" : "smooth" }); toast(A("Finger aufs Bild halten und herumfahren – das ist die Lupe.", "Finger aufs Bild halten und herumfahren – das ist die Lupe.")); }, 160); }, 260); return true;
+    case "sm-gluehw": gluehwSheet(); return true;
+    case "sm-km": ortSheet({ ort: "hochsitz" }); return true;
+    case "stoeberkiste": stoeberkisteSheet(); return true;
+  }
+  return false;
+}
+/* In den zentralen Weg (main.js aktion) einhängen – erst nach dem Laden aller Dateien, main.js kommt nach views.js */
+setTimeout(() => { if (typeof aktion !== "function") return; const alt = aktion; aktion = function (a, d, el, ev) { try { if (umbauAktion(a, d || {}, el)) return; } catch (e) { console.warn(e); return; } return alt(a, d, el, ev); }; }, 0);
+
 function massstabZeile(km) {
   const n = D.massstab.findIndex(z => z.km > km); const a = D.massstab[Math.max(0, n - 1)], b = D.massstab[n];
   if (!b) return "";
@@ -353,7 +459,7 @@ function viewTagebuch() {
 function wochenZahlen(h) {
   const d = tagDatum(h), mo = tagPlus(h, -((d.getDay() + 6) % 7));
   const es = S.eintraege.filter(e => e.tag >= mo && e.tag <= h);
-  const gesamt = h === heute() ? hakenDieseWoche() : es.length; // eine Zählung: dieselbe Zahl wie die Strichliste auf Heute
+  const gesamt = h === heute() ? hakenDieseWoche() : es.length; // eine Zählung: dieselbe Zahl wie die Strichliste im Rückblick
   if (!es.length && !gesamt) return [];
   const km = es.filter(e => tat(e.t).art === "km").reduce((s, e) => s + (e.km || 0), 0);
   const lesen = es.filter(e => tat(e.t).bild === "eiche").reduce((s, e) => s + (e.min || 0), 0);
@@ -417,7 +523,8 @@ function eintragenInhalt() {
   // Zusätze nur, wo sie passen
   const zusatz = [];
   if (t.draussenOpt) zusatz.push(schalter(E.draussen, "Draußen gemacht", `data-act="umschalt" data-f="draussen"`, "Frische Luft zählt im Bild etwas mehr."));
-  if (t.mutOpt) zusatz.push(schalter(E.mut, "Hat Mut gebraucht", `data-act="umschalt" data-f="mut"`, "Neu oder ungewohnt? Dann leuchtet ein Glühwürmchen mehr im Wald."));
+  // Kein Schalter „Hat Mut gebraucht“ mehr (V2): Glühwürmchen kommen von allein („Etwas zum ersten Mal gemacht“, „E-Roller“).
+  // Ältere Einträge mit e.mut zählen weiter (core.js modell), beim Ändern bleibt die Markierung im Entwurf erhalten.
   if (t.muehOpt) zusatz.push(schalter(E.anstrengend, "War ein bisschen anstrengend", `data-act="umschalt" data-f="anstrengend"`, "Dann zählt es ein Stück mehr."));
   if (zusatz.length) h += `<div class="zusaetze">${zusatz.join("")}</div>`;
   // Bewegung und Mut: „Wie ging’s dir danach?“ – freiwillig, höchstens einmal am Tag
@@ -612,22 +719,7 @@ function zurueckInhalt() {
 
 /* ---------- Kramladen ---------- */
 function ladenSheet() { sheet({ titel: "Kramladen", inhalt: ladenInhalt(), id: "laden" }); }
-function ladenInhalt() {
-  if (typeof kramladenInhalt === "function") return kramladenInhalt(); // Laden mit Abteilungen (skins.js)
-  const t = talerStand();
-  let html = `<div class="bogen mulde zeile zwischen"><span><span style="font-weight:700" class="zahl">${talerText(t)}</span><br><span class="klein">Taler kommen von allem, was du einträgst. Sie verfallen nie.</span></span>${ic("laden")}</div>`;
-  const gruppen = [...new Set(D.laden.map(x => x.gruppe))];
-  for (const g of gruppen) {
-    html += `<h3 style="margin-top:18px">${esc(g)}</h3><div class="liste">`;
-    html += D.laden.filter(x => x.gruppe === g).map(x => {
-      const hat = S.gekauft[x.id];
-      return `<div class="bogen" style="padding:14px 16px"><div class="zeile" style="align-items:flex-start">${ic(x.icon)}<div style="flex:1"><div style="font-weight:700">${esc(x.name)}</div><div class="klein">${esc(x.text)}</div></div></div>
-        <div style="margin-top:10px">${hat ? `<span class="klein" style="font-weight:700;color:var(--moos)">${ic("haken")} Gehört dir</span>${ladenOeffnen(x.id)}` : `<button class="knopf klein ${t >= x.preis ? "zweit" : "rand"}" data-act="kaufen" data-id="${x.id}" ${t >= x.preis ? "" : "disabled"}>${t >= x.preis ? `Für ${x.preis} Taler kaufen` : `${x.preis} Taler · noch ${Math.ceil(x.preis - t)} sammeln`}</button>`}</div></div>`;
-    }).join("");
-    html += `</div>`;
-  }
-  return html;
-}
+function ladenInhalt() { return typeof kramladenInhalt === "function" ? kramladenInhalt() : ""; } // Laden mit Abteilungen (skins.js/laden2.js)
 function ladenOeffnen(id) {
   const m = { gedichte1: "lesen", gedichte2: "lesen", rezepte1: "lesen", rezepte2: "lesen", rezepte3: "lesen", briefe: "lesen", fragen: "lesen", tanzkarten: "lesen" };
   if (m[id]) return ` <button class="knopf klein leise" data-act="lesen" data-was="${id}">Öffnen</button>`;
@@ -635,10 +727,6 @@ function ladenOeffnen(id) {
   if (id === "patience") return ` <button class="knopf klein leise" data-act="spiel">Spielen</button>`;
   if ((D.gutscheine || []).some(g => g.id === id)) return ` <button class="knopf klein leise" data-act="gutschein" data-id="${id}">Einlösen</button>`;
   return "";
-}
-function kaufenFrage(id) {
-  const x = D.laden.find(y => y.id === id);
-  sheet({ titel: x.name, inhalt: `<p>${esc(x.text)}</p><p>Für <span style="font-weight:700">${x.preis} Taler</span> kaufen? ${A("Danach gehört es dir.", "Danach gehört es Ihnen.")}</p>`, fuss: `<div class="stapel"><button class="knopf haupt voll" data-act="kaufen-ja" data-id="${id}">Ja, kaufen</button><button class="knopf leise" data-act="sheet-zu">Doch nicht</button></div>` });
 }
 
 /* ---------- Lesestoff aus dem Laden ---------- */
@@ -712,10 +800,6 @@ function wissenSheet() {
 function lebensbuchSheet() {
   const f = D.lebensbuch || [];
   sheet({ titel: "Erzählfragen", inhalt: `<p class="klein">Fragen zum Plaudern – beim Kaffee, am Telefon oder mit Max. Nichts davon muss.</p>` + f.map(x => `<div class="bogen"><p style="font-family:var(--f-stimme);font-weight:600">${esc(x.frage)}</p><p class="klein">${x.mit === "zusammen" ? "Zum Erzählen" : "Zum Aufschreiben"}</p><textarea class="text" data-lb="${x.id}" placeholder="Wenn du magst …">${esc(S.lebensbuch[x.id] || "")}</textarea></div>`).join("") });
-}
-function momentSheet() {
-  const h = heute();
-  sheet({ titel: "Schönster Moment heute", inhalt: `<p>Was war heute schön? Ein Satz reicht.</p><textarea id="moment-text" class="text" placeholder="z. B. Sonne auf dem Balkon">${esc(S.momente[h] || "")}</textarea>`, fuss: `<button class="knopf haupt voll" data-act="moment-speichern">${ic("haken")} Aufschreiben</button>` });
 }
 function rueckblickSheet() {
   const h = heute(), d = tagDatum(h), mo = tagPlus(h, -((d.getDay() + 6) % 7));
@@ -922,12 +1006,13 @@ function erklaerungSheet() {
     <div class="bogen"><h3>Notfallplan</h3><p style="margin:0">Unter „Ideen“ und bei „Ablenkung?“ liegt dein Notfallplan: für Momente mit Unruhe, Anspannung und dergleichen. Was drinsteht, bestimmst du. Ab und zu üben, dann sitzt er.</p></div>` });
 }
 
-/* ---------- Meine Liste (Ritas eigene Abhak-Liste) ---------- */
+/* ---------- Meine Liste (Ritas eigene Abhak-Liste) ----------
+   Die Strichliste der Woche steht seit dem Umbau (V1) nur noch im Rückblick unter „Diese Woche“ (rueckblick.js). */
 let LISTE_EDIT = false;
 function listeHTML() {
   const L = S.liste || [], h = heute();
   const offen = L.filter(x => !x.erledigt), heuteFertig = L.filter(x => x.erledigt === h);
-  return `<section class="abschnitt"><div class="zeile zwischen"><h2 style="margin:0">Meine To-do-Liste</h2><button class="knopf klein leise frage-knopf" data-act="liste-hilfe" aria-label="Wofür ist die To-do-Liste?">${ic("frage")}</button></div>${(() => { const n = hakenDieseWoche(); return n ? `<div class="klein zeile" style="gap:10px;margin-top:6px;flex-wrap:wrap" aria-label="Diese Woche: ${n} Sachen geschafft">${strichHTML(n)}<span>Diese Woche: ${n} ${n === 1 ? "Sache" : "Sachen"} geschafft</span></div>` : ""; })()}
+  return `<section class="abschnitt"><div class="zeile zwischen"><h2 style="margin:0">Meine To-do-Liste</h2><button class="knopf klein leise frage-knopf" data-act="liste-hilfe" aria-label="Wofür ist die To-do-Liste?">${ic("frage")}</button></div>
     <div class="liste" style="margin-top:10px">${LISTE_EDIT ? offen.map(x => `<div class="zeile liste-edit"><input class="text" data-liste-text="${x.id}" value="${esc(x.text)}" aria-label="Punkt umbenennen"><button class="knopf zweit" data-act="liste-weg" data-id="${x.id}" aria-label="${esc(x.text)} löschen">${ic("schliessen")}</button></div>`).join("") : offen.map(x => `<button class="liste-zeile" data-act="liste-hak" data-id="${x.id}" aria-pressed="false" aria-label="${esc(x.text)} – offen, antippen zum Abhaken">${ic("box")}<span class="text"><span class="titel">${esc(x.text)}</span></span></button>`).join("")}
     ${heuteFertig.map(x => `<button class="liste-zeile" data-act="liste-zurueck" data-id="${x.id}" style="opacity:.75" aria-pressed="true" aria-label="${esc(x.text)} – abgehakt, antippen zum Zurücknehmen">${ic("boxhaken")}<span class="text"><span class="titel" style="text-decoration:line-through">${esc(x.text)}</span></span></button>`).join("")}</div>
     ${offen.length ? `<button class="knopf klein leise" data-act="liste-edit" style="margin-top:4px">${LISTE_EDIT ? "Fertig" : "Liste bearbeiten"}</button>` : ""}<div class="zeile" style="margin-top:10px"><input id="liste-neu" class="text" placeholder="Was steht an?" aria-label="Neuer Punkt für die To-do-Liste" style="min-height:56px"><button class="knopf zweit" data-act="liste-neu" aria-label="Auf die Liste setzen">${ic("plus")}</button></div></section>`;
@@ -1053,26 +1138,6 @@ function postHeute() {
   if (x && x.tag === h && !x.gelesen) return { wer: x.wer, text: x.text, extra: true, offen: !!x.offen };
   const p = maxPost(); if (p && S.postGelesen !== h) return { wer: "max", text: p, offen: S.postOffen === h };
   return null;
-}
-
-/* Rückblick-Extras: Wann zuletzt, vor einem Monat, Stichworte fürs Tagebuch, Fundstücke */
-function rueckblickExtras(h) {
-  let html = "";
-  // Wann zuletzt? (ohne Wertung)
-  const zuletzt = [];
-  // nur Tätigkeiten, keine Personen: kein stilles Kontakt-Messen
-  const aus = [...S.eintraege].reverse().find(x => x.t === "ausflug"); if (aus) zuletzt.push([`Ausflug: ${aus.titel}`, aus.tag]);
-  const gang = [...S.eintraege].reverse().find(x => tat(x.t).art === "km"); if (gang) zuletzt.push(["Spaziergang", gang.tag]);
-  const tanz = [...S.eintraege].reverse().find(x => x.t === "tanzstunde"); if (tanz) zuletzt.push(["Tanzstunde", tanz.tag]);
-  if (zuletzt.length) html += `<section class="abschnitt"><details class="bogen" data-id="zuletzt"><summary style="font-weight:700;cursor:pointer;min-height:44px;display:flex;align-items:center">${ic("uhr")}&nbsp; Wann war das zuletzt?</summary><div style="margin-top:8px">${zuletzt.map(([n, t]) => `<p style="margin:4px 0">${esc(n)} <span class="klein">· ${t === h ? "heute" : t === tagPlus(h, -1) ? "gestern" : datumLang(t)}</span></p>`).join("")}</div></details></section>`;
-  // Vor einem Monat
-  const vm = (() => { const d = tagDatum(h), t = d.getDate(); d.setDate(1); d.setMonth(d.getMonth() - 1); d.setDate(Math.min(t, new Date(d.getFullYear(), d.getMonth() + 1, 0).getDate())); return tagVon(d); })();
-  const vmE = eintraegeAm(vm);
-  if (vmE.length || S.momente[vm]) html += `<section class="abschnitt"><div class="bogen"><h3>Heute vor einem Monat</h3><p style="margin:0">${esc([...new Set(vmE.map(e => e.t === "abgehakt" ? e.notiz : tat(e.t).name))].join(" · "))}${S.momente[vm] ? `<br><span class="serif">„${esc(S.momente[vm])}“</span>` : ""}</p></div></section>`;
-  // Fundstücke
-  const f = S.fundstuecke || [];
-  if (f.length || S.tschuessSiege) html += `<section class="abschnitt"><details class="bogen" data-id="funde"><summary style="font-weight:700;cursor:pointer;min-height:44px;display:flex;align-items:center">${ic("stern")}&nbsp; Fundstücke (${f.length})</summary>${S.tschuessSiege ? `<p class="klein" style="margin-top:8px">Tschüss-Duell: ${S.tschuessSiege}× zuerst aufgelegt.</p>` : ""}${f.map(x => `<p style="margin:10px 0 0"><span class="klein" style="font-weight:700">${esc(EI_WER[x.wer] || "")} · ${datumLang(x.tag)}</span><br>${esc(x.text)}</p>`).join("")}</details></section>`;
-  return html;
 }
 
 /* Abendkarte: den Tag mit ein paar Tipps nachtragen */

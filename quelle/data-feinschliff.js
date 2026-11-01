@@ -5,11 +5,9 @@
   if (D.missionen) D.missionen = D.missionen.filter(m => m.id !== "M04" && m.id !== "M30" && m.t !== "tanzplanen");
   if (D.wissen) { D.wissen = D.wissen.filter(w => !["W03", "W06", "W14", "W15", "W19"].includes(w.id));
     D.wissen.forEach(w => { if (w.text) w.text = w.text.replace(/ ?[–(,]? ?etwa einem Nachbarn Tanzen beibringt ?[–),]?/g, "").replace(/einem Nachbarn Tanz[a-zäöü ]*beibringen/g, "anderen helfen"); }); }
-  (D.monate || []).forEach(m => (m.impulse || []).forEach(i => { if (i.drinnen) i.drinnen = i.drinnen.replace(" und eine Figur für die Tanzstunde „stehlen“", ""); }));
   if (D.timerVorlagen) D.timerVorlagen = D.timerVorlagen.filter(v => v.id !== "tanzplanen");
   (D.gruppen || []).forEach(g => { g.ids = g.ids.filter(i => i !== "tanzplanen"); if (g.ids.includes("tanzstunde")) g.ids = g.ids.filter(i => i !== "tanzstunde").concat("tanzstunde"); });
   if (D.orte?.tanz) Object.assign(D.orte.tanz, { name: "Musik im Haus", text: "Musik und Tanzstunden finden drinnen statt. Man sieht es trotzdem: Mit der Zeit hängt eine Lichterkette an deinem Balkon." });
-  if (D.huehnchenOrt) D.huehnchenOrt.tanz = "Hühnchen sitzt heute unterm Balkon und wippt mit.";
   (D.stufen || D.meilensteine || []).forEach(s => { if (s.el === "schnur") Object.assign(s, { name: "Die Lichterkette", text: "An deinem Balkon hängt eine Lichterkette. Drinnen läuft Musik." }); if (s.el === "pavillon") s.text = "Zwischen den Häusern steht ein kleiner Pavillon. Darunter ist Platz für Gäste."; });
 })();
 

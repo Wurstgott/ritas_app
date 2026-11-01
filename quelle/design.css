@@ -1,6 +1,6 @@
 /* ============================================================
    Entwurf C2 – „Skandinavisch-Vintage / Kramladen“
-   Wird als letzte CSS-Datei geladen (build.py: nach feedback.css).
+   Wird nach feedback.css und hp.css geladen; danach folgen noch weitere Dateien (Reihenfolge: Liste CSS in build.py).
    Ordnung: 1 Token · 2 Schrift · 3 Grundformen (Etikett, Schild)
             4 Heute · 5 Listen/Chips · 6 Tagebuch · 7 Navigation · 8 Kramladen
             9 Kleiderschrank · 10 Ideen · 11 Notfallplan · 12 Schriftgröße 3 · 13 Sonstiges
@@ -192,7 +192,6 @@ nav.tabs .fb-tabzeiger { top: 0; height: 3px; border-radius: 0 0 3px 3px; }
 .preis-schild::before { left: 6px; width: 5px; height: 5px; margin-top: -2.5px; background: var(--bogen); box-shadow: inset 0 0 0 1px rgba(90,60,10,.4); }
 .preis-schild:not(.geht) { opacity: 1; background: var(--mulde); color: var(--tinte-2); }
 .regal-brett { height: 10px; border-radius: 2px; background: var(--holz); box-shadow: 0 3px 0 rgba(0,0,0,.18); }
-.ware-kachel.breit .ware-bild.schrank-bild { width: auto; height: auto; border-radius: 50px; padding: 6px 18px 0; background: var(--teller); box-shadow: inset 0 0 0 1.5px var(--teller-rand); }
 .ware-gross .ware-svg { width: 120px; height: 120px; }
 .laden-tuer { border-radius: 18px 18px 12px 12px; box-shadow: inset 0 0 0 1.5px var(--linie-fein), var(--kante); }
 .lt-titel { font-size: 1rem; color: var(--tinte); overflow-wrap: normal; hyphens: auto; }
@@ -375,3 +374,65 @@ html[data-size="3"] .bogen.mulde.zeile.zwischen:has(.tf-kurz) > .knopf { align-s
 /* ---------- 14  Neue Teile (Übernahme) ---------- */
 .ereignis-zu { width: 48px; height: 48px; }          /* Tippziel ≥ 44 px, auch während der Einblend-Animation */
 html[data-size="3"] .gk-titel { font-size: 1.05rem; white-space: nowrap; }
+
+/* ---------- 15  Umbau 1.11. (V1, V2, V4): Neu für dich · Meine Sammlung · Ideen-Raster ----------
+   Nur vorhandene Tokens (Dorfladen). Alles Klickbare ist position: relative (HAPSEL, feedback.js). */
+/* „Neu für dich“ auf „Heute“: ein einziger Platz, eine Karte */
+.neu-fuer-dich > .nfd-kopf { margin-bottom: 10px; }
+.neu-fuer-dich > .hinweis, .neu-fuer-dich > .goenn-hinweis, .neu-fuer-dich > .zettel-notiz, .neu-fuer-dich > .bogen { margin: 0; }
+.nfd-sammlung { display: grid; grid-template-columns: auto 1fr; column-gap: 12px; row-gap: 8px; align-items: center; }
+.nfd-sammlung > .zeile { grid-column: 1 / -1; }
+.nfd-huhn { display: grid; place-items: center; }
+/* Zuhause: die Karte „Meine Sammlung“ – Setzkasten-Holz als Rahmen */
+.kachel.breit.sammlung-kachel { position: relative; flex-direction: row; text-align: left; gap: 14px; padding: 14px 14px 14px 16px; min-height: 96px; --k: var(--ocker);
+  box-shadow: inset 0 0 0 4px var(--holz), inset 0 0 0 5.5px var(--holz-d), var(--kante); }
+.kachel.breit.sammlung-kachel::before { display: none; }
+.sammlung-kachel .sk-text { flex: 1; min-width: 0; display: flex; flex-direction: column; }
+.sammlung-kachel .titel { font-family: var(--f-schild); font-weight: 400; font-size: 1.25rem; }
+.sammlung-kachel .unter { color: var(--tinte-2); }
+.sammlung-kachel .sk-zahlen { margin-top: 4px; font-size: .84rem; font-weight: 600; color: var(--tinte); line-height: 1.3; }
+.sammlung-kachel .pfeil { flex: none; width: 22px; height: 22px; color: var(--tinte-2); }
+.sammlung-kachel .sk-neu { position: absolute; top: 8px; right: 10px; }
+.bild-worte { margin: 6px 0 0; text-align: center; }
+.bild-worte .link-knopf { position: relative; min-height: 44px; font-size: .9rem; }
+/* Sammlung-Blatt: Fächer wie im Setzkasten der Stöberkiste */
+.sm-huhn { margin: 0 0 14px; }
+.sm-kasten .sm-fach { position: relative; min-height: 76px; min-width: 0; }
+.sm-kasten .sm-fach .c-kasten-name { overflow-wrap: break-word; hyphens: manual; }
+.sm-fach .sm-zahl { align-self: start; font-size: .8rem; font-weight: 500; color: var(--tinte-2); line-height: 1.25; }
+.sm-fach .sm-neu { position: static; grid-column: 2; justify-self: start; margin-top: 3px; padding: 4px 6px 3px; font-size: .6rem; }
+button.sm-km { position: relative; display: block; width: 100%; text-align: left; font: inherit; color: inherit; border: 0; cursor: pointer; }
+/* Ideen: ein Raster mit zwei Überschriften in den Türfarben (Drinnen Senf, Draußen Moos) */
+h2.c-ort { gap: 8px; }
+h2.c-ort svg.ic-f { width: 34px; height: 34px; padding: 3px; border-radius: 50%; flex: none; }
+h2.c-ort-drinnen { color: color-mix(in srgb, var(--em-senf) 70%, var(--tinte)); }
+h2.c-ort-drinnen svg.ic-f { background: color-mix(in srgb, var(--em-senf) var(--tmix), var(--bogen)); }
+h2.c-ort-draussen { color: color-mix(in srgb, var(--em-moos) 70%, var(--tinte)); }
+h2.c-ort-draussen svg.ic-f { background: color-mix(in srgb, var(--em-moos) var(--tmix), var(--bogen)); }
+.c-fenster { gap: 10px; }
+/* kompakte Querkachel: Markisen-Streifen links, Symbol, Titel – zwei nebeneinander */
+.c-fach.c-fach-klein { flex-direction: row; align-items: center; justify-content: flex-start; text-align: left; gap: 8px; min-height: 64px; min-width: 0; padding: 8px 8px 8px 14px; }
+.c-fach.c-fach-klein::before { top: 0; bottom: 0; left: 0; right: auto; width: 8px; height: auto; background: repeating-linear-gradient(180deg, var(--ton) 0 12px, color-mix(in srgb, var(--ton) 80%, #fff) 12px 24px); }
+.c-fach.c-fach-klein .c-fach-bild { flex: none; width: 38px; height: 38px; margin: 0; box-shadow: none; }
+.c-fach.c-fach-klein .c-fach-bild svg { width: 31px; height: 31px; }
+.c-fach.c-fach-klein .c-fach-titel { flex: 1; min-width: 0; margin: 0; font-family: var(--f-text); font-weight: 700; font-size: .9rem; line-height: 1.2; overflow-wrap: break-word; hyphens: manual; text-wrap: balance; } /* Trennstellen als weiches Trennzeichen im Titel */
+.c-fach.c-fach-klein .c-fach-text { display: none; }
+.c-fach.c-fach-klein .c-fach-marke { top: 4px; right: 4px; padding: 4px 6px 3px; font-size: .6rem; }
+.c-wochenplan { margin: 10px 0 0; text-align: center; }
+.kachel.breit.c-stoeber-knopf { position: relative; flex-direction: row; text-align: left; gap: 14px; padding: 14px 14px 14px 16px; min-height: 88px; --k: var(--ocker);
+  box-shadow: inset 0 0 0 4px var(--holz), inset 0 0 0 5.5px var(--holz-d), var(--kante); }
+.kachel.breit.c-stoeber-knopf::before { display: none; }
+.c-stoeber-knopf > span { flex: 1; }
+.c-stoeber-knopf .titel { font-family: var(--f-schild); font-weight: 400; font-size: 1.2rem; }
+.c-stoeber-knopf .unter { color: var(--tinte-2); }
+.c-stoeber-knopf .pfeil { flex: none; width: 22px; height: 22px; color: var(--tinte-2); }
+.notfall-leiste { margin-top: 14px; }
+/* Rückblick: Strichliste der Woche (früher auf „Heute“) */
+.wo-striche { display: flex; justify-content: center; margin: 10px 0 0; color: var(--tinte-2); }
+/* Schriftgröße 3: Raster einspaltig als Querkacheln, Symbol links */
+html[data-size="3"] .c-raster-drinnen .c-fenster, html[data-size="3"] .c-raster-draussen .c-fenster { grid-template-columns: 1fr; }
+html[data-size="3"] .c-fach.c-fach-klein { min-height: 60px; }
+html[data-size="3"] .c-fach.c-fach-klein .c-fach-titel { font-size: 1rem; }
+html[data-size="3"] .sammlung-kachel .titel, html[data-size="3"] .c-stoeber-knopf .titel { font-size: 1.1rem; }
+html[data-size="3"] .sm-kasten { grid-template-columns: 1fr; }
+.sm-kasten .c-kasten svg.ic-f { width: 38px; height: 38px; }

@@ -69,8 +69,6 @@ function jfFrageHTML(opt = {}) {
     return opt.rahmen === false ? `<div class="jf-frage jf-eingebettet">${innen}</div>` : `<div class="bogen jf-frage">${innen}</div>`;
   } catch (e) { console.warn(e); return ""; }
 }
-/* Heute: dieselbe Frage als eigener Abschnitt (wird beim Rückblick-Umbau durch die Karte „Für dein Tagebuch“ ersetzt) */
-function jfHeuteHTML() { const f = jfFrageHTML(); return f ? `<section class="abschnitt">${f}</section>` : ""; }
 
 /* ---------- Rückblick: Monatsblatt + aufklappbares Jahr ---------- */
 function jfMonatName(m) { return `${MONAT[Number(m.slice(5)) - 1]} ${m.slice(0, 4)}`; }
