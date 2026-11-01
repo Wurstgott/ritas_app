@@ -1,11 +1,10 @@
 # Ritas App
 
 Eintragen, was man macht – eine Runde im Forst, ein Kapitel, ein Anruf, eine Tanzstunde –
-und dabei wächst ein Bild von Ritas Zuhause im Spandauer Forst. Hühnchen, die kleine Tonfigur aus Peru, kommentiert.
+und dabei wächst ein Bild von Ritas Zuhause im Spandauer Forst. Hühnchen, eine kleine Tonfigur, kommentiert.
 
 - Eine einzige HTML-Datei, ohne Server, ohne Konto. Alles bleibt auf dem Handy.
 - Installierbar: iPhone (Safari › Teilen › Zum Home-Bildschirm), Android (Chrome › ⋮ › App installieren).
-- Kein Medizinprodukt. Bei Fieber, neuen Schmerzen oder Problemen mit dem Stoma: Praxis, nachts 116 117, im Notfall 112.
 
 Gebaut von Max für Rita.
 
