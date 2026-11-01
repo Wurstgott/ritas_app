@@ -348,6 +348,7 @@ function sheet(opt) {
   sh.setAttribute("role", "dialog"); sh.setAttribute("aria-modal", "true"); sh.setAttribute("aria-label", opt.titel || "Fenster"); sh.tabIndex = -1;
   if (opt.id) sh.dataset.id = opt.id;
   if (opt.id && typeof mbGeoeffnet === "function") try { mbGeoeffnet(opt.id); } catch (e) { } // „Entdeckt“-Merker (maxbriefe.js)
+  if (opt.id && typeof teilenGeoeffnet === "function") try { teilenGeoeffnet(opt.id); } catch (e) { } // Öffnen zählen (teilen.js)
   sh.innerHTML = `${opt.voll ? "" : `<div class="griff" aria-hidden="true"></div>`}
     <div class="sheet-kopf"><h2>${esc(opt.titel || "")}</h2>${opt.ohneZu ? "" : `<button class="knopf klein leise" data-act="sheet-zu">Schließen</button>`}</div>
     <div class="sheet-inhalt">${opt.inhalt || ""}</div>${opt.fuss ? `<div class="sheet-fuss">${opt.fuss}</div>` : ""}`;

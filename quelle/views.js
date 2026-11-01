@@ -799,7 +799,8 @@ function einstellungenInhalt() {
       `<div class="liste">${zeileBtn("frage", "So funktioniert’s", "Liste, Bild, Taler – kurz erklärt", `data-act="erklaerung"`)}
       ${zeileBtn("handy", "App aufs Handy legen", "Anleitung mit Bildern", `data-act="install"`)}
       ${zeileBtn("info", "Über die App", "Von Max, für Rita", `data-act="ueber"`)}
-      ${zeileBtn("stift", "Wunsch oder Kritik an Max", "Per WhatsApp – ein Satz reicht", `data-act="wunsch-auf"`)}</div>`)
+      ${zeileBtn("stift", "Wunsch oder Kritik an Max", "Per WhatsApp – ein Satz reicht", `data-act="wunsch-auf"`)}
+      ${typeof teilenEinstZeile === "function" ? teilenEinstZeile() : ""}</div>`)
     + `<div class="ersteller"><span class="fig-idle">${maxSVG(48)}</span><p>Ausgedacht und gebaut von <b>Carlo Maximilian Engeländer</b> – für seine tolle Patentante Rita.<br><span class="klein">Idee und Konzept: Carlo Maximilian Engeländer, umgesetzt mit Unterstützung von Claude (KI). © 2026</span></p></div>`
     + einstGruppe("daten", "kiste", "Daten und Neustart", "Sicherung und Technik",
       `<div class="liste">${zeileBtn("werkzeug", "Technik & Sicherung", "Für Max: Sicherung, Wiederherstellen, Geburtstag, Zurücksetzen", `data-act="helfer"`)}</div>`)

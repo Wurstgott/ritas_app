@@ -1331,7 +1331,7 @@ function spielAusloesen(s, cx, cy) {
   if (s.id === "licht") st.zustand.licht = !st.zustand.licht; else if (s.bleibt) st.zustand[s.id] = true;
   if (s.id === "schneemann") st.schneemann = heute();
   const satz = spielSatz(s);
-  if (erstes) { st.erledigt[s.id] = true; S.taler += s.taler || 2; if (typeof PLAK !== "undefined") PLAK.leise = true; }
+  if (erstes) { st.erledigt[s.id] = true; S.taler += s.taler || 2; if (typeof PLAK !== "undefined") PLAK.leise = true; if (typeof teilenZaehl === "function") teilenZaehl("funkeln"); }
   speichern(); haptik(erstes ? "erfolg" : "auswahl");
   fxAnim(s, () => { const c = document.getElementById("bild-gross"); if (c && s.bleibt) zeichneSzene(c, {}); });
   if (erstes || s.id !== "licht" || st.zustand.licht) setTimeout(() => fxBlase(s, satz, erstes ? (s.taler || 2) : 0), REDUCED() ? 0 : Math.min(1300, s.dauer * .42));

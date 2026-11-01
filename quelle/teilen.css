@@ -1,0 +1,15 @@
+/* ============================================================
+   Nutzung mit Max teilen (teilen.js) – nur Design-Tokens.
+   Klick-Rückmeldung macht feedback.js; tippbar sind nur .knopf, .liste-zeile, .schalter-zeile (alle in HAPSEL, position:relative).
+   ============================================================ */
+.teilen-vorschau {
+  margin: 8px 0 10px; padding: 14px 14px 12px; background: var(--mulde); color: var(--tinte);
+  border-radius: 10px; box-shadow: inset 0 0 0 1px var(--linie-fein);
+  font: inherit; font-size: .8em; line-height: 1.5; white-space: pre-wrap; overflow-wrap: anywhere; word-break: break-word;
+  max-height: 46vh; overflow-y: auto; overflow-x: hidden; -webkit-overflow-scrolling: touch;
+}
+.teilen-ohne { display: flex; gap: 8px; align-items: flex-start; color: var(--tinte-2); }
+.teilen-ohne .icon, .teilen-ohne .ic-f { flex: none; width: 20px; height: 20px; margin-top: 2px; color: var(--moos); }
+.teilen-max .brief p { overflow-wrap: anywhere; }
+.teilen-anleitung { background: var(--mulde); border-radius: 10px; padding: 10px 12px; color: var(--tinte); }
+.schalter-zeile { position: relative; }
