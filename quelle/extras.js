@@ -79,7 +79,7 @@ function bingoAktion(a, d) {
   const linien = BINGO_LINIEN.filter(l => l.every(k => B.an[k])).length;
   if (linien > B.linien) { const neu = linien - B.linien; B.linien = linien; S.taler += 5 * neu; haptik("erfolg"); ton("erfolg");
     window._bingoTanz = true;
-    toast(["Bingo! Ich hab vor Freude mit dem Sockel gewackelt. Fast umgekippt.", "Reihe voll! Ich klatsch mit beiden Flügeln!", "Bingo! Das Schwein sagt, es hätte das auch gekonnt. Glaub ich nicht."][linien % 3] + `\n+${5 * neu} Taler`, { erfolg: true }); }
+    toast(["Bingo! Ich hab vor Freude mit dem Sockel gewackelt. Fast umgekippt.", "Reihe voll! Ich klatsch mit beiden Flügeln!", "Bingo! Hätte ich auch gekonnt. Glaub ich jedenfalls."][linien % 3] + `\n+${5 * neu} Taler`, { erfolg: true }); }
   if (!B.voll && B.an.every(Boolean)) { B.voll = true; S.taler += 20; S.fundstuecke = [{ id: "bingo", tag: heute(), wer: "huhn", text: "Eine ganze Bingo-Karte voll. Ich lass sie rahmen. Also: im Kopf." }, ...(S.fundstuecke || [])]; toast("Karte voll! Das kommt in die Fundstücke.\n+20 Taler", { erfolg: true }); }
   speichern(); sheetInhalt(bingoInhalt()); return true;
 }

@@ -181,6 +181,7 @@ function fluegelX(y) { return FP + (HAUS.r - FP) * (y - HORIZONT) / (HAUS.y - HO
 /* Waldweg rechts: u 0 = vorn unten, 1 = hinter der großen Kiefer am Waldrand. [x, y, halbe Breite] */
 function wegPunkt(u) { return [800 + u * 165 - Math.sin(u * Math.PI) * 18, VH + 10 - u * 200, 64 * (1 - u * .7)]; }
 const QUELLE = [700, 768], WEIHER = [560, 848];
+const TANZ = [858, 778]; // Tanzfläche (ab Stufe 5) vorn rechts zwischen Quelle und Waldweg
 const HUHN_NACHT = [742, 694]; // nachts sitzt Hühnchen vor dem Hauseingang an der Innenseite des Flügels
 
 /* ---------- Hauptzeichnung ---------- */
@@ -616,6 +617,27 @@ function zeichneSzene(canvas, opt = {}) {
     poly(p, [[x - 50, y], [x - 46, y - 80], [x - 40, y - 80], [x - 44, y]], null); poly(p, [[x + 50, y], [x + 46, y - 80], [x + 40, y - 80], [x + 44, y]], null);
     poly(p, [[x - 62, y - 78], [x, y - 122], [x + 62, y - 78]], null); papier(ctx, p, "#E8DCC4", 3, { saum: true }); ctx.restore(); }
 
+  // ===== Tanzfläche (ab Stufe 5 „Laternenschnur“): kleiner Bretterboden vorn rechts, zwei Tanzpaare, Lichterschnur =====
+  // Illu 1.11.: holt Ritas Tanz-Bezug zurück. Ruhiges Detail mit wenigen Formen; abends leuchten die Lämpchen warm.
+  if (st >= 5) { const [x, y] = TANZ, boden = new Path2D(), dunkel = new Path2D(), rock = new Path2D(), kopf = new Path2D();
+    ellipse(boden, x, y, 42, 12); papier(ctx, boden, "#B79A6E", 1.5);
+    ctx.strokeStyle = "rgba(90,66,40,.3)"; ctx.lineWidth = 1; ctx.beginPath(); for (const dx of [-21, 0, 21]) { ctx.moveTo(x + dx - 4, y - 10); ctx.lineTo(x + dx + 4, y + 10); } ctx.stroke();
+    for (const [px, py, dreh] of [[x - 17, y - 2, 1], [x + 17, y + 1, -1]]) { // je Paar: er (dunkel) und sie (Rock), einander zugewandt
+      const ex = px - 4 * dreh, sx = px + 4 * dreh;
+      poly(dunkel, [[ex - 3, py], [ex - 3.4, py - 15], [ex + 3.4, py - 15], [ex + 3, py]], null); kreis(kopf, ex, py - 18.5, 3.2);
+      poly(rock, [[sx - 6.5, py], [sx - 2.4, py - 15], [sx + 2.4, py - 15], [sx + 6.5, py]], null); kreis(kopf, sx, py - 18, 3); }
+    papier(ctx, dunkel, "#3E4654", 1); papier(ctx, rock, "#C9563A", 1); papier(ctx, kopf, "#E8C3A0", .6);
+    // Lichterschnur zwischen zwei Stangen, Lämpchen größer als am Balkon
+    const l0 = x - 44, l1 = x + 44, oy = y - 44, pf = new Path2D();
+    poly(pf, [[l0 - 1.4, y + 4], [l0 - 1.4, oy], [l0 + 1.4, oy], [l0 + 1.4, y + 4]], null); poly(pf, [[l1 - 1.4, y + 6], [l1 - 1.4, oy], [l1 + 1.4, oy], [l1 + 1.4, y + 6]], null); papier(ctx, pf, "#6B5238", 1);
+    ctx.strokeStyle = "#3A3028"; ctx.lineWidth = 1; ctx.beginPath(); ctx.moveTo(l0, oy); ctx.quadraticCurveTo(x, oy + 16, l1, oy); ctx.stroke();
+    const warm = Math.max(nacht, gold * .7);
+    for (let i = 0; i < 5; i++) { const tt = (i + 1) / 6, lx = l0 + (l1 - l0) * tt, ly = oy + 2 * tt * (1 - tt) * 16 + 3.6;
+      ctx.fillStyle = warm > .3 ? "#FFC860" : ["#E2A93B", "#C9563A", "#E8C66A"][i % 3]; ctx.beginPath(); ctx.arc(lx, ly, 3.6, 0, TAU); ctx.fill();
+      if (warm > .25) gluehen(ctx, lx, ly, 20, warm); }
+    if (warm > .3) gluehen(ctx, x, y - 8, 44, warm * .45);
+    SZ.anker.tanzflaeche = [x, y - 10]; SZ.regionen.push({ ort: "tanz", x: x - 48, y: oy - 6, w: 96, h: y - oy + 20 }); }
+
   // ===== Wiese: Blumen (Hände & Haus) =====
   { const r = R("blumen"), n = Math.min(M.wiese, 70), p = [new Path2D(), new Path2D(), new Path2D()];
     for (let i = 0; i < n; i++) {
@@ -724,6 +746,7 @@ function zeichneSzene(canvas, opt = {}) {
   if (canvas.id === "bild-gross") try { fxEinrichten(canvas); } catch (e) { }
 }
 function blockiert(x, y, M, wegOk) {
+  if (M.stufe >= 5 && Math.abs(x - TANZ[0]) < 48 && y > TANZ[1] - 50 && y < TANZ[1] + 16) return true; // Tanzfläche
   // Zufahrt, Parkplatz, Hecke, Häuser
   if (y < PARK.vorn + 18 && x > strasseL(Math.max(y, PARK.hinten - 40)) - 16) return true;
   if (y > PARK.hinten - 30 && x > strasseL(y) - 14 && x < strasseR(y) + 14) return true;
@@ -910,6 +933,7 @@ function bildBeschreibung(M) {
   const pers = Object.keys(M.menschen).length; if (pers) z.push(`Die Häuser: ${pers} ${pers === 1 ? "Fenster leuchtet" : "Fenster leuchten"} für deine Herzensmenschen.`);
   const L = Math.min(M.musik + M.tanzStunden, M.stufe >= 5 ? 16 : 5);
   if (L) z.push(`Musik im Haus: ${L} ${L === 1 ? "Licht" : "Lichter"} am Balkon.`);
+  if (M.stufe >= 5) z.push("Vorn rechts eine kleine Tanzfläche: zwei Tanzpaare unter einer Lichterschnur.");
   if (M.leseMin) z.push(`Die Leseeiche: ${Math.round(M.leseMin)} Minuten gelesen oder gehört${M.buecher.length ? `, ${M.buecher.length} Lesezeichen am Ast` : ""}.`);
   if (M.ruhe) z.push(`Die Quelle: ${M.ruhe}-mal bewusst ausgeruht oder für dich gesorgt${M.ruhe > 8 ? " – daraus ist ein Weiher geworden" : ""}.`);
   if (M.wiese) z.push(`Die Wiese: ${Math.min(M.wiese, 70)} ${M.wiese === 1 ? "Blume" : "Blumen"}.`);

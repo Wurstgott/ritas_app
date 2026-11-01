@@ -13,17 +13,17 @@ D.anrufe = [
       { text: "Du kannst doch gar nicht zählen.", weiter: "k4" },
       { text: "Gut, ich mach gleich zu.", weiter: "k4" } ] },
     k3: { sagt: "Bei mir zieht’s am Fenster. Dagegen ist das hier Nordpol.", antworten: [
-      { text: "Du warst genau einmal im Ofen.", weiter: "k4" },
+      { text: "Dir wird doch nie kalt.", weiter: "k4" },
       { text: "Soll ich dir einen Schal stricken?", weiter: "k5" } ] },
     k4: { sagt: "Einmal reicht, das prägt einen. Kannst du mich wenigstens ein Stück Richtung Heizung rücken?", antworten: [
       { text: "Zwei Zentimeter. Mehr nicht.", weiter: null },
-      { text: "Dann stehst du vorm Glücksschwein.", weiter: "k6" } ] },
+      { text: "Dann stehst du vor der Gardine.", weiter: "k6" } ] },
     k5: { sagt: "Einen Schal? Ich hab keinen Hals, Rita. Aber nett, dass du fragst.", antworten: [
-      { text: "Dann ein Deckchen unter den Sockel.", weiter: "k4" },
+      { text: "Dann ein Deckchen unter die Füße.", weiter: "k4" },
       { text: "Irgendwo ist da ein Hals.", weiter: "k4" } ] },
-    k6: { sagt: "Das Schwein steht seit Jahren da und kriegt die ganze Wärme ab. Das ist nicht gerecht.", antworten: [
-      { text: "Na gut, ihr tauscht bis Sonntag.", weiter: null },
-      { text: "Das Schwein war zuerst da.", weiter: null } ] }
+    k6: { sagt: "Die Gardine hängt seit Jahren da und kriegt die ganze Wärme ab. Das ist nicht gerecht.", antworten: [
+      { text: "Na gut, bis Sonntag darfst du näher ran.", weiter: null },
+      { text: "Die Gardine war zuerst da.", weiter: null } ] }
   },
   schluss: "Ich sag nichts mehr. Ich frier jetzt still vor mich hin." },
 
@@ -32,9 +32,9 @@ D.anrufe = [
     start: { sagt: "Den Krimi gestern hab ich mitgeguckt. Weggucken ging nicht, meine Augen sind aufgemalt.", antworten: [
       { text: "War’s dir zu spannend?", weiter: "k2" },
       { text: "Und, wer war’s deiner Meinung nach?", weiter: "k3" } ] },
-    k2: { sagt: "Bei der Stelle im Keller hab ich mich hinterm Glücksschwein versteckt. Innerlich.", antworten: [
+    k2: { sagt: "Bei der Stelle im Keller hab ich mich hinter der Teekanne versteckt. Innerlich.", antworten: [
       { text: "Da hab ich auch geschluckt.", weiter: "k4" },
-      { text: "Das Schwein hat nichts gemerkt.", weiter: "k4" } ] },
+      { text: "Die Teekanne hat nichts gemerkt.", weiter: "k4" } ] },
     k3: { sagt: "Der Pfarrer. Der hat so geguckt, und mit Gucken kenn ich mich aus.", antworten: [
       { text: "Falsch. Es war die Schwester.", weiter: "k4" },
       { text: "Der Pfarrer war’s nicht.", weiter: "k4" } ] },
@@ -44,34 +44,34 @@ D.anrufe = [
     k5: { sagt: "Und mach nicht wieder das Licht aus, wenn’s spannend wird. Für mich ist das doppelt dunkel.", antworten: [
       { text: "Na gut, die Stehlampe bleibt an.", weiter: null },
       { text: "Dann gucken wir am Nachmittag.", weiter: null } ] },
-    k6: { sagt: "Wem soll ich’s denn verraten? Das Schwein hört eh nie zu.", antworten: [
-      { text: "Das Schwein ist sehr verschwiegen.", weiter: null },
+    k6: { sagt: "Wem soll ich’s denn verraten? Ich komm ja nicht raus.", antworten: [
+      { text: "Du bist sehr verschwiegen.", weiter: null },
       { text: "Gut, dann guckst du wieder mit.", weiter: null } ] }
   },
   schluss: "Heute Abend wieder? Ich steh schon mal Richtung Fernseher." },
 
-{ id: "huhn-03", wer: "huhn", thema: "Glücksschwein",
+{ id: "huhn-03", wer: "huhn", thema: "Glücksbringer",
   knoten: {
-    start: { sagt: "Das Glücksschwein behauptet, es bringt mehr Glück als ich. Seit Silvester redet es von nichts anderem.", antworten: [
+    start: { sagt: "Ich hab beschlossen, ich bin ab jetzt dein Glücksbringer. Seit Silvester üb ich schon.", antworten: [
       { text: "Und was bringst du so?", weiter: "k2" },
-      { text: "Soll ich mal mit ihm reden?", weiter: "k3" } ] },
+      { text: "Wer hat dich denn gefragt?", weiter: "k3" } ] },
     k2: { sagt: "Ich pass auf. Wenn du deinen Schlüssel suchst, weiß ich immer, wo er liegt.", antworten: [
       { text: "Und warum sagst du’s nie?", weiter: "k4" },
       { text: "Das ist tatsächlich was wert.", weiter: "k5" } ] },
-    k3: { sagt: "Bloß nicht, dann fühlt es sich wichtig. Es ist eh schon so rund vor Stolz.", antworten: [
-      { text: "Schweine sind nun mal rund.", weiter: "k5" },
+    k3: { sagt: "Keiner. Glücksbringer werden nicht gefragt, die sind einfach da.", antworten: [
+      { text: "Na, dann sei mal da.", weiter: "k5" },
       { text: "Gut, ich ignorier es eine Woche.", weiter: "k5" } ] },
     k4: { sagt: "Ich darf ja nichts sagen, ich bin Deko. Aber ich guck dann ganz doll in die Richtung.", antworten: [
       { text: "Ab jetzt guck ich, wohin du guckst.", weiter: "k5" },
       { text: "Ganz doll guckst du nie.", weiter: "k5" } ] },
-    k5: { sagt: "Ich schlag vor, wir machen einen Wettbewerb bis Sonntag. Du führst Strichliste, das kannst du ja.", antworten: [
+    k5: { sagt: "Ich schlag vor, wir testen das bis Sonntag. Du führst Strichliste, das kannst du ja.", antworten: [
       { text: "Gut. Ein Strich für den Schlüssel.", weiter: "k6" },
-      { text: "Und wer ist Schiedsrichter?", weiter: "k6" } ] },
+      { text: "Und wer zählt nach?", weiter: "k6" } ] },
     k6: { sagt: "Das Eichhörnchen draußen in der Kiefer. Das ist neutral, das kennt keinen von uns.", antworten: [
       { text: "Dann ist das fair.", weiter: null },
       { text: "Das ist doch dauernd unterwegs.", weiter: null } ] }
   },
-  schluss: "So. Ich konzentrier mich jetzt aufs Glück. Das Schwein soll sich warm anziehen." },
+  schluss: "So. Ich konzentrier mich jetzt aufs Glück. Bitte nicht stören." },
 
 { id: "huhn-04", wer: "huhn", thema: "Umgestellt",
   knoten: {
@@ -110,7 +110,7 @@ D.anrufe = [
     k5: { sagt: "Hab ich mir auch gedacht. Die haben, glaub ich, auch das bessere Essen.", antworten: [
       { text: "Du isst doch gar nichts.", weiter: null },
       { text: "Und sie sind nett zueinander.", weiter: null } ] },
-    k6: { sagt: "Ich guck nicht so, das ist die Glasur. Aber ehrgeizig bin ich schon, das stimmt.", antworten: [
+    k6: { sagt: "Ich guck nicht so, das ist mein Gesicht. Aber ehrgeizig bin ich schon, das stimmt.", antworten: [
       { text: "Na also. Grün steht dir.", weiter: null },
       { text: "Gut, dann doch Hufflepuff.", weiter: null } ] }
   },
@@ -129,7 +129,7 @@ D.anrufe = [
       { text: "Quark ist doch was Feines.", weiter: "k2" } ] },
     k4: { sagt: "Na los, ich warte.", antworten: [
       { text: "Du bist das hübscheste Huhn hier.", weiter: "k6" },
-      { text: "Deine Glasur glänzt heute so.", weiter: "k6" } ] },
+      { text: "Du glänzt heute so.", weiter: "k6" } ] },
     k5: { sagt: "Montag ist lange her. Ich spür schon wieder was auf dem Kopf.", antworten: [
       { text: "Na gut, Freitag wird gewischt.", weiter: "k6" },
       { text: "Das ist dein Kamm.", weiter: "k6" } ] },
@@ -190,9 +190,9 @@ D.anrufe = [
     start: { sagt: "Ich muss dir was gestehen. Ich hab noch nie ein Ei gelegt.", antworten: [
       { text: "Das hat auch keiner erwartet.", weiter: "k2" },
       { text: "Möchtest du denn eins?", weiter: "k3" } ] },
-    k2: { sagt: "Doch, das Schwein. Das fragt jeden Morgen, ob heute was kommt.", antworten: [
-      { text: "Das Schwein soll sich benehmen.", weiter: "k4" },
-      { text: "Sag ihm, du hast Urlaub.", weiter: "k4" } ] },
+    k2: { sagt: "Doch, ich selbst. Ich frag mich jeden Morgen, ob heute was kommt.", antworten: [
+      { text: "Mach dir mal keinen Druck.", weiter: "k4" },
+      { text: "Sag dir einfach, du hast Urlaub.", weiter: "k4" } ] },
     k3: { sagt: "Ich hab’s grad mal probiert. Es hat geknackt, aber das war das Regal.", antworten: [
       { text: "Lass das lieber, bevor was bricht.", weiter: "k4" },
       { text: "Das Regal knackt immer.", weiter: "k4" } ] },
@@ -213,13 +213,13 @@ D.anrufe = [
     start: { sagt: "Ich seh das Tuch, du wischst heute Staub. Bei mir bitte den Pinsel, nicht das nasse Ding.", antworten: [
       { text: "Warum denn nicht nass?", weiter: "k2" },
       { text: "Wer sagt, dass du dran bist?", weiter: "k3" } ] },
-    k2: { sagt: "Da krieg ich Streifen auf die Glasur. Und dann guckt das Glücksschwein so schadenfroh.", antworten: [
+    k2: { sagt: "Da krieg ich Streifen. Und die sieht dann jeder.", antworten: [
       { text: "Gut, du kriegst den Pinsel.", weiter: "k4" },
-      { text: "Das guckt sowieso so.", weiter: "k4" } ] },
+      { text: "Die sieht keiner.", weiter: "k4" } ] },
     k3: { sagt: "Ich steh ganz vorne, also bin ich als Erste dran. Das ist Regalordnung.", antworten: [
       { text: "Die hast du dir ausgedacht.", weiter: "k4" },
       { text: "Na gut, du zuerst.", weiter: "k4" } ] },
-    k4: { sagt: "Ah, ja, schön. Hinten am Sockel, da, wo’s kitzelt.", antworten: [
+    k4: { sagt: "Ah, ja, schön. Hinten am Rücken, da, wo’s kitzelt.", antworten: [
       { text: "Da war ja eine dicke Fluse.", weiter: "k5" },
       { text: "Halt still. Ganz sanft jetzt.", weiter: "k5" } ] },
     k5: { sagt: "Die wohnt da seit Ostern. Die hätt ich selber nie weggekriegt.", antworten: [
@@ -262,9 +262,9 @@ D.anrufe = [
     k2: { sagt: "Ein echtes? Was hat es gemacht?", antworten: [
       { text: "Nüsse vergraben und mich ignoriert.", weiter: "k4" },
       { text: "Mich angeguckt, ganz frech.", weiter: "k5" } ] },
-    k3: { sagt: "Für mich? Leg’s mir hin, bitte. Direkt vor den Sockel.", antworten: [
+    k3: { sagt: "Für mich? Leg’s mir hin, bitte. Direkt vor meine Füße.", antworten: [
       { text: "Da liegt es schön.", weiter: "k6" },
-      { text: "Das Glücksschwein kriegt keins.", weiter: "k6" } ] },
+      { text: "Das ist nur für dich.", weiter: "k6" } ] },
     k4: { sagt: "Typisch. Die denken nur an Nüsse, für Kunst haben die keinen Blick.", antworten: [
       { text: "Du bist ja auch keine Nuss.", weiter: null },
       { text: "Nimm’s nicht persönlich.", weiter: null } ] },
@@ -307,16 +307,16 @@ D.anrufe = [
       { text: "Ich frag lieber nicht.", weiter: "k3" } ] },
     k2: { sagt: "Ich guck so lange aufs Handy, bis es klingelt. Dauert manchmal.", antworten: [
       { text: "Wie lange denn?", weiter: "k4" },
-      { text: "Hilft dir das Glücksschwein?", weiter: "k5" } ] },
+      { text: "Hilft dir jemand?", weiter: "k5" } ] },
     k3: { sagt: "Ist auch besser so. Sonst programmiert Max da wieder was.", antworten: [
       { text: "Na gut, sag schon.", weiter: "k2" },
       { text: "Warum rufst du überhaupt an?", weiter: "k6" } ] },
     k4: { sagt: "Heute seit halb neun. Ich hab ja keine Termine.", antworten: [
       { text: "Beneidenswert.", weiter: "k6" },
       { text: "Ich hab heute drei.", weiter: "k6" } ] },
-    k5: { sagt: "Das Schwein hilft nie. Das guckt nur zu und denkt sich seinen Teil.", antworten: [
-      { text: "Das macht es bei mir auch.", weiter: "k6" },
-      { text: "Wenigstens stört er nicht.", weiter: "k6" } ] },
+    k5: { sagt: "Keiner. Die Stehlampe guckt nur zu und denkt sich ihren Teil.", antworten: [
+      { text: "Das macht sie bei mir auch.", weiter: "k6" },
+      { text: "Wenigstens stört sie nicht.", weiter: "k6" } ] },
     k6: { sagt: "Ich wollt eigentlich nur Hallo sagen. Hab ich jetzt.", antworten: [
       { text: "Hallo zurück, mein Hühnchen.", weiter: null },
       { text: "Ruf ruhig öfter an.", weiter: null } ] }
@@ -334,7 +334,7 @@ D.anrufe = [
     k3: { sagt: "Ich steh den ganzen Tag neben deinen Rätseln. Da bleibt was hängen.", antworten: [
       { text: "Gut. Hausvogel, vier Buchstaben.", weiter: "k2" },
       { text: "Fluss in Berlin, fünf Buchstaben?", weiter: "k6" } ] },
-    k4: { sagt: "Siehst du. Schreib’s groß, damit das Glücksschwein das sieht.", antworten: [
+    k4: { sagt: "Siehst du. Schreib’s groß, damit ich’s von hier aus sehen kann.", antworten: [
       { text: "Ganz groß, in Druckbuchstaben.", weiter: null },
       { text: "Jetzt bild dir nichts ein.", weiter: null } ] },
     k5: { sagt: "Gans, na toll. Und was steht im zweiten Kästchen?", antworten: [
@@ -357,7 +357,7 @@ D.anrufe = [
     k3: { sagt: "Ich hab ein bisschen mitgewippt. Innerlich, von außen sieht man das nicht.", antworten: [
       { text: "Ich hab’s trotzdem gesehen.", weiter: "k4" },
       { text: "Innerlich wippen zählt auch.", weiter: "k4" } ] },
-    k4: { sagt: "Kannst du das nochmal anmachen? Das Schwein hat’s verschlafen.", antworten: [
+    k4: { sagt: "Kannst du das nochmal anmachen? Ich hab den Anfang verpasst.", antworten: [
       { text: "Das war Radio, das ist weg.", weiter: "k5" },
       { text: "Ich such’s dir im Handy raus.", weiter: "k6" } ] },
     k5: { sagt: "Einfach weg? So wie Wetter?", antworten: [
@@ -367,7 +367,7 @@ D.anrufe = [
       { text: "Das hab ich selbst rausgefunden.", weiter: null },
       { text: "Bisschen Max, bisschen ich.", weiter: null } ] }
   },
-  schluss: "Aber nicht zu laut. Das Schwein ist empfindlich, auch wenn’s das nicht zugibt." },
+  schluss: "Aber nicht zu laut. Ich bin da empfindlich, auch wenn ich’s nicht zugebe." },
 
 { id: "huhn-17", wer: "huhn", thema: "Mondlicht",
   knoten: {
@@ -403,7 +403,7 @@ D.anrufe = [
     k3: { sagt: "Gar nicht. Ich hab ihn mir ausgesucht, das darf man, wenn keiner aufgeschrieben hat, wann man aus dem Ofen kam.", antworten: [
       { text: "Gute Wahl, heute ist schönes Wetter.", weiter: "k2" },
       { text: "Dann such ich mir auch einen aus.", weiter: "k5" } ] },
-    k4: { sagt: "Schön. Das Schwein hat nicht mitgesungen, aber ich glaub, es hat zugehört.", antworten: [
+    k4: { sagt: "Schön. Das war die beste Strophe, die ich je gehört hab.", antworten: [
       { text: "Willst du ein Stück Kuchen?", weiter: "k6" },
       { text: "Und jetzt Geschenke?", weiter: "k6" } ] },
     k5: { sagt: "Nee, du hast doch schon einen. Einer pro Person, sonst wird’s unübersichtlich.", antworten: [
@@ -806,12 +806,12 @@ D.anrufe = [
   knoten: {
     start: { sagt: "Ich hab ein Quiz für dich, drei Fragen. Frage eins: Wer ist dein Lieblingspatensohn?", antworten: [
       { text: "Gibt’s Antwortmöglichkeiten?", weiter: "k2" },
-      { text: "Das Glücksschwein.", weiter: "k3" } ] },
+      { text: "Hühnchen.", weiter: "k3" } ] },
     k2: { sagt: "Nein. Die Antwort ist Max. Ein Punkt für dich.", antworten: [
       { text: "Ich hab doch gar nichts gesagt.", weiter: "k4" },
       { text: "Ich nehm den Punkt.", weiter: "k4" } ] },
-    k3: { sagt: "Das Schwein ist kein Patensohn! Das hat dir auch keine App gebaut.", antworten: [
-      { text: "Aber es ruft nie zu spät an.", weiter: "k4" },
+    k3: { sagt: "Hühnchen ist kein Patensohn! Das hat dir auch keine App gebaut.", antworten: [
+      { text: "Aber es widerspricht nie.", weiter: "k4" },
       { text: "Na gut, dann eben du.", weiter: "k4" } ] },
     k4: { sagt: "Frage zwei: Wer tanzt besser, du oder ich?", antworten: [
       { text: "Ist das eine ernste Frage?", weiter: "k5" },
