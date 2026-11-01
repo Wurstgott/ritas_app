@@ -94,41 +94,116 @@ function figLachSchicht(o = {}) {
 /* Porträt Max – nach seinem Foto: wuschelige braune Locken mit Strähnen in der Stirn, blaugraue Augen, gepflegter
    rötlich-brauner 7-Tage-Bart (kurz, dicht, flach, Haut schimmert durch) mit klarer Kontur an Wange und Hals, schmaler rasierter Spalt über der Oberlippe, schmale Lippen,
    kleine Creole, enge Silberkette mit Herz, grauer Strickpulli mit Streifen. */
+/* Porträt Max – Feinschliff (Fassung A). Nach seinem Foto: wuschelige braune Locken mit Strähnen in der Stirn,
+   blaugraue Augen, gepflegter rötlich-brauner 7-Tage-Bart mit klarer Kontur an Wange und Hals, schmaler rasierter Spalt
+   über der Oberlippe, schmale Lippen, kleine Creole, enge silberne Gliederkette mit Herz, grau-schwarzer Zickzack-Strickpulli
+   mit weinroten Streifen, blauer T-Shirt-Rand. Proportionen (Kopfform, Kinn, Augen, Nase, Mund) unverändert zu maxSVG.
+   Licht kommt dezent von links oben (wie im Foto): rechte Gesichtshälfte und Hals liegen leicht im Schatten. */
 function maxSVG(gr = 64) {
-  const id = "mx" + (maxSVG.n = (maxSVG.n || 0) + 1);
-  const T = maxSVG.t || (maxSVG.t = {
-    bart: figStriche(7, 75, figImBart, "#6A361C", ".34", ".34", .5) + figStriche(29, 45, figImBart, "#8A4F2E", ".3", ".26", .4),
-    hals: figStriche(23, 12, (x, y) => y > 70 && y < 74.6 && Math.abs(x - 50) < 11 - (y - 70) * .9, "#6A3A22", ".32", ".26", .45, [36, 68, 28, 9]),
-    strick: figStrick(83, 101, "#B9BCC2", ".55")
-  });
-  return `<svg class="portrait max" viewBox="0 0 100 100" style="width:${gr}px;height:${gr}px" aria-hidden="true"><defs><clipPath id="${id}"><path d="M8 100 Q10 81 50 79 Q90 81 92 100Z"/></clipPath></defs>
+  const id = "mxa" + (maxSVG.n = (maxSVG.n || 0) + 1);
+  const T = maxSVG.t || (maxSVG.t = (() => {
+    /* Gliederkette: ovale Ringe entlang der Halslinie, abwechselnd flach und hochkant */
+    const q = t => { const u = 1 - t; return [u * u * 41.4 + 2 * u * t * 50 + t * t * 58.6, u * u * 76.4 + 2 * u * t * 82.8 + t * t * 76.4]; };
+    let kette = "", glanz = "";
+    for (let i = 0; i <= 14; i++) {
+      const t = i / 14, [x, y] = q(t), [x2, y2] = q(Math.min(1, t + .01)), [x1, y1] = q(Math.max(0, t - .01));
+      const a = (Math.atan2(y2 - y1, x2 - x1) * 180 / Math.PI).toFixed(1), flach = i % 2 === 0;
+      kette += `<ellipse cx="${x.toFixed(2)}" cy="${y.toFixed(2)}" rx="${flach ? .95 : .78}" ry="${flach ? .62 : .5}" transform="rotate(${a} ${x.toFixed(2)} ${y.toFixed(2)})"/>`;
+      glanz += `M${(x - .5).toFixed(2)} ${(y - .35).toFixed(2)}l.55 -.12`;
+    }
+    return {
+      bart: figStriche(7, 80, figImBart, "#5E2E17", ".28", ".26", .5) + figStriche(29, 70, figImBart, "#C08058", ".26", ".3", .45),
+      hals: figStriche(23, 10, (x, y) => y > 70.4 && y < 74 && Math.abs(x - 50) < 10 - (y - 70) * .9, "#7A4428", ".24", ".13", .4, [36, 68, 28, 9]),
+      strick: figStrick(83, 101, "#C4C7CC", ".6") + figStrick(84.2, 101, "#3E4148", ".45"),
+      kette: `<g fill="none" stroke="#8A9099" stroke-width=".72">${kette}</g><g fill="none" stroke="#C7CBD1" stroke-width=".42">${kette}</g><path d="${glanz}" stroke="#F4F6F8" stroke-width=".3" stroke-linecap="round" opacity=".8"/>`
+    };
+  })());
+  const gesicht = "M50 27.5 C61.2 27.5 67.6 35.5 67.6 46.5 C67.6 53 66.8 57 65 60.4 C62.6 65 57 68.4 50 69 C43 68.4 37.4 65 35 60.4 C33.2 57 32.4 53 32.4 46.5 C32.4 35.5 38.8 27.5 50 27.5Z";
+  const pulli = "M8 100 Q10 81 50 79 Q90 81 92 100Z";
+  return `<svg class="portrait max" viewBox="0 0 100 100" style="width:${gr}px;height:${gr}px" aria-hidden="true"><defs><clipPath id="${id}"><path d="${pulli}"/></clipPath><clipPath id="${id}g"><path d="${gesicht}"/></clipPath></defs>
   <circle cx="50" cy="50" r="48" fill="#E7EDE4"/>
-  <path d="M8 100 Q10 81 50 79 Q90 81 92 100Z" fill="#696C73"/>
-  <g clip-path="url(#${id})">${T.strick}<g stroke="#7A2D3A" stroke-width="3.4"><path d="M29 81 L26.4 100"/><path d="M71 81 L73.6 100"/></g><g stroke="#262B3A" stroke-width="1.5"><path d="M20.5 84 L18 100"/><path d="M40.4 80 L39.6 100"/><path d="M59.6 80 L60.4 100"/><path d="M79.5 84 L82 100"/></g></g>
+  <!-- Pulli: Zickzack-Strick, Streifenpaare weinrot/nachtblau, dünne schwarze Streifen; rechte Schulter etwas im Schatten -->
+  <path d="${pulli}" fill="#6C6F76"/>
+  <g clip-path="url(#${id})">${T.strick}
+   <g stroke="#232838" stroke-width="1.3"><path d="M17.6 85 L14.6 100"/><path d="M27.4 82.2 L25.6 100"/><path d="M72.6 82.2 L74.4 100"/><path d="M82.4 85 L85.4 100"/></g>
+   <g stroke="#742A37" stroke-width="3.2"><path d="M35.6 80.6 L34.4 100"/><path d="M64.4 80.6 L65.6 100"/></g>
+   <g stroke="#262D45" stroke-width="1.5"><path d="M38.9 80.2 L38.3 100"/><path d="M61.1 80.2 L61.7 100"/></g>
+   <path d="M60 79.6 Q86 81 92 100 L60 100Z" fill="#1E2230" opacity=".13"/><path d="M8 100 Q10 85 26 82 Q16 88 14 100Z" fill="#FFFFFF" opacity=".07"/>
+  </g>
+  <!-- Hals mit Schatten unter dem Kinn -->
   <path d="M41.6 60 L58.4 60 L58.2 82 Q50 85 41.8 82Z" fill="#DFA886"/>
-  <path d="M38.6 62 C41 67.6 44.6 71.2 50 71.6 C55.4 71.2 59 67.6 61.4 62Z" fill="#7A4124" opacity=".2"/>${T.hals}
-  <path d="M36.6 79.4 Q50 87 63.4 79.4 L61.6 77.4 Q50 84.2 38.4 77.4Z" fill="#252B42"/><path d="M55.4 81.6 Q59.2 80.4 61.4 78.4 L62.2 79.4 Q59.4 81.8 56 82.6Z" fill="#4C83B5"/>
-  <path d="M41.8 76.3 Q50 82.2 58.2 76.3" stroke="#D3D7DC" stroke-width="1.7" fill="none" stroke-dasharray="1.5 .35"/><path d="M41.8 76.3 Q50 82.2 58.2 76.3" stroke="#8F959D" stroke-width=".55" fill="none" stroke-dasharray=".7 1.15" stroke-dashoffset="-.4"/>
-  <circle cx="50" cy="80.6" r=".8" fill="none" stroke="#C9CCD2" stroke-width=".5"/><path d="M50 86.2 l-2.6 -2.5 a1.55 1.55 0 0 1 2.6 -1.9 a1.55 1.55 0 0 1 2.6 1.9Z" fill="#DDE0E4" stroke="#A3A8B0" stroke-width=".4"/>
-  <path d="M30.4 50.5 Q28.2 36 33.6 27.4 Q40 19 50.4 19 Q61 19 66.6 26.6 Q71.8 35 69.6 50.5 L67 50.5 Q67.4 41 63.4 35.4 L36.6 35.4 Q32.6 41 33 50.5Z" fill="#573B27"/>
-  <ellipse cx="31.6" cy="49.6" rx="2.6" ry="4.2" fill="#E0A986"/><ellipse cx="68.4" cy="49.6" rx="2.6" ry="4.2" fill="#E0A986"/><path d="M31.2 47.6 Q30.2 49.6 31.4 51.6 M68.8 47.6 Q69.8 49.6 68.6 51.6" stroke="#C88A68" stroke-width=".6" fill="none"/>
-  <circle cx="69.2" cy="54.4" r="1.25" fill="none" stroke="#C9CCD2" stroke-width=".7"/>
-  <path d="M50 27.5 C61.2 27.5 67.6 35.5 67.6 46.5 C67.6 53 66.8 57 65 60.4 C62.6 65 57 68.4 50 69 C43 68.4 37.4 65 35 60.4 C33.2 57 32.4 53 32.4 46.5 C32.4 35.5 38.8 27.5 50 27.5Z" fill="#EAB996"/>
-  <path d="M32.6 45 L34.6 45 L34.8 50.6 C36.4 53.6 38.4 56 41 57.8 L59 57.8 C61.6 56 63.6 53.6 65.2 50.6 L65.4 45 L67.4 45 C67.6 53 66.8 57 65 60.4 C62.6 65 57 68.4 50 69.2 C43 68.4 37.4 65 35 60.4 C33.2 57 32.4 53.5 32.6 45Z" fill="#7A4124" opacity=".3"/><path d="M33.4 56.4 C33.8 58 34.4 59.4 35 60.4 C37.4 65 43 68.4 50 69.2 C57 68.4 62.6 65 65 60.4 C65.6 59.4 66.2 58 66.6 56.4 C64.6 62.6 59.4 67.8 50 68.6 C40.6 67.8 35.4 62.6 33.4 56.4Z" fill="#6E3A20" opacity=".14"/><path d="M34.8 50.6 C36.4 53.6 38.4 56 41 57.8 M59 57.8 C61.6 56 63.6 53.6 65.2 50.6" stroke="#7A4124" stroke-width=".5" fill="none" opacity=".35"/>${T.bart}<path d="M32.4 37.6 L35.4 37.6 L35.1 46.2 Q33.8 47.6 32.5 46.6Z M67.6 37.6 L64.6 37.6 L64.9 46.2 Q66.2 47.6 67.5 46.6Z" fill="#573B27"/>
+  <path d="M52.6 68 Q57.6 66 58.4 61 L58.2 82 Q55.6 83.2 53 83.6Z" fill="#A9643F" opacity=".12"/>
+  <path d="M38.6 62 C41 67.6 44.6 71.2 50 71.8 C55.4 71.2 59 67.6 61.4 62Z" fill="#7A4124" opacity=".22"/>${T.hals}
+  <!-- Kragen: breiter Rippbund, rechts blitzt das blaue T-Shirt -->
+  <path d="M36.2 79.6 Q50 88.4 63.8 79.6 L61.7 77.2 Q50 84.6 38.3 77.2Z" fill="#252B42"/>
+  <path d="M37.3 78.5 Q50 86.6 62.7 78.5" stroke="#161B2C" stroke-width="2.2" fill="none" stroke-dasharray=".28 .82" opacity=".7"/>
+  <path d="M54.6 80.3 Q58.8 79 61.8 77.1 L60.9 75.9 Q58.2 77.9 54.4 79.1Z" fill="#4C83B5"/><path d="M54.6 79.5 Q58.4 78.3 61.2 76.4" stroke="#7DAAD2" stroke-width=".3" fill="none" opacity=".8"/>
+  <!-- Silberkette (eng, Glieder) mit Knebelverschluss und Herzanhänger -->
+  ${T.kette}
+  <g fill="none" stroke="#9AA0A8" stroke-width=".55"><circle cx="56.6" cy="78.6" r="1.15"/><path d="M55.4 80.4 L58.4 79.6" stroke-width=".7" stroke-linecap="round"/></g>
+  <ellipse cx="50" cy="83.7" rx=".42" ry=".62" fill="none" stroke="#9AA0A8" stroke-width=".42"/>
+  <path d="M50 87.9 C48.6 86.9 47.2 85.9 47.2 84.9 C47.2 84 48 83.6 48.6 83.8 C49.2 83.9 49.7 84.3 50 84.8 C50.3 84.3 50.8 83.9 51.4 83.8 C52 83.6 52.8 84 52.8 84.9 C52.8 85.9 51.4 86.9 50 87.9Z" fill="#D9DCE1" stroke="#9AA0A8" stroke-width=".35"/><path d="M48.2 84.8 Q48.6 84.2 49.3 84.4" stroke="#FFFFFF" stroke-width=".35" fill="none" stroke-linecap="round" opacity=".9"/>
+  <!-- Haar hinten: dunkle Grundmasse, Schläfen und Nacken -->
+  <path d="M30 51 C28.4 44 28.2 36.6 30.4 30.6 C32.2 24.6 37 20 43.2 18.6 C47.8 17.4 53.6 17.4 58.4 18.8 C64.6 20.6 69 25 70.4 31 C71.6 37 71.4 44 70 51 Q50 44 30 51Z" fill="#3F2A1B"/>
+  <!-- Ohren -->
+  <path d="M33.2 45.6 C31.2 44.6 29.2 45.6 29.1 48.2 C29 50.8 30 53.2 31.8 53.9 C32.8 54.3 33.6 53.6 33.6 52.6Z" fill="#DFA684"/><path d="M32.6 47.2 C31.2 46.6 30.3 47.4 30.4 48.8 C30.5 50.4 31.2 51.8 32.4 52.2" stroke="#BF8060" stroke-width=".55" fill="none" stroke-linecap="round"/>
+  <path d="M66.8 45.6 C68.8 44.6 70.8 45.6 70.9 48.2 C71 50.8 70 53.2 68.2 53.9 C67.2 54.3 66.4 53.6 66.4 52.6Z" fill="#D69E7C"/><path d="M67.4 47.2 C68.8 46.6 69.7 47.4 69.6 48.8 C69.5 50.4 68.8 51.8 67.6 52.2" stroke="#B57858" stroke-width=".55" fill="none" stroke-linecap="round"/>
+  <circle cx="69" cy="54.6" r="1.2" fill="none" stroke="#B9BDC4" stroke-width=".65"/><path d="M68.1 55.4 A1.2 1.2 0 0 0 69.9 55.4" stroke="#EEF0F2" stroke-width=".35" fill="none"/>
+  <!-- Gesicht, Licht von links: rechte Hälfte leicht im Schatten -->
+  <path d="${gesicht}" fill="#EAB996"/>
+  <g clip-path="url(#${id}g)">
+   <path d="M60.6 27 C66.6 34 66.4 50 63.4 60 C61.4 65.6 57 68.4 52 70 L70 70 L70 27Z" fill="#B5704A" opacity=".13"/>
+   <ellipse cx="44.6" cy="51" rx="5" ry="3.4" fill="#F6D2B6" opacity=".35"/>
+   <path d="M32 33 C36 36.6 44 38 50 38 C56 38 64 36.6 68 33 L68 42 C62 40.6 56 41.6 50 41.2 C44 41.6 38 40.6 32 42Z" fill="#8C4E2E" opacity=".14"/>
+  </g>
+  <!-- Bart: dichte, flache Fläche mit klarer Wangen- und Halskontur, Kinn dichter, feine Haarstriche -->
+  <path d="M32.6 45 L34.6 45 L34.8 50.6 C36.4 53.6 38.4 56 41 57.8 L59 57.8 C61.6 56 63.6 53.6 65.2 50.6 L65.4 45 L67.4 45 C67.6 53 66.8 57 65 60.4 C62.6 65 57 68.4 50 69.2 C43 68.4 37.4 65 35 60.4 C33.2 57 32.4 53.5 32.6 45Z" fill="#8A4626" opacity=".46"/>
+  <path d="M40.4 61 C42 64.6 45.4 66.6 50 67 C54.6 66.6 58 64.6 59.6 61 C60.4 63.8 58 67.2 54 68.4 C52.6 68.8 51.2 69 50 69.1 C48.8 69 47.4 68.8 46 68.4 C42 67.2 39.6 63.8 40.4 61Z" fill="#7A3C20" opacity=".16"/>
+  <path d="M33.4 56.4 C33.8 58 34.4 59.4 35 60.4 C37.4 65 43 68.4 50 69.2 C57 68.4 62.6 65 65 60.4 C65.6 59.4 66.2 58 66.6 56.4 C64.6 62.6 59.4 67.8 50 68.6 C40.6 67.8 35.4 62.6 33.4 56.4Z" fill="#5E2E17" opacity=".16"/>
+  <path d="M34.8 50.6 C36.4 53.6 38.4 56 41 57.8 M59 57.8 C61.6 56 63.6 53.6 65.2 50.6" stroke="#7A4124" stroke-width=".45" fill="none" opacity=".3"/>${T.bart}
+  <!-- Koteletten: Haar läuft weich in den Bart über -->
+  <path d="M32.5 37.4 C33.8 39.6 35.2 41.6 35.3 44.2 L35.1 47.6 Q34.1 48.6 32.8 47.8 C32.4 44.2 32.2 40.6 32.5 37.4Z M67.5 37.4 C66.2 39.6 64.8 41.6 64.7 44.2 L64.9 47.6 Q65.9 48.6 67.2 47.8 C67.6 44.2 67.8 40.6 67.5 37.4Z" fill="#4A3020"/>
+  <path d="M33 47.6 L34.9 47.6 L34.8 50 Q33.9 50.6 33 49.8Z M67 47.6 L65.1 47.6 L65.2 50 Q66.1 50.6 67 49.8Z" fill="#6E3A20" opacity=".45"/>
+  <!-- rasierter Spalt zwischen Schnurrbart und Oberlippe -->
   <path d="M41.6 58.9 Q46 57.8 50 58.3 Q54 57.8 58.4 58.9 Q54 60.6 50 60.5 Q46 60.6 41.6 58.9Z" fill="#E8B391"/>
-  <path d="M30.6 39 Q28.6 33 31.4 28.4 Q31 23.4 36 21.6 Q38.4 16.6 44.2 17.6 Q48.4 13.8 54 15.8 Q59.6 14 63 18.4 Q68.8 18.8 69.6 24.6 Q72.6 28.6 70.6 33.4 Q71.4 37.6 68.8 40.6 Q66.4 35.4 62.2 34.8 Q60.8 39 56.2 39.8 Q57.2 35.8 54 34.6 Q51 38.8 46 39.2 Q47.6 36.2 45.6 34.6 Q41.6 37.6 39.2 41.6 Q38.4 37.4 36 37.6 Q33.6 40 30.6 39Z" fill="#6B4A31"/>
-  <path d="M44.2 35.4 Q41.8 39.6 44.4 42.4 Q43.4 39.2 46 36.4Z M53.6 35.4 Q56.6 38.2 54.8 41.4 Q57.8 39 56.2 35.2Z" fill="#6B4A31"/>
-  <g stroke="#8C6A4A" stroke-width=".9" fill="none" stroke-linecap="round"><path d="M37.4 27 q3 -3.2 6.2 -1"/><path d="M46.6 21.8 q3.2 -2.6 6.4 -.4"/><path d="M57 20.6 q3 -2 6 .4"/><path d="M40.6 31.6 q3 -2.4 5.4 .2"/><path d="M57.6 28.8 q2.8 -2.2 5.2 .6"/><path d="M50 30.4 q2.2 -1.8 4.2 0"/><path d="M33.4 33 q1.6 -2.6 4 -2.2"/><path d="M64.4 25.2 q2.6 -1 3.8 1.6"/></g>
-  <g stroke="#4A3120" stroke-width=".9" fill="none" stroke-linecap="round"><path d="M43.6 25.6 q2.4 1.8 .6 4.2"/><path d="M52.4 24 q2.4 2 .2 4.4"/><path d="M61.4 25 q2 2.2 -.4 4.4"/><path d="M36.6 31.4 q1.8 2 0 4"/><path d="M47.6 31.6 q1.8 1.8 0 3.6"/><path d="M66.6 31 q1.4 2 -.4 3.8"/></g>
-  <path d="M57.4 17.4 Q60.6 12.2 65.6 13.2 Q61.6 14.4 60.6 18Z M64.2 19.4 Q67.6 15.4 70.8 16.8 Q67.4 17.8 66.2 20.8Z M31.8 30.4 Q27.4 29 28.4 24.6 Q29.6 27.8 32.8 27.8Z" fill="#6B4A31"/>
-  <g class="brauen" fill="#4A3322"><path d="M39.4 42.8 Q43.2 40 47.8 41.2 L47.6 42.6 Q43.6 41.8 39.8 43.8Z"/><path d="M60.6 42.8 Q56.8 40 52.2 41.2 L52.4 42.6 Q56.4 41.8 60.2 43.8Z"/></g>
+  <!-- Haar vorn: Lockenmasse mit Strähnen in die Stirn -->
+  <path d="M30.4 41.2 C29 36.6 29.4 31.8 31.8 28.4 C31.2 24.4 34.2 21 38 20.6 C40.2 17.4 44.4 16.2 47.8 17.4 C50.8 14.8 55.8 14 58.8 16.6 C62.8 15.4 67.4 18 68.2 22.4 C70.8 24.8 71.8 29 70.4 32.4 C71.6 35.6 70.8 39.4 68.8 41.6 C68.2 38.8 66.8 36.8 64.8 36 C64.6 37.8 63.6 39 62 39.4 C62.4 37 61 35.4 59 34.8 C58.6 36.8 57.2 38 55.2 38.4 C55.8 36.2 54.6 34.8 52.8 34.4 C52.2 36.8 50.2 38.6 47.6 39.2 C48.8 37.4 48.6 35.8 47.2 35 C45.6 37.2 43.6 39 41 39.8 C42.2 38 42 36.4 40.6 35.8 C39.6 37.8 38.2 39.2 36.2 39.8 C37 38.4 36.8 37.2 35.6 36.8 C34 38.6 32.4 40.4 30.4 41.2Z" fill="#634329"/>
+  <!-- Licht auf den Locken (oben links) -->
+  <g fill="#86613F">
+   <path d="M33.4 31.4 C34 26.4 38.4 22.8 43.4 22.8 C40 24.6 37.6 27.6 36.6 31.6 C35.6 31 34.4 31 33.4 31.4Z"/>
+   <path d="M45.4 22 C48 18.8 53.2 18 56.8 19.8 C53.4 20 50.6 21.4 49 23.8 C48 22.6 46.8 22 45.4 22Z"/>
+   <path d="M58.8 23.8 C61.6 21.8 65.6 22.6 67.4 25.6 C64.8 24.8 62.4 25.2 60.8 26.8 C60.4 25.6 59.8 24.6 58.8 23.8Z"/>
+   <path d="M39.6 33.4 C41.8 30.4 45.8 29.2 49 30.4 C46 31 43.6 32.6 42.4 35 C41.6 34 40.6 33.5 39.6 33.4Z"/>
+   <path d="M52.6 30 C55.2 28.2 58.8 28.6 60.6 30.8 C58.2 30.4 56 30.8 54.6 32.2 C54.2 31.2 53.4 30.4 52.6 30Z"/>
+   <path d="M63.4 30.2 C65.4 29.2 67.8 30.2 68.6 32.4 C66.8 31.8 65.4 32.2 64.6 33.4 C64.4 32.2 64 31 63.4 30.2Z"/>
+  </g>
+  <g fill="#A27A54" opacity=".75"><path d="M52.4 25.8 C55.6 24 59.8 24.4 62 26.6 C59.4 26 56.8 26.2 54.4 27.4Z"/><path d="M36 28 C37.4 25.6 39.8 24.2 42.2 24.2 C40 25.4 38.6 26.8 37.8 28.8Z"/><path d="M48.6 20.6 C50.4 19.4 52.8 19.2 54.6 19.8 C52.6 20.2 51 21 49.8 22.2Z"/><path d="M42 32 C43.4 30.8 45.4 30.4 47 30.8 C45.4 31.4 44.2 32.2 43.4 33.4Z"/></g>
+  <!-- Schatten zwischen den Locken -->
+  <g fill="#3F2A1B" opacity=".85">
+   <path d="M36.6 31.6 C37.8 32.4 38.6 33.6 38.8 35.2 C37.8 34 36.6 33.4 35.2 33.2 C35.8 32.8 36.2 32.2 36.6 31.6Z"/>
+   <path d="M49 23.8 C50.2 25 50.6 26.6 50.2 28.4 C49.6 27 48.6 26 47.2 25.6 C48 25.2 48.6 24.6 49 23.8Z"/>
+   <path d="M60.8 26.8 C61.8 28 62 29.6 61.4 31.2 C61 29.8 60.2 28.8 58.8 28.4 C59.6 28 60.4 27.4 60.8 26.8Z"/>
+   <path d="M42.4 35 C43.2 36.2 43.4 37.4 43 38.6 C42.6 37.6 41.8 36.8 40.8 36.6 C41.4 36.2 42 35.6 42.4 35Z"/>
+   <path d="M54.6 32.2 C55.6 33.2 55.8 34.4 55.4 35.6 C55 34.6 54.2 33.8 53.2 33.6 C53.8 33.2 54.2 32.8 54.6 32.2Z"/>
+   <path d="M30.8 34 C31.6 35.6 32 37.2 31.6 39 C31 37.6 30.6 36 30.8 34Z M69.6 34 C69 35.8 68.4 37.2 67.4 38.2 C68 36.6 68.6 35.2 69.6 34Z"/>
+  </g>
+  <!-- Strähnen in der Stirn: einzelne Locken, die über den Haaransatz fallen -->
+  <path d="M46.6 35.8 C43.6 36.8 42 39 42.8 40.8 C43.4 40 44.4 39.6 45.2 39.9 C44.4 38.8 45 37.2 47.4 36.6Z M52.8 35.4 C55.8 36 57.4 37.8 57 39.8 C56.4 39 55.4 38.8 54.6 39.2 C55.2 37.8 54.4 36.6 52.4 36.2Z" fill="#634329"/>
+  <!-- abstehende Härchen oben und die Locke links -->
+  <path d="M54.2 17 C54.8 13.6 57.6 11.6 60.6 12.2 C58.2 13 56.8 14.8 56.6 17.2Z M60.6 17.6 C62.6 14.8 65.8 14 68.2 15.4 C65.6 15.6 63.8 16.8 62.8 18.6Z" fill="#634329"/>
+  <path d="M58 16.8 Q60.4 13 63.8 12" stroke="#634329" stroke-width=".45" fill="none" stroke-linecap="round" opacity=".8"/>
+  <path d="M31.4 29.8 C28.6 29.2 26.6 30.8 26.9 33.2 C27.2 34.9 28.8 35.9 30.2 35.2 C29 34.9 28.4 33.9 28.8 32.9 C29.2 31.9 30.4 31.7 31.2 32.2Z M70.2 32.6 C72.6 33 74 35.2 73.2 37.6 C72.8 38.8 71.8 39.4 70.8 39.2 C71.6 38.4 71.8 37.2 71.2 36.2 C70.8 35.6 70.2 35.4 69.6 35.6Z" fill="#634329"/><path d="M29.8 30.8 C28.6 31 27.8 32 27.9 33.2" stroke="#86613F" stroke-width=".5" fill="none" stroke-linecap="round"/>
+  <g stroke="#B08A64" stroke-width=".4" fill="none" stroke-linecap="round" opacity=".7"><path d="M38.4 23.2 q3 -1.6 5.6 -.6"/><path d="M50.4 19 q2.6 -.8 4.8 .2"/><path d="M61.4 22.2 q2.4 0 3.8 1.4"/><path d="M43.4 30.2 q2 -.8 3.8 -.4"/></g>
+  <g class="brauen" fill="#4A3322"><path d="M39.4 42.8 Q43.2 39.8 47.8 41 L47.6 42.6 Q43.6 41.8 39.8 43.8Z"/><path d="M60.6 42.8 Q56.8 39.8 52.2 41 L52.4 42.6 Q56.4 41.8 60.2 43.8Z"/></g>
   <g class="augen"><g class="auge-l"><ellipse cx="44" cy="46.4" rx="3.2" ry="1.85" fill="#FFFDF5"/><circle cx="44.3" cy="46.5" r="1.7" fill="#8AA4AE"/><circle cx="44.3" cy="46.5" r=".78" fill="#1C2620"/><circle cx="44.9" cy="45.9" r=".45" fill="#fff"/><path d="M40.4 46.5 Q44 43.1 47.6 46.5" stroke="#3A2A22" stroke-width="1.1" fill="none" stroke-linecap="round"/><path d="M41.4 48.8 Q44 49.9 46.6 48.8" stroke="#D29C7E" stroke-width=".7" fill="none" stroke-linecap="round"/></g><g class="auge-r"><ellipse cx="56" cy="46.4" rx="3.2" ry="1.85" fill="#FFFDF5"/><circle cx="56.3" cy="46.5" r="1.7" fill="#8AA4AE"/><circle cx="56.3" cy="46.5" r=".78" fill="#1C2620"/><circle cx="56.9" cy="45.9" r=".45" fill="#fff"/><path d="M52.4 46.5 Q56 43.1 59.6 46.5" stroke="#3A2A22" stroke-width="1.1" fill="none" stroke-linecap="round"/><path d="M53.4 48.8 Q56 49.9 58.6 48.8" stroke="#D29C7E" stroke-width=".7" fill="none" stroke-linecap="round"/></g></g>
   <path d="M49.4 45.8 Q49.8 50.6 51.7 52.9 Q51.5 54.6 49.8 54.6 M47.1 53.5 Q47.5 54.9 48.9 54.9" stroke="#C68767" stroke-width=".95" fill="none" stroke-linecap="round"/>
   <ellipse cx="38.6" cy="51.8" rx="3" ry="1.6" fill="#E58468" opacity=".22"/><ellipse cx="61.4" cy="51.8" rx="3" ry="1.6" fill="#E58468" opacity=".22"/>
   <g class="mund"><path d="M43.2 59.7 Q46.6 58.9 50 59.4 Q53.4 58.9 56.8 59.7 Q53.4 60.5 50 60.4 Q46.6 60.5 43.2 59.7Z" fill="#BE7166"/><path d="M44.6 60.5 Q50 61.3 55.4 60.5 Q53.6 62.2 50 62.3 Q46.4 62.2 44.6 60.5Z" fill="#D28C82"/><path d="M42.9 59.4 Q50 61.1 57.1 59.4" stroke="#7A3830" stroke-width=".6" fill="none" stroke-linecap="round"/></g>
   ${figLachSchicht()}
-  <path d="M40.8 58.7 Q42.6 55.9 46.6 55.9 Q48.8 55.9 50 56.6 Q51.2 55.9 53.4 55.9 Q57.4 55.9 59.2 58.7 Q56.6 57.6 53 57.9 Q51 57.9 50 58.3 Q49 57.9 47 57.9 Q43.4 57.6 40.8 58.7Z" fill="#7A4124" opacity=".48"/>
-  <path d="M43 57.2 l-.4 .8 M45.2 56.6 l-.3 .9 M47.4 56.4 l-.15 .9 M52.6 56.4 l.15 .9 M54.8 56.6 l.3 .9 M57 57.2 l.4 .8" stroke="#6E3C22" stroke-width=".4" stroke-linecap="round" opacity=".45"/>
+  <!-- Schnurrbart -->
+  <path d="M40.8 58.7 Q42.6 55.9 46.6 55.9 Q48.8 55.9 50 56.6 Q51.2 55.9 53.4 55.9 Q57.4 55.9 59.2 58.7 Q56.6 57.6 53 57.9 Q51 57.9 50 58.3 Q49 57.9 47 57.9 Q43.4 57.6 40.8 58.7Z" fill="#7A3E22" opacity=".55"/>
+  <path d="M43 57.2 l-.4 .8 M45.2 56.6 l-.3 .9 M47.4 56.4 l-.15 .9 M52.6 56.4 l.15 .9 M54.8 56.6 l.3 .9 M57 57.2 l.4 .8" stroke="#5E2E17" stroke-width=".4" stroke-linecap="round" opacity=".5"/>
+  <path d="M44 56.5 l-.2 .7 M46.4 56.2 l-.1 .8 M53.6 56.2 l.1 .8 M56 56.5 l.2 .7" stroke="#B8774E" stroke-width=".35" stroke-linecap="round" opacity=".55"/>
 </svg>`;
 }
 
