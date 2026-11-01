@@ -480,10 +480,10 @@ D.brevvan = [
       { text: "Hühnchen säger: tack, Karin!", de: "Hühnchen sagt: Danke, Karin!", weiter: "tack" },
       { text: "Hühnchen hälsar till Sotis!", de: "Hühnchen lässt Sotis grüßen!", weiter: "sotis" } ] },
     fall: { sagt: "Och utan att lämna fönsterbrädan. Det kallar jag talang.", de: "Und ohne die Fensterbank zu verlassen. Das nenn ich Talent.", antworten: [
-      { text: "Hühnchen är av lera. Alltid lugn.", de: "Hühnchen ist aus Ton. Immer gelassen.", weiter: null },
+      { text: "Hühnchen är alltid lugn.", de: "Hühnchen ist immer gelassen.", weiter: null },
       { text: "Och Hühnchen vill inte ha någon lön.", de: "Und Gehalt will Hühnchen auch keins.", weiter: null } ] },
     sotis: { sagt: "Sotis säger mjau tillbaka. Fast hon undrar nog om man kan äta Hühnchen.", de: "Sotis sagt miau zurück. Wobei sie sich wohl fragt, ob man Hühnchen fressen kann.", antworten: [
-      { text: "Säg att Hühnchen är av lera!", de: "Sag ihr, Hühnchen ist aus Ton!", weiter: null },
+      { text: "Säg att Hühnchen är alltid lugn!", de: "Sag ihr, Hühnchen ist immer gelassen!", weiter: null },
       { text: "Mjau från Spandau!", de: "Miau aus Spandau!", weiter: null } ] },
     tack: { sagt: "Varsågod, lilla kyckling! Vi hörs i nästa brev.", de: "Gern geschehen, kleines Hühnchen! Bis zum nächsten Brief.", antworten: [
       { text: "Hühnchen bugar.", de: "Hühnchen verbeugt sich.", weiter: null },

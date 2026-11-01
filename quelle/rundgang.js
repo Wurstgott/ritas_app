@@ -43,7 +43,7 @@
       ziel: () => huhnAn() ? [["[data-act=huhn-tap]"], [".huhn-karte"], ["[data-act=tf]"]] : [["[data-act=tf]"]],
       alle: () => !huhnAn() || !q("[data-act=huhn-tap], .huhn-karte"),
       mitmach: () => huhnAn() && q("[data-act=huhn-tap], .huhn-karte") ? "huhn" : null,
-      max: () => huhnAn() ? "Und das ist Hühnchen – ja, das aus Ton. Morgens fragt es nach deiner Energie. Tipp mal drauf oder halt den Finger länger drauf."
+      max: () => huhnAn() ? "Und das ist Hühnchen. Morgens fragt es nach deiner Energie. Tipp mal drauf oder halt den Finger länger drauf."
         : "Morgens tippst du hier an, wie viel Energie du hast. Danach richten sich die Ideen.",
       huhn: "Na los. Ich beiß nicht. Meistens." },
     { id: "eintragen", titel: "Eintragen", tab: "heute", ziel: [["[data-act=eintragen]", "[data-act=alles]"]], alle: true,

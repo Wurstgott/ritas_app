@@ -68,7 +68,7 @@ D.eier = {
 },
 "max-wieder-da": {
 "wer": "max",
-"text": "Da bist du ja! Hühnchen hat in der Zwischenzeit das Regal neu sortiert. Frag lieber nicht nach dem Hasen.",
+"text": "Da bist du ja! Hühnchen hat in der Zwischenzeit das Regal neu sortiert. Frag lieber nicht, nach welchem System.",
 "form": "brief",
 "selten": 1
 },
@@ -134,7 +134,7 @@ D.eier = {
 },
 "huhn-liste-fenster": {
 "wer": "huhn",
-"text": "Fenster geputzt? Endlich seh ich den Hasen wieder scharf. Ob das ein Gewinn ist, weiß ich noch nicht.",
+"text": "Fenster geputzt? Endlich seh ich das Eichhörnchen wieder scharf. Es mich leider auch.",
 "form": "toast",
 "selten": 0.8
 },
@@ -158,7 +158,7 @@ D.eier = {
 },
 "huhn-antippen-7": {
 "wer": "huhn",
-"text": "Ja? Ich bin aus Ton, nicht aus Gummi.",
+"text": "Ja? Ich bin ganz Ohr.",
 "form": "sprechblase",
 "selten": 1
 },
@@ -206,7 +206,7 @@ D.eier = {
 },
 "huhn-ostern": {
 "wer": "huhn",
-"text": "Ostern. Nein, ich lege keine Eier. Ich bin aus Ton. Hör auf, so zu gucken.",
+"text": "Ostern. Nein, ich lege keine Eier. Hör auf, so zu gucken.",
 "form": "sprechblase",
 "selten": 1
 },

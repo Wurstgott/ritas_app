@@ -284,6 +284,8 @@ function armHaptics() {
   // Vibration aus oder Bewegung reduziert: keine Haptik, auch kein iOS-Tick
   if (!S.vib || REDUCED()) { $$("label.hap").forEach(l => l.remove()); return; }
   $$(HAPSEL).forEach(el => {
+    // Kein Label in Links (a[href], auch tel:): Der Tipp ginge sonst an den Schalter darin, der Link öffnet nie
+    if (el.closest("a[href]")) { const alt = el.querySelector(":scope>label.hap"); if (alt) alt.remove(); return; }
     if (el.querySelector(":scope>label.hap") || el.disabled) return;
     // Kein Label über eigenen Knöpfen/Feldern (sonst schluckt es auf dem iPhone deren Tipps) und keins auf Zeilen ohne Aktion
     if (el.querySelector("button, a[href], input:not([switch]), select, textarea, [data-act], [data-tab]")) return;

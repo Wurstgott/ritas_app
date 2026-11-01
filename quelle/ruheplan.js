@@ -34,7 +34,7 @@ D.ruhe = {
     { id: "pause", text: "Ich darf Pause machen. Und danach weiter." }
   ]
 };
-if (D.huehnchenReaktionen) D.huehnchenReaktionen.ruhe = ["Geübt. Ich hab mitgeatmet. Glaub ich.", "Ruhig ein, langsam aus. Ich bin aus Ton, ich kann das von Natur aus.", "Sitzt schon besser. Respekt.", "Training ist Training. Haken dran."];
+if (D.huehnchenReaktionen) D.huehnchenReaktionen.ruhe = ["Geübt. Ich hab mitgeatmet. Glaub ich.", "Ruhig ein, langsam aus. Ich mach mit.", "Sitzt schon besser. Respekt.", "Training ist Training. Haken dran."];
 D.taetigkeiten.push({ id: "ruheuebung", name: "Ruhe geübt", kurz: "Ruhe geübt", art: "klein", feld: "sorge", bild: "quelle", tf: "ABCD", icon: "atem",
   info: ["Geübt. Dann sitzt es, wenn es drauf ankommt.", "Ruhe geübt. Das ist Training, genau wie Gehen."] });
 

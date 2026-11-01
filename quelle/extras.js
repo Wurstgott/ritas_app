@@ -79,7 +79,7 @@ function bingoAktion(a, d) {
   const linien = BINGO_LINIEN.filter(l => l.every(k => B.an[k])).length;
   if (linien > B.linien) { const neu = linien - B.linien; B.linien = linien; S.taler += 5 * neu; haptik("erfolg"); ton("erfolg");
     window._bingoTanz = true;
-    toast(["Bingo! Ich hab vor Freude mit dem Sockel gewackelt. Fast umgekippt.", "Reihe voll. Der Hase hat applaudiert. Mit den Ohren.", "Bingo! Das Schwein sagt, es hätte das auch gekonnt. Glaub ich nicht."][linien % 3] + `\n+${5 * neu} Taler`, { erfolg: true }); }
+    toast(["Bingo! Ich hab vor Freude mit dem Sockel gewackelt. Fast umgekippt.", "Reihe voll! Ich klatsch mit beiden Flügeln!", "Bingo! Das Schwein sagt, es hätte das auch gekonnt. Glaub ich nicht."][linien % 3] + `\n+${5 * neu} Taler`, { erfolg: true }); }
   if (!B.voll && B.an.every(Boolean)) { B.voll = true; S.taler += 20; S.fundstuecke = [{ id: "bingo", tag: heute(), wer: "huhn", text: "Eine ganze Bingo-Karte voll. Ich lass sie rahmen. Also: im Kopf." }, ...(S.fundstuecke || [])]; toast("Karte voll! Das kommt in die Fundstücke.\n+20 Taler", { erfolg: true }); }
   speichern(); sheetInhalt(bingoInhalt()); return true;
 }
@@ -160,10 +160,10 @@ function postLaden() {
 const HG_EMOJI = [
   { art: "emo-froh", zeichen: ["✨", "⭐", "✨"], n: 5, flug: "steigen", sprueche: ["Ich hab mich heute extra poliert. Sieht man, oder?", "Glitzer. Hat mir keiner verboten.", "Funkel, funkel, Hühnchen."] },
   { art: "emo-froh", zeichen: ["🍰", "☕"], n: 4, flug: "steigen", sprueche: ["Hab ich da Kuchen gehört?", "Kaffee? Kuchen? Kaffee UND Kuchen?", "Ich nehm das Stück mit der Kirsche."] },
-  { art: "emo-zu", zeichen: ["💤", "z", "Z"], n: 4, flug: "steigen", sprueche: ["Bin wach! … Fast.", "Ich hab nur kurz die Augen geschont.", "Ich war nicht weg. Ich hab nur vom Brennofen geträumt."] },
+  { art: "emo-zu", zeichen: ["💤", "z", "Z"], n: 4, flug: "steigen", sprueche: ["Bin wach! … Fast.", "Ich hab nur kurz die Augen geschont.", "Ich war nicht weg. Ich hab nur von Kuchen geträumt."] },
   { art: "emo-froh", zeichen: ["🎉", "🎊", "✨"], n: 6, flug: "steigen", sprueche: ["Konfetti! Aufräumen musst aber du, ich hab keine Hände.", "Tusch! Wofür, weiß ich auch nicht.", "Mir war grad nach Feiern. Ein Grund findet sich noch."] },
   { art: "emo-froh", zeichen: ["🌸", "🌼", "🌷"], n: 5, flug: "fall", sprueche: ["Blumen für dich. Hab ich selbst … gefunden.", "Die sind vom Balkon nebenan. Pssst."] },
-  { art: "emo-schreck", zeichen: ["❗", "❓"], n: 3, flug: "steigen", sprueche: ["Huch! Du schon wieder!", "Ich hab dich gar nicht kommen sehen!", "Erschreck mich doch nicht so, ich bin aus Ton!"] },
+  { art: "emo-schreck", zeichen: ["❗", "❓"], n: 3, flug: "steigen", sprueche: ["Huch! Du schon wieder!", "Ich hab dich gar nicht kommen sehen!", "Erschreck mich doch nicht so!"] },
   { art: "emo-froh", zeichen: ["📚", "🔍"], n: 3, flug: "steigen", sprueche: ["Ich lese gerade. Krimi. Der Gärtner war’s nicht.", "Ich ermittle. Verdächtig: alle."] },
   { art: "emo-froh", zeichen: ["☀️", "🌤️"], n: 3, flug: "steigen", sprueche: ["Wetterbericht: Hühnchen sonnig.", "Ich hab die Sonne bestellt. Gern geschehen."] },
   { art: "emo-froh", zeichen: ["❄️", "❄"], n: 7, flug: "fall", sprueche: ["Mir ist kalt. Ton hält nicht warm!", "Schneeflocken! Darf man die essen?"] },
@@ -194,7 +194,7 @@ const HG_EMOJI = [
     if (art === "rot" && Math.random() < .5) blase(zuf(["Guck nicht so.", "Oh. Du schon wieder.", "Ich werd ja ganz verlegen."]));
     if (art === "frage") blase(zuf(["Ist was?", "Hab ich was im Gesicht?", "Ich hab Körner gezählt. Was gibt’s?"]));
     if (art === "weg") blase(zuf(["Hmpf. Ich guck jetzt woandershin.", "Bin nicht da.", "Pause. Hühnerpause."]));
-    if (art === "cool") blase(zuf(["Läuft bei mir.", "Sonnenbrille. Weil ich’s kann.", "Ich bin aus Ton. Ich bin cool gebrannt.", "Autogramme gibt’s später.", "Ich bin heute schwer beschäftigt. Mit Gucken.", "Zurücklehnen geht bei Ton schlecht. Sieht aber gut aus."]));
+    if (art === "cool") blase(zuf(["Läuft bei mir.", "Sonnenbrille. Weil ich’s kann.", "Ich bin einfach cool.", "Autogramme gibt’s später.", "Ich bin heute schwer beschäftigt. Mit Gucken.", "Zurücklehnen geht bei Ton schlecht. Sieht aber gut aus."]));
     if (art === "frech") blase(zuf(["Na, auch hier?", "Was guckst du? Ich bin handgemacht.", "Erst die Liste, dann das Hühnchen!", "Ich hab dich zuerst gesehen.", "Schon wieder du? Ich fühl mich geehrt.", "Finger weg, ich bin frisch glasiert!", "Ich bin klein, aber ich hab Meinungen.", "Noch einmal antippen, und ich sag’s Max.","Du hast da was. … Reingefallen!", "Ich bin nicht neugierig. Ich bin informiert."]));
     grossH.classList.add("hg-" + art);
     if (grossH._emoji) { const E = grossH._emoji; for (let i = 0; i < E.n; i++) { const z = document.createElement("span"); z.className = "hg-flug hg-emo hg-" + E.flug; z.textContent = E.zeichen[i % E.zeichen.length]; z.style.left = (70 + Math.random() * 70) + "px"; z.style.top = (E.flug === "fall" ? 0 : 50) + "px"; z.style.animationDelay = (1900 + i * 140) + "ms"; z.style.setProperty("--dx", ((Math.random() - .5) * 90) + "px"); grossH.appendChild(z); } }

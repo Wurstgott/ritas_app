@@ -36,10 +36,10 @@ const FH_WAREN = [
   { id: "fh-zimt", name: "Kanelbulle", preis: 8, b: "picken", fx: ["kruemel", "dampf"], text: "Eine Zimtschnecke vom Blech, noch warm. Hühnchen pickt zuerst die Zuckerperlen ab.", s: ["Noch warm. Ich ess ganz langsam, dann hält sie länger.", "Erst die Zuckerperlen, dann der Rest. Das macht man so.", "Lauwarm. Genau richtig. Ich hab nachgefühlt."], k: [5, "Mehr gibt’s nicht, sonst hätt ich mehr gegeben."] },
   { id: "fh-salmiak", name: "Salmiak-Lakritz", preis: 6, b: "picken", fx: ["sterne"], text: "Schwarze Rauten, salzig und streng. Hühnchen findet sie schrecklich. Und will noch eine.", s: ["Schrecklich. … Hast du noch eine?", "Salzig, schwarz und frech. Deswegen mag ich sie.", "Die Schweden essen das freiwillig. Ich jetzt auch."], k: [2, "Und eine Träne. Ich komm trotzdem wieder."] },
   { id: "fh-beeren", name: "Blaubeeren vom Forst", preis: 6, b: "picken", fx: ["sterne"], x: "blau", text: "Eine Handvoll Blaubeeren aus dem Forst. Danach ist Hühnchens Schnabel kurz verdächtig blau.", s: ["Ich hab nichts gegessen. Wieso?", "Eine für dich, eine für mich. Eine für mich.", "Die kleinen sind die süßesten. Hab ich alle geprüft."], k: [4, "Abzug, weil ich jetzt blau bin."] },
-  { id: "fh-torte", name: "Stück Prinsesstårta", preis: 12, b: "umarmen", fx: ["sterne"], x: "nase", text: "Ein Stück grüne Prinzessinnentorte. Das Marzipan bleibt Hühnchen an der Schnabelspitze kleben.", s: ["Prinsesstårta. Ich fühl mich gleich adelig.", "Marzipan an der Nase? Das trägt man so bei Hofe.", "Ich bin aus Ton. Aber für Sahne mach ich eine Ausnahme."], k: [5, "Und eine Krone. Die Krone behalt ich."] },
+  { id: "fh-torte", name: "Stück Prinsesstårta", preis: 12, b: "umarmen", fx: ["sterne"], x: "nase", text: "Ein Stück grüne Prinzessinnentorte. Das Marzipan bleibt Hühnchen an der Schnabelspitze kleben.", s: ["Prinsesstårta. Ich fühl mich gleich adelig.", "Marzipan an der Nase? Das trägt man so bei Hofe.", "Für Sahne mach ich immer eine Ausnahme."], k: [5, "Und eine Krone. Die Krone behalt ich."] },
   { id: "fh-wachs", name: "Parkettwachs", preis: 8, b: "umarmen", fx: ["sterne"], x: "dreh", text: "Eine Dose Bohnerwachs. Hühnchen nimmt Anlauf und dreht eine Pirouette.", s: ["Wer hat hier gebohnert? Ich tanz sowieso gleich.", "Ich rutsch nicht. Ich gleite.", "Eine Pirouette. Mehr ist mit Ton nicht drin."], k: [3, "Schmeckt nach nichts, glänzt aber."] },
-  { id: "fh-waerme", name: "Wärmflasche im Strickbezug", preis: 7, b: "umarmen", fx: [], text: "Eine kleine Wärmflasche im gestrickten Bezug. Hühnchen kuschelt sich dran und macht die Augen zu.", s: ["Nicht stören. Ich bin im Winterschlaf. Bis zum Kaffee.", "Wer hat den Bezug gestrickt? Ich frag nicht. Ich behalt ihn.", "So. Jetzt bin ich warm gebrannt. Zum zweiten Mal."], k: [4, "Für die Wärme. Geschmacklich eher Gummi."] },
-  { id: "fh-disko", name: "Diskokugel", preis: 12, b: "stemmen", fx: ["sterne"], x: "licht", text: "Eine Diskokugel in Hühnchen-Größe. Lichtpunkte tanzen über Hühnchens Karte.", s: ["Licht aus, Kugel an. Ich führe.", "Ich hab Rhythmus. Man sieht’s nur nicht, ich bin aus Ton.", "Die Lichtpunkte gehören alle mir. Den da darfst du haben."], k: [3, "Knusprig ist anders. Aber das Licht!"] },
+  { id: "fh-waerme", name: "Wärmflasche im Strickbezug", preis: 7, b: "umarmen", fx: [], text: "Eine kleine Wärmflasche im gestrickten Bezug. Hühnchen kuschelt sich dran und macht die Augen zu.", s: ["Nicht stören. Ich bin im Winterschlaf. Bis zum Kaffee.", "Wer hat den Bezug gestrickt? Ich frag nicht. Ich behalt ihn.", "So. Jetzt bin ich warm bis in die Federn."], k: [4, "Für die Wärme. Geschmacklich eher Gummi."] },
+  { id: "fh-disko", name: "Diskokugel", preis: 12, b: "stemmen", fx: ["sterne"], x: "licht", text: "Eine Diskokugel in Hühnchen-Größe. Lichtpunkte tanzen über Hühnchens Karte.", s: ["Licht aus, Kugel an. Ich führe.", "Ich hab Rhythmus. Man sieht’s nur nicht.", "Die Lichtpunkte gehören alle mir. Den da darfst du haben."], k: [3, "Knusprig ist anders. Aber das Licht!"] },
   { id: "fh-kassette", name: "Krimi-Kassette", preis: 9, b: "umarmen", fx: ["sterne"], text: "Ein Hörspiel-Krimi auf Kassette. Hühnchen hält sie fest und rätselt mit.", s: ["Pst. Gleich kommt raus, wer’s war.", "Ich hab’s gewusst. Seit Seite A.", "Spul nicht vor. Ich hab die Augen zu, aber ich hör alles."], k: [4, "Spannend bis zum Schluss. Bandsalat gab’s nicht."] }
 ];
 const FH_MAP = Object.fromEntries(FH_WAREN.map(w => [w.id, w]));
@@ -78,7 +78,7 @@ const fhAn = () => !!(S && S.huhn && S.onboard);
 /* ============================================================
    Kramladen: Regal „Für Hühnchen“
    ============================================================ */
-const FH_LADEN_SATZ = ["Ich bin aus Ton. Ich ess nicht wirklich, ich tu nur so. Aber mit Hingabe.", "Mitbringen ist freiwillig. Gucken auch. Ich guck trotzdem.", "Ich brauch nichts, ich bin ja aus Ton. Aber ich nehm’s gern."];
+const FH_LADEN_SATZ = ["Ich tu nur so, als ob ich esse. Aber mit Hingabe.", "Mitbringen ist freiwillig. Gucken auch. Ich guck trotzdem.", "Ich brauch nichts. Aber ich nehm’s gern."];
 function fhRegal() {
   if (!fhAn()) return "";
   const t = talerStand(), z = fhZ(), satz = FH_LADEN_SATZ[hash32("fh" + heute()) % FH_LADEN_SATZ.length];
@@ -92,7 +92,7 @@ function fhRegal() {
 }
 function fhWareSheet(id) {
   const w = FH_MAP[id]; if (!w) return;
-  const sh = sheet({ titel: w.name, id: "fh-ware", inhalt: `<div class="ware-gross">${fhBild(w.id, 120)}</div><p>${esc(w.text)}</p><p class="klein">Hühnchen ist aus Ton und tut nur so, als ob. Das aber mit voller Überzeugung.</p>`, fuss: fhWareFuss(w) });
+  const sh = sheet({ titel: w.name, id: "fh-ware", inhalt: `<div class="ware-gross">${fhBild(w.id, 120)}</div><p>${esc(w.text)}</p>`, fuss: fhWareFuss(w) });
   if (sh) sh.dataset.ware = w.id;
 }
 function fhWareFuss(w, gekauft) {
