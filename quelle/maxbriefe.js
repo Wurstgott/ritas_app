@@ -155,7 +155,7 @@ const MB_LOB = {
   telefon: ["Du hast {mal} telefoniert. Ich hoffe, es war auch was zum Lachen dabei.", "{malGross} telefoniert {seitKlein}. Du bist besser vernetzt als ich, und ich hab drei Handys. Na gut, eins."],
   liste: ["{n} Sachen von deiner Liste abgehakt. Ich hab auch eine Liste. Da steht drauf: „Rita schreiben“. Abgehakt!", "Von deiner To-do-Liste sind {n} Sachen erledigt. Bei mir wächst die Liste nur. Ich glaub, du machst was richtig."],
   tagebuch: ["{malGross} Tagebuch geschrieben. Ich wette, deins ist spannender als jeder Schwedenkrimi.", "Du schreibst fleißig Tagebuch, {mal} {seitKlein}. Hühnchen will mitlesen. Ich hab Nein gesagt."],
-  mut: ["Und mindestens einmal hat’s Mut gebraucht. Das find ich richtig stark, egal, was es war.", "Im Wald in deinem Bild leuchtet ein Glühwürmchen mehr. Das gibt’s nur für Mut. Ich hab’s mir gemerkt."],
+  mut: ["Und mindestens einmal war was ganz Neues dabei. Das find ich richtig stark, egal, was es war.", "Im Wald in deinem Bild leuchtet ein Glühwürmchen mehr. Das gibt’s nur für Neues. Ich hab’s mir gemerkt."],
   leute: ["Du warst unter Leuten. Schön! Erzähl mir mal, wer am meisten geredet hat. Außer dir, meine ich.", "Du warst mit dabei, unter Leuten. Das freut mich. Ich hoffe, der Kuchen war gut."],
   lesen: ["{std} Stunden gelesen {seitKlein}. Die Eiche im Bild freut sich, und ich mich auch.", "Fast {std} Stunden mit Büchern. Ich bin ehrlich neidisch. Ich schaff gerade zwei Seiten vorm Einschlafen."],
   allgemein: ["{seit} hast du {n} Sachen eingetragen. Schön, dass du dabei bist.", "{n} Einträge {seitKlein}. Jeder davon ist ein Stückchen Bild.", "{n} Mal hat die App {seitKlein} was von dir gehört. Sie freut sich jedes Mal, sagt sie. Ich glaub ihr."]
@@ -279,7 +279,7 @@ const MB_PUSTE = [
   "Sauber ausgepustet! Mit dem Schnabel hätte ich das nie hingekriegt.",
   "Und? Was gewünscht? Ein Huhn kann schweigen. Meistens.",
   "Ich hab ein Ständchen vorbereitet. Es ist kurz. Es heißt: Hurra!",
-  "Alles Gute, Rita! Von Herzen. Aus Ton.",
+  "Alles Gute, Rita! Von ganzem Herzen.",
   "Heute ist dein Tag. Ich halt mich zurück. Ab morgen wieder frech.",
   "Ich hab die Kerzen nicht gezählt. Ehrenwort. Ich kann gar nicht so weit zählen."
 ];

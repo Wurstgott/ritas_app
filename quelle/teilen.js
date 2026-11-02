@@ -6,14 +6,20 @@
    eigenen Ideen/Tätigkeiten, Notfallplan, keine Telefonnummern, keine Namen von Herzensmenschen, keine Gesichter.
    Alles, was ausgegeben wird, stammt aus Zählern oder aus festen App-Inhalten (Tätigkeits-, Waren-, Outfit-Namen).
    Zustand: S.teilen = { ok: null|true|false, erinnern: true, seit, tage: [..], offen: {sheetId: n}, tabs: {tab: n},
-            z: {schluessel: n}, gesendet: [..], kopiert: n, naechste: "JJJJ-MM-TT", neinAb: erstes Nein, gefragt: "JJJJ-MM-TT", nein: n, var: n }
+            z: {schluessel: n}, gesendet: [..], kopiert: n, naechste: "JJJJ-MM-TT", neinAb: erstes Nein, gefragt: "JJJJ-MM-TT", nein: n, var: n,
+            – seit 11/2026 zusätzlich – wartet: "JJJJ-MM-TT" (WhatsApp geöffnet, Antwort auf die Rückfrage steht aus), versuche: n (WhatsApp geöffnet),
+            fehl: n („Hat nicht geklappt“), bestaetigt: "JJJJ-MM-TT" (zuletzt „Ja, abgeschickt“), bitte: ""|"offen"|"spaeter"|"fertig"|"nein"
+            (einmalige neue Bitte von Max nach dem Umbau), bitteAb: "JJJJ-MM-TT" (nach „Später“) }
+   gesendet[] zählt seit dem Umbau nur noch bestätigte Sendungen (Rückfrage „Ist die Nachricht bei Max angekommen?“).
    Hooks: core.js sheet() → teilenGeoeffnet · scene.js spielAusloesen → teilenZaehl("funkeln") ·
           main.js aktion() default → teilenAktion · views.js Einstellungen → Zeile „Nutzung mit Max teilen“
    ============================================================ */
 const TEILEN_JA_TAGE = 28;      // zugestimmt: etwa alle 4 Wochen ein dezenter Hinweis „Neue Übersicht für Max?“
 const TEILEN_NEIN_TAGE = 7, TEILEN_NEIN_SPAETER = 14, TEILEN_NEIN_PHASE = 28; // abgelehnt: in den ersten 4 Wochen nach dem ersten Nein wöchentlich, danach alle 14 Tage (Max, endgültig)
 const TEILEN_OFFEN_TAGE = 7;    // Blatt ohne Entscheidung geschlossen: in einer Woche nochmal
-const TEILEN_LINK_MAX = 1800;   // längerer Text: erst kopieren, dann WhatsApp öffnen
+const TEILEN_URL_MAX = 3000;    // Länge des URL-kodierten Texts; darüber (nur bei sehr langer Notiz) Notfall-Umweg: erst kopieren, dann WhatsApp öffnen
+const TEILEN_FREI_MAX = 300;    // freie Notiz an Max
+const TEILEN_BITTE_TAGE = 3;    // einmalige Bitte: „Später“ → in drei Tagen nochmal (danach nur noch das normale Schema)
 const TEILEN_KENNUNG = "Ritas App – Nutzung";
 
 /* Blätter, deren Öffnen gezählt wird (nur feste Kennungen, nie Inhalte) */
@@ -51,8 +57,8 @@ function teilenS() {
   if (typeof T.erinnern !== "boolean") T.erinnern = true;
   for (const k of ["offen", "tabs", "z"]) if (!T[k] || typeof T[k] !== "object" || Array.isArray(T[k])) T[k] = {};
   for (const k of ["tage", "gesendet"]) if (!Array.isArray(T[k])) T[k] = [];
-  for (const k of ["seit", "naechste", "gefragt", "neinAb"]) if (typeof T[k] !== "string") T[k] = "";
-  for (const k of ["kopiert", "nein", "var"]) if (!Number.isFinite(T[k])) T[k] = 0;
+  for (const k of ["seit", "naechste", "gefragt", "neinAb", "wartet", "bestaetigt", "bitte", "bitteAb"]) if (typeof T[k] !== "string") T[k] = "";
+  for (const k of ["kopiert", "nein", "var", "versuche", "fehl"]) if (!Number.isFinite(T[k])) T[k] = 0;
   if (!T.seit) T.seit = heute();
   return T;
 }
@@ -173,38 +179,28 @@ function teilenDaten() {
   return { T, h, start, a30: tageIn(30), a90: tageIn(90), offenTage: T.tage.length, kats, dunkel, B, zahlen, verdient };
 }
 
-/* ---------- Text bauen ---------- */
+/* ---------- Text bauen ----------
+   Kurz, damit WhatsApp IMMER mit fertigem Text aufgeht (wa.me/…?text=). Wenige lesbare Zeilen für Rita,
+   darunter der Block für den Auswerte-Job. Erste Zeile und [RA-NUTZUNG …] bleiben unverändert (Marker!).
+   Lesbarer Teil möglichst ohne Umlaute/Sonderzeichen: die zählen URL-kodiert sechs- bis neunfach. */
 function teilenText(frei) {
-  const d = teilenDaten(), T = d.T, h = d.h, Z = [];
-  const letzte = T.gesendet.length ? T.gesendet[T.gesendet.length - 1] : "";
+  const d = teilenDaten(), h = d.h, Z = [];
   Z.push(`${TEILEN_KENNUNG} ${tlDatum(h)}`);
-  const nt = tlTage(d.start, h) + 1;
-  Z.push(`Zeitraum: ${tlDatum(d.start)} bis ${tlDatum(h)} (${nt} ${nt === 1 ? "Tag" : "Tage"})${letzte ? ` · letzte Übersicht: ${tlDatum(letzte)}` : ""}`);
-  Z.push(`Version ${BUILD} · Schrift: ${["", "Normal", "Groß", "Sehr groß"][S.size] || S.size} · ${S.theme === "auto" ? `wie das Handy (gerade ${d.dunkel ? "dunkel" : "hell"})` : d.dunkel ? "dunkel" : "hell"} · Anrede: ${S.anrede === "sie" ? "Sie" : "du"}`);
-  Z.push("");
-  Z.push(`Aktive Tage: ${d.a30} der letzten 30 · ${d.a90} der letzten 90`);
-  Z.push(`App geöffnet an ${d.offenTage} ${d.offenTage === 1 ? "Tag" : "Tagen"} (gezählt seit ${tlDatum(T.seit)})`);
-  Z.push("");
+  Z.push("Nur Zahlen, wie oft ich was benutze. Nichts von dem, was ich schreibe.");
   const E = d.kats, sum = E.reduce((s, [, v]) => s + v.g, 0);
-  Z.push(`Einträge: ${sum} (gesamt/30 Tage)`);
-  if (E.length) { const top = E.slice(0, 14).map(([, v]) => `${v.n} ${v.g}/${v.m}`), rest = E.slice(14); Z.push(top.join(" · ") + (rest.length ? ` · ${rest.length} weitere Arten ${rest.reduce((s, [, v]) => s + v.g, 0)}` : "")); }
-  Z.push("");
-  Z.push("Bereiche:");
-  const B = Object.values(d.B), nie = B.filter(b => !b.ja);
-  B.filter(b => b.ja).forEach(b => Z.push(`– ${b.label}${b.info ? ": " + b.info : ""}`));
-  const zz = d.zahlen;
-  Z.push(`– Sonst: Tschüss-Siege ${zz.tschuess} · Liste ${zz.liste} (${zz.listeErl} erledigt) · Vorhaben fertig ${zz.vorhaben} · Herzensmenschen ${zz.menschen} · eigene Tätigkeiten ${zz.eigene}`);
-  const tabs = Object.entries(T.tabs).filter(([k]) => TEILEN_TABS[k]).sort((a, b) => b[1] - a[1]).map(([k, n]) => `${TEILEN_TABS[k]} ${tlN(n)}`);
-  if (tabs.length) { Z.push(""); Z.push("Tabs geöffnet: " + tabs.join(" · ")); } // welche Blätter wie oft: im Block unten (o=)
-  Z.push("");
-  Z.push(`Nie geöffnet: ${nie.length ? nie.map(b => b.kl || b.label).join(", ") : "nichts – alles schon ausprobiert"}`);
-  Z.push(`Taler: ${tlN(S.taler)} übrig · ${tlN(S.talerAusgegeben)} ausgegeben · ${d.verdient} verdient`);
-  const f = String(frei || "").trim();
-  if (f) { Z.push(""); Z.push("Was ich Max noch sagen will:"); Z.push(f); }
+  Z.push(`Aktiv an ${d.a30} von 30 Tagen, ${sum} ${sum === 1 ? "Eintrag" : "Einträge"}`);
+  if (E.length) Z.push("Am meisten eingetragen: " + E.slice(0, 3).map(([, v]) => v.n).join(", "));
+  const B = Object.values(d.B), ja = B.filter(b => b.ja).length;
+  Z.push(`Ausprobiert: ${ja} von ${B.length} Bereichen`);
+  const f = tlFrei(frei);
+  if (f) Z.push("Noch von mir: " + f);
   Z.push("");
   Z.push(teilenMaschine(d));
   return Z.join("\n");
 }
+const tlFrei = t => String(t || "").trim().slice(0, TEILEN_FREI_MAX);
+const tlUrlLaenge = text => encodeURIComponent(text).length;
+const tlZuLang = text => tlUrlLaenge(text) > TEILEN_URL_MAX;
 /* Maschinenlesbarer Block: kompakt, nur Kennungen und Zahlen */
 function teilenMaschine(d) {
   const T = d.T, q = [];
@@ -225,23 +221,29 @@ let TEILEN_FREI = "", TEILEN_SCHRITT = "";  // Freitext bleibt nur im Speicher, 
 const tlMaxKopf = html => `<div class="max-karte teilen-max"><span class="fig-idle">${maxSVG(56)}</span><div class="bogen post brief" style="flex:1;min-width:0;margin:0">${html}</div></div>`;
 function teilenVorschau() { return `<pre class="teilen-vorschau" id="teilen-vorschau" aria-label="So sieht die Nachricht an Max aus">${esc(teilenText(TEILEN_FREI))}</pre>`; }
 function teilenInhalt() {
-  const T = teilenS(), lang = teilenText(TEILEN_FREI).length > TEILEN_LINK_MAX;
+  const T = teilenS(), lang = tlZuLang(teilenText(TEILEN_FREI));
   return tlMaxKopf(`<p style="margin:0">${A("Hilf mir, die App besser zu machen. Ich sehe nur, welche Teile du wie oft benutzt – nichts von dem, was du schreibst.", "Helfen Sie mir, die App besser zu machen. Ich sehe nur, welche Teile Sie wie oft benutzen – nichts von dem, was Sie schreiben.")}</p>`)
     + `<h3 style="margin-top:16px">Das geht an Max</h3>
     <p class="klein" style="margin-top:0">Genau dieser Text, nichts sonst. ${A("Du schickst", "Sie schicken")} ihn selbst ab.</p>
     ${teilenVorschau()}
     <p class="klein teilen-ohne">${ic("schild")}<span>Nicht dabei: Tagebuch, „Was war heute schön?“, Dank-Zeilen, Merkzettel, Liste, eigene Ideen, Notfallplan, Telefonnummern, Namen und Gesichter.</span></p>
     <label class="feld" for="teilen-frei">Was ich Max noch sagen will <span class="klein">(freiwillig)</span></label>
-    <textarea id="teilen-frei" class="text" rows="3" data-teilen-frei="1" placeholder="Zum Beispiel: Das Memory spiel ich am liebsten.">${esc(TEILEN_FREI)}</textarea>
-    <p class="klein" id="teilen-lang"${lang ? "" : " hidden"}>Der Text ist lang. Beim Schicken wird er erst kopiert, dann öffnet sich WhatsApp – dort einfügen und senden.</p>
+    <textarea id="teilen-frei" class="text" rows="3" maxlength="${TEILEN_FREI_MAX}" data-teilen-frei="1" placeholder="Zum Beispiel: Das Memory spiel ich am liebsten.">${esc(TEILEN_FREI)}</textarea>
+    <p class="klein" id="teilen-lang"${lang ? "" : " hidden"}>Der Text ist diesmal sehr lang. Beim Schicken wird er erst kopiert, dann öffnet sich WhatsApp – dort einfügen und senden.</p>
+    <h3 style="margin-top:16px">So geht’s</h3>
+    ${tlSoGehts("Unten auf „An Max schicken“ tippen. WhatsApp geht auf, der Text steht schon drin.")}
     <h3 style="margin-top:18px">Einstellung</h3>
     ${schalter(T.ok === true, "Nutzung mit Max teilen", `data-act="teilen-um"`, T.ok === true ? "Etwa alle vier Wochen fragt die App, ob eine neue Übersicht rausgehen soll." : "Aus. Schicken geht trotzdem jederzeit hier.")}
     ${T.ok === true ? "" : schalter(T.erinnern !== false, "Erinnerungen an ‚Nutzung teilen‘", `data-act="teilen-erinnern"`, "Max fragt ab und zu nochmal nach.")}
     ${T.gesendet.length ? `<p class="klein">Zuletzt geschickt: ${tlDatum(T.gesendet[T.gesendet.length - 1])}.</p>` : ""}`;
 }
 function teilenFuss() {
-  if (TEILEN_SCHRITT === "kopiert") return `<div class="stapel"><p class="klein teilen-anleitung" style="margin:0"><b>Text ist kopiert.</b> Jetzt WhatsApp öffnen, im Chat mit Max lange ins Textfeld tippen, „Einfügen“ wählen und auf Senden tippen.</p><button class="knopf haupt voll" data-act="teilen-wa">${ic("brief")} WhatsApp öffnen</button><button class="knopf leise" data-act="teilen-kopie">Nochmal kopieren</button></div>`;
+  if (TEILEN_SCHRITT === "kopiert") return `<div class="stapel"><p class="klein teilen-anleitung" style="margin:0"><b>Text ist kopiert.</b> Jetzt WhatsApp öffnen, im Chat mit Max lange ins Textfeld tippen, „Einfügen“ wählen und auf den grünen Pfeil tippen.</p><button class="knopf haupt voll" data-act="teilen-wa">${ic("brief")} WhatsApp öffnen</button><button class="knopf leise" data-act="teilen-kopie">Nochmal kopieren</button></div>`;
   return `<div class="stapel"><button class="knopf haupt voll" data-act="teilen-senden">${ic("brief")} An Max schicken</button><button class="knopf zweit voll" data-act="teilen-kopie">Als Text kopieren</button></div>`;
+}
+/* Zwei Schritte, immer gleich erklärt */
+function tlSoGehts(erst) {
+  return `<ol class="teilen-schritte" aria-label="So geht’s"><li>${esc(erst)}</li><li>In WhatsApp unten rechts auf den grünen Pfeil tippen. Fertig.</li></ol>`;
 }
 function teilenSheet() {
   TEILEN_SCHRITT = "";
@@ -263,9 +265,47 @@ function teilenFrageSheet(erinnerung) {
     onclose: () => { if (!TEILEN_ENTSCHIEDEN) { const t = teilenS(); if (t.ok == null) t.naechste = tagPlus(heute(), TEILEN_OFFEN_TAGE); else if (t.ok === false) t.naechste = tlNeinNaechste(); speichern(); } } });
 }
 
+/* Rückfrage nach dem Senden: nachfragen statt annehmen */
+let TEILEN_LETZT_FREI = "", TEILEN_RUECK_ENTSCHIEDEN = false;
+function teilenRueckInhalt(hilfe) {
+  if (!hilfe) return `<p class="teilen-rueck-frage">Ist die Nachricht bei Max angekommen?</p>`
+    + `<p class="klein" style="margin-top:8px">In WhatsApp muss man zum Schluss noch auf den grünen Pfeil tippen. Erst dann ist sie unterwegs.</p>`;
+  return `<p style="margin-top:0"><b>Kein Problem.</b> So klappt’s:</p>`
+    + tlSoGehts("Auf „Nochmal versuchen“ tippen. WhatsApp geht auf, der Text steht schon drin.")
+    + `<p class="klein">Steht kein Text da? Dann „Als Text kopieren“ und im Chat mit Max einfügen.</p>`;
+}
+function teilenRueckfrage() {
+  TEILEN_RUECK_ENTSCHIEDEN = false; TEILEN_SCHRITT = ""; TEILEN_FREI = TEILEN_LETZT_FREI;
+  sheet({ titel: "Angekommen?", id: "teilen-zurueck", inhalt: teilenRueckInhalt(false),
+    fuss: `<div class="stapel"><button class="knopf haupt voll" data-act="teilen-angekommen">Ja, abgeschickt</button><button class="knopf zweit voll" data-act="teilen-nichtgeklappt">Hat nicht geklappt</button></div>`,
+    onclose: () => { const T = teilenS(); if (T.wartet) { T.wartet = ""; speichern(); } TEILEN_FREI = ""; TEILEN_SCHRITT = ""; } });
+}
+/* Einmalige neue Bitte von Max nach dem Umbau (Merker S.teilen.bitte) */
+let TEILEN_BITTE_ENTSCHIEDEN = false;
+function teilenBitteSheet() {
+  const T = teilenS(), zweit = T.bitte === "spaeter"; TEILEN_BITTE_ENTSCHIEDEN = false; T.gefragt = heute(); speichern();
+  sheet({ titel: "Kleine Bitte von Max", id: "teilen-bitte",
+    inhalt: tlMaxKopf(`<p style="margin:0">Danke, dass du das Schicken ausprobiert hast! Da hat’s gehakt – das lag an der App, nicht an dir. Ich hab’s umgebaut, jetzt geht’s einfacher.</p>`
+      + `<p style="margin:8px 0 0">Und auch wenn du die App die letzten Tage wenig benutzt hast: Das hilft mir trotzdem. Gerade das find ich spannend.</p>`
+      + `<p class="mb-ort" style="margin:8px 0 0;text-align:right">Dein Max</p>`)
+      + `<h3 style="margin-top:16px">So geht’s jetzt</h3>`
+      + tlSoGehts("Auf „An Max schicken“ tippen. WhatsApp geht auf, der Text steht schon drin."),
+    fuss: `<div class="stapel"><button class="knopf haupt voll" data-act="teilen-bitte-jetzt">Jetzt schicken</button><button class="knopf zweit voll" data-act="teilen-bitte-spaeter">Später</button></div>`,
+    onclose: () => { if (!TEILEN_BITTE_ENTSCHIEDEN) tlBitteSpaeter(zweit); } });
+}
+function tlBitteSpaeter(zweit) { const T = teilenS(); if (zweit) { T.bitte = "fertig"; T.bitteAb = ""; } else { T.bitte = "spaeter"; T.bitteAb = tagPlus(heute(), TEILEN_BITTE_TAGE); } speichern(); }
+
 /* ---------- Aktionen ---------- */
 function tlWhatsApp(text) { const u = `https://wa.me/${MAX_WA}${text ? "?text=" + encodeURIComponent(text) : ""}`; try { window.open(u, "_blank"); } catch (e) { location.href = u; } }
 function tlGesendet() { const T = teilenS(), h = heute(); if (T.gesendet[T.gesendet.length - 1] !== h) T.gesendet.push(h); T.gesendet = T.gesendet.slice(-24); if (T.ok === true) T.naechste = tagPlus(h, TEILEN_JA_TAGE); speichern(); }
+/* WhatsApp ist auf – ob wirklich gesendet wurde, fragt die App beim Zurückkommen (visibilitychange) oder beim nächsten Öffnen heute */
+let TEILEN_WEG = false, TEILEN_RUECK_T = 0;
+function tlVersuch(frei) { // erst nach sheetZu() aufrufen: das Schließen der Rückfrage räumt „wartet“ ab
+  const T = teilenS(); T.wartet = heute(); T.versuche++; speichern(); TEILEN_LETZT_FREI = frei || "";
+  TEILEN_WEG = false; const t = TEILEN_RUECK_T = Date.now();
+  // WhatsApp ging gar nicht auf (Seite nie verdeckt)? Dann nach ein paar Sekunden trotzdem nachfragen
+  setTimeout(() => { if (t === TEILEN_RUECK_T && !TEILEN_WEG && !document.hidden && window.TEILEN_PRUEFEN) TEILEN_PRUEFEN("zurueck"); }, 6000);
+}
 function teilenAktion(a, d, el) {
   const T = teilenS();
   switch (a) {
@@ -277,20 +317,28 @@ function teilenAktion(a, d, el) {
     case "teilen-was": { const v = $("#teilen-frage-vorschau"); if (!v) return; if (v.innerHTML) { v.innerHTML = ""; return; } v.innerHTML = `<h3 style="margin-top:12px">So sähe die Nachricht aus</h3>${teilenVorschau()}<p class="klein teilen-ohne">${ic("schild")}<span>Nicht dabei: Tagebuch, „Was war heute schön?“, Dank-Zeilen, Merkzettel, Liste, eigene Ideen, Notfallplan, Telefonnummern, Namen und Gesichter.</span></p>`; armHaptics(); return; }
     case "teilen-um": T.ok = T.ok === true ? false : true; if (T.ok) { T.neinAb = ""; T.naechste = tagPlus(heute(), TEILEN_JA_TAGE); } else { T.neinAb = ""; T.naechste = tlNeinNaechste(); } speichern(); sheetInhalt(teilenInhalt()); return;
     case "teilen-erinnern": T.erinnern = !T.erinnern; if (T.erinnern && T.ok === false && !T.naechste) T.naechste = tlNeinNaechste(); speichern(); sheetInhalt(aktuellesSheet()?.dataset.id === "einst" ? einstellungenInhalt() : teilenInhalt()); return;
-    case "teilen-kopie": kopieren(teilenText(TEILEN_FREI), "Kopiert. Jetzt bei Max in WhatsApp einfügen."); T.kopiert++; speichern(); return;
+    case "teilen-kopie": kopieren(teilenText(TEILEN_FREI), "Kopiert."); T.kopiert++; speichern(); TEILEN_SCHRITT = "kopiert"; sheetFuss(teilenFuss()); return;
     case "teilen-senden": {
       const text = teilenText(TEILEN_FREI);
-      if (text.length > TEILEN_LINK_MAX) { kopieren(text, "Kopiert."); T.kopiert++; speichern(); TEILEN_SCHRITT = "kopiert"; sheetFuss(teilenFuss()); return; }
-      tlWhatsApp(text); tlGesendet(); TEILEN_FREI = ""; sheetZu(); toast("Danke! Max freut sich.", { erfolg: true }); return;
+      if (tlZuLang(text)) { kopieren(text, "Kopiert."); T.kopiert++; speichern(); TEILEN_SCHRITT = "kopiert"; sheetFuss(teilenFuss()); return; } // Notfall: sehr lange Notiz
+      const frei = TEILEN_FREI; sheetZu(); TEILEN_FREI = ""; tlVersuch(frei); tlWhatsApp(text); return;
     }
-    case "teilen-wa": tlWhatsApp(""); tlGesendet(); TEILEN_FREI = ""; TEILEN_SCHRITT = ""; sheetZu(); toast("Danke! Im Chat mit Max einfügen und senden.", { erfolg: true, dauer: 9000 }); return;
+    case "teilen-wa": { const frei = TEILEN_FREI; sheetZu(); TEILEN_FREI = ""; TEILEN_SCHRITT = ""; tlVersuch(frei); tlWhatsApp(""); return; }
+    case "teilen-angekommen": TEILEN_RUECK_ENTSCHIEDEN = true; tlGesendet(); T.bestaetigt = heute(); T.wartet = ""; if (T.bitte === "offen" || T.bitte === "spaeter") T.bitte = "fertig"; TEILEN_LETZT_FREI = ""; speichern(); haptik("erfolg");
+      sheetZu(); toast("Danke! Max freut sich.", { erfolg: true }); return;
+    case "teilen-nichtgeklappt": TEILEN_RUECK_ENTSCHIEDEN = true; T.fehl++; T.wartet = ""; speichern(); haptik("auswahl");
+      sheetInhalt(teilenRueckInhalt(true)); sheetFuss(`<div class="stapel"><button class="knopf haupt voll" data-act="teilen-senden">${ic("brief")} Nochmal versuchen</button><button class="knopf zweit voll" data-act="teilen-kopie">Als Text kopieren</button></div>`); return;
+    case "teilen-bitte-jetzt": TEILEN_BITTE_ENTSCHIEDEN = true; T.bitte = "fertig"; T.bitteAb = ""; speichern(); haptik("auswahl");
+      sheetZu(); setTimeout(teilenSheet, REDUCED() ? 0 : 240); return;
+    case "teilen-bitte-spaeter": { TEILEN_BITTE_ENTSCHIEDEN = true; const zweit = T.bitte === "spaeter"; tlBitteSpaeter(zweit); haptik("auswahl");
+      sheetZu(); toast(zweit ? "Alles klar. Geht jederzeit in den Einstellungen unter „Hilfe und Infos“." : "Alles klar. Max fragt in ein paar Tagen nochmal."); return; }
   }
 }
 document.addEventListener("input", ev => {
   const el = ev.target; if (!el.dataset || !el.dataset.teilenFrei) return;
-  TEILEN_FREI = el.value.slice(0, 600);
+  TEILEN_FREI = el.value.slice(0, TEILEN_FREI_MAX);
   const p = $("#teilen-vorschau"), t = teilenText(TEILEN_FREI); if (p) p.textContent = t;
-  const l = $("#teilen-lang"); if (l) l.hidden = t.length <= TEILEN_LINK_MAX;
+  const l = $("#teilen-lang"); if (l) l.hidden = !tlZuLang(t);
 });
 
 /* ---------- Einstellungen: eine Zeile ---------- */
@@ -307,6 +355,8 @@ function teilenEinstZeile() {
 (function () {
   const T0 = teilenS(), schonEingerichtet = !!S.onboard, h0 = heute();
   if (T0.tage[T0.tage.length - 1] !== h0) { T0.tage.push(h0); T0.tage = T0.tage.slice(-120); }
+  // Einmalige neue Bitte (Umbau 11/2026): nur, wer schon Ja gesagt oder es versucht hat – einmal beim ersten Start entschieden
+  if (!T0.bitte) T0.bitte = T0.ok !== false && (T0.ok === true || T0.gesendet.length > 0 || T0.kopiert > 0) ? "offen" : "nein";
   speichern();
   const auto = () => !navigator.webdriver || window.TEILEN_AUTO === true; // Testläufe: nur auf Wunsch
   let getippt = false, fertig = false, t0 = Date.now();
@@ -319,11 +369,23 @@ function teilenEinstZeile() {
   };
   const postDa = () => !!$("button.umschlag") || !!$(".ereignis:not(.weg)");
   function pruefen(art) {
-    if (fertig || !auto()) return;
+    if (!auto()) return;
     try {
       const T = teilenS(), h = heute(); if (!S.onboard || !schonEingerichtet) return;
+      // Rückfrage nach dem Senden (WhatsApp war offen): beim Zurückkommen oder beim nächsten Öffnen am selben Tag
+      if (T.wartet) {
+        if (T.wartet !== h) { T.wartet = ""; speichern(); }
+        else { if (!frei()) return; fertig = true; teilenRueckfrage(); return; }
+      }
+      if (fertig || art === "zurueck") return;
       if (T.gefragt === h) { fertig = true; return; } // höchstens einmal am Tag
       if (!frei()) return;
+      // Einmalige neue Bitte von Max: erst nach der Morgenfrage, nicht an Sparflamme-Tagen; gilt nicht nach „Lieber nicht“
+      if (T.ok !== false && (T.bitte === "offen" || (T.bitte === "spaeter" && T.bitteAb && h >= T.bitteAb))) {
+        const tf = (S.tf || {})[h]; if (!tf) return; if (tf === "D") { fertig = true; return; }
+        if (art === "start" && postDa()) return; // erst nach dem ersten Tipp
+        fertig = true; teilenBitteSheet(); return;
+      }
       if (T.ok == null) {
         if (T.naechste && h < T.naechste) { fertig = true; return; }
         if (art === "start" && postDa()) return; // erst nach dem ersten Tipp
@@ -345,7 +407,7 @@ function teilenEinstZeile() {
   setTimeout(() => pruefen("start"), 4500);
   document.addEventListener("pointerdown", () => { getippt = true; }, true);
   // nach einem Tipp (Fenster zu, Tab gewechselt …) in Ruhe nochmal schauen
-  document.addEventListener("click", () => { if (!fertig) setTimeout(() => pruefen("tipp"), 1200); }, true);
-  document.addEventListener("visibilitychange", () => { if (!document.hidden) { const T = teilenS(), h = heute(); if (T.tage[T.tage.length - 1] !== h) { T.tage.push(h); T.tage = T.tage.slice(-120); speichern(); } fertig = false; t0 = Date.now(); getippt = false; setTimeout(() => pruefen("start"), 2500); } });
+  document.addEventListener("click", () => { if (!fertig || teilenS().wartet) setTimeout(() => pruefen("tipp"), 1200); }, true);
+  document.addEventListener("visibilitychange", () => { if (document.hidden) { TEILEN_WEG = true; return; } if (teilenS().wartet) setTimeout(() => pruefen("zurueck"), 700); { const T = teilenS(), h = heute(); if (T.tage[T.tage.length - 1] !== h) { T.tage.push(h); T.tage = T.tage.slice(-120); speichern(); } fertig = false; t0 = Date.now(); getippt = false; setTimeout(() => pruefen("start"), 2500); } });
   window.TEILEN_PRUEFEN = pruefen; // für Tests
 })();

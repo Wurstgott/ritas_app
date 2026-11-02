@@ -431,7 +431,7 @@ function aktion(a, d, el, ev) {
     case "sicherung-spaeter": S.sicherungErinnert = heute(); speichern(); sheetZu(); break;
     case "sichern-kopie": kopieren(sicherungText(), "Sicherung kopiert. Am besten in eine Notiz oder Mail einfügen."); S.letzteSicherung = heute(); speichern(); break;
     case "einspielen-text": { const s = sicherungPruefen($("#import-text").value); if (s) sicherungFrage(s); else { toast("Das sieht nicht wie eine Sicherung von Ritas App aus."); haptik("achtung"); } break; }
-    case "einspielen-ja": { if (!window._import) break; const vorher = JSON.stringify(S); S = window._import; window._import = null; try { migrieren(); eigeneRegistrieren(); alleSheetsZu(); render(); } catch (err) { S = JSON.parse(vorher); speichern(); alleSheetsZu(); render(); toast("Diese Sicherung ließ sich nicht lesen. Es bleibt alles, wie es war."); break; } toast("Sicherung eingespielt.", { erfolg: true }); break; }
+    case "einspielen-ja": { if (!window._import) break; const vorher = JSON.stringify(S); { let roh = null; try { roh = localStorage.getItem(KEY); } catch (e) { } vorherSichern(roh || vorher); } S = window._import; window._import = null; try { migrieren(); eigeneRegistrieren(); alleSheetsZu(); render(); } catch (err) { S = JSON.parse(vorher); speichern(); alleSheetsZu(); render(); toast("Diese Sicherung ließ sich nicht lesen. Es bleibt alles, wie es war."); break; } toast("Sicherung eingespielt.", { erfolg: true }); break; }
     case "wiederher": eintragWiederher(d.id); sheetInhalt(helferInhalt()); break;
     case "reset-1": sheet({ titel: "Wirklich alles löschen?", inhalt: `<p>Alle Einträge, das Bild, Taler und Einstellungen auf diesem Handy werden gelöscht. Das lässt sich nicht rückgängig machen.</p><button class="knopf zweit voll" data-act="sichern-kopie">Vorher Sicherung kopieren</button>`, fuss: `<div class="stapel"><button class="knopf voll rand warn" data-act="reset-2">Ja, alles löschen</button><button class="knopf haupt voll" data-act="sheet-zu">Nein, behalten</button></div>` }); break;
     case "reset-2": { S = frisch(); speichern(); eigeneRegistrieren(); alleSheetsZu(); TAB = "heute"; ONB = 1; LISTE_EDIT = false; EINST_OFFEN = new Set(["aussehen"]); render(); setTimeout(onboardingSheet, 350); break; }
@@ -524,7 +524,11 @@ function timerBeenden() {
 function start() {
   // unlesbarer Speicherstand: nicht überschreiben, sondern Rettungsansicht zeigen (Kopie liegt unter „…-defekt-Datum“)
   if (LADEFEHLER) { themaAnwenden(); notfall(LADEFEHLER, true); return; }
-  migrieren(); eigeneRegistrieren();
+  // Nach einem Update (andere Fassung als beim letzten Speichern): erst den Rohtext als „…-vorher“ beiseitelegen, dann migrieren.
+  // Klemmt die Migration, kommt die Notfall-Ansicht statt einer weißen Seite – und es wird nichts gespeichert.
+  try { if (ROH_START && S.buildZuletzt !== BUILD) vorherSichern(ROH_START); } catch (e) { }
+  try { migrieren(); eigeneRegistrieren(); }
+  catch (err) { LADEFEHLER = err; try { themaAnwenden(); } catch (e) { } notfall(err); return; }
   themaAnwenden();
   // Testzugang ?zeit=… wird schon ganz oben in core.js gesetzt (vor laden/migrieren)
   try { eierTag(); render(); } catch (err) { notfall(err); return; }

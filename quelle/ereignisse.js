@@ -80,9 +80,9 @@ const EREIGNISSE = [
   { id: "max-neujahr", wer: "max", wann: { monat: 1, tag: 1 }, zeilen: ["Frohes Neues, Rita!", "Erste Amtshandlung im neuen Jahr: Ich sag nicht Tschüss."],
     antworten: [{ text: "Frohes Neues!", sagt: "Dir auch! Und jetzt sag ich’s doch. Tschüss!", effekt: "konfetti" }, { text: "Das hältst du nicht durch", sagt: "Stimmt. Hab ich gestern schon gemerkt.", effekt: "herzen" }] },
   { id: "huhn-geburtstag", wer: "huhn", wann: { geburtstag: true }, zeilen: ["Heute ist dein Geburtstag!", "Ich hab geübt. Pass auf, jetzt sing ich."],
-    antworten: [{ text: "Na los!", sagt: "Zum Geburtstag viel Glück … Den Rest summ ich.", effekt: "noten", tanz: true }, { text: "Danke, Hühnchen!", sagt: "Alles Gute, Rita! Von Herzen. Aus Ton.", effekt: "herzen" }] },
+    antworten: [{ text: "Na los!", sagt: "Zum Geburtstag viel Glück … Den Rest summ ich.", effekt: "noten", tanz: true }, { text: "Danke, Hühnchen!", sagt: "Alles Gute, Rita! Von ganzem Herzen.", effekt: "herzen" }] },
   { id: "huhn-schnee-2", wer: "huhn", wann: { monate: [12, 1, 2] }, wenn: () => { const t = (S.ereignisse || {})["huhn-schnee"]; return !!t && (tagDatum(heute()) - tagDatum(t)) / 864e5 > 200; }, zeilen: ["Letztes Jahr dachte ich, Schnee ist Quark von oben.", "Ich hatte recht."],
-    antworten: [{ text: "Du Schlauberger", sagt: "Ich weiß. Steht so auch auf meinem Sockel.", effekt: "schnee" }, { text: "Bau ein Schneehuhn!", sagt: "Aus Schnee? Dann schmilzt es. Ich bleib lieber drinnen." }] },
+    antworten: [{ text: "Du Schlauberger", sagt: "Ich weiß. Sag ich ja immer.", effekt: "schnee" }, { text: "Bau ein Schneehuhn!", sagt: "Aus Schnee? Dann schmilzt es. Ich bleib lieber drinnen." }] },
   /* ---------- Passend zu dem, was Rita eingetragen hat ---------- */
   { id: "micha-pilze", wer: "micha", wann: { monate: [8, 9, 10, 11] }, wenn: () => { const mo = tagPlus(heute(), -((tagDatum(heute()).getDay() + 6) % 7)); return S.eintraege.filter(e => e.tag >= mo && (e.t === "gehen" || e.t === "draussen")).length >= 3; }, zeilen: ["Wenn du so viel im Forst unterwegs bist:", "Hast du Pilze gesehen? Ich frag nur. Für die Pfanne."],
     antworten: [{ text: "Ein paar!", sagt: "Wusst ich’s. Wo, verrätst du natürlich nicht.", effekt: "herzen" }, { text: "Nur Eichhörnchen", sagt: "Die sammeln auch. Aber die teilen nicht." }] },

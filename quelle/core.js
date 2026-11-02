@@ -87,10 +87,16 @@ function frisch() {
   };
 }
 let LADEFEHLER = null;   // unlesbarer Stand: Rohtext wird gesichert, Notfall-Ansicht statt Überschreiben
+let ROH_START = null;    // Rohtext beim Laden – für den Vorher-Schnappschuss nach einem Update
+/* Genau ein Schnappschuss „…-vorher“: vor der Migration nach einem Versionswechsel und vor jedem Import.
+   Überschreibt nur den eigenen alten Schnappschuss; ist kein Platz mehr, wird still verzichtet (der Start geht vor). */
+const VORHER_KEY = KEY + "-vorher";
+function vorherSichern(roh) { if (typeof roh !== "string" || !roh) return false; try { localStorage.setItem(VORHER_KEY, roh); return true; } catch (e) { return false; } }
 function laden() {
   let r = null;
   try { r = localStorage.getItem(KEY); } catch (e) { return null; }
   if (!r) return null;
+  ROH_START = r;
   try { const o = JSON.parse(r); if (o && typeof o === "object" && !Array.isArray(o)) return o; throw new Error("Kein Spielstand"); }
   catch (e) { try { localStorage.setItem(KEY + "-defekt-" + tagVon(new Date()), r); } catch (x) { } LADEFEHLER = e; return null; }
 }
@@ -165,6 +171,15 @@ function migrieren() {
     g.karten = g.karten.filter(k => k && typeof k === "object" && typeof k.id === "string" && typeof k.text === "string" && k.text && TAG.test(k.tag || "")).map(k => ({ ...k, nr: Number.isFinite(k.nr) ? k.nr : 0, idx: Number.isFinite(k.idx) ? k.idx : 0, z: typeof k.z === "string" ? k.z : "" }));
     g.ideen = [...new Set(g.ideen.filter(t => typeof t === "string" && t.trim()).map(t => t.trim().slice(0, 90)))].slice(0, 80); }
   S.gekauft.patience = true;
+  // Listen null-fest: einzelne null/kaputte Elemente (alte Stände, Sicherungen, künftige Fehler) fallen raus, statt den Start zu kippen
+  { const obj = x => x && typeof x === "object" && !Array.isArray(x), nurObj = a => Array.isArray(a) ? a.filter(obj) : [], nurText = a => Array.isArray(a) ? a.filter(x => typeof x === "string") : [];
+    S.checkliste = nurObj(S.checkliste); S.checkliste.forEach(c => { if (typeof c.text !== "string") c.text = String(c.text ?? ""); });
+    S.geloescht = nurObj(S.geloescht);
+    S.eigeneT = nurObj(S.eigeneT).filter(x => x.id != null); S.eigeneT.forEach(x => { if (typeof x.name !== "string") x.name = String(x.name ?? "") || "Eigenes"; });
+    S.missionen.fertig = nurObj(S.missionen.fertig);
+    S.buecherEigen = nurObj(S.buecherEigen);
+    { const sd = f.schnell; S.schnell = (Array.isArray(S.schnell) ? S.schnell : []).map((x, i) => typeof x === "string" ? x : sd[i] || "gehen"); }
+    if (S.ruhe && typeof S.ruhe === "object") { for (const k of ["hilft", "eigene", "unterwegs", "unterwegsEigen"]) if (k in S.ruhe) S.ruhe[k] = nurText(S.ruhe[k]); if ("leute" in S.ruhe) S.ruhe.leute = nurObj(S.ruhe.leute); } }
   if (!S.eintraege.some(e => e.person === "tanzschueler")) S.menschen = S.menschen.filter(m => m.id !== "tanzschueler");
   if (Array.isArray(S.checkliste) && !S.checkliste.some(c => c.id === "maske")) { const i = S.checkliste.findIndex(c => c.id === "desinf"); S.checkliste.splice(i < 0 ? S.checkliste.length : i, 0, { id: "maske", text: "FFP2-Maske eingesteckt (und eine Ersatzmaske)", an: false }); }
   if (Array.isArray(S.checkliste)) S.checkliste = S.checkliste.filter(c => c.eigen || !["wc", "euro"].includes(c.id)); // Toiletten sind kein Thema (Max)
@@ -173,6 +188,7 @@ function migrieren() {
   if (!Array.isArray(S.buecherEigen)) S.buecherEigen = [];
   if (gvAlt < 2) { const i = S.schnell.indexOf("tanzstunde"); if (i >= 0 && !S.schnellGeaendert) S.schnell[i] = "tagebuch"; }
   S.gv = GV;
+  S.buildZuletzt = BUILD; // für den Vorher-Schnappschuss: welche Fassung hat zuletzt gespeichert
   // künftige Migrationen: if (gvAlt < 4) { … }  (gvAlt = Stand vor dem Auffüllen)
   // Papierkorb: älter als 30 Tage endgültig weg
   const grenze = Date.now() - 30 * 864e5;

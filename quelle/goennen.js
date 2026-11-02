@@ -54,8 +54,13 @@ function gkPool(k) {
   const vor = GK_VORSCHLAEGE.filter(v => !v.m || v.m.includes(mo));
   for (let i = vor.length - 1; i > 0; i--) { const j = Math.floor(r() * (i + 1)); [vor[i], vor[j]] = [vor[j], vor[i]]; }
   const eig = S.goenn.ideen, o = eig.length ? (k.nr || 0) % eig.length : 0;
-  return [...eig.slice(o), ...eig.slice(0, o)].map(t => ({ t, eigen: true })).concat(vor);
+  const alle = [...eig.slice(o), ...eig.slice(0, o)].map(t => ({ t, eigen: true })).concat(vor);
+  // Keine Doppelten: Texte, die schon auf einer anderen offenen Karte stehen, fallen raus (reicht der Rest nicht, bleibt alles)
+  const belegt = new Set(gkOffen().filter(x => x !== k && x.id !== k.id).map(x => x.text));
+  const frei = alle.filter(p => !belegt.has(p.t));
+  return frei.length ? frei : alle;
 }
+const GK_OFFEN_MAX = 4; // liegen schon so viele offene Karten, wird keine neue gezogen und keine „Überraschung“ gemeldet (gezählt wird weiter)
 function gkSetze(k, idx) {
   const p = gkPool(k); if (!p.length) return;
   let i = ((idx % p.length) + p.length) % p.length;
@@ -72,7 +77,7 @@ function gkPruefen() {
   const n = Math.floor(gkGesammelt() / GK_SCHRITT);
   if (g.ausgestellt < 0) { g.ausgestellt = n; if (n >= 1) gkNeueKarte(n); return; } // Einführung: höchstens eine Karte für das schon Gesammelte
   let neu = 0;
-  while (g.ausgestellt < n) { g.ausgestellt++; if (neu++ < 3) gkNeueKarte(g.ausgestellt); }
+  while (g.ausgestellt < n) { g.ausgestellt++; if (neu++ < 3 && gkOffen().length < GK_OFFEN_MAX) gkNeueKarte(g.ausgestellt); } // Zähler läuft immer weiter, nur der Stapel wächst nicht
 }
 /* Status wird aus Liste und Einträgen abgeleitet – so bleibt alles zurücknehmbar */
 function gkStatus(k) {
@@ -81,7 +86,10 @@ function gkStatus(k) {
   return { s: "offen" };
 }
 const gkOffen = () => S.goenn.karten.filter(k => gkStatus(k).s !== "gegoennt");
-const gkNeu = () => S.goenn.gesehen < S.goenn.ausgestellt && gkOffen().length > 0;
+/* „Neu“ heißt: Seit dem letzten Ansehen ist wirklich eine Karte dazugekommen – und vorher lagen noch keine GK_OFFEN_MAX offenen da */
+const gkNeu = () => { const g = S.goenn; if (!(g.gesehen < g.ausgestellt)) return false;
+  const o = gkOffen(), neu = o.filter(k => (k.nr || 0) > g.gesehen).length;
+  return neu > 0 && o.length - neu < GK_OFFEN_MAX; };
 
 /* ---------- Bilder ---------- */
 function gkStempel(cls = "gk-stempel") {

@@ -939,7 +939,7 @@ function bildBeschreibung(M) {
   if (M.wiese) z.push(`Die Wiese: ${Math.min(M.wiese, 70)} ${M.wiese === 1 ? "Blume" : "Blumen"}.`);
   if (M.km) z.push(`Der Weg: ${fmt(M.km)} km gegangen – der Waldweg rechts führt in den Wald.`);
   if (M.ausfluege.length) z.push(`Der Horizont: ${M.ausfluege.map(a => a.titel).join(", ")}.`);
-  if (M.mut) z.push(`Glühwürmchen: ${M.mut} für Mut.`);
+  if (M.mut) z.push(`Glühwürmchen: ${M.mut} für Neues.`);
   if (M.baenke) z.push(`${M.baenke} Rastbank am Weg.`);
   const ent = ENTDECKEN.filter(h => S.entdeckt && S.entdeckt[h.id]);
   if (ent.length) z.push(`Entdeckt: ${ent.map(h => h.name).join(", ")}.`);

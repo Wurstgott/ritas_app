@@ -74,7 +74,7 @@ D.eier2 = [
 { id: "e2-wintersonne", wer: "max", form: "toast", selten: 0.8, wann: {typ:"datum", md:"12-21"},
   text: "Kürzester Tag des Jahres. Ab morgen wird’s jeden Tag ein bisschen heller, ich hab’s extra bestellt." },
 { id: "e2-erster-schnee", wer: "huhn", form: "sprechblase", selten: 0.3, wann: {typ:"monat", m:1},
-  text: "Schnee im Forst? Ich guck lieber von drinnen, Ton und Glatteis vertragen sich nicht." },
+  text: "Schnee im Forst! Ich guck von drinnen zu und zähl die Flocken. Bin bei drei." },
 
 /* ---------- Wochentag und Uhrzeit ---------- */
 { id: "e2-mai-sonntag", wer: "max", form: "brief", selten: 0.4, wann: {typ:"wochentag", tag:0, monate:[5]},
@@ -96,7 +96,7 @@ D.eier2 = [
 
 /* ---------- Tagesform ---------- */
 { id: "e2-form-a-huhn", wer: "huhn", form: "sprechblase", selten: 0.4, wann: {typ:"tagesform", v:"A"},
-  text: "Heute volle Kraft? Ich bin dabei, im Rahmen meiner Möglichkeiten als Tonfigur." },
+  text: "Heute volle Kraft? Ich bin dabei. Vom Zugucken aus." },
 { id: "e2-form-a-max", wer: "max", form: "toast", selten: 0.4, wann: {typ:"tagesform", v:"A"},
   text: "Volle Batterie heute? Dann ruf an, ich trainiere seit Tagen für einen neuen Tschüss-Rekord." },
 { id: "e2-form-b-christiane", wer: "christiane", form: "zettel", selten: 0.4, wann: {typ:"tagesform", v:"B"},
@@ -112,11 +112,11 @@ D.eier2 = [
 
 /* ---------- Zufall ---------- */
 { id: "e2-zufall-ein-bein", wer: "huhn", form: "sprechblase", selten: 0.1, wann: {typ:"zufall"},
-  text: "Ich hab heute geübt, auf einem Bein zu stehen. Der Sockel hat sehr geholfen." },
+  text: "Ich hab heute geübt, auf einem Bein zu stehen. Klappt. Solange keiner guckt." },
 { id: "e2-zufall-schwein-zustaendig", wer: "huhn", form: "sprechblase", selten: 0.08, wann: {typ:"zufall"},
   text: "Ich hab nachgeguckt, wer hier für die guten Tage zuständig ist. Laut deiner Liste: du." },
 { id: "e2-zufall-ofen-spandau", wer: "huhn", form: "toast", selten: 0.1, wann: {typ:"zufall"},
-  text: "Gebrannt im Ofen, abgestaubt in Spandau. Ich weiß bis heute nicht, was mir besser gefallen hat." },
+  text: "Ich hab mich heute mal umgeguckt. Ich bleib hier. Beste Aussicht von ganz Spandau." },
 { id: "e2-zufall-hase-exotisch", wer: "huhn", form: "sprechblase", selten: 0.1, wann: {typ:"zufall"},
   text: "Ich hab überlegt, was an mir am hübschesten ist. Der Kamm. Knapp vor dem Rest." },
 { id: "e2-zufall-max-ohne-grund", wer: "max", form: "brief", selten: 0.08, wann: {typ:"zufall"},

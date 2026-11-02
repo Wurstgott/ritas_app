@@ -146,7 +146,7 @@ D.eier = {
 },
 "huhn-kapitel-13": {
 "wer": "huhn",
-"text": "Kapitel 13. Ich bin nicht abergläubisch. Ich klopf nur vorsichtshalber auf Holz. Also auf Ton.",
+"text": "Kapitel 13. Ich bin nicht abergläubisch. Ich klopf nur vorsichtshalber auf Holz.",
 "form": "toast",
 "selten": 1
 },

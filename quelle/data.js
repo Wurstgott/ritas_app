@@ -41,7 +41,7 @@ D.tagesformen = [
    feld: Hauptfeld, neben: Nebenfeld (50 % der Minuten)
    draussen: findet immer draußen statt (zählt automatisch mit Frischluft-Bonus)
    draussenOpt: kann drinnen oder draußen sein → Eintrag-Blatt fragt „Draußen gemacht“
-   mutOpt: kann neu oder ungewohnt sein → Eintrag-Blatt fragt „Hat Mut gebraucht“ (Glühwürmchen)
+   mutOpt: kann neu oder ungewohnt sein (früher Schalter im Eintrag-Blatt; Glühwürmchen kommen jetzt über mut: true, z. B. „Etwas zum ersten Mal gemacht“)
    bild: Bildort; tf: an welchen Tagen vorgeschlagen; info: sachlicher Satz nach dem Eintragen */
 D.taetigkeiten = [
   // Bewegung
