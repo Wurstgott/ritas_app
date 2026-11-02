@@ -139,40 +139,40 @@ const MB_LEBEN = [
   { t: "es regnet seit Tagen in Halle, und ich hab beschlossen: Das ist Briefwetter.", m: [10, 11, 3, 4] },
   { t: "in Halle ist Sommer, die Saale ist voller Paddler, und ich sitz im Schatten und schreib dir. Klingt faul, ist es auch.", m: [6, 7, 8] }
 ];
-/* Einleitung vor dem Lob (die App zählt auf Ritas Handy, Max sieht nichts) */
-const MB_ZAEHLT = ["Die App hat mir für diesen Brief ein bisschen was verraten.", "Ich hab die App gebeten, mal kurz nachzuzählen.", "Kleiner Bericht aus deiner App, frisch ausgezählt.", "Die App hat mir was zugesteckt.", "Ich hab die App gefragt, was bei dir so los war."];
+/* Einleitung vor dem Lob: Die Zahlen kommen hörbar von der App auf Ritas Handy – Max sieht nichts und tut auch nicht so (Kommission 2.11.) */
+const MB_ZAEHLT = ["Kleine Zahl am Rande, von deiner App ausgezählt:", "Hier zählt deine App selbst, ich hab ihr nur das Zählen beigebracht:", "Kleiner Bericht aus deiner App, frisch ausgezählt:", "Ab hier rechnet deine App, nicht ich:"];
 /* b) Lob – je Fakt mehrere Fassungen */
 const MB_LOB = {
   ersterAusflug: ["Dein erster Ausflug mit der App: {titel}! Ich hab mich gefreut, als hätte ich selbst den Rucksack gepackt. Im Bild steht er jetzt am Horizont, und da bleibt er.", "{titel}! Dein erster Ausflug, der im Bild am Horizont steht. Ich find’s richtig gut, dass du los bist. Erzähl mir davon, auch die unwichtigen Sachen.", "Erster Ausflug, eingetragen und alles: {titel}. Hühnchen tut so, als wär’s seine Idee gewesen."],
   ausflug: ["{titel} steht jetzt auch am Horizont. Du sammelst ja langsam richtig Orte.", "Und dann noch ein Ausflug: {titel}. Ich bin ein bisschen neidisch.", "{titel}, eingetragen. Dein Horizont im Bild wird voll, Rita."],
   buch: ["„{titel}“ ausgelesen! Ich bin beeindruckt. Ich lese gerade seit drei Wochen dasselbe Kapitel.", "Du hast „{titel}“ durch. An der Eiche im Bild hängt jetzt ein neues Lesezeichen. Wie fandst du’s?", "„{titel}“: fertig! Wenn du magst, erzähl mir beim nächsten Telefonat, ob es sich gelohnt hat. Ich such nämlich was."],
-  stufe: ["Im Bild ist was Neues dazugekommen: {name}. Das wächst ja nicht von allein, das warst du.", "Dein Bild hat eine neue Stufe: {name}. Ich hab mir das beim Programmieren ausgedacht und nicht gedacht, dass du so schnell da bist.", "Neue Stufe im Bild: {name}. Da steckt ganz schön viel Gehen, Lesen und Machen drin."],
-  kmRekord: ["{km} Kilometer an einem Stück! Das ist dein längster Weg bisher in der App. Hühnchen wär nach der Hälfte umgekehrt.", "Neuer Rekord: {km} km auf einmal. Ich hab’s zweimal gelesen, weil ich’s so gut fand.", "Dein längster Spaziergang bisher: {km} km. Respekt. Ich bin heute bis zum Bäcker gekommen."],
-  serie: ["Du hast {n} Tage hintereinander was eingetragen. Ich krieg das nicht mal beim Blumengießen hin.", "{n} Tage am Stück! Ich hab das programmiert, aber gemacht hast es du.", "Seit {n} Tagen steht jeden Tag was drin. Man merkt, wer hier die Listen-Expertin ist."],
-  mehr: ["{seit} hast du {n} Sachen eingetragen. Das sind {diff} mehr als in der Zeit davor. Läuft bei dir, würde Pauli sagen.", "{n} Einträge {seitKlein}, {diff} mehr als vorher. Ich hab extra nachgezählt. Also, die App.", "Ich hab verglichen: {n} Einträge diesmal, {diff} mehr als in den Tagen davor. Nicht schlecht, Herr Specht. Frau Specht."],
-  skin: ["Und im Kleiderschrank hast du dir was gegönnt: {name}. Sehr gute Wahl. {wem}", "{name} aus dem Kleiderschrank! {wem} Hühnchen findet das übrigens auch.", "Ich hab gehört, im Kleiderschrank fehlt jetzt {name}. Gekauft von einer gewissen Rita. {wem}"],
+  stufe: ["Im Bild ist was Neues dazugekommen: {name}. Das wächst ja nicht von allein, das warst du.", "Dein Bild hat eine neue Stufe: {name}. Die hab ich mir beim Programmieren besonders gern ausgedacht.", "Neue Stufe im Bild: {name}. Da steckt ganz schön viel Gehen, Lesen und Machen drin."],
+  kmRekord: ["{km} Kilometer an einem Stück! Das ist dein längster Weg bisher in der App. Hühnchen wär nach der Hälfte umgekehrt.", "Neuer Rekord: {km} km auf einmal. Da wär ich gern ein Stück mitgegangen.", "Dein längster Spaziergang bisher: {km} km. Respekt. Ich bin heute bis zum Bäcker gekommen."],
+  serie: ["Mindestens {n} Tage hintereinander stand bei dir was drin. Ich krieg das nicht mal beim Blumengießen hin.", "{n} Tage am Stück, und noch ein paar mehr. Hühnchen hat irgendwann aufgehört mitzuzählen.", "Seit über {n} Tagen steht jeden Tag was drin. Man merkt, wer hier die Listen-Expertin ist."],
+  mehr: ["{seit} hast du {n} Sachen eingetragen. Das sind {diff} mehr als in der Zeit davor. Läuft bei dir, würde Pauli sagen.", "{n} Einträge {seitKlein}, {diff} mehr als vorher. Da kommt ja richtig was zusammen.", "{n} Einträge diesmal, {diff} mehr als in den Tagen davor. Nicht schlecht, Herr Specht. Frau Specht."],
+  skin: ["Und im Kleiderschrank hast du dir was gegönnt: {name}. Sehr gute Wahl. {wem}", "{name} aus dem Kleiderschrank! {wem} Hühnchen findet das übrigens auch.", "Im Kleiderschrank fehlt jetzt {name}. Gekauft von einer gewissen Rita. {wem}"],
   km: ["{malGross} spazieren, zusammen {km} km. Der Forst kennt dich langsam mit Vornamen.", "{seit} bist du {km} km gegangen. Das ist mehr, als ich in der Zeit geschafft hab. Deutlich mehr.", "{km} Kilometer {seitKlein}. Im Bild wird der Weg immer länger."],
   telefon: ["Du hast {mal} telefoniert. Ich hoffe, es war auch was zum Lachen dabei.", "{malGross} telefoniert {seitKlein}. Du bist besser vernetzt als ich, und ich hab drei Handys. Na gut, eins."],
   liste: ["{n} Sachen von deiner Liste abgehakt. Ich hab auch eine Liste. Da steht drauf: „Rita schreiben“. Abgehakt!", "Von deiner To-do-Liste sind {n} Sachen erledigt. Bei mir wächst die Liste nur. Ich glaub, du machst was richtig."],
   tagebuch: ["{malGross} Tagebuch geschrieben. Ich wette, deins ist spannender als jeder Schwedenkrimi.", "Du schreibst fleißig Tagebuch, {mal} {seitKlein}. Hühnchen will mitlesen. Ich hab Nein gesagt."],
-  mut: ["Und mindestens einmal war was ganz Neues dabei. Das find ich richtig stark, egal, was es war.", "Im Wald in deinem Bild leuchtet ein Glühwürmchen mehr. Das gibt’s nur für Neues. Ich hab’s mir gemerkt."],
+  mut: ["Und mindestens einmal war was ganz Neues dabei. Das find ich richtig stark, egal, was es war.", "Im Wald in deinem Bild leuchtet ein Glühwürmchen mehr. Das gibt’s nur für Neues. Erzähl mal, was es war!"],
   leute: ["Du warst unter Leuten. Schön! Erzähl mir mal, wer am meisten geredet hat. Außer dir, meine ich.", "Du warst mit dabei, unter Leuten. Das freut mich. Ich hoffe, der Kuchen war gut."],
   lesen: ["{std} Stunden gelesen {seitKlein}. Die Eiche im Bild freut sich, und ich mich auch.", "Fast {std} Stunden mit Büchern. Ich bin ehrlich neidisch. Ich schaff gerade zwei Seiten vorm Einschlafen."],
-  allgemein: ["{seit} hast du {n} Sachen eingetragen. Schön, dass du dabei bist.", "{n} Einträge {seitKlein}. Jeder davon ist ein Stückchen Bild.", "{n} Mal hat die App {seitKlein} was von dir gehört. Sie freut sich jedes Mal, sagt sie. Ich glaub ihr."]
+  allgemein: ["{seit} hast du {n} Sachen eingetragen. Schön, dass du dabei bist.", "{n} Einträge {seitKlein}. Jeder davon ist ein Stückchen Bild.", "{n} Mal stand {seitKlein} was Neues drin. Das Bild wird davon jedes Mal ein bisschen voller."]
 };
 /* wenn wenig los war: kein Vorwurf, einfach was Nettes */
 const MB_WENIG = [
   "In der App war’s die letzten Tage eher ruhig. Das Bild wartet geduldig, das kann es gut. Ich hoff einfach, du hattest es schön.",
   "Viel eingetragen hast du diesmal nicht, und das ist völlig in Ordnung. Ich schreib dir trotzdem. Oder gerade deswegen.",
-  "Hühnchen hat gepetzt, dass es ruhig war. Ich hab gesagt: Na und? Rita weiß schon, was sie tut.",
+  "Bei mir war’s übrigens auch ruhig. Das Sofa und ich verstehen uns gerade sehr gut.",
   "Ruhige Tage zählen bei mir genauso. Die App ist ja kein Stundenzettel.",
   "Diesmal steht nicht viel drin. Macht nix. Ich wollt dir sowieso einfach nur mal schreiben.",
   "Ich bin auch nicht jeden Tag fleißig. Gestern hab ich zum Beispiel ausschließlich Kekse gegessen. Also: alles gut.",
   "Die App ist geduldig, und ich bin es auch. Wenn dir nach Eintragen ist, ist sie da. Wenn nicht, auch.",
   "Es war ruhig in der App. Ich stell mir vor, du hast stattdessen einen guten Krimi gelesen und gar nicht dran gedacht. Perfekt.",
   "Wenig los diesmal? Dann ist der Brief eben einfach nur ein Brief. Darf auch mal sein.",
-  "Ich hab diesmal gar nicht nachgezählt. Ich wollte einfach nur Hallo sagen.",
-  "Das Bild hat mir erzählt, dass es gerade eine Pause macht. Es sagt, das steht ihm gut."
+  "Diesmal gibt’s keine Zahlen von mir. Ich wollte einfach nur Hallo sagen.",
+  "Hier ist es gerade auch gemütlich. Greta sagt, ich pendle nur noch zwischen Teekanne und Bücherstapel."
 ];
 /* c) Wusstest du eigentlich …: Funktionen, die Rita noch nicht benutzt hat */
 const MB_FUNKTIONEN = [
@@ -196,7 +196,7 @@ const MB_FUNKTIONEN = [
 const MB_LIEBLING = [
   { id: "l-moment", text: "Mein Lieblingsding in der App ist „Was war heute schön?“ im Rückblick. Ein Satz am Abend, und nach einem Monat hast du eine kleine Sammlung.", knopf: "Was war heute schön?" },
   { id: "l-lebensbuch", text: "Mein Lieblingstipp gerade: die Erzählfragen unter „Ideen“. Such dir eine aus und erzähl sie mir beim nächsten Telefonat. Ich hab Zeit mitgebracht.", knopf: "Erzählfragen" },
-  { id: "l-wissen", text: "Ich les selbst gern die Wissen-Häppchen unter „Ideen“. Gestern hab ich gelernt, dass ich vorher nichts wusste.", knopf: "Wissen" },
+  { id: "l-wissen", text: "Ich les selbst gern die Wissen-Häppchen unter „Ideen“. Mein Liebling ist der mit den Staunspaziergängen.", knopf: "Wissen" },
   { id: "l-bingo", text: "Das Forst-Bingo ist mein heimlicher Favorit. Eichhörnchen, Specht, Pilz: Wer zuerst eine Reihe hat, darf angeben.", knopf: "Forst-Bingo" },
   { id: "l-vorhaben", text: "Unter „Ideen“ gibt’s kleine Vorhaben mit Kästchen zum Abhaken. Ganz ohne Eile. Ich hab mir selbst eins vorgenommen, verrate aber nicht, welches.", knopf: "Vorhaben" },
   { id: "l-setzkasten", text: "Mein Lieblingsort in der App ist der Setzkasten in deiner Sammlung unter „Zuhause“. Da liegt von jedem Ausflug ein kleines Andenken. Wie eine Vitrine, nur ohne Staub.", knopf: "Setzkasten" },
@@ -267,7 +267,7 @@ const MB_GB_BRIEFE = [
     "Danke für alles, Rita. Das ist ein großes Wort für einen kleinen Brief, aber es passt.",
     "Feier schön und lass dich beschenken. Die Kerzen auf „Heute“ darfst du übrigens auspusten, so oft du willst."]
 ];
-const MB_GB_ZAEHLT = ["Ich hab die App gebeten, für diesen Brief mal nachzuzählen. Keine Sorge, das bleibt alles bei dir auf dem Handy, ich seh nur das, was hier steht.", "Die App hat für mich nachgezählt, und ich muss sagen: Hut ab.", "Kleine Geburtstagsstatistik, frisch aus deiner App:"];
+const MB_GB_ZAEHLT = ["Zum Geburtstag hat deine App mal nachgerechnet:", "Hier zählt deine App, ich hab ihr nur das Zählen beigebracht:", "Kleine Geburtstagsstatistik, frisch aus deiner App:"];
 const MB_GB_LIEBLING = ["Am häufigsten steht bei dir übrigens „{name}“ drin. Passt zu dir.", "Dein Lieblingseintrag: „{name}“. Hätt ich auch so geraten.", "Ganz vorn liegt „{name}“. Überrascht mich kein bisschen."];
 const MB_GB_LEER = "Die App ist noch ganz frisch bei dir, da gibt’s noch nicht viel zu zählen. Nächstes Jahr mach ich hier eine richtige Statistik, mit Tortendiagramm. Passt ja.";
 const MB_GB_SPAET = "Falls du den Brief erst jetzt aufmachst: macht gar nichts. Geburtstag ist bei mir die ganze Woche.";
@@ -303,7 +303,7 @@ function mbFakten(von, bis, letzter) {
   const st = stufe(); if (letzter && Number.isFinite(letzter.stufe) && st > letzter.stufe && D.stufen[st]) F.push({ art: "stufe", p: 85, name: D.stufen[st].name });
   const maxVor = Math.max(0, ...vorE.filter(mbGang).map(e => e.km)), maxJ = Math.max(0, ...E.filter(mbGang).map(e => e.km));
   if (maxJ >= 2 && maxJ > maxVor && vorE.some(mbGang)) F.push({ art: "kmRekord", p: 80, km: fmt(maxJ) });
-  const se = mbSerie(bis); if (se >= 4) F.push({ art: "serie", p: 75, n: se });
+  { const se = mbSerie(bis), marke = [365, 100, 50, 30].find(m => se >= m); if (marke && marke > (Number(mbS().serieMarke) || 0)) F.push({ art: "serie", p: 75, n: marke }); } // Serie nur zu runden Marken, jede höchstens einmal – kein Druck
   const L = mbTage(von, bis) + 1, vVon = tagPlus(von, -L);
   if (letzter && S.start && vVon >= S.start) { const vn = mbIn(vVon, tagPlus(von, -1)).length; if (E.length >= 5 && vn > 0 && E.length >= vn + 3) F.push({ art: "mehr", p: 70, n: E.length, diff: E.length - vn }); }
   if (typeof SKIN_MAP === "object" && S.skins && S.skins.besitz) {
@@ -380,6 +380,7 @@ function mbErzeugen(f) {
       const zweit = F[0] ? F.slice(1).find(x => x.p >= 40 && x.art !== F[0].art) : null;
       b.absaetze.push(lob);
       if (zweit) b.absaetze.push(mbLobText(zweit, key + "2", v));
+      { const s = [F[0], zweit].find(x => x && x.art === "serie"); if (s) M.serieMarke = s.n; }
     }
     b.wd = mbWusstest(key);
     b.schluss = mbWaehle(MB_SCHLUSS, key + "s", "schluss");

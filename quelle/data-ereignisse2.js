@@ -26,7 +26,7 @@ D.ereignisse2 = [
   { id: "e2-max-kisten", wer: "max", zeilen: ["Ich hab eben vierzehn Kisten gepackt.", "Zwölf davon sind Bücher. Weiß gar nicht, von wem ich das hab."],
     antworten: [{ text: "Von mir natürlich!", sagt: "Dachte ich mir. Die Hälfte davon hast du mir geschenkt.", effekt: "herzen" }, { text: "Hol dir Hilfe!", sagt: "Micha kommt Samstag. Mit Bohrmaschine und Sprüchen." }] },
   { id: "e2-max-vorlesen", wer: "max", zeilen: ["Wusstest du, dass dein Handy dir Texte vorlesen kann?", "Frag mich beim nächsten Telefonat, dann zeig ich’s dir. Falls wir es schaffen aufzulegen."],
-    antworten: [{ text: "Klingt spannend!", sagt: "Steht auf deiner Liste. Dann vergessen wir’s nicht.", aktion: "liste:Max fragen: Handy liest vor" }, { text: "Ruf gleich an!", sagt: "Okay. Aber wer zuerst auflegt, verliert.", aktion: "tel:max" }] },
+    antworten: [{ text: "Klingt spannend!", sagt: "Ist es auch. Es liest sogar Krimis vor, ohne vorher den Täter zu verraten." }, { text: "Ruf gleich an!", sagt: "Okay. Aber wer zuerst auflegt, verliert.", aktion: "tel:max" }] },
   { id: "e2-max-abend", wer: "max", wann: { von: 18, bis: 21 }, zeilen: ["Feierabend! Greta kocht, ich decke den Tisch.", "Und was gibt’s heute bei dir?"],
     antworten: [{ text: "Was Feines", sagt: "Wusste ich. Bei dir gibt’s nichts Halbes." }, { text: "Brot mit Käse", sagt: "Klassiker. Mit Gurke?" }] },
   { id: "e2-max-bingo", wer: "max", zeilen: ["Ich hab heute mein Bingo voll!", "Und du? Wie steht’s bei dir?"],
@@ -42,11 +42,11 @@ D.ereignisse2 = [
   { id: "e2-jane-bank", wer: "jane", zeilen: ["Weißt du noch, als in der Bank die Kasse nicht stimmte?", "Vierzig Pfennig! Eine Stunde haben wir gesucht."],
     antworten: [{ text: "Lagen unterm Stuhl!", sagt: "Genau! Ich lach heute noch.", effekt: "konfetti" }, { text: "Du warst schuld!", sagt: "Niemals. Ich war die Ordentliche. Du die Mutige.", effekt: "herzen" }] },
   { id: "e2-jane-kipferl", wer: "jane", wann: { monate: [11, 12] }, zeilen: ["In der Binger riecht’s nach Vanillekipferln.", "Die erste Fuhre ist schon weg. Micha behauptet, er war’s nicht."],
-    antworten: [{ text: "Heb mir welche auf!", sagt: "Dose mit deinem Namen drauf. Diesmal mit Versteck.", effekt: "herzen" }, { text: "Rezept, bitte!", sagt: "Das ist geheim. Aber dir verrat ich’s.", aktion: "liste:Christiane nach dem Kipferl-Rezept fragen" }] },
+    antworten: [{ text: "Heb mir welche auf!", sagt: "Dose mit deinem Namen drauf. Diesmal mit Versteck.", effekt: "herzen" }, { text: "Rezept, bitte!", sagt: "Das ist geheim. Aber dir verrat ich’s." }] },
   { id: "e2-jane-morgen", wer: "jane", wann: { von: 7, bis: 10 }, zeilen: ["Guten Morgen! Ich hab schon Brötchen geholt.", "Und Micha ist noch nicht mal wach."],
     antworten: [{ text: "Weck ihn!", sagt: "Hab ich. Er sagt, er meditiert. Mit Schnarchen." }, { text: "Ich bin auch schon fit", sagt: "Natürlich. Du warst schon immer die Erste im Büro.", effekt: "herzen" }] },
   { id: "e2-jane-hofladen", wer: "jane", wann: { monate: [4, 5, 6, 7, 8, 9, 10] }, zeilen: ["Micha schwärmt schon wieder von deinem Hofladen.", "Der mit dem Kaffee am Stehtisch. Er sagt, da schmeckt er besser als bei mir. Frechheit."],
-    antworten: [{ text: "Fahrt doch mal mit!", sagt: "Gute Idee. Frag mich mal!", aktion: "liste:Christiane und Micha fragen: Samstag zum Hofladen?", effekt: "herzen" }, { text: "Wie wird das Wetter?", sagt: "Schau mal nach. Für Stehtisch-Kaffee muss es ja nicht gleich Sommer sein.", aktion: "wetter" }] },
+    antworten: [{ text: "Fahrt doch mal mit!", sagt: "Gute Idee. Frag mich mal!", effekt: "herzen" }, { text: "Wie wird das Wetter?", sagt: "Schau mal nach. Für Stehtisch-Kaffee muss es ja nicht gleich Sommer sein.", aktion: "wetter" }] },
   { id: "e2-jane-lila", wer: "jane", zeilen: ["Ich muss dich was fragen, und du musst ehrlich sein:", "Steht mir Lila?"],
     antworten: [{ text: "Hervorragend!", sagt: "Dann kauf ich den Schal. Du bist schuld.", effekt: "konfetti" }, { text: "Nimm lieber Grün", sagt: "Grün! Genau das hat Greta auch gesagt. Ihr steckt unter einer Decke." }] },
 
@@ -60,7 +60,7 @@ D.ereignisse2 = [
   { id: "e2-greta-drei", wer: "greta", wann: { von: 20, bis: 23 }, zeilen: ["Weißt du, was ich abends gern mache?", "Drei schöne Dinge vom Tag aufschreiben. Max findet das kitschig – und macht’s heimlich mit."],
     antworten: [{ text: "Mach ich auch!", sagt: "Im Tagebuch, oder? Hab ich mir gedacht.", effekt: "herzen" }, { text: "Was war heute schön?", sagt: "Die Linsensuppe. Und dass Max beim Abwasch gesungen hat. Schief." }] },
   { id: "e2-greta-hofladen", wer: "greta", zeilen: ["Kennst du bei dir einen guten Hofladen?", "Ich schau mir so was immer gern an – mit Studienblick."],
-    antworten: [{ text: "Den allerbesten!", sagt: "Echt? Frag mich mal, wenn wir in Berlin sind. Den Korb hätte ich.", aktion: "liste:Greta fragen: Mal zusammen zum Hofladen?", effekt: "herzen" }, { text: "Mit Maishähnchen!", sagt: "Pssst! Nicht so laut. Das Hühnchen hört mit." }] },
+    antworten: [{ text: "Den allerbesten!", sagt: "Echt? Frag mich mal, wenn wir in Berlin sind. Den Korb hätte ich.", effekt: "herzen" }, { text: "Mit Maishähnchen!", sagt: "Pssst! Nicht so laut. Das Hühnchen hört mit." }] },
 
   /* ---------- Pauli ---------- */
   { id: "e2-pauli-schild", wer: "pauli", zeilen: ["Ich male gerade Schilder für Samstag.", "Hast du einen guten Spruch? Du kannst doch so schön malen."],
@@ -68,7 +68,7 @@ D.ereignisse2 = [
   { id: "e2-pauli-frauentag", wer: "pauli", wann: { monat: 3, tag: 8 }, zeilen: ["Alles Gute zum Frauentag, Rita!", "Du hast ja schon dein eigenes Geld verwaltet, als das noch lange nicht normal war. Respekt."],
     antworten: [{ text: "Danke, Pauli!", sagt: "Ich schick dir Blumen. Erst mal digitale.", effekt: "herzen" }, { text: "Heute wird gefeiert!", sagt: "Mit Kuchen. Ganz klassisch feministisch.", effekt: "konfetti" }] },
   { id: "e2-pauli-mutig", wer: "pauli", zeilen: ["Darf ich dich was fragen?", "Was war das Mutigste, was du je gemacht hast?"],
-    antworten: [{ text: "Erzähl ich persönlich", sagt: "Deal. Ich bin gespannt!", aktion: "liste:Pauli die Mut-Geschichte erzählen" }, { text: "Jeden Tag was Neues", sagt: "Gute Antwort. Ich frag trotzdem nochmal nach.", effekt: "konfetti" }] },
+    antworten: [{ text: "Erzähl ich persönlich", sagt: "Deal. Ich bin gespannt!" }, { text: "Jeden Tag was Neues", sagt: "Gute Antwort. Ich frag trotzdem nochmal nach.", effekt: "konfetti" }] },
   { id: "e2-pauli-platten", wer: "pauli", zeilen: ["Ich hör gerade alte Platten von Mama.", "Kennst du Nina Hagen? Ach, natürlich kennst du Nina Hagen."],
     antworten: [{ text: "Und wie!", sagt: "Wusste ich. Du warst schon immer ein bisschen Punk.", effekt: "noten" }, { text: "Ich bin eher Abba", sagt: "Auch Kult. Schweden ist bei dir halt überall.", effekt: "noten" }] },
   { id: "e2-pauli-warnung", wer: "pauli", zeilen: ["Max übt heimlich Tschüss-Sagen. Vor dem Spiegel.", "Ich dachte, das solltest du wissen."],
@@ -82,7 +82,7 @@ D.ereignisse2 = [
   { id: "e2-micha-raketen", wer: "micha", wann: { monat: 12, tag: 31 }, zeilen: ["Ich hab Raketen gekauft. Christiane sagt: zu viele.", "Ich sag: Es sind genau so viele, wie in den Kofferraum gepasst haben."],
     antworten: [{ text: "Guten Rutsch!", sagt: "Dir auch, Rita! Eine zünd ich extra für dich.", effekt: "konfetti" }, { text: "Ich schau vom Fenster", sagt: "Bester Platz. Ich wink um Mitternacht Richtung Spandau.", effekt: "herzen" }] },
   { id: "e2-micha-regal", wer: "micha", zeilen: ["Ich hab ein Regal gebaut. Es steht.", "Ein bisschen schief. Christiane nennt es „Charakter“."],
-    antworten: [{ text: "Ich brauch auch eins!", sagt: "Frag mich mal richtig. Aber „gerade“ kann ich nicht versprechen.", aktion: "liste:Micha wegen Regal fragen" }, { text: "Schief ist modern", sagt: "Siehste. Ich war meiner Zeit voraus." }] },
+    antworten: [{ text: "Ich brauch auch eins!", sagt: "Frag mich mal richtig. Aber „gerade“ kann ich nicht versprechen." }, { text: "Schief ist modern", sagt: "Siehste. Ich war meiner Zeit voraus." }] },
 
   /* ---------- Karin ---------- */
   { id: "e2-karin-midsommar", wer: "karin", wann: { monat: 6 }, zeilen: ["Hej Rita! Bald ist Midsommar, ich binde schon Blumenkränze.", "Sotis trägt ihren nicht. Sie findet das unter ihrer Würde."],

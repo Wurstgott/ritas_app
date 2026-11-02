@@ -183,7 +183,7 @@ D.wissen = [
 {
 "id": "W12",
 "titel": "Natur und Wohlbefinden: Ältere Menschen, die acht Wochen lang einmal pro Woche 15 Minuten …",
-"text": "Ältere Menschen, die acht Wochen lang einmal pro Woche 15 Minuten „Staunspaziergänge“ machten (bewusst auf Weite, Details und Neues achten), berichteten über mehr Freude und Verbundenheit, und auf ihren Selfies lächelten sie breiter.",
+"text": "Wer acht Wochen lang einmal pro Woche 15 Minuten „Staunspaziergänge“ machte (bewusst auf Weite, Details und Neues achten), berichtete über mehr Freude und Verbundenheit. Und auf den Selfies wurde das Lächeln breiter.",
 "beleg": "mittel",
 "quelle": "https://memory.ucsf.edu/publications/big-smile-small-self-awe-walks-promote-prosocial-positive-emotions-older-adults",
 "quelleName": "Sturm et al. 2020, Emotion"
@@ -295,7 +295,7 @@ D.wissen = [
 {
 "id": "W26",
 "titel": "Schlaf: Eine Übersicht über viele Studien zeigt, dass regelmäßige Bewegung die …",
-"text": "Eine Übersicht über viele Studien zeigt, dass regelmäßige Bewegung die Schlafqualität älterer Menschen verbessert. Dafür braucht es keinen Sport im engeren Sinn; Spazierengehen und sanfte Übungen zählen auch.",
+"text": "Eine Übersicht über viele Studien zeigt, dass regelmäßige Bewegung die Schlafqualität verbessert. Dafür braucht es keinen Sport im engeren Sinn; Spazierengehen und sanfte Übungen zählen auch.",
 "beleg": "stark",
 "quelle": "https://pubmed.ncbi.nlm.nih.gov/35385825/",
 "quelleName": "Übersicht 2022, PubMed"
@@ -407,7 +407,7 @@ D.wissen = [
 {
 "id": "W40",
 "titel": "Neugier: Ältere, die drei Monate lang etwas Neues und Anspruchsvolles lernten …",
-"text": "Ältere, die drei Monate lang etwas Neues und Anspruchsvolles lernten (Digitalfotografie oder Quilten), verbesserten ihr Gedächtnis mehr als eine Gruppe, die Vertrautes tat oder sich nur gesellig traf. In einer älteren Studie lebten außerdem neugierigere ältere Männer länger (Beobachtung).",
+"text": "Wer drei Monate lang etwas Neues und Anspruchsvolles lernte (Digitalfotografie oder Quilten), verbesserte sein Gedächtnis mehr als eine Gruppe, die Vertrautes tat oder sich nur gesellig traf. In einer älteren Studie lebten außerdem neugierigere ältere Männer länger (Beobachtung).",
 "beleg": "mittel",
 "quelle": "https://www.psychologicalscience.org/news/releases/learning-new-skills-keeps-an-aging-mind-sharp.html",
 "quelleName": "Park et al. 2014, Psychological Science"

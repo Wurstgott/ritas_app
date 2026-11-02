@@ -86,7 +86,7 @@ D.eier = {
 },
 "max-250": {
 "wer": "max",
-"text": "250 Einträge. Ich hab extra nachgeprüft, ob die App das aushält. Sie hält. Hühnchen ist etwas außer Atem.",
+"text": "250 Einträge! Die App hält das locker aus. Hühnchen ist etwas außer Atem.",
 "form": "brief",
 "selten": 1
 },

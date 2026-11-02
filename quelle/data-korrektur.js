@@ -7,8 +7,8 @@
   const W = D.wissen;
   setze(W, "W01", { text: "Die WHO sagt vor allem: Jede Bewegung zählt, auch kleine Portionen, und jede Unterbrechung langen Sitzens hilft. Wie viel zu dir passt, weißt du selbst am besten." });
   setze(W, "W03", { text: "Gegen bleierne Müdigkeit halfen in einer Auswertung von über 100 Studien Bewegung und gute Gespräche oft mehr als Medikamente allein." });
-  setze(W, "W04", { text: "In einer großen Auswertung war mehr tägliches Gehen gesünder, aber nur bis zu einem Punkt: Bei über 60-Jährigen flachte der Nutzen bei etwa 6.000–8.000 Schritten ab. Darunter zählt jeder Schritt, darüber muss niemand Rekorde jagen." });
-  { const w5 = W.find(x => x.id === "W05"); if (w5) w5.text = "Gleichgewichts- und Alltagsübungen machen sicherer auf den Beinen – das zeigt eine Cochrane-Übersicht mit über 100 Studien. Die Übungen, die du schon kennst, zählen genau dafür."; }
+  setze(W, "W04", { text: "In einer großen Auswertung war mehr tägliches Gehen gesünder, aber nur bis zu einem Punkt: Je nach Gruppe flachte der Nutzen schon bei etwa 6.000–8.000 Schritten am Tag ab. Darunter zählt jeder Schritt, darüber muss niemand Rekorde jagen." });
+  { const w5 = W.find(x => x.id === "W05"); if (w5) w5.text = "Gleichgewicht ist kein festes Talent, man kann es üben wie Vokabeln. Eine Cochrane-Übersicht mit über 100 Studien zeigt: Schon einfache Balance-Übungen im Alltag wirken messbar. Die Übungen, die du schon kennst, zählen genau dafür."; }
   setze(W, "W10", { text: "Schon der Blick ins Grüne tut gut: In Studien erholten sich Menschen mit Blick auf Bäume schneller als mit Blick auf eine Mauer. Der Fensterplatz zählt." });
   setze(W, "W18", { text: "Wer regelmäßig liest, bleibt in Studien geistig wacher. Ob das Lesen die Ursache ist, weiß man nicht – aber ein Kapitel am Tag ist ein schöner Grund." });
   setze(W, "W21", { text: "Eine Auswertung von 148 Studien zeigt: Menschen, die gut eingebunden sind, geht es körperlich und seelisch besser. Ein Anruf, ein Tee im Haus, eine Tanzstunde – das ist keine Kleinigkeit." });

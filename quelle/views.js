@@ -120,15 +120,15 @@ function viewHeute() {
   if (typeof mbHeutePost === "function") html += mbHeutePost(); // Brief von Max (maxbriefe.js)
   if (ruhig) html += `<section class="abschnitt"><button class="kachel breit k-ruhe" data-act="hilft">${ic("windrad")}<span><span class="titel">Ablenkung?</span><br><span class="unter">Wenn der Rücken zwickt oder das Handyspiel lockt.</span></span></button></section>`;
   // Morgenseite (V1): Eintragen gleich nach Hühnchen und Post, die Rückmeldung „Heute eingetragen“ direkt darunter,
-  // dann die To-do-Liste und EIN Platz „Neu für dich“ – danach Bild und der Rest
+  // dann EIN Platz „Neu für dich“ (Beschluss U2: direkt vor der To-do-Liste) und die Liste – danach Bild und der Rest
   html += `<section class="abschnitt" id="eintragen-heute"><h2>Eintragen</h2><div class="kacheln">${schnellHeute(tf).map(id => { const t = tat(id); return kachel(t, zuletztText(id), `data-act="eintragen" data-t="${id}"`); }).join("")}</div>
     <button class="knopf haupt voll" style="margin-top:12px" data-act="alles">${ic("plus")} Etwas anderes eintragen</button></section>`;
   const ohneHaken = liste.filter(e => e.t !== "abgehakt");
   if (ohneHaken.length) {
     html += `<section class="abschnitt"><h2>Heute eingetragen</h2><div class="liste">${ohneHaken.slice().reverse().map(e => eintragZeile(e, true, true)).join("")}</div></section>`;
   }
-  html += listeHTML();
   html += neuFuerDichHTML(tf);
+  html += listeHTML();
   const st = D.stufen[stufe()];
   html += `<section class="abschnitt"><div class="buehne flach" id="buehne-heute"><canvas id="bild-heute" role="img" aria-label="${esc(bildBeschreibung(modell()).join(" "))}"></canvas><button class="ueber" data-tab="lichtung" aria-label="Das Bild groß ansehen"></button></div>
     <p class="klein" style="margin-top:8px">${esc(st.name)}${!S.eintraege.some(x => (x.w || 0) > 0) ? " · bald wächst hier was" : modell().letzte && D.orte[modell().letzte] ? ` · zuletzt gewachsen: ${esc(D.orte[modell().letzte].name.replace(/^(Der|Die|Das) /, m => m.toLowerCase()))}` : ""}</p></section>`;
@@ -318,15 +318,15 @@ const WOCHENPLAN = "Montags neue Bingo-Karte · Dienstags und freitags Post von 
 const THEMEN_REIHE = ["Handy", "Kreativ", "Krimi", "Schwedisch", "Geschichte", "Essen", "Tee & Wärme", "Gut geschützt", "Lesen", "Hören", "Körper & Sinne", "Neugier"];
 const THEMEN_GRUPPE = { "Hände": "Kreativ", "Erinnern": "Geschichte", "Musik": "Hören", "Körper": "Körper & Sinne", "Sinne": "Körper & Sinne", "Lernen": "Neugier", "Listen": "Neugier", "Ordnen": "Neugier", "Kontakt": "Neugier" };
 function themaVon(kat) { return THEMEN_GRUPPE[kat] || kat; }
-function ideenThemen() { const z = {}; (D.stattDaddeln || []).forEach(v => { if (v.kat) { const t = themaVon(v.kat); z[t] = (z[t] || 0) + 1; } }); return Object.entries(z).sort((a, b) => { const ia = THEMEN_REIHE.indexOf(a[0]), ib = THEMEN_REIHE.indexOf(b[0]); return (ia < 0 ? 99 : ia) - (ib < 0 ? 99 : ib); }); }
+function ideenThemen() { const z = {}; sichtbar(D.stattDaddeln).forEach(v => { if (v.kat) { const t = themaVon(v.kat); z[t] = (z[t] || 0) + 1; } }); return Object.entries(z).sort((a, b) => { const ia = THEMEN_REIHE.indexOf(a[0]), ib = THEMEN_REIHE.indexOf(b[0]); return (ia < 0 ? 99 : ia) - (ib < 0 ? 99 : ib); }); }
 function ideenThemaSheet(kat) {
   kat = themaVon(kat); // alte Themennamen (z. B. aus älteren Verweisen) landen im neuen Fach
-  const arr = (D.stattDaddeln || []).filter(v => themaVon(v.kat) === kat);
+  const arr = sichtbar(D.stattDaddeln).filter(v => themaVon(v.kat) === kat);
   sheet({ titel: kat, id: "thema", inhalt: `<p class="klein" style="margin-top:0">${arr.length} Ideen. Antippen, dann steht alles da.</p><div class="liste kurz-liste">${arr.map(v => zeileBtn(katIcon(v.kat, v), v.titel, ideeKurz(v), `data-act="idee" data-id="${v.id}"`, "k-geist")).join("")}</div>` });
 }
 function katIcon(kat, v) { if (v && v.icon && (ICF[v.icon] || IC[v.icon])) return v.icon; /* eigenes Symbol an der Idee geht vor (z. B. Kartoffeldruck: Pinsel statt Brief) */ { const k0 = (kat || "").toLowerCase(); if (k0.includes("krimi")) return "lupe"; if (k0.includes("körper")) return "matte"; if (k0.includes("hände")) return "pinsel"; if (k0 === "neugier") return "funke"; } if (/list/i.test(kat || "")) return "feder"; if (v && /karte|brief|post/i.test(v.titel + v.text)) return "brief"; const k = (kat || "").toLowerCase(); if (k.includes("handy")) return "handy"; if (k.includes("tee")) return "waerme"; if (k.includes("geschützt")) return "schild"; if (k.includes("essen")) return "topf"; if (k.includes("krimi")) return "maske"; if (k.includes("kreativ")) return "pinsel"; if (k.includes("schwed")) return "sprechen"; if (k.includes("geschicht")) return "lesezeichen"; return k.includes("les") ? "buch" : k.includes("hör") ? "kopfhoerer" : k.includes("hand") || k.includes("händ") ? "pinsel" : k.includes("kontakt") ? "telefon" : k.includes("körper") ? "matte" : k.includes("sinn") ? "blume" : k.includes("erinn") ? "feder" : k.includes("ordn") ? "kiste" : k.includes("lern") ? "funke" : k.includes("musik") || k.includes("tanz") ? "note" : "stern"; }
 function vorschlaege(tf, n, key) {
-  const pool = (D.stattDaddeln || []).filter(v => (v.tf || "ABCD").includes(tf) && (tf !== "D" || /Hören|Körper|Sinne|Musik|Lesen/.test(v.kat)) && (tf !== "C" || !/Ordnen/.test(v.kat)));
+  const pool = sichtbar(D.stattDaddeln).filter(v => (v.tf || "ABCD").includes(tf) && (tf !== "D" || /Hören|Körper|Sinne|Musik|Lesen/.test(v.kat)) && (tf !== "C" || !/Ordnen/.test(v.kat)));
   const r = rnd(key), a = pool.slice();
   for (let i = a.length - 1; i > 0; i--) { const j = Math.floor(r() * (i + 1)); [a[i], a[j]] = [a[j], a[i]]; }
   // möglichst verschiedene Kategorien
@@ -390,7 +390,7 @@ function sammlungInhalt() {
   h += fach("setzkasten", "Setzkasten", d.andenken ? `${zahlWort(d.andenken, "Andenken", "Andenken")} von Ausflügen` : "Andenken von Ausflügen", `data-act="setzkasten"`);
   h += fach("stern", "Fund\u00ADstücke", d.funde || d.siege ? `${zahlWort(d.funde, "Sache", "Sachen")} gefunden` : "noch nichts", `data-act="rb-funde"`, d.fundNeu);
   h += fach("geschenk", "Gönn-Karten", d.gk ? zahlWort(d.gk, "Karte", "Karten") : "kommen von allein", `data-act="gk-auf"`, d.gkNeu);
-  h += fach("lupe", "Im Bild entdeckt", d.entG ? `${d.ent} von ${d.entG}` : "", `data-act="sm-bild"`);
+  h += fach("lupe", "Im Bild entdeckt", d.entG ? (d.ent ? `${d.ent} von ${d.entG}` : "Noch nichts – probier die Lupe") : "", `data-act="sm-bild"`); // I4a: keine „0 von 28“
   h += fach("funke", "Glüh\u00ADwürmchen", d.gluehw ? `${d.gluehw} im Bild` : "noch keins", `data-act="sm-gluehw"`);
   h += fach("lichtung", "Alle Stufen", `Stufe ${st + 1} von ${D.stufen.length}`, `data-act="stufen"`);
   h += `</div>`;
@@ -562,7 +562,7 @@ function alleSheet() {
 function hilftSheet() {
   const tf = S.tf[heute()] || "C";
   let v = vorschlaege(tf === "A" || tf === "B" ? tf : (tf === "D" ? "D" : "C"), 3, "hilft" + Date.now());
-  if (tf === "C" || tf === "D") { const lind = (D.stattDaddeln || []).filter(x => /Körper|Hören/.test(x.kat) && x.tf.includes(tf)); if (lind.length && !v.some(x => lind.includes(x))) v = [lind[Math.floor(Math.random() * lind.length)], ...v.slice(0, 2)]; }
+  if (tf === "C" || tf === "D") { const lind = sichtbar(D.stattDaddeln).filter(x => /Körper|Hören/.test(x.kat) && x.tf.includes(tf)); if (lind.length && !v.some(x => lind.includes(x))) v = [lind[Math.floor(Math.random() * lind.length)], ...v.slice(0, 2)]; }
   let html = `${notfallLeiste("ruhe-jetzt")}<p>${A("Drei Ideen für jetzt. Oder keine – auch gut.", "Drei Ideen für jetzt. Oder keine – auch gut.")}</p><div class="liste kurz-liste">${v.map(x => zeileBtn(katIcon(x.kat, x), x.titel, ideeKurz(x), `data-act="idee" data-id="${x.id}"`, "k-geist")).join("")}</div>`;
   if (S.spiel.an && S.gekauft.patience && (tf === "C" || tf === "D")) html += `<div class="bogen mulde" style="margin-top:14px"><p style="margin:0 0 8px">Spiel ruhig eine Runde Patience – nach 10 Minuten ist sie vorbei.</p><button class="knopf zweit voll" data-act="spiel">${ic("karten")} Waldpatience</button></div>`;
   html += `<button class="knopf leise" data-act="hilft-neu">Andere Ideen</button><div class="liste" style="margin-top:12px">${zeileBtn("plaudern", "Kurz plaudern – zum Spaß", "Mit Hühnchen, Christiane, Max und Co.", `data-act="tel-auf"`, "k-menschen")}${zeileBtn("briefkasten", "Post von Karin aus Vimmerby", "Briefwechsel auf Schwedisch", `data-act="bv-auf"`, "k-menschen")}${zeileBtn("fernseher", "Film & Fernsehen", "Krimis und gute Filme aus der Mediathek", `data-act="tv-auf"`, "k-geist")}</div>`;
@@ -794,7 +794,7 @@ function stufeMoment(neuSt, auchNeu) {
 
 /* ---------- Wissen, Lebensbuch, Moment, Rückblick ---------- */
 function wissenSheet() {
-  const w = D.wissen || [];
+  const w = sichtbar(D.wissen);
   sheet({ titel: "Wissen", inhalt: `<p class="klein">Kurz, ehrlich, mit Quelle. „Beleg“ sagt, wie gut es untersucht ist.</p>` + w.map(x => `<details class="bogen" style="margin-bottom:10px"><summary style="font-weight:700;cursor:pointer;min-height:44px;display:flex;align-items:center">${esc(x.titel)}</summary><p style="margin-top:8px">${esc(x.text)}</p><p class="klein">Beleg: ${esc(x.beleg)}${x.quelle ? ` · <a href="${esc(x.quelle)}" target="_blank" rel="noopener">${esc(x.quelleName || "Quelle")}</a>` : ""}</p></details>`).join("") });
 }
 function lebensbuchSheet() {
@@ -814,7 +814,7 @@ function rueckblickSheet() {
 /* ---------- Missionen ---------- */
 function missionenSheet() {
   const tf = S.tf[heute()] || "B";
-  const ms = (D.missionen || []).filter(m => !S.missionen.aktiv.some(a => a.id === m.id));
+  const ms = sichtbar(D.missionen).filter(m => !S.missionen.aktiv.some(a => a.id === m.id));
   sheet({ titel: "Kleine Vorhaben", inhalt: `<p class="klein">Ein Vorhaben für ein paar Tage. Pausen sind erlaubt, es läuft nichts ab.</p><div class="liste">${ms.map(m => zeileBtn("funke", m.titel, `${m.tage} Tage · ${m.text}`, `data-act="mission-wahl" data-id="${m.id}"`, "k-mut")).join("")}</div>` });
 }
 function missionSheet(id) {

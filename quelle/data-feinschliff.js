@@ -63,3 +63,8 @@ if (D.ereignisse2) D.ereignisse2 = D.ereignisse2.filter(e => !["e2-max-klausur",
 
 /* Weitere Spaß-Telefonate (Greta, Pauli, Micha) */
 if (Array.isArray(D.anrufe2)) D.anrufe = [...(D.anrufe || []), ...D.anrufe2.filter(a => !(D.anrufe || []).some(x => x.id === a.id))];
+
+/* Verstecken statt streichen (Kommission 2.11.): Diese Einträge bleiben in D (IDs nie löschen), werden aber nicht mehr vorgeschlagen
+   oder zur Auswahl angezeigt. Was Rita schon begonnen oder erledigt hat, findet die App weiter. Filter: sichtbar() in core.js.
+   M13 E-Roller-Sicherheit · M27 Lesen zu zweit · SD420 Lüftungsplan · SD424 Test-Vorrat · SD434 Schal-Atmen · SD212/SD213 EMS · W27 Schlaftabletten */
+D.versteckt = new Set(["M13", "M27", "SD420", "SD424", "SD434", "SD212", "SD213", "W27"]);

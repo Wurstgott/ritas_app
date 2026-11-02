@@ -207,6 +207,10 @@ const Dosis = m => 10 * Math.log2(1 + m / 10);
 const REIHE = [1, .8, .6, .4, .2, 0];
 const tat = id => D.taetigkeiten.find(t => t.id === id) || { id, name: id, feld: "geist", bild: "wiese", art: "min", icon: "stern" };
 const eintraegeAm = tag => S.eintraege.filter(e => e.tag === tag);
+/* Verstecken statt streichen (Kommission 2.11.): IDs in D.versteckt bleiben in D, damit laufende Vorhaben, erledigte Ideen, Pläne und Käufe
+   weiter gefunden werden (…find(x => x.id === id)). Nur Vorschläge und Auswahl-Listen filtern sie mit sichtbar() aus. */
+const versteckt = id => { const v = D.versteckt; return v instanceof Set ? v.has(id) : Array.isArray(v) && v.includes(id); };
+const sichtbar = arr => (arr || []).filter(x => x && !versteckt(x.id));
 
 function minutenVon(e) {
   const t = tat(e.t);

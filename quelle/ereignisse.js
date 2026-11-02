@@ -28,7 +28,7 @@ const EREIGNISSE = [
   { id: "jane-krimi", wer: "jane", zeilen: ["Hast du den neuen Kommissar Beck gesehen?", "Ich hab den Täter in Minute zwölf erraten!"],
     antworten: [{ text: "Verrat bloß nichts!", sagt: "Meine Lippen sind versiegelt. Mmmh-mmh." }, { text: "Wo läuft der?", sagt: "In der Mediathek. Ich zeig’s dir.", aktion: "tv-auf" }] },
   { id: "jane-runde", wer: "jane", zeilen: ["Ich hab heute an unsere Runden im Forst gedacht.", "Mit Thermoskanne und Zimtschnecken. Weißt du noch?"],
-    antworten: [{ text: "Lass uns mal wieder!", sagt: "Gute Idee. Frag mich mal!", aktion: "liste:Christiane fragen: Lust auf eine Forstrunde?", effekt: "herzen" }, { text: "Die Zimtschnecken!", sagt: "Die waren gut. Micha behauptet bis heute, er hätte nur eine gegessen." }] },
+    antworten: [{ text: "Lass uns mal wieder!", sagt: "Gute Idee. Frag mich mal!", effekt: "herzen" }, { text: "Die Zimtschnecken!", sagt: "Die waren gut. Micha behauptet bis heute, er hätte nur eine gegessen." }] },
   { id: "jane-test", wer: "jane", wann: { monate: [10, 11, 12, 1, 2, 3] }, zeilen: ["Wenn ich das nächste Mal komme, mach ich vorher einen Test – versprochen.", "Und die gute Butter bring ich dann auch mit."],
     antworten: [{ text: "Du bist die Beste", sagt: "Ich weiß. Aber sag’s ruhig öfter.", effekt: "herzen" }, { text: "Und Kuchen?", sagt: "Rita. Ich bitte dich. Natürlich Kuchen." }] },
   { id: "jane-telefon", wer: "jane", zeilen: ["Ich hab eben was Unglaubliches beim Bäcker gehört.", "Aber das erzähl ich dir lieber am Telefon."],
@@ -86,7 +86,7 @@ const EREIGNISSE = [
   /* ---------- Passend zu dem, was Rita eingetragen hat ---------- */
   { id: "micha-pilze", wer: "micha", wann: { monate: [8, 9, 10, 11] }, wenn: () => { const mo = tagPlus(heute(), -((tagDatum(heute()).getDay() + 6) % 7)); return S.eintraege.filter(e => e.tag >= mo && (e.t === "gehen" || e.t === "draussen")).length >= 3; }, zeilen: ["Wenn du so viel im Forst unterwegs bist:", "Hast du Pilze gesehen? Ich frag nur. Für die Pfanne."],
     antworten: [{ text: "Ein paar!", sagt: "Wusst ich’s. Wo, verrätst du natürlich nicht.", effekt: "herzen" }, { text: "Nur Eichhörnchen", sagt: "Die sammeln auch. Aber die teilen nicht." }] },
-  { id: "max-buch-fertig", wer: "max", wenn: () => S.eintraege.some(e => e.t === "buchfertig" && e.tag >= tagPlus(heute(), -1)), zeilen: ["Hühnchen hat gepetzt: Du hast ein Buch ausgelesen.", "Und, wie war’s?"],
+  { id: "max-buch-fertig", wer: "max", wenn: () => S.eintraege.some(e => e.t === "buchfertig" && e.tag >= tagPlus(heute(), -1)), zeilen: ["Deine App sagt, du hast ein Buch ausgelesen.", "Und, wie war’s?"],
     antworten: [{ text: "Großartig!", sagt: "Dann brauchst du Nachschub. Accio nächstes Buch!", aktion: "lesebegleiter" }, { text: "Ging so", sagt: "Auch gut zu wissen. Das nächste wird besser." }] },
   /* ---------- Hühnchen ---------- */
   { id: "huhn-detektiv", wer: "huhn", zeilen: ["Ich ermittle in einem Fall.", "Jemand hat einen Keks gegessen. Die Spuren führen … zu dir."],

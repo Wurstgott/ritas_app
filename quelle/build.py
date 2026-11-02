@@ -1,7 +1,9 @@
 #!/usr/bin/env python3
-"""Fügt app.html + app.css + data.js + app.js zu EINER Datei zusammen.
-dist/app.html  -> Artifact-Fassung (vollständiges Dokument, ohne PWA-Verweise)
-repo/index.html -> GitHub-Pages-Fassung mit manifest + Icons (PWA)
+"""Fügt app.html + die Listen CSS, DATA und APP (unten, Reihenfolge trägt Logik) zu EINER Datei zusammen.
+dist/test.html  -> Testfassung (vollständiges Dokument, ohne PWA-Verweise) – gegen sie laufen alle Tests
+dist/app.html   -> Artifact-Fassung (ohne <html>/<head>-Gerüst)
+repo/index.html -> GitHub-Pages-Fassung mit Manifest + Icons (PWA), wird nach ritas_app/index.html kopiert
+Mehr dazu: README-entwickler.md
 """
 import datetime, pathlib, re, json
 d = pathlib.Path(__file__).parent

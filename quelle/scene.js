@@ -1311,7 +1311,7 @@ const BILDSPIELE = [
   { id: "igel", wo: "am Busch", satz: "Er schmatzt. Sehr laut für so einen Kleinen.", jahr: c => c.m >= 4 && c.m <= 10, uhr: c => c.h >= 17 && c.h < 23, anker: () => SZ.anker.igel, dauer: 3000, abends: true },
   { id: "laterne", blase: "unten", wo: "an der Laterne", satz: "Flackert kurz, dann brennt sie. Jetzt findet jeder heim.", jahr: () => true, uhr: c => c.h >= 16 && c.h < 23 && (c.nacht > .05 || c.gold > .25 || c.h >= 18), anker: () => SZ.anker.laterne, dauer: 2400, bleibt: true, abends: true },
   { id: "seifenblasen", blase: "unten", wo: "auf deinem Balkon", wer: "huhn", satz: "Ich hab eine gefangen. Sie war weg. Betrug!", jahr: c => c.m >= 5 && c.m <= 8 && c.art !== "regen", uhr: c => c.h >= 9 && c.h < 20 && c.tag, anker: () => SZ.anker.balkon, dauer: 3400 },
-  { id: "kraniche", blase: "unten", wo: "am Himmel", taler: 3, wer: "huhn", satz: "Die ziehen los. Ich nicht. Ich hab hier meine Fensterbank.", jahr: c => c.m === 10 || c.m === 3, uhr: c => c.h >= 8 && c.h < 17 && c.tag, anker: () => [700, 120], dauer: 4200 }
+  { id: "kraniche", blase: "unten", wo: "am Himmel", taler: 3, wer: "huhn", satz: "Die ziehen los. Ich nicht. Ich hab hier mein Regal.", jahr: c => c.m === 10 || c.m === 3, uhr: c => c.h >= 8 && c.h < 17 && c.tag, anker: () => [700, 120], dauer: 4200 }
 ];
 /* Die Tagesauswahl hängt nur vom echten Wetter und vom Datum ab (K-F-13) – Umstellen des Bildwetters ändert sie nicht */
 function spielKontext() {
@@ -1378,7 +1378,7 @@ function schneemannMalen(ctx, x, y, s, teil = 1) {
 /* ============================================================
    Effekt-Ebene über dem großen Bild: Wetter, Funkeln, Animationen
    ============================================================ */
-const FX = { cv: null, ctx: null, raf: 0, teil: [], anim: [], sichtbar: true, letzt: 0, art: "", geo: null, w: 0, h: 0, dpr: 1, io: null, ruhe: 0, takt: 32 };
+const FX = { cv: null, ctx: null, raf: 0, teil: [], anim: [], sichtbar: true, letzt: 0, art: "", geo: null, w: 0, h: 0, dpr: 1, io: null, ruhe: 0, warte: 0, takt: 32 };
 function fxP(a) { const g = FX.geo; return [g.ox + a[0] * g.sk, g.oy + a[1] * g.sk]; }
 function fxK() { return clamp((FX.geo ? FX.geo.sk : .36) / .36, .8, 1.8); }
 function fxEinrichten(canvas) {
@@ -1401,20 +1401,32 @@ function fxTeilchen() {
   if (BW.art === "wolken") for (let i = 0; i < 3; i++) FX.teil.push({ x: r() * w, y: h * (.05 + r() * .22), v: .06 + r() * .1, s: .7 + r() * .6, wolke: 1 });
   if (BW.wind > 26 && !["regen", "schnee"].includes(BW.art)) { const SA = SZ.SA || SAISON.sommer, L = SA.laub || ["#C98A3E", "#A55A2E"]; for (let i = 0; i < 9; i++) FX.teil.push({ x: r() * w, y: h * (.4 + r() * .5), v: 1.2 + r() * 1.6, ph: r() * TAU, blatt: L[i % L.length] }); }
 }
-/* Die Schleife läuft nur, solange sich etwas bewegt (Wetter, Funkeln, Feuerwerk, Animation). Sonst hält sie an
-   und schaut alle 5 s still nach; render, Kauf, Animation, Sichtbarkeit und Wetterwechsel stoßen sie sofort wieder an. */
+/* Die Schleife läuft nur, solange sich etwas bewegt (Wetter, Funkeln, Feuerwerk, Animation).
+   Beschluss T4: Ist nichts zu malen, schläft sie ganz – kein requestAnimationFrame mehr. Nur ein stiller Wecker (setTimeout,
+   1×/min, ohne rAF) malt einmal zur Probe, damit Spielereien nach Uhrzeit trotzdem auftauchen. render, Kauf, Animation
+   (spielAnim, laden2.js), Sichtbarkeit und Wetterwechsel stoßen sie über fxLos() sofort wieder an.
+   Zwischen zwei Bildern wartet sie per setTimeout statt per Leer-rAF (Funkeln 15, Wetter 30 Bilder/s – wie bisher).
+   Die Figuren-Animationen (CSS) hängen nicht an dieser Schleife. */
 function fxLos() {
   if (FX.raf || !FX.cv) return;
-  clearTimeout(FX.ruhe); FX.ruhe = 0;
-  const f = now => {
-    FX.raf = 0; if (!FX.cv || !FX.cv.isConnected) return;
-    if (document.hidden || !FX.sichtbar) return;
-    let bewegt = true;
-    if (now - FX.letzt >= FX.takt) { FX.letzt = now; try { const r = fxMalen(now); bewegt = !!r; FX.takt = r === 1 ? 66 : 32; } catch (e) { FX.takt = 32; } } // nur langsames Funkeln: 15 statt 30 Bilder/s
-    if (!bewegt && !FX.anim.length) { FX.ruhe = setTimeout(() => { FX.ruhe = 0; fxLos(); }, 5000); return; }
-    if (!REDUCED() || FX.anim.length) FX.raf = requestAnimationFrame(f);
-  };
-  FX.raf = requestAnimationFrame(f);
+  clearTimeout(FX.ruhe); clearTimeout(FX.warte); FX.ruhe = 0; FX.warte = 0;
+  FX.raf = requestAnimationFrame(fxSchritt);
+}
+function fxSchritt(now) {
+  FX.raf = 0; if (!FX.cv || !FX.cv.isConnected) return;
+  if (document.hidden || !FX.sichtbar) return;
+  let bewegt = true;
+  if (now - FX.letzt >= FX.takt - 8) { FX.letzt = now; try { const r = fxMalen(now); bewegt = !!r; FX.takt = r === 1 ? 66 : 32; } catch (e) { FX.takt = 32; } } // nur langsames Funkeln: 15 statt 30 Bilder/s
+  if (!bewegt && !FX.anim.length) { FX.ruhe = setTimeout(fxWecker, 60000); return; } // nichts zu malen: schlafen
+  if (REDUCED() && !FX.anim.length) return;
+  const rest = FX.takt - (performance.now() - FX.letzt);
+  if (rest > 20) FX.warte = setTimeout(() => { FX.warte = 0; if (!FX.raf) FX.raf = requestAnimationFrame(fxSchritt); }, rest - 4);
+  else FX.raf = requestAnimationFrame(fxSchritt);
+}
+function fxWecker() {
+  FX.ruhe = 0; if (FX.raf || FX.warte || !FX.cv || !FX.cv.isConnected || document.hidden || !FX.sichtbar) return;
+  let r = false; try { r = fxMalen(performance.now()); } catch (e) { }
+  if (r || FX.anim.length) fxLos(); else FX.ruhe = setTimeout(fxWecker, 60000);
 }
 document.addEventListener("visibilitychange", () => { if (!document.hidden) fxLos(); });
 function fxMalen(now) {

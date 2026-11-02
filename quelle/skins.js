@@ -59,17 +59,17 @@ const SKIN_REIHEN = [
 ];
 const D_SKINS = [
   /* ===== Rita ===== */
-  { id: "r-sonnenbrille", fuer: "rita", fach: "augen", name: "Sonnenbrille", preis: 40, text: "Dunkel, rund, ein bisschen Hollywood. Wer dahinter sitzt, muss nicht jeden grüßen.",
+  { id: "r-sonnenbrille", fuer: "rita", fach: "augen", name: "Sonnenbrille, schwarz", preis: 40, text: "Dunkel, rund, ein bisschen Hollywood. Wer dahinter sitzt, muss nicht jeden grüßen.",
     r: { vorn: [SP("M37.4 44.4 Q37.4 43.4 38.6 43.4 H48 Q49.2 43.4 49 44.8 L48.4 49.2 Q48 51.8 45 51.8 H41.2 Q38.2 51.8 37.8 49.2Z M62.6 44.4 Q62.6 43.4 61.4 43.4 H52 Q50.8 43.4 51 44.8 L51.6 49.2 Q52 51.8 55 51.8 H58.8 Q61.8 51.8 62.2 49.2Z", "#1E262C"),
       SL("M49 45.4 Q50 44.4 51 45.4", "#1E262C", 1.3), SL("M37.6 45.2 L34 44.4 M62.4 45.2 L66 44.4", "#1E262C", 1.2),
       SL("M37.6 44.2 H48.6 M51.4 44.2 H62.4", "#C9A24A", .7), SL("M39.8 45.4 L43.2 45 M53.2 45.4 L56.6 45", "#FFFFFF", .9, { op: .65 })] } },
-  { id: "r-katzenauge", fuer: "rita", fach: "augen", name: "Katzenaugen-Brille", preis: 60, reihe: "krimi", text: "Rot, mit Schwung nach oben wie in den Sechzigern. So eine trägt im Krimi immer die Sekretärin, die als Erste weiß, wer’s war.",
+  { id: "r-katzenauge", fuer: "rita", fach: "augen", name: "Katzenaugen-Brille, rot", preis: 60, reihe: "krimi", text: "Rot, mit Schwung nach oben wie in den Sechzigern. So eine trägt im Krimi immer die Sekretärin, die als Erste weiß, wer’s war.",
     r: { vorn: [SP("M36 44 Q42 42.2 48.6 43.6 Q49 48.8 46.4 51.2 Q42.4 52.6 39.2 50.6 Q36.6 48.4 36 44Z M64 44 Q58 42.2 51.4 43.6 Q51 48.8 53.6 51.2 Q57.6 52.6 60.8 50.6 Q63.4 48.4 64 44Z", "rgba(255,255,255,.18)", { s: "#C0282A", w: 1.7 }),
       SP("M36.4 44.6 L33.2 40.8 L39.4 43.2Z M63.6 44.6 L66.8 40.8 L60.6 43.2Z", "#C0282A"), SL("M48.6 44.8 Q50 43.6 51.4 44.8", "#C0282A", 1.4),
       SC(34.4, 41.8, .7, "#FFF6DC"), SC(65.6, 41.8, .7, "#FFF6DC")] } },
   { id: "r-perlen", fuer: "rita", fach: "hals", name: "Perlen wie damals am Schalter", preis: 70, reihe: "tanzsaal", text: "Kette und Ohrringe wie damals am Schalter. Heute ohne Kundschaft, dafür mit Hühnchen.",
     r: { vorn: [...skPerlen([[41.2, 77], [43.2, 79.6], [45.5, 81.5], [47.8, 82.6], [50.2, 83], [52.6, 82.6], [54.9, 81.5], [57.1, 79.6], [59, 77]], 1.55), SC(31, 60.4, 3.3, "#F6F1E4"), SC(30, 59.3, 1, "#FFFFFF", { op: .9 }), SC(69, 60.4, 3.3, "#F6F1E4"), SC(68, 59.3, 1, "#FFFFFF", { op: .9 })] } },
-  { id: "r-zauberschal", fuer: "rita", fach: "hals", name: "Zauberschal", preis: 60, reihe: "winter", text: "Rot-gold geringelt wie in Gryffindor, lang genug für zweimal rum. Zaubern kann er nicht. Bis jetzt.",
+  { id: "r-zauberschal", fuer: "rita", fach: "hals", name: "Zauberschal, rot-gold", preis: 60, reihe: "winter", text: "Rot-gold geringelt wie in Gryffindor, lang genug für zweimal rum. Zaubern kann er nicht. Bis jetzt.",
     r: { vorn: [SP("M36.5 73.6 Q50 82.6 63.5 73.6 L65 80 Q50 89.6 35 80Z", "#8E2430"),
       SP("M39.5 75.6 L42.6 77.2 L42.2 84 L38.6 82.6Z M46.4 78.6 L49.6 79.2 L49.6 86 L46 85.6Z M53.4 78.8 L56.6 78 L57.4 84.8 L53.8 85.6Z M60.2 76 L63 74.6 L64 80.8 L60.8 82.6Z", "#E2B13C"),
       SP("M38.6 80.6 L33 100 L41.4 100.5 L44.4 82.6Z", "#8E2430"), SP("M36.6 87.4 L42.8 89.2 L42 92 L35.8 90.2Z M34.6 94 L41.2 95.6 L40.6 98.6 L33.8 97Z", "#E2B13C")] } },
@@ -77,7 +77,7 @@ const D_SKINS = [
     r: { vorn: [SE(50, 29, 33, 4.6, "rgba(70,50,20,.18)"), SE(50, 25.6, 40.5, 8.8, "#E7C77C"), SP("M9.6 26.4 Q50 40.4 90.4 26.4 Q50 35.8 9.6 26.4Z", "#C9A456"),
       SP("M31.6 25.2 Q30.6 8.6 50 7.6 Q69.4 8.6 68.4 25.2 Q50 28.4 31.6 25.2Z", "#F0D48F"), SL("M35.2 13.6 Q50 11.2 64.8 13.6 M33.2 17.6 Q50 15.4 66.8 17.6", "#D2B06A", .6),
       SP("M32.1 20.4 Q50 23.8 67.9 20.4 L68.4 25.2 Q50 28.4 31.6 25.2Z", "#C9563A"), ...skBluete(35.4, 23.2, 2.7, "#FBF8EE")] } },
-  { id: "r-bommel", fuer: "rita", fach: "kopf", name: "Bommelmütze", preis: 80, reihe: "winter", saison: [11, 12, 1, 2], text: "Rot gestrickt, mit weißem Bommel. Für Tage, an denen der Forst nach Schnee riecht.",
+  { id: "r-bommel", fuer: "rita", fach: "kopf", name: "Bommelmütze, rot", preis: 80, reihe: "winter", saison: [11, 12, 1, 2], text: "Rot gestrickt, mit weißem Bommel. Für Tage, an denen der Forst nach Schnee riecht.",
     r: { vorn: [SP("M26.6 31 Q25.4 9.6 50 8.4 Q74.6 9.6 73.4 31Z", "#C8463B"),
       SL("M36 29 Q34.8 19 39.4 11.6 M43.4 29 Q42.8 18 45.2 9.4 M50 29 L50 8.8 M56.6 29 Q57.2 18 54.8 9.4 M64 29 Q65.2 19 60.6 11.6", "#A9382F", .9, { op: .7 }),
       ...[32, 38, 44, 50, 56, 62, 68].map((x, i) => SC(x, i % 2 ? 19.2 : 20.4, .95, "#F7F1E6")),
@@ -101,16 +101,16 @@ const D_SKINS = [
       vorn: [SL("M22.6 23.6 Q50 33 77.4 23.6", "#4E7F45", 2.8), ...[[27, 25.4], [35, 28.6], [43, 30.4], [57, 30.4], [65, 28.6], [73, 25.4]].map(([x, y], i) => SE(x, y, 2.8, 1.3, "#5D9A50", { rot: i < 3 ? 18 : -18 })),
       ...skBluete(23.6, 23.2, 2.9, "#FBF8EE"), ...skBluete(31, 27.2, 2.9, "#C7B6E6", "#F2E3A0"), ...skBluete(39.4, 29.6, 3.1, "#F2D27A", "#E09A3A"), ...skBluete(50, 30.6, 3.4, "#FBF8EE"),
       ...skBluete(60.6, 29.6, 3.1, "#E9A0B8", "#F2E3A0"), ...skBluete(69, 27.2, 2.9, "#C7B6E6", "#F2E3A0"), ...skBluete(76.4, 23.2, 2.9, "#F2D27A", "#E09A3A")] } },
-  { id: "r-ohrenwaermer", fuer: "rita", fach: "kopf", name: "Ohrenwärmer", preis: 70, reihe: "winter", ab: "2026-12", saison: [12, 1, 2], text: "Flauschig, flieder, mit Bügel übers Haar. Hält warm und sieht aus wie zwei kleine Wolken.",
+  { id: "r-ohrenwaermer", fuer: "rita", fach: "kopf", name: "Ohrenwärmer, flieder", preis: 70, reihe: "winter", ab: "2026-12", saison: [12, 1, 2], text: "Flauschig, flieder, mit Bügel übers Haar. Hält warm und sieht aus wie zwei kleine Wolken.",
     r: { vorn: [SL("M28 52 Q24 14 50 12 Q76 14 72 52", "#7E5A92", 3.4), SL("M29 46 Q27 19 50 16.8", "#9C7AAE", 1, { op: .8 }),
       ...[[29, 56.4, 7.6], [71, 56.4, 7.6]].flatMap(([x, y, r]) => [SC(x, y, r, "#E7DCEF"), SC(x - 4.6, y - 4.4, 3, "#F1EAF6"), SC(x + 4.4, y - 4.4, 3, "#F1EAF6"), SC(x - 5.4, y + 2.6, 3, "#E0D3EA"), SC(x + 5.4, y + 2.6, 3, "#E0D3EA"), SC(x, y + 5.6, 3, "#E0D3EA"), SC(x - 1.4, y - 1.6, 2.2, "#FFFFFF", { op: .7 })])] } },
-  { id: "r-konfetti", fuer: "rita", fach: "augen", name: "Konfetti-Brille", preis: 60, ab: "2027-02", saison: [2], text: "Zwei pinke Sterne als Brille, dazu Konfetti. Für Fasching. Oder für einen Dienstag, der’s nötig hat.",
+  { id: "r-konfetti", fuer: "rita", fach: "augen", name: "Konfetti-Brille, pink", preis: 60, ab: "2027-02", saison: [2], text: "Zwei pinke Sterne als Brille, dazu Konfetti. Für Fasching. Oder für einen Dienstag, der’s nötig hat.",
     r: { vorn: [SP("M43 40.4 L44.8 44.4 L49.2 44.6 L45.8 47.4 L47 51.6 L43 49.2 L39 51.6 L40.2 47.4 L36.8 44.6 L41.2 44.4Z M57 40.4 L58.8 44.4 L63.2 44.6 L59.8 47.4 L61 51.6 L57 49.2 L53 51.6 L54.2 47.4 L50.8 44.6 L55.2 44.4Z", "rgba(255,255,255,.2)", { s: "#E0558A", w: 1.8 }),
       SL("M48.8 46.4 Q50 45.4 51.2 46.4", "#E0558A", 1.3), SL("M36.8 45 L31.6 43.8 M63.2 45 L68.4 43.8", "#E0558A", 1.1),
       ...[[22, 30, "#3E7FB8"], [78, 34, "#F2C33A"], [26, 78, "#5BA35A"], [80, 74, "#E0558A"], [16, 54, "#F2C33A"], [84, 54, "#3E7FB8"]].map(([x, y, c], i) => SP(`M${x} ${y} l2.4 ${i % 2 ? -1 : 1} l.6 1.8 l-2.4 ${i % 2 ? 1 : -1}Z`, c))] } },
-  { id: "r-blumen", fuer: "rita", fach: "kopf", name: "Blumen im Haar", preis: 70, ab: "2027-04", saison: [4, 5], text: "Drei Blüten und zwei Blätter, seitlich ins Haar gesteckt. Die Amseln am Forst halten dich jetzt für eine von ihnen.",
+  { id: "r-blumen", fuer: "rita", fach: "kopf", name: "Blumen im Haar, rosa", preis: 70, ab: "2027-04", saison: [4, 5], text: "Drei Blüten und zwei Blätter, seitlich ins Haar gesteckt. Die Amseln am Forst halten dich jetzt für eine von ihnen.",
     r: { vorn: [SE(31.4, 30.4, 4.6, 2, "#5D9A50", { rot: -40 }), SE(38.4, 22, 4.2, 1.8, "#4F8A45", { rot: 30 }), ...skBluete(30.6, 24, 4, "#E9A0B8", "#F2E3A0"), ...skBluete(37.4, 27.6, 3, "#FBF8EE"), ...skBluete(26.6, 31.6, 2.6, "#C7B6E6", "#F2E3A0")] } },
-  { id: "r-strick", fuer: "rita", fach: "ganz", name: "Schwedenpulli", preis: 150, reihe: "schweden", text: "Dunkelblau mit weißer Bordüre und Rollkragen. Darin liest sich ein Schwedenkrimi gleich doppelt so spannend.",
+  { id: "r-strick", fuer: "rita", fach: "ganz", name: "Schwedenpulli, blau", preis: 150, reihe: "schweden", text: "Dunkelblau mit weißer Bordüre und Rollkragen. Darin liest sich ein Schwedenkrimi gleich doppelt so spannend.",
     r: { vorn: [SP("M12.6 100 Q14.6 77.6 50 75.2 Q85.4 77.6 87.4 100Z", "#2E4E8E"),
       SP("M14.2 88.6 Q50 83 85.8 88.6 L86.4 96 Q50 90.4 13.6 96Z", "#26427A"),
       ...[18, 25, 32, 39, 46, 53, 60, 67, 74, 81].map((x, i) => SP(`M${x} ${92.2 - Math.sin((x - 14) / 72 * Math.PI) * 4.6} l2.4 -2.8 l2.4 2.8 l-2.4 2.8Z`, "#F3EDE0")),
@@ -152,15 +152,15 @@ const D_SKINS = [
       ...[[28.6, 8.6], [44, 5.8], [56, 5.8], [71.4, 8.6]].map(([x, y]) => SC(x, y, 1.4, "#F6D77A"))] } },
 
   /* ===== Hühnchen ===== */
-  { id: "h-schleife", fuer: "huhn", fach: "kopf", name: "Große Schleife", preis: 30, reihe: "sommer", geschenk: "start", text: "Pink mit Punkten, hinten am Kopf. Hühnchen sagt, sie sei „gar nicht so wichtig“. Guckt aber dauernd in den Spiegel.",
+  { id: "h-schleife", fuer: "huhn", fach: "kopf", name: "Große Schleife, pink", preis: 30, reihe: "sommer", geschenk: "start", text: "Pink mit Punkten, hinten am Kopf. Hühnchen sagt, sie sei „gar nicht so wichtig“. Guckt aber dauernd in den Spiegel.",
     s: { kopf: [SP("M49 20 L39.6 13.6 Q36.6 20.4 40 26.6Z", "#E0558A"), SP("M49 20 L56.4 14.6 Q59.6 20 56.8 25.6Z", "#E0558A"), SP("M47.6 22 L44.4 30 L47.4 29.2 L49.4 22.6Z", "#C7437A"),
       SC(41, 17, .9, "#FFF"), SC(40.8, 23, .9, "#FFF"), SC(54.8, 18, .8, "#FFF"), SC(55.6, 22.6, .8, "#FFF"), SC(49, 20, 2.8, "#C7437A")] },
     f: { kopf: [SP("M80 19 L72.6 13.4 Q70.4 19 73 24.4Z", "#E0558A"), SP("M80 19 L87.4 13 Q90.4 19 87.4 24.8Z", "#E0558A"), SC(74, 16.6, .8, "#FFF"), SC(86.6, 17, .8, "#FFF"), SC(86.8, 22, .8, "#FFF"), SC(80, 19, 2.6, "#C7437A")] } },
-  { id: "h-sonnenbrille", fuer: "huhn", fach: "augen", name: "Undercover-Brille", preis: 40, reihe: "krimi", text: "Hühnchen ist jetzt inkognito. Dass es trotzdem jeder erkennt, findet es unerklärlich.",
+  { id: "h-sonnenbrille", fuer: "huhn", fach: "augen", name: "Undercover-Brille, schwarz", preis: 40, reihe: "krimi", text: "Hühnchen ist jetzt inkognito. Dass es trotzdem jeder erkennt, findet es unerklärlich.",
     s: { kopf: [SL("M56 27.6 L47.6 26.4", "#1C2620", 1.6), SP("M56 25.6 H73.4 Q75 25.6 74.6 27.6 L73.2 35 Q72.6 37.8 69.4 37.8 H60 Q57 37.8 56.4 35 L55 27.6 Q54.8 25.6 56 25.6Z", "#1C2620"),
       SL("M74.4 28.4 L76.6 29", "#1C2620", 1.4), SL("M58.4 28.6 L62.4 28.6", "#FFFFFF", 1.2, { op: .7 })] },
     f: { kopf: [SP("M53.5 26.5 H66 Q66.6 26.5 66.4 27.2 L65 34.5 Q64.5 36.6 62 36.6 H57.6 Q55 36.6 54.4 34.4 L53 27.4 Q52.9 26.5 53.5 26.5Z M70 26.5 H82.5 Q83.1 26.5 83 27.4 L81.6 34.4 Q81 36.6 78.4 36.6 H74 Q71.5 36.6 71 34.5 L69.6 27.2 Q69.4 26.5 70 26.5Z", "#1C2620"), SL("M66 28.4 H70", "#1C2620", 1.6), SL("M55.6 28.6 L58.6 28.6 M72.2 28.6 L75.2 28.6", "#FFFFFF", 1.1, { op: .7 })] } },
-  { id: "h-chullo", fuer: "huhn", fach: "kopf", name: "Bommelmütze mit Ohrenklappen", preis: 90, reihe: "welt", deckt: "kamm", text: "Die bunte Strickmütze mit Ohrenklappen. Hühnchen: „Endlich mal was Vernünftiges auf dem Kopf.“",
+  { id: "h-chullo", fuer: "huhn", fach: "kopf", name: "Bommelmütze mit Ohrenklappen, rot", preis: 90, reihe: "welt", deckt: "kamm", text: "Die bunte Strickmütze mit Ohrenklappen. Hühnchen: „Endlich mal was Vernünftiges auf dem Kopf.“",
     s: { kopf: [SP("M48 23 Q46.6 32.6 50.8 37.6 Q55.2 33 55 23.6Z", "#C8363A"), SL("M49 27 L51.6 29.4 L54 27 M49.4 31 L51.6 33.4 L53.8 31", "#F2C33A", 1),
       SL("M50.8 37.6 L50.8 46", "#F2C33A", 1.1), SC(50.8, 47.6, 2.4, "#2FA6A0"),
       SP("M46.8 25 Q45.6 5.8 63 4.6 Q80.4 5.8 79.8 25 Q63 20.6 46.8 25Z", "#C8363A"), SL("M48.2 16.4 L51.2 13.4 L54.2 16.4 L57.2 13.4 L60.2 16.4 L63.2 13.4 L66.2 16.4 L69.2 13.4 L72.2 16.4 L75.2 13.4 L78.2 16.4", "#F2C33A", 1.5),
@@ -241,7 +241,7 @@ const D_SKINS = [
         SP("M52.9 13.6 L73.9 13.4 L74.1 18.4 L52.7 18.6Z", "#8E2A5A"), SL("M55.6 1.6 L55.8 11", "#4A4A54", 1.2, { op: .8 })] },
     f: { kopf: [SE(68, 20.2, 18.6, 3.8, "#1E1E24"), SP("M57 20 L58 -1 Q68 -3.2 78 -1 L79 20Z", "#2A2A30"), SE(68, -1.2, 10, 2, "#3A3A42"), SP("M57.3 14.2 L78.7 14.2 L78.9 19.2 L57.1 19.2Z", "#8E2A5A"), SL("M60 2.2 L60.2 11.6", "#4A4A54", 1.2, { op: .8 })] },
     hoch: 8, vbKopf: "36 -6 64 64", vbFront: "36 -6 64 64" },
-  { id: "h-schal", fuer: "huhn", fach: "hals", name: "Ringelschal", preis: 50, reihe: "winter", ab: "2027-01", saison: [12, 1, 2], text: "Grün-weiß geringelt, viel zu lang. Hühnchen tritt nur ganz selten drauf.",
+  { id: "h-schal", fuer: "huhn", fach: "hals", name: "Ringelschal, grün-weiß", preis: 50, reihe: "winter", ab: "2027-01", saison: [12, 1, 2], text: "Grün-weiß geringelt, viel zu lang. Hühnchen tritt nur ganz selten drauf.",
     s: { koerper: [SP("M51.6 45.4 Q63 54.4 74.4 45.6 L74.4 51.6 Q63 60.4 51.6 51.6Z", "#3F8F5A"), SL("M55.4 48.6 L55 54.2 M60.2 51 L60 56.8 M65.4 51.4 L65.6 57 M70.4 49.2 L70.8 54.6", "#F3EDE0", 2),
       SP("M55.6 52.6 Q51 66 50.4 79.6 L56.4 80 Q57 66 60.2 54Z", "#3F8F5A"), SL("M54.6 57.4 L59 58.2 M53.2 63 L57.8 63.6 M52 68.6 L56.8 69 M51.2 74.2 L56.4 74.6", "#F3EDE0", 2), SL("M50.8 80 L50.4 82.4 M52.8 80.2 L52.6 82.6 M54.8 80.2 L54.8 82.6 M56.4 80.2 L56.6 82.4", "#3F8F5A", .9)] },
     f: { kopf: [SP("M51.6 48.6 Q68 57.2 84.4 48.6 L84.4 55 Q68 63.6 51.6 55Z", "#3F8F5A"), SL("M56 51 L55.6 57 M62 53.4 L61.8 59.6 M68 54.6 L68 60.8 M74 53.4 L74.2 59.6 M80 51 L80.4 57", "#F3EDE0", 2)] } },
@@ -260,7 +260,7 @@ const D_SKINS = [
       SP("M50.6 25.4 Q49.6 7.8 68 6.8 Q86.4 7.8 85.4 25.4 Q68 21.6 50.6 25.4Z", "#A9B0B6"), SP("M54.6 12.4 Q60 8.8 66 8.4 Q58 11.8 56 17.4Z", "#D0D5D9", { op: .8 }),
       SP("M55 9.6 H81 V15.6 H55Z", "#7A8288"), SL("M58 12.6 H78", "#2E3238", 1.4), SL("M50.6 25.2 Q68 21.4 85.4 25.2", "#7A8288", 1.4)] },
     hoch: 8, vbKopf: "36 -8 66 66", vbFront: "36 -8 66 66" },
-  { id: "h-strohhut", fuer: "huhn", fach: "kopf", name: "Strohhut", preis: 80, ab: "2027-06", saison: [6, 7, 8], reihe: "sommer", deckt: "kamm", text: "Breite Krempe, rotes Band. Hühnchen macht Sommerfrische – im Schatten der eigenen Krempe.",
+  { id: "h-strohhut", fuer: "huhn", fach: "kopf", name: "Strohhut mit rotem Band", preis: 80, ab: "2027-06", saison: [6, 7, 8], reihe: "sommer", deckt: "kamm", text: "Breite Krempe, rotes Band. Hühnchen macht Sommerfrische – im Schatten der eigenen Krempe.",
     s: { kopf: [SE(63.4, 18.6, 25.4, 5, "#E7C77C", { rot: -4 }), SP("M38.6 19.4 Q63 30.4 88.4 17.6 Q63 25 38.6 19.4Z", "#C9A456"), SP("M51.4 18.4 Q51 5.6 63.4 5 Q75.8 5.6 75.4 18 Q63.4 20.6 51.4 18.4Z", "#F0D48F"),
       SP("M51.6 14.6 Q63.4 17 75.6 14.2 L75.4 18 Q63.4 20.6 51.4 18.4Z", "#C9563A"), ...skBluete(55, 15.6, 2.2, "#FBF8EE")] },
     f: { kopf: [SE(68, 19.4, 27, 5.4, "#E7C77C"), SP("M41.2 19.8 Q68 31 94.8 19.8 Q68 26.6 41.2 19.8Z", "#C9A456"), SP("M55.6 19 Q55.2 5.6 68 5 Q80.8 5.6 80.4 19 Q68 21.6 55.6 19Z", "#F0D48F"),
@@ -270,7 +270,7 @@ const D_SKINS = [
     s: { kopf: [SP("M55.6 17.6 L61.4 -6 L69.4 16.4Z", "#3E7FB8"), SL("M57 12 L68 10.6 M58.6 5.6 L66.2 4.8", "#F2D27A", 1.8), SC(61.4, -6.6, 2.6, "#E0558A")] },
     f: { kopf: [SP("M61.6 16 L68 -7 L74.4 16Z", "#3E7FB8"), SL("M63 10.4 L73 10.4 M64.8 4 L71.2 4", "#F2D27A", 1.8), SC(68, -7.6, 2.6, "#E0558A")] },
     hoch: 10, vbKopf: "34 -10 68 68", vbFront: "34 -10 68 68" },
-  { id: "h-fliege", fuer: "huhn", fach: "hals", name: "Fliege", naechst: "die Fliege", preis: 60, reihe: "tanzsaal", ab: "2026-10", es: "die Fliege", text: "Schwarze Fliege, frisch gebügelt. Hühnchen ist heute dein Tanzpartner. Es führt nicht, es wird geführt.",
+  { id: "h-fliege", fuer: "huhn", fach: "hals", name: "Fliege, schwarz", naechst: "die Fliege", preis: 60, reihe: "tanzsaal", ab: "2026-10", es: "die Fliege", text: "Schwarze Fliege, frisch gebügelt. Hühnchen ist heute dein Tanzpartner. Es führt nicht, es wird geführt.",
     s: { koerper: [SL("M56.4 48.6 Q63.4 53.6 71.2 48.4", "#FBF8F1", 1.6), SP("M63.6 53.6 L57.8 50.2 L58 57.2Z", "#1C2620"), SP("M63.6 53.6 L69.4 50.2 L69.2 57.2Z", "#1C2620"), SC(63.6, 53.6, 1.9, "#34403A"), SL("M59.4 52 L60.2 52.6", "#FFFFFF", .7, { op: .5 })] },
     f: { kopf: [SP("M68 55 L60.4 51 L60.6 59Z", "#1C2620"), SP("M68 55 L75.6 51 L75.4 59Z", "#1C2620"), SC(68, 55, 2.1, "#34403A")] }, vbFront: "38 2 60 60" },
   { id: "h-elch", fuer: "huhn", fach: "kopf", name: "Elchgeweih", naechst: "das Elchgeweih", preis: 80, reihe: "schweden", saison: [11, 12, 1], ab: "2026-10", es: "das Geweih", text: "Ein Geweih aus Filz. Hühnchen ruft jetzt „Älg!“ und erwartet, dass die Autos bremsen.",
@@ -314,7 +314,7 @@ const SKIN_VARIANTEN = [
   ["h-strohhut", "h-strohhut-blau", "Strohhut mit blauem Band", "2027-07", { "#C9563A": "#2F5E8E" }, "Der Strohhut, diesmal mit blauem Band. Blau und Gelb, sehr schwedisch."],
   ["r-zauberschal", "r-zauberschal-gelb", "Zauberschal, gelb-schwarz", "2027-08", { "#8E2430": "#2A2A2A", "#E2B13C": "#E8C23A" }, "Gelb und schwarz wie bei Hufflepuff. Die sind treu und backen gern, sagt man."],
   ["r-katzenauge", "r-katzenauge-tuerkis", "Katzenaugen-Brille, türkis", "2027-09", { "#C0282A": "#2A8C8A" }, "Türkis statt Rot. Ermittelt wird trotzdem."],
-  ["h-chullo", "h-chullo-blau", "Chullo, blau", "2027-10", { "#C8363A": "#2F5E8E" }, "Die Ohrenklappen-Mütze in Blau. Blau trägt man jetzt, sagt Hühnchen. Woher es das weiß, sagt es nicht."],
+  ["h-chullo", "h-chullo-blau", "Bommelmütze mit Ohrenklappen, blau", "2027-10", { "#C8363A": "#2F5E8E" }, "Die Ohrenklappen-Mütze in Blau. Blau trägt man jetzt, sagt Hühnchen. Woher es das weiß, sagt es nicht."],
   ["r-ohrenwaermer", "r-ohrenwaermer-mint", "Ohrenwärmer, mint", "2027-11", { "#7E5A92": "#3F7A6A", "#9C7AAE": "#6FA898", "#E7DCEF": "#DCEFE8", "#F1EAF6": "#EDF8F4", "#E0D3EA": "#CFE8DF" }, "Flauschig in Mint. Wie zwei kleine Pfefferminzwolken."],
   ["r-bommel", "r-bommel-blau", "Bommelmütze, blau-gelb", "2027-12", { "#C8463B": "#2F5E8E", "#A9382F": "#244A78", "#F7F2E8": "#F2C33A", "#F7F1E6": "#F2C33A" }, "Blau mit gelbem Bommel. Schwedischer geht eine Mütze nicht."],
   ["h-schal", "h-schal-blau", "Ringelschal, blau-gelb", "2028-01", { "#3F8F5A": "#2F5E8E", "#F3EDE0": "#F2C33A" }, "Blau-gelb geringelt. Hühnchen ruft jetzt „Heja Sverige!“, auch wenn gar kein Spiel ist."],
@@ -826,8 +826,10 @@ function zuhauseZusatz() {
   return h;
 }
 /* Abteilungs-Reiter (V3): genau EINE Abteilung zeigen, die Wahl merken. Kein Springen durchs Blatt.
-   Steht die Reiterleiste schon über dem Blattrand, rückt das Blatt so, dass die Reiter wieder oben zu sehen sind
-   (scrollTop direkt setzen – iOS scrollt mit scrollIntoView im Blatt nicht zuverlässig). Rückmeldung: Familie „auswahl“ (feedback.js, .chip). */
+   Beschluss U1: Nach dem Tipp rückt das Blatt (nach oben UND nach unten), bis die Reiterleiste oben am Blattrand steht und die
+   Überschrift der Abteilung zu sehen ist; passen beide nicht zusammen in den Blick (Schrift 3), steht die Überschrift oben.
+   Der Laden-Kopf bleibt, wie er ist. Gescrollt wird am Blatt selbst (scrollTo – iOS scrollt mit scrollIntoView im Blatt nicht
+   zuverlässig), weich nur ohne REDUCED(). Rückmeldung: Familie „auswahl“ (feedback.js, .chip). */
 function skAbtZeigen(v, el) {
   const sh = (el && el.closest(".sheet")) || document; if (!ladenTeile().some(x => x.id === v)) return;
   const ziel = sh.querySelector(`.laden-teil[data-teil="${v}"]`); if (!ziel) return;
@@ -836,7 +838,17 @@ function skAbtZeigen(v, el) {
   sh.querySelectorAll(".laden-teil").forEach(x => { x.hidden = x !== ziel; });
   sh.querySelectorAll(".laden-chips [data-act=sk-abt]").forEach(c => c.setAttribute("aria-pressed", String(c.dataset.v === v)));
   const sc = ziel.closest(".sheet-inhalt") || ziel.closest(".sheet"), ch = sh.querySelector(".laden-chips-rahmen");
-  if (sc && ch) { const oben = ch.getBoundingClientRect().top - sc.getBoundingClientRect().top; if (oben < 0) sc.scrollTop = Math.max(0, sc.scrollTop + oben - 10); }
+  if (sc && ch) {
+    const sr = sc.getBoundingClientRect(), cr = ch.getBoundingClientRect(), kopf = ziel.querySelector("h2, h3") || ziel, kr = kopf.getBoundingClientRect();
+    const sOben = Math.max(sr.top, 0), sUnten = Math.min(sr.bottom, window.innerHeight || sr.bottom), oben = cr.top - sOben;
+    const kopfDa = kr.top >= sOben && kr.bottom <= sUnten;
+    if (oben < 0 || oben > 40 || !kopfDa) {
+      let soll = sc.scrollTop + oben - 10; // Reiterleiste oben am Blattrand
+      if (kr.bottom - cr.top + 10 > sUnten - sOben - 8) soll = sc.scrollTop + (kr.top - sOben) - 10; // passt nicht beides: Überschrift oben
+      soll = Math.max(0, Math.round(soll));
+      if (Math.abs(soll - sc.scrollTop) > 2) { try { sc.scrollTo({ top: soll, behavior: REDUCED() ? "instant" : "smooth" }); } catch (e) { sc.scrollTop = soll; } }
+    }
+  }
 }
 /* Münze antippen: dreht sich wie eine echte Münze um die senkrechte Achse, mit kleinem Klimpern */
 function muenzKlimpern() {
