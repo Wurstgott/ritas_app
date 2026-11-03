@@ -385,6 +385,48 @@ html[data-size="3"] .gk-titel { font-size: 1.05rem; white-space: nowrap; }
 .nfd-huhn { display: grid; place-items: center; }
 /* Entdecken (views.js entdeckenHTML): gleiche Karte wie der Sammlung-Hinweis; Knöpfe stehen in HAPSEL → Bezugssystem fürs iOS-label.hap */
 .nfd-entdecken .knopf { position: relative; }
+.nfd-entdecken { align-items: start; }
+.nfd-entdecken > p { align-self: center; }
+/* Illustration (views.js ENT_ILL): antippbar wie der Hauptknopf (ent-auf), Bezugssystem für feedback.js und iOS-label.hap.
+   Nur das SVG bewegt sich – der Knopf behält seine Größe, Text und Knöpfe stehen still. Kein eigenes :active (feedback.js). */
+.ent-ill { position: relative; display: block; width: 68px; height: 68px; padding: 0; margin: 0; border: 0; border-radius: 50%; cursor: pointer;
+  background: color-mix(in srgb, var(--licht) var(--tmix), var(--bogen)); color: var(--tinte, currentColor); -webkit-tap-highlight-color: transparent; }
+.ent-ill svg { display: block; width: 64px; height: 64px; margin: 2px; transform-origin: 50% 92%; }
+.ent-ill .ent-hej { font: 400 12.5px/1 var(--f-schild); letter-spacing: .02em; }
+/* Endbild (Ruhe): Siegel drauf, Gesicht vorn, „Hej!“ steht da */
+.ent-ill .ent-rueck, .ent-ill .ent-punkte { opacity: 0; }
+.ent-ill .ent-siegel, .ent-ill .ent-flip, .ent-ill .ent-blase { transform-box: fill-box; transform-origin: center; }
+.ent-ill .ent-blase { transform-origin: 30% 100%; }
+.ent-ill.wartet svg { opacity: 0; }
+/* Einmaliger Auftritt: Pop 480 ms, 120 ms später die Szene, alles nach ≤ 1,4 s still. Keine Schleifen. */
+.ent-ill.spielt svg { animation: ent-pop .48s cubic-bezier(.34,1.45,.64,1) both; }
+@keyframes ent-pop { 0% { transform: scale(.55); opacity: 0; } 35% { opacity: 1; } 65% { transform: scale(1.03); animation-timing-function: ease-out; } 100% { transform: none; opacity: 1; } }
+/* Akte: Flammen wachsen vom Kelchrand (450 ms), flackern einmal (2 × 140 ms), Siegel stempelt am Fuß (300 ms) – fertig nach 1,4 s */
+.ent-ill .ent-flammen { transform-box: fill-box; transform-origin: 50% 100%; }
+.ent-ill .ent-flacker { transform-box: fill-box; transform-origin: 50% 100%; }
+.ent-ill.spielt .ent-flammen { animation: ent-flammen .45s ease-out .6s both; }
+@keyframes ent-flammen { 0% { transform: scaleY(0); } 70% { transform: scaleY(1.08); animation-timing-function: ease-in-out; } 100% { transform: none; } }
+.ent-ill.spielt .ent-flacker { animation: ent-flacker .14s ease-in-out 1.05s 2 alternate; }
+@keyframes ent-flacker { to { transform: scaleX(.92); } }
+.ent-ill.spielt .ent-siegel { animation: ent-siegel .3s cubic-bezier(.2,.9,.3,1.2) 1.1s both; }
+@keyframes ent-siegel { 0% { transform: translateY(-6px) scale(1.08) rotate(-6deg); opacity: 0; } 35% { opacity: 1; } 100% { transform: none; opacity: 1; } }
+.ent-ill.spielt .ent-flip { animation: ent-flip .4s .6s both; }
+@keyframes ent-flip { 0% { transform: scaleX(1); animation-timing-function: ease-in; } 45% { transform: scaleX(0); animation-timing-function: ease-out; } 100% { transform: scaleX(1); } }
+.ent-ill.spielt .ent-rueck { animation: ent-rueck .4s .6s both; }
+@keyframes ent-rueck { 0%, 44.9% { opacity: 1; } 45%, 100% { opacity: 0; } }
+.ent-ill.spielt .ent-vorn { animation: ent-vorn .4s .6s both; }
+@keyframes ent-vorn { 0%, 44.9% { opacity: 0; } 45%, 100% { opacity: 1; } }
+.ent-ill.spielt .ent-blase { animation: ent-kipp .36s cubic-bezier(.34,1.4,.64,1) .6s both; }
+@keyframes ent-kipp { from { transform: rotate(-4deg); } to { transform: none; } }
+.ent-ill.spielt .ent-punkte { animation: ent-punkte .72s linear .6s both; }
+@keyframes ent-punkte { 0%, 72% { opacity: 1; } 100% { opacity: 0; } }
+.ent-ill.spielt .ent-punkte circle { transform-box: fill-box; transform-origin: center; animation: ent-punkt .14s ease-out .6s both; }
+.ent-ill.spielt .ent-punkte circle:nth-child(2) { animation-delay: .72s; }
+.ent-ill.spielt .ent-punkte circle:nth-child(3) { animation-delay: .84s; }
+@keyframes ent-punkt { from { opacity: 0; transform: scale(.6); } to { opacity: 1; transform: none; } }
+.ent-ill.spielt .ent-hej { animation: ent-hej .2s ease-out 1.12s both; }
+@keyframes ent-hej { from { opacity: 0; } to { opacity: 1; } }
+@media (prefers-reduced-motion: reduce) { .ent-ill svg, .ent-ill svg * { animation: none !important; } .ent-ill.wartet svg { opacity: 1; } }
 /* Zuhause: die Karte „Meine Sammlung“ – Setzkasten-Holz als Rahmen */
 .kachel.breit.sammlung-kachel { position: relative; flex-direction: row; text-align: left; gap: 14px; padding: 14px 14px 14px 16px; min-height: 96px; --k: var(--ocker);
   box-shadow: inset 0 0 0 4px var(--holz), inset 0 0 0 5.5px var(--holz-d), var(--kante); }

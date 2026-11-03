@@ -23,6 +23,7 @@ function render(opt = {}) {
   figurenMalen();
   const lg = $("#logo"); if (lg && !lg.firstChild) lg.innerHTML = ritaSVG(72);
   armHaptics();
+  if (typeof entAnimArm === "function") try { entAnimArm(); } catch (e) { }
 }
 function bilderZeichnen(neu) {
   const c1 = $("#bild-heute"), c2 = $("#bild-gross");

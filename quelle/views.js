@@ -229,19 +229,17 @@ const entOffen = id => Number((entObj(entObj(S.teilen).offen))[id]) > 0; // Blat
 const NFD_ENTDECKEN = [
   { id: "akte", // teilen.js: !!S.akte · Rita liest Band 4 und ist noch nicht durch
     frei: () => !!D.hpAkte && !S.akte && !entOffen("hp-pinnwand") && S.hp && S.hp.band === 4 && S.hp.kapitel < 37,
-    text: () => A("Du liest gerade den Feuerkelch? Unter „Ideen“ liegt dazu eine Akte: Eine ausgedachte Kommissarin liest mit und legt dir nach etwa zwei Kapiteln ihre Notizen hin, manchmal mit einer Rätselfrage. Verraten wird nichts, was du noch nicht gelesen hast.",
-      "Sie lesen gerade den Feuerkelch? Unter „Ideen“ liegt dazu eine Akte: Eine ausgedachte Kommissarin liest mit und legt Ihnen nach etwa zwei Kapiteln ihre Notizen hin, manchmal mit einer Rätselfrage. Verraten wird nichts, was Sie noch nicht gelesen haben."),
+    text: () => "Unter „Ideen“ liegt eine Akte zum Feuerkelch. Eine Kommissarin liest mit und verrät nichts.",
     knopf: () => "Zur Akte" },
   { id: "memory", // teilen.js: S.memory.spiele || offen.memory
     frei: () => !(Number(entObj(S.memory).spiele) > 0) && !entOffen("memory") && (D.laden || []).some(x => x.id === "memory"),
     text: () => (S.gekauft || {}).memory
-      ? A("Dein Figuren-Memory wartet noch auf die erste Runde: du, Max, Christiane, Hühnchen und die anderen als Kartenpaare. Wer findet Micha zweimal?", "Ihr Figuren-Memory wartet noch auf die erste Runde: Sie, Max, Christiane, Hühnchen und die anderen als Kartenpaare. Wer findet Micha zweimal?")
-      : A("Im Kramladen steht ein Figuren-Memory: du, Max, Christiane, Hühnchen und die anderen als Kartenpaare. Ohne Uhr, ohne Punkte. Wer findet Micha zweimal?", "Im Kramladen steht ein Figuren-Memory: Sie, Max, Christiane, Hühnchen und die anderen als Kartenpaare. Ohne Uhr, ohne Punkte. Wer findet Micha zweimal?"),
+      ? A("Dein Memory wartet auf die erste Runde. Ohne Uhr, ohne Punkte. Wer findet Micha zweimal?", "Ihr Memory wartet auf die erste Runde. Ohne Uhr, ohne Punkte. Wer findet Micha zweimal?")
+      : A("Ein Memory mit dir, Max und Hühnchen. Ohne Uhr, ohne Punkte. Wer findet Micha zweimal?", "Ein Memory mit Ihnen, Max und Hühnchen. Ohne Uhr, ohne Punkte. Wer findet Micha zweimal?"),
     knopf: () => (S.gekauft || {}).memory ? "Eine Runde spielen" : "Memory ansehen" },
   { id: "rede", // teilen.js: S.rede.gesendet || offen.rede (dazu: fürs Telefonat gemerkt)
     frei: () => { const r = entObj(S.rede); return !Object.keys(entObj(r.gesendet)).length && !Object.keys(entObj(r.gemerkt)).length && !entOffen("rede") && (D.stattDaddeln || []).some(x => x && x.rede && !x.aus); },
-    text: () => A("Max’ Schwedisch ist ungefähr auf Hühnchen-Niveau. Unter „Ideen“ stehen acht schwedische Redensarten, jede mit „So klingt’s“. Such dir eine aus und bring sie ihm bei.",
-      "Max’ Schwedisch ist ungefähr auf Hühnchen-Niveau. Unter „Ideen“ stehen acht schwedische Redensarten, jede mit „So klingt’s“. Suchen Sie sich eine aus und bringen Sie sie ihm bei."),
+    text: () => A("Max’ Schwedisch ist auf Hühnchen-Niveau. Bring ihm eine von acht Redensarten bei.", "Max’ Schwedisch ist auf Hühnchen-Niveau. Bringen Sie ihm eine Redensart bei."),
     knopf: () => "Redensarten ansehen" }
 ];
 function entdeckenS() {
@@ -262,8 +260,44 @@ function entdeckenKarte() {
 }
 function entdeckenGezeigt(id) { const E = entdeckenS(); if (E.gezeigt[id] === heute()) return; E.gezeigt[id] = heute(); setTimeout(() => { try { speichern(); } catch (e) { } }, 0); }
 function entdeckenVerdraengt(id) { const E = entdeckenS(); if (E.gezeigt[id] === heute() && !E.weg[id]) delete E.gezeigt[id]; }
+/* Illustration statt Hühnchenkopf (viewBox 48, Kurzschrift wie ICF → Klassen f-x und l-x, Dunkelmodus über --i-*).
+   Endbild = Ruhezustand ohne Klasse; .spielt spielt EINMAL Pop + Szene (CSS design.css), .wartet hält das Bild bis dahin unsichtbar. */
+const ENT_ILL = {
+  /* Akte zum Feuerkelch: schlichter Kelch, blaue Flammen, kleines rotes Akten-Siegel am Fuß (eigenes, generisches Motiv) */
+  akte: `<g class="ent-flammen"><g class="ent-flacker"><path class="B" d="M12.5 14C11 10 13 7 15.5 5.4c-.2 2.5 1 3.8 2.5 4.2-.2-3.7 2.5-6.4 6-7.7-.8 3.3 1 6 3.5 7.1.5-1.8 2-3 4-3.6 1.5 2 4 4.5 4 8.6Z"/><path class="b" d="M16 14c-.6-2.4.6-3.8 2-4.4.4 1.4 1.4 2.2 2.6 2.4 0-3 1.8-5.2 3.8-6-.2 2.6 1.2 4.8 3.2 5.6.6-1 1.6-1.6 2.8-1.8 1.2 1.4 1.8 2.8 1.6 4.2Z"/><path class="s" d="M20.6 14c0-1.4 1-2.4 2-2.6.2 1 1 1.4 1.8 1.4.2-1.4 1.2-2.2 2.2-2.4.8 1.2 1.2 2.4.8 3.6Z"/></g></g><path class="y" d="M12 15h24c0 8.6-4.6 14.4-12 14.4S12 23.6 12 15Z"/><path class="Y" d="M30 15h6c0 8.6-4.6 14.4-12 14.4 4.4-1.6 6-7.4 6-14.4Z"/><rect class="Y" x="10.6" y="12.6" width="26.8" height="3.4" rx="1.7"/><path class="Y" d="M21.6 29h4.8l-.8 6h-3.2Z"/><path class="y" d="M14 41.5c0-3.4 4.4-6 10-6s10 2.6 10 6Z"/><rect class="Y" x="13" y="40.6" width="22" height="2.6" rx="1.3"/><g class="ent-siegel"><path class="r" d="M32.6 33.4c1.2-.6 2.5.4 3.7.2 1.3.8 1.2 2.2 2 3.2-.1 1.4-1.3 1.9-1.5 3.2-1.1.8-2.5.2-3.7.8-1.3-.4-1.9-1.7-3.2-2.2-.3-1.3.7-2.3.5-3.6.7-1.2 1.3-1.3 2.2-1.6Z"/><circle class="R" cx="33.6" cy="37" r="2.6"/><path class="-y" stroke-width="1" d="M32.4 36.2h2.4M32.4 37.8h1.6"/></g>`,
+  memory: () => `<g transform="rotate(-10 16 24)"><rect class="G" x="4" y="8" width="22" height="30" rx="3"/><rect class="-c" stroke-width="1.4" x="7" y="11" width="16" height="24" rx="2"/><circle class="y" cx="15" cy="23" r="3"/></g><g transform="rotate(6 33 23)"><g class="ent-flip"><g class="ent-rueck"><rect class="G" x="22" y="8" width="22" height="30" rx="3"/><rect class="-c" stroke-width="1.4" x="25" y="11" width="16" height="24" rx="2"/><circle class="y" cx="33" cy="23" r="3"/></g><g class="ent-vorn"><rect class="w" x="22" y="8" width="22" height="30" rx="3"/><rect class="-e" stroke-width="1.4" x="22" y="8" width="22" height="30" rx="3"/><defs><clipPath id="ent-mc"><circle cx="50" cy="50" r="48"/></clipPath></defs><g transform="translate(24.2 11.8) scale(.176)"><g clip-path="url(#ent-mc)">${String(typeof michaSVG === "function" ? michaSVG(64) : "").replace(/^\s*<svg[^>]*>|<\/svg>\s*$/g, "")}</g></g><path class="-e" stroke-width="1.6" d="M28.5 33.5h9"/></g></g></g>`,
+  rede: `<g class="ent-blase"><path class="y" d="M8 7h32a5 5 0 0 1 5 5v16a5 5 0 0 1-5 5H23l-9 8v-8H8a5 5 0 0 1-5-5V12a5 5 0 0 1 5-5Z"/><path class="b" d="M8.4 9.6h31.2a2.8 2.8 0 0 1 2.8 2.8v15.2a2.8 2.8 0 0 1-2.8 2.8H22l-5.4 4.8v-4.8H8.4a2.8 2.8 0 0 1-2.8-2.8V12.4a2.8 2.8 0 0 1 2.8-2.8Z"/><g class="ent-punkte"><circle class="w" cx="16" cy="20" r="2.3"/><circle class="w" cx="24" cy="20" r="2.3"/><circle class="w" cx="32" cy="20" r="2.3"/></g><text class="f-w ent-hej" x="24" y="24.6" text-anchor="middle">Hej!</text></g>`
+};
+function entIllHTML(x) {
+  const f = ENT_ILL[x.id]; if (!f) return "";
+  return `<button class="ent-ill ent-${x.id}" data-act="ent-auf" data-id="${x.id}" tabindex="-1" aria-hidden="true"><svg class="ic-f" viewBox="0 0 48 48" width="64" height="64">${_icfKlassen(typeof f === "function" ? f() : f)}</svg></button>`;
+}
 function entdeckenHTML(x) {
-  return `<div class="hinweis nfd-sammlung nfd-entdecken" role="note" data-ent="${x.id}">${S.huhn ? `<span class="nfd-huhn" aria-hidden="true">${huhnSVG({ gr: 40, kopf: true })}</span>` : ""}<p style="margin:0">${esc(x.text())}</p><div class="zeile zwischen"><button class="knopf klein zweit" data-act="ent-auf" data-id="${x.id}">${esc(x.knopf())}</button><button class="knopf klein leise" data-act="ent-weg" data-id="${x.id}">Danke</button></div></div>`;
+  return `<div class="hinweis nfd-sammlung nfd-entdecken" role="note" data-ent="${x.id}">${entIllHTML(x)}<p style="margin:0">${esc(x.text())}</p><div class="zeile zwischen"><button class="knopf klein zweit" data-act="ent-auf" data-id="${x.id}">${esc(x.knopf())}</button><button class="knopf klein leise" data-act="ent-weg" data-id="${x.id}">Danke</button></div></div>`;
+}
+/* Einmaliger Auftritt: erst, wenn die Karte zu ≥ 60 % im Bild ist; je Karte höchstens einmal am Tag (Merker im Browser-Speicher
+   und im Arbeitsspeicher, nicht in S). Ein neues render() (Abhaken, Neuladen) startet nichts neu. REDUCED(): sofort das Endbild. */
+const ENT_ANIM_KEY = "lichtung-ent-anim", ENT_ANIM = {};
+let ENT_IO = null;
+function entAnimGespielt(id) {
+  const h = heute(); if (ENT_ANIM[id] === h) return true;
+  try { return JSON.parse(localStorage.getItem(ENT_ANIM_KEY) || "{}")[id] === h; } catch (e) { return false; }
+}
+function entAnimMerken(id) { const h = heute(); ENT_ANIM[id] = h; try { localStorage.setItem(ENT_ANIM_KEY, JSON.stringify({ [id]: h })); } catch (e) { } }
+function entAnimArm() {
+  if (ENT_IO) { ENT_IO.disconnect(); ENT_IO = null; }
+  const b = document.querySelector("#main .nfd-entdecken .ent-ill"); if (!b) return;
+  const id = b.dataset.id, karte = b.closest(".nfd-entdecken");
+  if (REDUCED() || entAnimGespielt(id) || typeof IntersectionObserver === "undefined") return;
+  b.classList.add("wartet");
+  const io = ENT_IO = new IntersectionObserver(es => {
+    const e = es[es.length - 1]; if (!e.isIntersecting || e.intersectionRatio < .6) return;
+    io.disconnect(); if (ENT_IO === io) ENT_IO = null;
+    b.classList.remove("wartet");
+    if (document.hidden || REDUCED() || entAnimGespielt(id)) return;
+    entAnimMerken(id); b.classList.add("spielt");
+  }, { threshold: [0, .6, 1] });
+  io.observe(karte);
 }
 function entdeckenOeffnen(id) {
   if (id === "akte") { aktion("hp-auf", {}); return; }
