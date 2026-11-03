@@ -182,21 +182,31 @@ function neuFuerDichKandidaten(tf) {
   const tagNr = Math.round((tagDatum(h) - tagDatum(S.start)) / 864e5);
   const hw = tf && tagNr >= 3 && !postHeute() ? hinweisDesTages() : null;
   if (hw) k.push({ id: "hw:" + hw.id, html: `<div class="hinweis" role="note"><p style="margin:0">${hw.html}</p><div class="zeile zwischen">${hw.knopf || ""}<button class="knopf klein leise" data-act="hinweis-weg" data-id="${hw.id}" data-fuer-immer="${hw.immer ? 1 : 0}">${hw.immer ? "Passt so" : "Danke"}</button></div></div>` });
+  try { const en = entdeckenKarte(); if (en) k.push({ id: "ent:" + en.id, html: entdeckenHTML(en) }); } catch (e) { }
   if (!istInstalliert() && S.onboard && h !== S.start && S.installKarte !== "nie" && (!S.installKarte || S.installKarte <= h) && S.eintraege.length >= 1)
     k.push({ id: "install", html: `<div class="bogen streifen"><h3>Die App aufs Handy legen</h3><p class="klein">Dann findest du sie wie jede andere App auf dem Startbildschirm.</p><div class="zeile"><button class="knopf klein zweit" data-act="install">Anleitung zeigen</button><button class="knopf klein leise" data-act="install-spaeter">Später</button></div></div>` });
-  return k;
+  return k.sort((a, b) => nfdPrio(a.id) - nfdPrio(b.id)); // stabil: gleiche Stufe behält ihre Reihenfolge
+}
+/* Rangfolge: Zettel · Gönn-Karte · Sammlung · Hinweis des Tages mit Anlass (Wochenrückblick, Pause) · Entdecken ·
+   allgemeiner Tageshinweis (th…) · App aufs Handy. Der Tageshinweis kommt fast täglich; stünde Entdecken dahinter, käme es nie dran. */
+function nfdPrio(id) {
+  const s = String(id), k = s.split(":")[0];
+  if (k === "hw") return /^hw:th\d/.test(s) ? 3.7 : 3;
+  return { zettel: 0, gk: 1, sammlung: 2, ent: 3.5, install: 4 }[k] ?? 9;
 }
 function neuFuerDichHTML(tf) {
   if (!S.onboard) return "";
   const h = heute(), k = neuFuerDichKandidaten(tf); let n = S.neuFuer && typeof S.neuFuer === "object" ? S.neuFuer : null;
   if (!k.length) return "";
-  const PRIO = { zettel: 0, gk: 1, sammlung: 2, hw: 3, install: 4 }, prio = id => PRIO[String(id).split(":")[0]] ?? 9;
+  const prio = nfdPrio;
   let karte;
   if (!n || n.tag !== h) karte = k[0];
   else if (k[0].id !== n.id && prio(k[0].id) < prio(n.id)) karte = k[0]; // später dazugekommen und wichtiger
   else karte = k.find(x => x.id === n.id) || null;                         // sonst: die Karte von heute oder (weggelegt) keine
   if (!karte) return "";
   if (!n || n.tag !== h || n.id !== karte.id) S.neuFuer = { tag: h, id: karte.id }; // wird beim nächsten speichern() mitgesichert
+  if (n && n.tag === h && n.id !== karte.id && String(n.id).startsWith("ent:")) entdeckenVerdraengt(n.id.slice(4)); // heute doch etwas Wichtigeres: Hinweis kommt an einem anderen Tag
+  if (String(karte.id).startsWith("ent:")) entdeckenGezeigt(karte.id.slice(4));
   return `<section class="abschnitt neu-fuer-dich" aria-labelledby="nfd-h"><h2 id="nfd-h" class="nfd-kopf">Neu für dich</h2>${karte.html}</section>`;
 }
 /* Einmaliger Hinweis: Briefe, Setzkasten und Fundstücke liegen jetzt in „Meine Sammlung“ */
@@ -206,6 +216,65 @@ function sammlungHinweisHTML() {
   const hat = (S.maxBriefe && (S.maxBriefe.archiv || []).length) || (S.fundstuecke || []).length || (S.briefe || []).length || (S.goenn && (S.goenn.karten || []).length) || modell().ausfluege.length;
   if (!hat) return "";
   return `<div class="hinweis nfd-sammlung" role="note">${S.huhn ? `<span class="nfd-huhn" aria-hidden="true">${huhnSVG({ gr: 40, kopf: true })}</span>` : ""}<p style="margin:0">${A("Briefe von Max, Setzkasten und Fundstücke liegen jetzt zusammen unter „Zuhause“ in „Meine Sammlung“. Alles ist noch da.", "Briefe von Max, Setzkasten und Fundstücke liegen jetzt zusammen unter „Zuhause“ in „Meine Sammlung“. Alles ist noch da.")}</p><div class="zeile zwischen"><button class="knopf klein zweit" data-act="sammlung">Zur Sammlung</button><button class="knopf klein leise" data-act="sammlung-hinweis-weg">Danke</button></div></div>`;
+}
+
+/* ---------- „Neu für dich“ › Entdecken: einmalige Hinweise auf bisher Ungenutztes ----------
+   Höchstens EINE Karte am Tag und nur, wenn nichts Wichtigeres ansteht (nfdPrio). Reihenfolge fest: Akte Feuerkelch, Memory,
+   Redensarten. Jede Karte erscheint an genau einem Tag; zwischen zwei Karten liegen mindestens ENT_ABSTAND Tage.
+   Eine Karte entfällt, sobald der Bereich genutzt wurde – dieselben Kriterien wie die Nutzungsübersicht (teilen.js).
+   Zustand: S.entdecken = { gezeigt: { id: "JJJJ-MM-TT" }, weg: { id: "JJJJ-MM-TT" } } (weg = weggelegt oder über den Knopf geöffnet) */
+const ENT_ABSTAND = 2;
+const entObj = v => v && typeof v === "object" && !Array.isArray(v) ? v : {};
+const entOffen = id => Number((entObj(entObj(S.teilen).offen))[id]) > 0; // Blatt schon mal geöffnet (Zähler aus teilen.js)
+const NFD_ENTDECKEN = [
+  { id: "akte", // teilen.js: !!S.akte · Rita liest Band 4 und ist noch nicht durch
+    frei: () => !!D.hpAkte && !S.akte && !entOffen("hp-pinnwand") && S.hp && S.hp.band === 4 && S.hp.kapitel < 37,
+    text: () => A("Du liest gerade den Feuerkelch? Unter „Ideen“ liegt dazu eine Akte: Eine ausgedachte Kommissarin liest mit und legt dir nach etwa zwei Kapiteln ihre Notizen hin, manchmal mit einer Rätselfrage. Verraten wird nichts, was du noch nicht gelesen hast.",
+      "Sie lesen gerade den Feuerkelch? Unter „Ideen“ liegt dazu eine Akte: Eine ausgedachte Kommissarin liest mit und legt Ihnen nach etwa zwei Kapiteln ihre Notizen hin, manchmal mit einer Rätselfrage. Verraten wird nichts, was Sie noch nicht gelesen haben."),
+    knopf: () => "Zur Akte" },
+  { id: "memory", // teilen.js: S.memory.spiele || offen.memory
+    frei: () => !(Number(entObj(S.memory).spiele) > 0) && !entOffen("memory") && (D.laden || []).some(x => x.id === "memory"),
+    text: () => (S.gekauft || {}).memory
+      ? A("Dein Figuren-Memory wartet noch auf die erste Runde: du, Max, Christiane, Hühnchen und die anderen als Kartenpaare. Wer findet Micha zweimal?", "Ihr Figuren-Memory wartet noch auf die erste Runde: Sie, Max, Christiane, Hühnchen und die anderen als Kartenpaare. Wer findet Micha zweimal?")
+      : A("Im Kramladen steht ein Figuren-Memory: du, Max, Christiane, Hühnchen und die anderen als Kartenpaare. Ohne Uhr, ohne Punkte. Wer findet Micha zweimal?", "Im Kramladen steht ein Figuren-Memory: Sie, Max, Christiane, Hühnchen und die anderen als Kartenpaare. Ohne Uhr, ohne Punkte. Wer findet Micha zweimal?"),
+    knopf: () => (S.gekauft || {}).memory ? "Eine Runde spielen" : "Memory ansehen" },
+  { id: "rede", // teilen.js: S.rede.gesendet || offen.rede (dazu: fürs Telefonat gemerkt)
+    frei: () => { const r = entObj(S.rede); return !Object.keys(entObj(r.gesendet)).length && !Object.keys(entObj(r.gemerkt)).length && !entOffen("rede") && (D.stattDaddeln || []).some(x => x && x.rede && !x.aus); },
+    text: () => A("Max’ Schwedisch ist ungefähr auf Hühnchen-Niveau. Unter „Ideen“ stehen acht schwedische Redensarten, jede mit „So klingt’s“. Such dir eine aus und bring sie ihm bei.",
+      "Max’ Schwedisch ist ungefähr auf Hühnchen-Niveau. Unter „Ideen“ stehen acht schwedische Redensarten, jede mit „So klingt’s“. Suchen Sie sich eine aus und bringen Sie sie ihm bei."),
+    knopf: () => "Redensarten ansehen" }
+];
+function entdeckenS() {
+  const e = entObj(S.entdecken), nurTage = o => { const r = {}; for (const k in entObj(o)) if (/^\d{4}-\d{2}-\d{2}$/.test(o[k])) r[k] = o[k]; return r; };
+  S.entdecken = { gezeigt: nurTage(e.gezeigt), weg: nurTage(e.weg) };
+  return S.entdecken;
+}
+const entTage = (von, bis) => Math.round((tagDatum(bis) - tagDatum(von)) / 864e5);
+function entdeckenKarte() {
+  if (!S.onboard) return null;
+  const E = entdeckenS(), h = heute();
+  if (h === S.start) return null; // nicht am Einrichtungstag
+  const heuteDa = NFD_ENTDECKEN.find(x => E.gezeigt[x.id] === h);
+  if (heuteDa) return !E.weg[heuteDa.id] && heuteDa.frei() ? heuteDa : null; // die Karte von heute bleibt heute
+  const zuletzt = Object.values(E.gezeigt).filter(t => t <= h).sort().pop();
+  if (zuletzt && entTage(zuletzt, h) < ENT_ABSTAND) return null;
+  return NFD_ENTDECKEN.find(x => !E.gezeigt[x.id] && !E.weg[x.id] && x.frei()) || null;
+}
+function entdeckenGezeigt(id) { const E = entdeckenS(); if (E.gezeigt[id] === heute()) return; E.gezeigt[id] = heute(); setTimeout(() => { try { speichern(); } catch (e) { } }, 0); }
+function entdeckenVerdraengt(id) { const E = entdeckenS(); if (E.gezeigt[id] === heute() && !E.weg[id]) delete E.gezeigt[id]; }
+function entdeckenHTML(x) {
+  return `<div class="hinweis nfd-sammlung nfd-entdecken" role="note" data-ent="${x.id}">${S.huhn ? `<span class="nfd-huhn" aria-hidden="true">${huhnSVG({ gr: 40, kopf: true })}</span>` : ""}<p style="margin:0">${esc(x.text())}</p><div class="zeile zwischen"><button class="knopf klein zweit" data-act="ent-auf" data-id="${x.id}">${esc(x.knopf())}</button><button class="knopf klein leise" data-act="ent-weg" data-id="${x.id}">Danke</button></div></div>`;
+}
+function entdeckenOeffnen(id) {
+  if (id === "akte") { aktion("hp-auf", {}); return; }
+  if (id === "memory") { if ((S.gekauft || {}).memory) memorySheet(); else wareSheet("memory"); return; }
+  if (id === "rede") { const v = (D.stattDaddeln || []).find(x => x && x.rede && !x.aus); if (v) ideeSheet(v.id); }
+}
+function entdeckenAktion(a, d) {
+  const id = d.id, x = NFD_ENTDECKEN.find(y => y.id === id); if (!x) return;
+  entdeckenS().weg[id] = heute(); speichern(); haptik("auswahl");
+  render({ halteScroll: true, ohneAnim: true });
+  if (a === "ent-auf") { const los = () => entdeckenOeffnen(id); if (SHEETS.length) { alleSheetsZu(); setTimeout(los, 260); } else los(); }
 }
 
 /* ---------- Hinweis des Tages ---------- */
@@ -417,6 +486,7 @@ function umbauAktion(a, d, el) {
   switch (a) {
     case "sammlung": { const sh = aktuellesSheet(); if (sh && sh.dataset.id === "sammlung") return true; if (SHEETS.length) { alleSheetsZu(); setTimeout(sammlungSheet, 260); } else sammlungSheet(); haptik("auswahl"); return true; }
     case "sammlung-hinweis-weg": sammlungS().hinweisWeg = heute(); speichern(); haptik("auswahl"); render({ halteScroll: true, ohneAnim: true }); return true;
+    case "ent-auf": case "ent-weg": entdeckenAktion(a, d); return true;
     case "sm-bild": alleSheetsZu(); setTimeout(() => { if (TAB !== "lichtung") wechsleTab("lichtung"); setTimeout(() => { const b = $("#buehne-gross"); if (b) b.scrollIntoView({ block: "center", behavior: REDUCED() ? "auto" : "smooth" }); toast(A("Finger aufs Bild halten und herumfahren – das ist die Lupe.", "Finger aufs Bild halten und herumfahren – das ist die Lupe.")); }, 160); }, 260); return true;
     case "sm-gluehw": gluehwSheet(); return true;
     case "sm-km": ortSheet({ ort: "hochsitz" }); return true;

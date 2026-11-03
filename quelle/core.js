@@ -80,6 +80,7 @@ function frisch() {
     spiel: { an: true, frei: false, limit: 4, limitNeu: null, limitAb: "", marken: 0, tag: "", genutzt: 0, geschenkt: 0, laufend: null, restSek: 0, rueckenmotiv: false },
     hp: { band: 4, kapitel: 0 },
     installKarte: "", nachherTag: "", meilensteine: {},
+    entdecken: { gezeigt: {}, weg: {} }, // „Neu für dich“ › Entdecken (views.js): einmalige Hinweise auf Akte, Memory, Redensarten
     goenn: { ausgestellt: -1, gesehen: 0, karten: [], ideen: [] }, // Gönn-Karten (goennen.js); -1 = noch nie gezählt
     letzteSicherung: "",
     geburtstag: "12-07", entdeckt: {}, // Briefe von Max (maxbriefe.js)

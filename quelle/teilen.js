@@ -188,7 +188,7 @@ function teilenText(frei) {
   Z.push(`${TEILEN_KENNUNG} ${tlDatum(h)}`);
   Z.push("Nur Zahlen, wie oft ich was benutze. Nichts von dem, was ich schreibe.");
   const E = d.kats, sum = E.reduce((s, [, v]) => s + v.g, 0);
-  Z.push(`Aktiv an ${d.a30} von 30 Tagen, ${sum} ${sum === 1 ? "Eintrag" : "Einträge"}`);
+  Z.push(`${tlAktivText(d)}, ${sum} ${sum === 1 ? "Eintrag" : "Einträge"}`);
   if (E.length) Z.push("Am meisten eingetragen: " + E.slice(0, 3).map(([, v]) => v.n).join(", "));
   const B = Object.values(d.B), ja = B.filter(b => b.ja).length;
   Z.push(`Ausprobiert: ${ja} von ${B.length} Bereichen`);
@@ -197,6 +197,17 @@ function teilenText(frei) {
   Z.push("");
   Z.push(teilenMaschine(d));
   return Z.join("\n");
+}
+/* „Aktiv an X von 30 Tagen“ – liegt der Start (S.start bzw. erster Eintrag) weniger als 30 Tage zurück:
+   „Seit T.M. an X von N Tagen“, N = Tage seit dem Start einschließlich heute (Start 23.10., heute 3.11. → 12). Nur der lesbare Teil. */
+function tlAktivText(d) {
+  const h = d.h, T = /^\d{4}-\d{2}-\d{2}$/;
+  const erster = (Array.isArray(S.eintraege) ? S.eintraege : []).map(e => e && e.tag).filter(t => T.test(t || "") && t <= h).sort()[0];
+  const st = [d.start, erster].filter(t => T.test(t || "") && t <= h).sort()[0];
+  const n = st ? tlTage(st, h) + 1 : 0;
+  if (!st || n > 30) return `Aktiv an ${d.a30} von 30 Tagen`;
+  const t = tagDatum(st);
+  return `Seit ${t.getDate()}.${t.getMonth() + 1}. an ${Math.min(d.a30, n)} von ${n} ${n === 1 ? "Tag" : "Tagen"}`;
 }
 const tlFrei = t => String(t || "").trim().slice(0, TEILEN_FREI_MAX);
 const tlUrlLaenge = text => encodeURIComponent(text).length;

@@ -383,6 +383,8 @@ html[data-size="3"] .gk-titel { font-size: 1.05rem; white-space: nowrap; }
 .nfd-sammlung { display: grid; grid-template-columns: auto 1fr; column-gap: 12px; row-gap: 8px; align-items: center; }
 .nfd-sammlung > .zeile { grid-column: 1 / -1; }
 .nfd-huhn { display: grid; place-items: center; }
+/* Entdecken (views.js entdeckenHTML): gleiche Karte wie der Sammlung-Hinweis; Knöpfe stehen in HAPSEL → Bezugssystem fürs iOS-label.hap */
+.nfd-entdecken .knopf { position: relative; }
 /* Zuhause: die Karte „Meine Sammlung“ – Setzkasten-Holz als Rahmen */
 .kachel.breit.sammlung-kachel { position: relative; flex-direction: row; text-align: left; gap: 14px; padding: 14px 14px 14px 16px; min-height: 96px; --k: var(--ocker);
   box-shadow: inset 0 0 0 4px var(--holz), inset 0 0 0 5.5px var(--holz-d), var(--kante); }
