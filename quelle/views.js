@@ -1176,7 +1176,11 @@ function angebotDaten(a) {
 }
 function angebotRegel(a) { return /tags\b|tags |jeden|Absprache|wöchentlich|Di–Sa|Mo, Mi|erfragen|bis März/i.test(a.wann || ""); }
 function angebotNaechstes(a) { if (/Ausstellung/.test(a.wann || "")) return ""; const h = heute(); return angebotDaten(a).find(d => d >= h) || ""; }
-function angebotVorbei(a) { const d = angebotDaten(a); return !angebotRegel(a) && d.length > 0 && d[d.length - 1] < heute(); }
+function angebotVorbei(a) { if (/^\d{4}-\d{2}-\d{2}$/.test(a.letzter_termin || "") && a.letzter_termin < heute()) return true; const d = angebotDaten(a); return !angebotRegel(a) && d.length > 0 && d[d.length - 1] < heute(); }
+/* Datenpflege: Ist der Stand älter als 10 Tage (oder fehlt er), steht oben ein ruhiger Hinweis – Uhr per ?zeit= stellbar */
+function standAlt(st) { return !/^\d{4}-\d{2}-\d{2}$/.test(st || "") || (tagDatum(heute()) - tagDatum(st)) / 864e5 > 10; }
+function standHinweis(st, tv) { return standAlt(st) ? `<p class="stand-hinweis" style="margin:0 0 10px">Diese Tipps sind schon etwas älter – ${tv ? "vorher kurz ins Programm schauen" : "vor dem Losgehen kurz anrufen"}.</p>` : ""; }
+function telNr(t) { const n = String(t || "").replace(/[^\d+]/g, ""); return n.replace(/\D/g, "").length >= 6 ? n : ""; }
 function angebotWann(a) { const d = angebotNaechstes(a); if (!d) return ""; const dt = tagDatum(d), uhr = /(\d{1,2}:\d{2})/.exec(String(a.wann || "")); return `${["So", "Mo", "Di", "Mi", "Do", "Fr", "Sa"][dt.getDay()]} ${dt.getDate()}.${dt.getMonth() + 1}.${uhr ? ", " + uhr[1] + " Uhr" : ""}`; }
 function angebotKurz(a) {
   let n = a.name.replace(/[„“"]/g, "").split(" – ")[0].trim(); if (n.length > 48) n = n.slice(0, 46).replace(/\s+\S*$/, "") + " …"; // am Wortende kürzen
@@ -1196,14 +1200,19 @@ function angeboteInhalt() {
   if (!alle.includes(ANG_KAT)) ANG_KAT = alle[0];
   const kats = [ANG_KAT];
   const zeile = (k, v) => v ? `<p style="margin:0 0 4px"><span style="font-weight:700">${k}:</span> ${esc(v)}</p>` : "";
-  const html = `<div class="chips" style="margin-bottom:6px">${alle.map(k => chip(k === ANG_KAT, `${k} · ${zahl(k)}`, `data-act="angebot-kat" data-v="${esc(k)}"`)).join("")}</div><label class="schalter-zeile" style="margin:4px 0 2px"><span>Nur draußen oder mit viel Platz</span><input type="checkbox" switch data-act="ang-luft" ${S.angLuft !== false ? "checked" : ""}></label><p class="klein">Stand: ${D.angeboteStand ? datumLang(D.angeboteStand).replace(/^[^,]*, /, "") : "Oktober 2026"}. Die Liste frischt sich jeden Sonntag von selbst auf. Termine und Preise vorher kurz nachfragen – angerufen ist schnell.</p>` + kats.map(k => {
+  const html = standHinweis(D.angeboteStand) + `<div class="chips" style="margin-bottom:6px">${alle.map(k => chip(k === ANG_KAT, `${k} · ${zahl(k)}`, `data-act="angebot-kat" data-v="${esc(k)}"`)).join("")}</div><label class="schalter-zeile" style="margin:4px 0 2px"><span>Nur draußen oder mit viel Platz</span><input type="checkbox" switch data-act="ang-luft" ${S.angLuft !== false ? "checked" : ""}></label><p class="klein">Stand: ${D.angeboteStand ? datumLang(D.angeboteStand).replace(/^[^,]*, /, "") : "Oktober 2026"}. Die Liste frischt sich jeden Sonntag von selbst auf. Termine und Preise vorher kurz nachfragen – angerufen ist schnell.</p>` + kats.map(k => {
     const h = heute(), arr = D.angebote.filter(a => (a.kategorie || "Kultur") === k && !angebotVorbei(a) && !(S.angLuft !== false && a.luft === "drinnen voll")).sort((x, y) => (angebotNaechstes(x) || "9") < (angebotNaechstes(y) || "9") ? -1 : 1); if (!arr.length) return `<p class="klein" style="margin-top:14px">Gerade nichts${S.angLuft !== false ? " mit viel Platz" : ""} in dieser Rubrik.${S.angLuft !== false ? " Schalter oben aus, dann siehst du alles." : ""}</p>`;
     return `<h3 style="margin-top:18px">${esc(k)}</h3>` + arr.map(a => {
       const auf = (S.liste || []).some(y => !y.erledigt && (y.angebot === a.id || y.text === angebotKurz(a)));
       return `<div class="bogen"><h3 style="font-size:1.05rem">${esc(a.name)}</h3>${a.luft ? `<span class="luft-marke luft-${a.luft === "draußen" ? "aussen" : a.luft === "weitläufig" ? "weit" : "voll"}">${a.luft === "draußen" ? "Draußen" : a.luft === "weitläufig" ? "Viel Platz" : "Eher voll"}</span>` : ""}${a.text ? `<p style="margin:0 0 8px">${esc(a.text)}</p>` : ""}${zeile("Wann", a.wann)}${zeile("Wo", a.wo)}${zeile("Kosten", a.kosten)}
-        ${a.tel ? `<a class="knopf klein zweit" style="margin:6px 0 4px" href="tel:${esc(a.tel.replace(/[^\d+]/g, ""))}">${ic("telefon")} Anrufen: ${esc(a.tel)}</a>` : ""}
-        ${a.pruefen ? `<p class="klein" style="margin:4px 0">Noch nicht ganz sicher – vorher nachfragen.</p>` : ""}
-        <div class="zeile zwischen" style="margin-top:6px;flex-wrap:wrap">${auf ? `<p class="klein" style="margin:6px 0 0">${ic("haken")} Steht auf ${A("deiner", "Ihrer")} Liste.</p>` : `<button class="knopf klein zweit" data-act="angebot-liste" data-id="${a.id}">${ic("plus")} Auf meine Liste</button>`}${sicher(a.quelle) ? `<a class="knopf klein leise" style="min-height:44px" href="${sicher(a.quelle)}" target="_blank" rel="noopener">Quelle</a>` : ""}</div></div>`;
+        ${a.pruefen ? `<p class="klein" style="margin:4px 0">${telNr(a.tel) ? "Noch nicht ganz sicher – lieber vorher kurz anrufen." : "Noch nicht ganz sicher – lieber vorher kurz nachfragen."}</p>` : ""}
+        <div class="zeile" style="margin-top:6px;gap:8px;flex-wrap:wrap">${(() => {
+          // Anrufen steht immer direkt vor dem Link; bei ungeprüften Einträgen kommt beides zuerst
+          const tel = telNr(a.tel) ? `<a class="knopf klein zweit ang-tel" style="min-height:44px" href="tel:${esc(telNr(a.tel))}">${ic("telefon")} Anrufen: ${esc(a.tel)}</a>` : "";
+          const quelle = sicher(a.quelle) ? `<a class="knopf klein leise" style="min-height:44px" href="${sicher(a.quelle)}" target="_blank" rel="noopener">Quelle</a>` : "";
+          const liste = auf ? `<p class="klein" style="margin:6px 0 0">${ic("haken")} Steht auf ${A("deiner", "Ihrer")} Liste.</p>` : `<button class="knopf klein zweit" data-act="angebot-liste" data-id="${a.id}">${ic("plus")} Auf meine Liste</button>`;
+          return a.pruefen && tel ? tel + quelle + liste : liste + tel + quelle;
+        })()}</div></div>`;
     }).join("");
   }).join("");
   return html;

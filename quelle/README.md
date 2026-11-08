@@ -25,6 +25,8 @@ Diese Datei liegt in `/home/claude/app/README-entwickler.md` und wird als `ritas
   Hoisting. Deshalb: **nicht** in Module oder mehrere Script-Tags aufteilen.
 - `angebote.json` und `tv.json` (sonntags automatisch erneuert) baut der Build in `D` ein und legt sie neben `repo/index.html`.
   Gibt es `angebote.json`, fällt `data-angebote.js` (Notfall-Stand) weg.
+  Die App blendet Vergangenes nur bei der Anzeige aus (`fernsehen.datum`, `mediathek.bis`, optional `angebote.letzter_termin`)
+  und zeigt bei `stand` älter als 10 Tage einen ruhigen Hinweis. Prüfen der Daten: `python3 check_daten.py angebote.json tv.json [--links]`.
 - Der Build bricht ab, wenn eine Datei fehlt. Er verkleinert die Schriften (braucht `fontTools`) und lässt die
   HP-Spoiler-Prüfung laufen (braucht `node`). Erwartet: `HP-Prüfung: OK`.
 - Die Schrift-Blobs ändern sich bei jedem Build (Zeitstempel von fontTools). Das ist harmlos.
