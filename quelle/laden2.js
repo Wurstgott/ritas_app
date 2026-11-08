@@ -149,7 +149,12 @@ function sfAbspielen(id) {
   alleSheetsZu();
   setTimeout(() => {
     if (TAB !== "lichtung") { TAB = "lichtung"; render(); }
-    setTimeout(() => { const b = document.getElementById("buehne-gross"); if (b) b.scrollIntoView({ block: "center", behavior: REDUCED() ? "auto" : "smooth" }); setTimeout(() => sfStart(e), REDUCED() ? 100 : 650); }, 120);
+    setTimeout(() => {
+      // V5 (8.11.): weich nur bis eine Bildschirmhöhe Weg, darüber (oder bei „ruhig“) sofort springen (ux80: Auto-Scroll)
+      const b = document.getElementById("buehne-gross"); let weich = false;
+      if (b) { const r = b.getBoundingClientRect(); weich = !REDUCED() && Math.abs(r.top + r.height / 2 - innerHeight / 2) <= innerHeight; b.scrollIntoView({ block: "center", behavior: weich ? "smooth" : "auto" }); }
+      setTimeout(() => sfStart(e), weich ? 650 : 100);
+    }, 120);
   }, 280);
 }
 function sfStart(e) {

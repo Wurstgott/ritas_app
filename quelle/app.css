@@ -455,8 +455,11 @@ svg.icon { width: 28px; height: 28px; flex: none; color: var(--k, var(--moos)); 
 .bogen.post { background: color-mix(in srgb, var(--bogen) 88%, var(--licht)); overflow: hidden; }
 /* ---------- Hühnchen (Comic, SVG) ---------- */
 .huhn { overflow: visible; flex: none; }
-.huhn .huhn-kopf { transform-box: fill-box; transform-origin: 40% 90%; animation: huhn-wippen 3.6s ease-in-out infinite; }
-.huhn .lider { animation: huhn-blinzeln 5.2s infinite; }
+/* V4 (8.11.): Wippen und Blinzeln nicht mehr endlos, sondern einmal, wenn figuren.js (figurenIdle) kurz die Klasse fig-wipp / fig-blink setzt */
+.huhn .huhn-kopf { transform-box: fill-box; transform-origin: 40% 90%; }
+.huhn.fig-wipp .huhn-kopf { animation: huhn-wippen 3.6s ease-in-out; }
+.huhn.fig-blink .lider { animation: huhn-blinzeln-1 .4s; }
+@keyframes huhn-blinzeln-1 { 0%, 100% { opacity: 0; } 35%, 65% { opacity: 1; } }
 .huhn .froh { display: none; }
 .huhn.freut .froh { display: inline !important; } .huhn.freut .pupillen, .huhn.freut .huhn-augen ellipse:not(.lider ellipse) { display: none; }
 .huhn.freut .lider { display: none; }
@@ -574,8 +577,8 @@ h2, h3 { font-weight: 620; }
 @keyframes lz-strich { 15%, 70% { opacity: 1; } 0%, 85%, 100% { opacity: 0; } }
 .logo-knopf.a-huepfen .portrait { animation: lz-hops .9s cubic-bezier(.3,1.6,.5,1); }
 @keyframes lz-hops { 0% { transform: translateY(0) scale(1, 1); } 15% { transform: translateY(2px) scale(1.12, .86); } 45% { transform: translateY(-14px) scale(.94, 1.08); } 75% { transform: translateY(0) scale(1.06, .94); } 100% { transform: none; } }
-.logo-knopf.a-drehen .portrait { animation: lz-dreh 1s ease-in-out; }
-@keyframes lz-dreh { 0% { transform: rotateY(0); } 100% { transform: rotateY(720deg); } }
+.logo-knopf.a-drehen .portrait { animation: lz-dreh .6s ease-in-out; }
+@keyframes lz-dreh { 0% { transform: rotateY(0); } 100% { transform: rotateY(360deg); } }
 .logo-knopf.a-brille .brille { animation: lz-brille 2.4s ease-in-out; }
 @keyframes lz-brille { 0% { opacity: 0; transform: translateY(-14px); } 20% { opacity: 1; transform: translateY(0); } 80% { opacity: 1; transform: translateY(0); } 100% { opacity: 0; transform: translateY(0); } }
 .logo-knopf.a-wackeln .portrait { animation: lz-wackel .8s ease-in-out; transform-origin: 50% 90%; }
@@ -891,8 +894,9 @@ h2, h3 { font-weight: 620; }
 .huhn-gross.hg-frech .hg-vorn .huhn-schnabel .unten { animation: hg-schnabel-auf .9s ease-in-out 1.45s both, hg-schnabel-grins .3s ease-in-out 1.9s 4 alternate; }
 @keyframes hg-schnabel-grins { to { transform: scaleY(1.9) translateY(.8px); } }
 /* Figuren: immer ein bisschen lebendig – blinzeln, und beim Sprechen bewegt sich der Mund */
-.portrait .augen { transform-box: fill-box; transform-origin: center; animation: fig-blinzeln 5.4s ease-in-out infinite; }
-.portrait.max .augen { animation-delay: 1.3s; } .portrait.jane .augen { animation-delay: 2.1s; } .portrait.micha .augen { animation-delay: .6s; } .portrait.karin .augen { animation-delay: 3s; }
+.portrait .augen { transform-box: fill-box; transform-origin: center; }
+.portrait.fig-blink .augen { animation: fig-blinzeln-1 .38s ease-in-out; }
+@keyframes fig-blinzeln-1 { 0%, 100% { transform: scaleY(1); } 40% { transform: scaleY(.1); } }
 @keyframes fig-blinzeln { 0%, 93%, 100% { transform: scaleY(1); } 95.5% { transform: scaleY(.1); } }
 .portrait .mund { transform-box: fill-box; transform-origin: 50% 25%; }
 .spricht .portrait .mund { animation: fig-mund .15s ease-in-out infinite alternate; }
@@ -900,9 +904,11 @@ h2, h3 { font-weight: 620; }
 .spricht .huhn .huhn-schnabel .unten { transform-box: fill-box; transform-origin: 50% 0; animation: fig-schnabel .14s ease-in-out infinite alternate !important; }
 @keyframes fig-schnabel { from { transform: scaleY(1); } to { transform: scaleY(1.9) translateY(.5px); } }
 .portrait-gross .mund { animation: pg-laecheln 2.6s ease-in-out .2s infinite; }
-.fig-idle { animation: fig-wippen 3.2s ease-in-out infinite; transform-origin: 50% 100%; }
+.fig-idle { transform-origin: 50% 100%; }
+.fig-idle.fig-wipp { animation: fig-wippen 3.2s ease-in-out; }
 @keyframes fig-wippen { 0%, 100% { transform: translateY(0) rotate(0); } 50% { transform: translateY(-2px) rotate(-1.2deg); } }
-.brief-marke .portrait, .max-karte > .portrait, .tel-kopf .portrait, .zettel-notiz .portrait { animation: fig-wippen 3.6s ease-in-out infinite; transform-origin: 50% 100%; }
+.brief-marke .portrait, .max-karte > .portrait, .tel-kopf .portrait, .zettel-notiz .portrait { transform-origin: 50% 100%; }
+.brief-marke .portrait.fig-wipp, .max-karte > .portrait.fig-wipp, .tel-kopf .portrait.fig-wipp, .zettel-notiz .portrait.fig-wipp { animation: fig-wippen 3.6s ease-in-out; }
 /* Ereignis-Karte */
 .ereignis { position: fixed; left: max(12px, env(safe-area-inset-left, 0px)); right: max(12px, env(safe-area-inset-right, 0px)); bottom: calc(86px + env(safe-area-inset-bottom, 0px)); z-index: 75; max-width: 520px; margin: 0 auto; background: var(--bogen); color: var(--tinte); border-radius: 20px; padding: 14px 14px 12px; box-shadow: 0 14px 40px rgba(0,0,0,.28); animation: er-rein .45s cubic-bezier(.3,1.4,.5,1) both; }
 .ereignis.weg { animation: er-raus .3s ease-in forwards; }
@@ -911,7 +917,8 @@ h2, h3 { font-weight: 620; }
 .ereignis-zu { position: absolute; right: 6px; top: 6px; width: 40px; height: 40px; border: 0; background: none; color: var(--tinte); opacity: .6; border-radius: 50%; cursor: pointer; }
 .ereignis-zu .icon { width: 20px; height: 20px; }
 .ereignis-kopf { display: flex; gap: 12px; align-items: flex-start; padding-right: 30px; }
-.er-figur { flex: none; width: 84px; height: 84px; animation: er-hops .6s cubic-bezier(.3,1.6,.5,1) .15s both, fig-wippen 3.2s ease-in-out .8s infinite; }
+.er-figur { flex: none; width: 84px; height: 84px; animation: er-hops .6s cubic-bezier(.3,1.6,.5,1) .15s both; }
+.er-figur.fig-wipp { animation: fig-wippen 3.2s ease-in-out; }
 @keyframes er-hops { 0% { transform: translateY(24px) scale(.7); } 60% { transform: translateY(-6px) scale(1.05); } 100% { transform: none; } }
 .er-figur.er-huhn .huhn { background: var(--mulde); border-radius: 50%; }
 .er-figur.er-tanzt { animation: er-tanz .32s ease-in-out infinite alternate; }
@@ -930,7 +937,7 @@ h2, h3 { font-weight: 620; }
 .wm-text { font-family: "Satisfy", "Dancing Script", cursive; font-size: min(1.95em, 8vw); letter-spacing: 0; }
 .wm-kap { font-size: 1.22em; margin-right: 0; }
 @media (max-width: 370px) { .wm-text { font-size: 7.2vw; } }
-.portrait.greta .augen { animation-delay: 1.8s; } .portrait.pauli .augen { animation-delay: 2.6s; }
+/* (Blinzel-Versatz für Greta/Pauli: jetzt per Zufall in figurenIdle) */
 /* Hühnchen: Emoji-Vielfalt */
 .hg-emo { font-size: 24px; color: inherit; }
 .hg-emo.hg-fall { animation: hg-emo-fall 1.8s ease-in forwards; }

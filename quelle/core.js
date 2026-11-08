@@ -294,7 +294,9 @@ function haptik(art) {
   vibriere(art);
 }
 function vibriere(art) {
-  if (!S.vib || REDUCED()) return;
+  // V3 (8.11.): „ruhig“ nimmt nur die Bewegung weg, die Vibration (Android) bleibt; es zählt allein S.vib.
+  // iOS hat kein navigator.vibrate – dort regelt armHaptics() die label.hap und lässt sie unter „ruhig“ weiter weg.
+  if (!S.vib || (IOS && REDUCED())) return;
   if (navigator.userActivation && !navigator.userActivation.hasBeenActive) return; // ohne Nutzergeste blockt der Browser ohnehin
   try { if (navigator.vibrate) navigator.vibrate(VIB[art] || 10); } catch (e) { }
 }

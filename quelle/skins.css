@@ -5,15 +5,19 @@
 /* Mit Hut wippt der Kopf um denselben Punkt wie ohne (fester Drehpunkt statt Bounding-Box) */
 .huhn.mit-skin .huhn-kopf { transform-box: view-box; transform-origin: 61px 48px; }
 .huhn-front.mit-skin .huhn-kopf { transform-origin: 64px 48px; }
-.skin-flamme { transform-box: fill-box; transform-origin: 50% 100%; animation: sk-flacker 1.3s ease-in-out infinite alternate; }
-.skin-flamme:nth-of-type(3n) { animation-duration: 1.7s; }
+/* V4 (8.11.): Skin-Teile bewegen sich mit, wenn die Figur gerade wippt (fig-wipp), sonst Ruhepose = Anfang der Schleife */
+.skin-flamme { transform-box: fill-box; transform-origin: 50% 100%; transform: rotate(-3deg); }
+.fig-wipp .skin-flamme { animation: sk-flacker 1.3s ease-in-out 2 alternate; }
+.fig-wipp .skin-flamme:nth-of-type(3n) { animation-duration: 1.7s; }
 @keyframes sk-flacker { 0% { transform: scale(1, 1) rotate(-3deg); } 60% { transform: scale(.92, 1.12) rotate(2deg); } 100% { transform: scale(1.04, .94) rotate(-1deg); } }
-.skin-cape { transform-box: fill-box; transform-origin: 95% 5%; animation: sk-cape 2.4s ease-in-out infinite; }
+.skin-cape { transform-box: fill-box; transform-origin: 95% 5%; }
+.fig-wipp .skin-cape { animation: sk-cape 2.4s ease-in-out; }
 @keyframes sk-cape { 0%, 100% { transform: rotate(0deg) skewX(0deg); } 50% { transform: rotate(3deg) skewX(-3deg); } }
-.skin-feder { transform-box: fill-box; transform-origin: 50% 100%; animation: sk-feder 2.2s ease-in-out infinite; }
+.skin-feder { transform-box: fill-box; transform-origin: 50% 100%; transform: rotate(-4deg); }
+.fig-wipp .skin-feder { animation: sk-feder 2.2s ease-in-out; }
 @keyframes sk-feder { 0%, 100% { transform: rotate(-4deg); } 50% { transform: rotate(5deg); } }
-:root[data-motion="ruhig"] .skin-flamme, :root[data-motion="ruhig"] .skin-cape, :root[data-motion="ruhig"] .skin-feder { animation: none; }
-@media (prefers-reduced-motion: reduce) { .skin-flamme, .skin-cape, .skin-feder { animation: none; } }
+:root[data-motion="ruhig"] .fig-wipp .skin-flamme, :root[data-motion="ruhig"] .fig-wipp .skin-cape, :root[data-motion="ruhig"] .fig-wipp .skin-feder { animation: none; }
+@media (prefers-reduced-motion: reduce) { .fig-wipp .skin-flamme, .fig-wipp .skin-cape, .fig-wipp .skin-feder { animation: none; } }
 
 /* ---------- Taler-Plakette in der Kopfzeile ---------- */
 header.kopf { position: relative; }
@@ -59,6 +63,12 @@ header.kopf { position: relative; }
 .ks-fig .klein { text-align: center; line-height: 1.25; }
 .ks-fig.hops > svg { animation: ks-hops .6s cubic-bezier(.3,1.6,.5,1); }
 @keyframes ks-hops { 0% { transform: translateY(0) rotate(0); } 35% { transform: translateY(-10px) rotate(-4deg); } 70% { transform: translateY(0) rotate(3deg); } 100% { transform: none; } }
+/* M3 (8.11.): Anprobe – das neue Teil setzt sich auf (einmal, 360 ms): von oben absenken (≤ 14 Einheiten ≈ 11 px, ≤ 8° gekippt), die Figur staucht kurz.
+   Nur das Bild bewegt sich, kein Text. Unter „ruhig“ setzt skins.js die Klasse gar nicht. */
+.ks-fig.aufsetzen > svg { overflow: visible; animation: ks-stauch .36s ease-out; transform-origin: 50% 100%; }
+.ks-fig.aufsetzen .skin-teil { transform-box: view-box; transform-origin: 50px 30px; animation: ks-aufsetzen .36s cubic-bezier(.3,.7,.4,1); }
+@keyframes ks-aufsetzen { 0% { transform: translateY(-14px) rotate(-8deg); opacity: 0; } 35% { opacity: 1; } 70% { transform: translateY(0) rotate(0); } 100% { transform: none; opacity: 1; } }
+@keyframes ks-stauch { 0%, 62% { transform: none; } 80% { transform: scale(1.03, .96); } 100% { transform: none; } }
 .ks-kasse { display: flex; align-items: center; gap: 10px; padding: 10px 14px; border-radius: 14px; background: var(--mulde); }
 .ks-kasse > .muenze { width: 34px; height: 34px; flex: none; }
 .ks-fach { margin: 18px 2px 8px; font-size: 1.05rem; }
@@ -285,8 +295,9 @@ header.kopf { position: relative; }
 .muenze-knopf { position: relative; display: grid; place-items: center; flex: none; width: 52px; height: 52px; padding: 0; border: 0; border-radius: 50%; background: none; cursor: pointer; perspective: 260px; -webkit-tap-highlight-color: transparent; }
 .muenze-knopf:focus-visible { outline: 3px solid var(--fokus); outline-offset: 2px; }
 .taler-plakette .tp-pille { perspective: 200px; }
-.muenze.dreht { animation: muenz-dreh .95s cubic-bezier(.2,.7,.3,1); transform-style: preserve-3d; }
-@keyframes muenz-dreh { 0% { transform: rotateY(0) scale(1); } 40% { transform: rotateY(540deg) scale(1.12); } 100% { transform: rotateY(1080deg) scale(1); } }
+/* V2 (8.11.): eine Umdrehung statt drei (ux80: Münze ≤ 360°) */
+.muenze.dreht { animation: muenz-dreh .6s cubic-bezier(.2,.7,.3,1); transform-style: preserve-3d; }
+@keyframes muenz-dreh { 0% { transform: rotateY(0) scale(1); } 40% { transform: rotateY(180deg) scale(1.08); } 100% { transform: rotateY(360deg) scale(1); } }
 @media (prefers-reduced-motion: reduce) { .muenze.dreht { animation: none; } }
 .laden-tuer { min-width: 0; overflow-wrap: anywhere; hyphens: auto; } .laden-tuer .lt-bild { max-width: 100%; overflow: hidden; }
 /* V3 (Verschlankung, 1.11.): fünf Abteilungs-Reiter, alle auf einen Blick (umbrechen statt seitlich scrollen); es ist immer nur EINE Abteilung zu sehen */

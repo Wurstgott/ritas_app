@@ -891,9 +891,38 @@ function stufenSheet() {
 function stufeMoment(neuSt, auchNeu) {
   $$(".toast").forEach(t => t.remove());
   const s = D.stufen[neuSt];
-  sheet({ titel: "Neu im Bild", inhalt: `<div class="buehne klein" style="margin-bottom:14px"><canvas id="bild-moment"></canvas></div><div class="klein">Stufe ${neuSt + 1} von ${D.stufen.length}</div><h2>${esc(s.name)}</h2><p>${esc(s.text)}</p>${auchNeu && auchNeu.length ? `<p class="klein">Auch neu: ${esc(auchNeu.join(", "))}</p>` : ""}`, fuss: `<button class="knopf haupt voll" data-act="sheet-zu">Klasse!</button>`, id: "moment" });
-  setTimeout(() => { const c = $("#bild-moment"); if (c) zeichneSzene(c, {}); }, 60);
-  haptik("stufe"); ton("erfolg");
+  sheet({ titel: "Neu im Bild", inhalt: `<div class="buehne klein" style="margin-bottom:14px"><canvas id="bild-moment-vorher" aria-hidden="true" style="position:absolute;inset:0"></canvas><canvas id="bild-moment" style="position:relative"></canvas></div><div class="klein">Stufe ${neuSt + 1} von ${D.stufen.length}</div><h2>${esc(s.name)}</h2><p>${esc(s.text)}</p>${auchNeu && auchNeu.length ? `<p class="klein">Auch neu: ${esc(auchNeu.join(", "))}</p>` : ""}`, fuss: `<button class="knopf haupt voll" data-act="sheet-zu">Klasse!</button>`, id: "moment" });
+  ton("erfolg");
+  stufeAnkunft(neuSt);
+}
+/* M2 (8.11.): Der Stufenaufstieg nutzt die vorhandene Ankunfts-Animation (bildMitAnkunft) – ohne Vorhang, ohne Kippen.
+   Das Bild der neuen Stufe blendet über dem der alten ein, Neues wächst an seinem Ort; zusammen ≤ 1,6 s nach dem Hereinschieben
+   des Blatts (unter 3 s). Ein Tipp irgendwo springt sofort zum Endzustand. Haptik beim Ankommen. Unter „ruhig“ sofort das Endbild. */
+function stufeAnkunft(neuSt) {
+  // Elemente direkt aus diesem Blatt nehmen (ein gerade schließendes Blatt trägt kurz noch dieselben IDs)
+  const sh = aktuellesSheet(), c = sh && sh.querySelector("#bild-moment"), v = sh && sh.querySelector("#bild-moment-vorher");
+  let fertig = false, t1 = 0, t2 = 0;
+  const ende = () => {
+    if (fertig) return; fertig = true; clearTimeout(t1); clearTimeout(t2); document.removeEventListener("pointerdown", ende, true);
+    if (v) v.remove();
+    if (!c || !c.isConnected) return;
+    cancelAnimationFrame(SZ.raf); c.style.transition = "none"; c.style.opacity = ""; zeichneSzene(c, {});
+    haptik("stufe");
+  };
+  if (REDUCED() || !neuSt) { t1 = setTimeout(ende, 60); return; }
+  t1 = setTimeout(() => {
+    if (!c || !v || !c.isConnected) { ende(); return; }
+    try { zeichneSzene(v, { modell: { ...modell(), stufe: neuSt - 1 } }); } catch (e) { ende(); return; }
+    c.style.opacity = "0";
+    document.addEventListener("pointerdown", ende, true);
+    // erst nach dem Hereinschieben des Blatts (280 ms), dann 1,2 s Ankunft
+    t1 = setTimeout(() => {
+      if (fertig || !c.isConnected) return;
+      c.style.transition = "opacity .9s ease-out"; c.style.opacity = "1";
+      bildMitAnkunft(c, "stufe:" + neuSt);
+      t2 = setTimeout(ende, 1300);
+    }, 260);
+  }, 60);
 }
 
 /* ---------- Wissen, Lebensbuch, Moment, Rückblick ---------- */

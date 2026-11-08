@@ -10,14 +10,14 @@ nav.tabs button > .tab-zahl {
   border: 2px solid var(--tz-rand);
   font-family: var(--f-text, system-ui, sans-serif); font-size: 12px; font-weight: 800; line-height: 16px;
   text-align: center; font-variant-numeric: tabular-nums; pointer-events: none;
-  animation: tz-puls 2.8s ease-in-out infinite;
+  animation: tz-puls 2.8s ease-in-out 3;
 }
 :root[data-size="2"] nav.tabs button > .tab-zahl, :root[data-size="3"] nav.tabs button > .tab-zahl { min-width: 22px; height: 22px; border-radius: 11px; font-size: 13px; line-height: 18px; }
-@keyframes tz-puls {
-  0%, 60%, 100% { transform: scale(1); box-shadow: 0 0 0 0 color-mix(in srgb, var(--tz-rot) 45%, transparent); }
-  75% { transform: scale(1.1); box-shadow: 0 0 0 5px color-mix(in srgb, var(--tz-rot) 0%, transparent); }
-}
-@media (prefers-reduced-motion: reduce) { nav.tabs button > .tab-zahl { animation: none; } }
-:root[data-motion="ruhig"] nav.tabs button > .tab-zahl { animation: none; }
+/* V1 (8.11.): höchstens 3 Durchläufe, dann steht das Badge (ux80: Pulsieren ≤ 3 Zyklen). Ring nur über transform/opacity. */
+nav.tabs button > .tab-zahl::after { content: ""; position: absolute; inset: -2px; border-radius: inherit; border: 2px solid var(--tz-rot); opacity: 0; pointer-events: none; animation: tz-ring 2.8s ease-out 3; }
+@keyframes tz-puls { 0%, 60%, 100% { transform: scale(1); } 75% { transform: scale(1.1); } }
+@keyframes tz-ring { 0%, 60% { transform: scale(1); opacity: .45; } 90%, 100% { transform: scale(1.5); opacity: 0; } }
+@media (prefers-reduced-motion: reduce) { nav.tabs button > .tab-zahl, nav.tabs button > .tab-zahl::after { animation: none; } }
+:root[data-motion="ruhig"] nav.tabs button > .tab-zahl, :root[data-motion="ruhig"] nav.tabs button > .tab-zahl::after { animation: none; }
 /* Wortmarke „Ritas App“ ist antippbar (→ Heute) und steht in HAPSEL: Bezugssystem fürs iOS-label.hap */
 .wm-text { position: relative; cursor: pointer; }

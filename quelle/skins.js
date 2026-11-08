@@ -626,10 +626,11 @@ function ksFuss() {
   else k = `<div class="stapel">${skFortschritt(s.preis, t, s.fuer === "huhn" ? "dann gehört es Hühnchen" : A("dann gehört es dir", "dann gehört es Ihnen"))}${S.skins.ziel === s.id ? `<button class="knopf leise voll" data-act="sk-ziel" data-id="">${ic("haken")} Ist dein Ziel – nicht mehr merken</button>` : `<button class="knopf zweit voll" data-act="sk-ziel" data-id="${s.id}">${ic("stern")} Als Ziel merken</button>`}</div>`;
   return `<div class="ks-fuss"><div class="ks-fuss-text"><span style="font-weight:700">${esc(s.name)}</span><span class="klein">${esc(s.text)}</span></div>${k}</div>`;
 }
-function ksNeu(wackel) {
+function ksNeu(wackel, auf) {
   const sh = aktuellesSheet(); if (!sh || sh.dataset.id !== "schrank") return;
   sheetInhalt(ksInhalt()); sheetFuss(ksFuss());
-  if (wackel && !REDUCED()) { const el = sh.querySelector(`.ks-fig[data-v="${wackel}"]`); if (el) { el.classList.remove("hops"); void el.offsetWidth; el.classList.add("hops"); } }
+  // M3 (8.11.): Wird ein Teil anprobiert, setzt es sich auf („aufsetzen“); sonst der bisherige kleine Hopser
+  if (wackel && !REDUCED()) { const el = sh.querySelector(`.ks-fig[data-v="${wackel}"]`); if (el) { const k = auf && el.querySelector(".skin-teil") ? "aufsetzen" : "hops"; el.classList.remove("hops", "aufsetzen"); void el.offsetWidth; el.classList.add(k); setTimeout(() => el.classList.remove(k), 700); } }
 }
 function reiheVoll() {
   for (const r of SKIN_REIHEN) if (!S.skins.reihen[r.id] && r.ids.every(skinHat)) { S.skins.reihen[r.id] = heute(); S.taler += r.bonus; return r; }
@@ -871,7 +872,7 @@ function skAktion(a, d, el) {
       if (offen && offen.dataset.id === "laden") { kleiderschrankSheet(); break; } // aus dem Kramladen: darüberlegen, „Schließen“ führt zurück in den Laden
       if (offen) { alleSheetsZu(); setTimeout(() => kleiderschrankSheet(), 240); } else kleiderschrankSheet(); break; }
     case "sk-fig": KS.fig = d.v; KS.sel = null; ksNeu(d.v); break;
-    case "sk-probe": { const s = SKIN_MAP[d.id]; if (!s) break; KS.fig = s.fuer; if (KS.sel === s.id) { KS.sel = null; delete KS.probe[s.fuer]; } else { KS.sel = s.id; KS.probe[s.fuer] = s.id; } haptik("auswahl"); ksNeu(s.fuer); break; }
+    case "sk-probe": { const s = SKIN_MAP[d.id]; if (!s) break; KS.fig = s.fuer; if (KS.sel === s.id) { KS.sel = null; delete KS.probe[s.fuer]; } else { KS.sel = s.id; KS.probe[s.fuer] = s.id; } haptik("auswahl"); ksNeu(s.fuer, KS.sel === s.id); break; }
     case "sk-kaufen": skinKaufen(d.id); break;
     case "sk-rueck": { const t = el.closest(".toast"); if (t) t.remove(); skinRueck(); break; }
     case "sk-an": { const s = SKIN_MAP[d.id]; if (!s || !skinHat(s.id)) break; S.skins[s.fuer] = s.id; delete KS.probe[s.fuer]; speichern(); haptik("erfolg"); figurenAktualisieren(); ksNeu(s.fuer); skRender(); break; }
