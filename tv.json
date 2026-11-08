@@ -1,5 +1,5 @@
 {
-  "stand": "2026-11-01",
+  "stand": "2026-11-08",
   "mediathek": [
     {
       "titel": "Kommissar Beck – Vilhelm",
@@ -38,7 +38,7 @@
       "genre": "Krimi",
       "text": "Walter Sittler als Robert Anders auf Gotland: Ausgerechnet beim Luciafest kurz vor Weihnachten geschieht ein Unglück. Gotland, Kerzenschein und ein Kommissar mit Herz, schöner kann man den dunklen Herbst nicht beginnen.",
       "laenge": "89 Min.",
-      "bis": "2026-12-17",
+      "bis": "2028-11-13",
       "link": "https://www.zdf.de/video/serien/der-kommissar-und-das-meer-104/lichterfest-100"
     },
     {
@@ -90,16 +90,6 @@
       "laenge": "6 Folgen",
       "bis": "2027-10-16",
       "link": "https://www.zdf.de/video/serien/under-salt-marsh-tod-in-den-salzwiesen-100/under-salt-marsh---tod-in-den-salzwiesen-ein-grauenhafter-fund-100"
-    },
-    {
-      "titel": "Karen Pirie – Echo einer Mordnacht",
-      "sender": "ZDF",
-      "art": "Miniserie",
-      "genre": "Krimi",
-      "text": "Eine junge schottische Ermittlerin rollt in St. Andrews einen jahrzehntealten Mordfall neu auf, mit ihren direkten Fragen eckt sie überall an. Nach Val McDermid, klug und mit trockenem Humor. Schnell anschauen, es ist nur noch bis Anfang November online!",
-      "laenge": "3 Teile à ca. 87 Min.",
-      "bis": "2026-11-06",
-      "link": "https://www.zdf.de/video/serien/karen-pirie-echo-einer-mordnacht-100/der-fall-rosie-duff-nach-dem-roman-von-val-mcdermid-echo-einer-winternacht-100"
     },
     {
       "titel": "Havelland-Krimi – Hinter der Fassade",
@@ -249,7 +239,7 @@
       "text": "Die wahre Geschichte der Britin Nazanin Zaghari-Ratcliffe, die 2016 bei einem Familienbesuch im Iran als angebliche Spionin festgenommen wird, und ihres Mannes, der in London jahrelang für sie kämpft. Bewegend, hervorragend gespielt und britisches Fernsehen von seiner besten Seite.",
       "laenge": "4 Folgen à ca. 70 Min.",
       "bis": "2026-12-16",
-      "link": "https://www.zdf.de/video/serien/collection-index-page-artede-collection-artede-rc-028037-240/page-video-artede-prisoner-951-14---der-moment-in-dem-alles-kippt-100"
+      "link": "https://www.zdf.de/video/serien/collection-index-page-artede-collection-artede-rc-028037-254/page-video-artede-prisoner-951-14---der-moment-in-dem-alles-kippt-100"
     },
     {
       "titel": "In die Sonne schauen",
@@ -350,189 +340,69 @@
       "laenge": "44 Min.",
       "bis": "2028-10-14",
       "link": "https://www.zdf.de/video/dokus/collection-index-page-ard-collection-ard-dxjuomfyzdpzag93ojizogvmzwfmmwjlmja1njk-226/page-video-ard-kaktus-hotel-104"
+    },
+    {
+      "titel": "Der Kommissar und das Meer – Aus glücklichen Tagen",
+      "sender": "ZDF",
+      "art": "Film",
+      "genre": "Krimi",
+      "text": "Auf Gotland häufen sich Einbrüche, in Visby liegt ein Toter, und Robert Anders fragt sich, ob er bei einem alten Fall danebenlag. Ostsee-Licht und schwedische Ruhe – genau Dein Samstagabend.",
+      "laenge": "89 Min.",
+      "bis": "2027-10-14",
+      "link": "https://www.zdf.de/video/serien/der-kommissar-und-das-meer-104/aus-gluecklichen-tagen-104"
+    },
+    {
+      "titel": "Der Island-Krimi: Tod der Elfenfrau",
+      "sender": "ARD",
+      "art": "Film",
+      "genre": "Krimi",
+      "text": "Lavafelder, Nebel und ein Land, in dem man an Elfen glaubt – hier wird der Volksglaube zur Spur in einem Mordfall. Landschaften, bei denen Du die Wolldecke enger ziehst.",
+      "laenge": "89 Min.",
+      "bis": "2027-01-15",
+      "link": "https://www.zdf.de/page-video-ard-der-island-krimi-tod-der-elfenfrau-106.html"
+    },
+    {
+      "titel": "Der Island-Krimi: Der Tote im Westfjord",
+      "sender": "ARD",
+      "art": "Film",
+      "genre": "Krimi",
+      "text": "In den abgelegenen Westfjorden kennt jeder jeden – bis ein Toter auftaucht und keiner etwas gesehen haben will. Bald schauen, der Fjord macht Ende November dicht.",
+      "laenge": "89 Min.",
+      "bis": "2026-11-30",
+      "link": "https://www.zdf.de/page-video-ard-der-island-krimi-der-tote-im-westfjord-106.html"
+    },
+    {
+      "titel": "Romy und Magda Schneider – Mutter, Tochter, Rivalinnen?",
+      "sender": "ZDF",
+      "art": "Doku",
+      "genre": "Kultur",
+      "text": "Neu entdeckte Privatfilme, Briefe und Tagebücher zeigen, wie es zwischen Romy und ihrer Mutter wirklich war – weit weg von der Sissi-Kutsche. Kino-Glamour mit doppeltem Boden.",
+      "laenge": "45 Min.",
+      "bis": "2031-01-04",
+      "link": "https://www.zdf.de/video/dokus/terra-x-history-102/romy-und-magda-schneider-mutter-tochter-rivalinnen-100"
+    },
+    {
+      "titel": "Terra X: Der Geheimcode der Maria Stuart",
+      "sender": "ZDF",
+      "art": "Doku",
+      "genre": "Geschichte",
+      "text": "Drei Hobby-Codeknacker entschlüsseln 57 Geheimbriefe, die Maria Stuart in Gefangenschaft schrieb, und lesen 400 Jahre später mit. Ein echter historischer Krimi, nur ohne Kommissar.",
+      "laenge": "44 Min.",
+      "bis": "2035-12-23",
+      "link": "https://www.zdf.de/video/dokus/terra-x-112/terra-x-der-geheimcode-der-maria-stuart-doku-100"
+    },
+    {
+      "titel": "Terra X: Azuchi – Die Burg des Samurai",
+      "sender": "ZDF",
+      "art": "Doku",
+      "genre": "Geschichte",
+      "text": "Oda Nobunaga ließ im 16. Jahrhundert eine Prachtburg bauen, von der nach einem Brand nichts blieb – nun wird sie digital wieder aufgebaut. Japan-Reise ganz ohne Jetlag.",
+      "laenge": "44 Min.",
+      "bis": "2036-03-01",
+      "link": "https://www.zdf.de/video/dokus/terra-x-112/terra-x-azuchi-die-burg-des-samurai-doku-100"
     }
   ],
   "fernsehen": [
-    {
-      "titel": "Rebecca",
-      "sender": "arte",
-      "datum": "2026-11-01",
-      "zeit": "20:15",
-      "art": "Film",
-      "genre": "Krimi",
-      "text": "Hitchcocks Meisterwerk von 1940: Die junge zweite Frau des Witwers Maxim de Winter merkt schnell, dass auf Manderley die tote Rebecca noch immer das Regiment führt. Schwarz-weiß, schaurig, unvergesslich – der perfekte Sonntagabend.",
-      "link": "https://www.tvmovie.de/tv/rebecca-epg-234851843"
-    },
-    {
-      "titel": "Polizeiruf 110: Sie haben Namen",
-      "sender": "ARD",
-      "datum": "2026-11-01",
-      "zeit": "20:15",
-      "art": "Film",
-      "genre": "Krimi",
-      "text": "Bei einer Feriensiedlung wird eine junge Frau tot gefunden, und niemand weiß, wer sie ist. Die Spur führt zu einem früheren Kämpfer, der heute Geschäftsmann ist. Falls Du Rebecca schaust: ab in die Mediathek damit!",
-      "link": "https://www.tvmovie.de/tv/polizeiruf-110-sie-haben-namen-epg-235265803"
-    },
-    {
-      "titel": "Die Sünderin",
-      "sender": "arte",
-      "datum": "2026-11-02",
-      "zeit": "20:15",
-      "art": "Film",
-      "genre": "Drama",
-      "text": "Der Skandalfilm von 1951 mit Hildegard Knef, über den sich halb Nachkriegsdeutschland empört hat. Heute darfst Du in aller Ruhe selbst urteilen, was daran so unerhört war.",
-      "link": "https://www.tvmovie.de/tv/die-suenderin-epg-234856261"
-    },
-    {
-      "titel": "Hildegard Knef – So oder so ist das Leben",
-      "sender": "arte",
-      "datum": "2026-11-02",
-      "zeit": "21:40",
-      "art": "Doku",
-      "genre": "Kultur",
-      "text": "Gleich im Anschluss: das bewegte Leben der Knef zwischen Berlin, New York und Hollywood, zu ihrem 100. Geburtstag. Eine echte Berliner Pflanze mit Stimme, Witz und Schneid.",
-      "link": "https://www.tvmovie.de/tv/hildegard-knef-so-oder-so-ist-das-leben-epg-234856258"
-    },
-    {
-      "titel": "Vienna Blood – Königin der Nacht",
-      "sender": "3sat",
-      "datum": "2026-11-03",
-      "zeit": "20:15",
-      "art": "Film",
-      "genre": "Krimi",
-      "text": "Wien um 1900: Der junge Arzt Max Liebermann und Inspektor Rheinhardt jagen einen Serienmörder. Kaffeehaus, Psychoanalyse und Gänsehaut – sehr elegant gemacht.",
-      "link": "https://www.tvinfo.de/fernsehprogramm/2445840462-vienna-blood-koenigin-der-nacht"
-    },
-    {
-      "titel": "1491 – Amerika vor Kolumbus",
-      "sender": "phoenix",
-      "datum": "2026-11-03",
-      "zeit": "20:15",
-      "art": "Dokuserie",
-      "genre": "Geschichte",
-      "text": "Wie lebten die Menschen in Amerika, bevor Kolumbus überhaupt losgesegelt ist? Zwei Folgen über die ersten Siedler, Jäger und Bauern eines ganzen Kontinents, am Mittwoch geht es weiter.",
-      "link": "https://www.tvinfo.de/fernsehprogramm/2447719342-1491-amerika-vor-kolumbus"
-    },
-    {
-      "titel": "Tatort: Borowski und das Haus der Geister",
-      "sender": "NDR",
-      "datum": "2026-11-03",
-      "zeit": "22:00",
-      "art": "Film",
-      "genre": "Krimi",
-      "text": "Kiel, Kommissar Borowski und ein Haus, in dem es nicht ganz geheuer ist. Für Krimifreundinnen mit Nachtsitzfleisch genau das Richtige.",
-      "link": "https://tv.de/sendung/tatort/tatort-borowski-und-das-haus-der-geister,2450268703/"
-    },
-    {
-      "titel": "Doitscha – Alles geht vorüber",
-      "sender": "ARD",
-      "datum": "2026-11-04",
-      "zeit": "20:15",
-      "art": "Film",
-      "genre": "Drama",
-      "text": "Eine jüdische Mutter in Köln hält ihre bunte Familie zusammen, zwischen Pubertät, Antisemitismus und alten Schuldfragen. Ein Film kurz vor dem Jahrestag der Pogromnacht, der lange nachwirkt.",
-      "link": "https://www.tvinfo.de/fernsehprogramm/2448194119-doitscha-alles-geht-vorueber"
-    },
-    {
-      "titel": "Das legendäre Konzert für Berlin '89",
-      "sender": "3sat",
-      "datum": "2026-11-04",
-      "zeit": "20:15",
-      "art": "Doku",
-      "genre": "Geschichte",
-      "text": "Ein paar Tage nach dem Mauerfall wollen Radioleute ein Konzert für Zehntausende auf die Beine stellen, und dann ist plötzlich der Saal weg. Wie es doch noch in der Deutschlandhalle klappte, erzählen zwei Folgen. Warst Du damals dabei?",
-      "link": "https://www.tvinfo.de/fernsehprogramm/2445840533-das-legendaere-konzert-fuer-berlin-89-freiheit-stars-aufbruch"
-    },
-    {
-      "titel": "Hans Rosenthal – eine Spurensuche",
-      "sender": "rbb",
-      "datum": "2026-11-04",
-      "zeit": "22:15",
-      "art": "Doku",
-      "genre": "Geschichte",
-      "text": "Der Mann, der ganz Deutschland „Das war spitze!“ rufen ließ, war ein waschechter Berliner. Diese Spurensuche zeigt, was hinter dem fröhlichen Quizmaster von Dalli Dalli steckte.",
-      "link": "https://tv.de/sendung/hans-rosenthal-eine-spurensuche/hans-rosenthal-eine-spurensuche,2448866064/"
-    },
-    {
-      "titel": "Wunschkind – Der Usedom-Krimi",
-      "sender": "ARD",
-      "datum": "2026-11-05",
-      "zeit": "20:15",
-      "art": "Film",
-      "genre": "Krimi",
-      "text": "Donnerstagskrimi an der Ostsee: Ein Fall der Familienhilfe wird zum Sorgerechtsstreit, und dann ist ein Pflegevater tot. Usedom im Herbst ist ohnehin die schönste Kulisse für Abgründe.",
-      "link": "https://www.tvinfo.de/fernsehprogramm/2448194188-wunschkind-der-usedom-krimi"
-    },
-    {
-      "titel": "mareTV: Bergen und die Fjorde / Helsinkis Schärenküste",
-      "sender": "NDR",
-      "datum": "2026-11-05",
-      "zeit": "20:15",
-      "art": "Doku",
-      "genre": "Natur",
-      "text": "Ein Abend für Deine Nordsehnsucht: erst die alte Hansestadt Bergen und Norwegens Fjorde, um 21 Uhr dann die Schärenküste vor Helsinki. Fast so schön wie ein Sommer in Schweden.",
-      "link": "https://tv.de/sendung/maretv/maretv-bergen-und-fjorde-norwegens-hanseatische-h,2448282734/"
-    },
-    {
-      "titel": "Die weiße Rose",
-      "sender": "3sat",
-      "datum": "2026-11-06",
-      "zeit": "20:15",
-      "art": "Film",
-      "genre": "Geschichte",
-      "text": "Die Geschwister Scholl und ihre Freunde in München, die den Mut hatten, gegen Hitler Flugblätter zu verteilen. Ein Spielfilm über Zivilcourage, die einem heute noch den Atem nimmt.",
-      "link": "https://www.tvmovie.de/tv/die-weisse-rose-epg-235142875"
-    },
-    {
-      "titel": "Wilde Zeiten – Das letzte Jahr der DDR",
-      "sender": "phoenix",
-      "datum": "2026-11-06",
-      "zeit": "20:15",
-      "art": "Doku",
-      "genre": "Geschichte",
-      "text": "Zwischen Mauerfall und Einheit war ein Jahr lang plötzlich alles möglich, im Osten gleich um die Ecke. Ein spannender Rückblick, bei dem Du sicher manches wiedererkennst.",
-      "link": "https://tv.de/sendung/wilde-zeiten-das-letzte-jahr-der-ddr/wilde-zeiten-das-letzte-jahr-der-ddr,2447719482/"
-    },
-    {
-      "titel": "„Hallelujah“: Leonard Cohen, ein Leben, ein Lied",
-      "sender": "arte",
-      "datum": "2026-11-06",
-      "zeit": "22:05",
-      "art": "Doku",
-      "genre": "Kultur",
-      "text": "Die Geschichte eines Liedes, das erst kaum jemand wollte und das heute jeder kennt, und dazu das Leben seines melancholischen Dichters. Taschentuch bereitlegen ist erlaubt.",
-      "link": "https://www.tvmovie.de/tv/hallelujah-leonard-cohen-ein-leben-ein-lied-epg-235146632"
-    },
-    {
-      "titel": "Liebling Kreuzberg",
-      "sender": "rbb",
-      "datum": "2026-11-07",
-      "zeit": "20:15",
-      "art": "Serie",
-      "genre": "Komödie",
-      "text": "Manfred Krug als Anwalt Robert Liebling, gleich zwei Folgen hintereinander. Berliner Schnauze, Kreuzberger Charme und ein Mann, der lieber Zigarre raucht als Akten liest – herrlich.",
-      "link": "https://tv.de/sendung/liebling-kreuzberg/liebling-kreuzberg-die-staatsanwaltin,2452513392/"
-    },
-    {
-      "titel": "Ostfriesentodesspiel",
-      "sender": "ZDF",
-      "datum": "2026-11-07",
-      "zeit": "20:15",
-      "art": "Film",
-      "genre": "Krimi",
-      "text": "Der neue Samstagskrimi kommt aus Ostfriesland, wo hinter Deichen und Teetassen das Böse lauert. Ideal mit einer Kanne Ostfriesentee daneben.",
-      "link": "https://tv.de/sendung/ostfriesentodesspiel-2026/ostfriesentodesspiel,2451946518/"
-    },
-    {
-      "titel": "Die Anden – Im Bann der Urkräfte",
-      "sender": "arte",
-      "datum": "2026-11-07",
-      "zeit": "20:15",
-      "art": "Doku",
-      "genre": "Natur",
-      "text": "Vulkane, Gletscher und Hochebenen: die längste Gebirgskette der Welt in großen Bildern. Wer lieber staunt als ermittelt, ist hier genau richtig.",
-      "link": "https://tv.de/sendung/die-anden-im-bann-der-urkrafte-2021/die-anden-im-bann-der-urkrafte,2446502430/"
-    },
     {
       "titel": "Tatort: Frei wie ein Adler",
       "sender": "ARD",
@@ -554,14 +424,24 @@
       "link": "https://tv.de/sendung/absolute-power/absolute-power,2446502536/"
     },
     {
-      "titel": "Die Andersdenkenden",
-      "sender": "rbb",
+      "titel": "Die Reise der Eisbären",
+      "sender": "phoenix",
       "datum": "2026-11-09",
-      "zeit": "21:00",
-      "art": "Doku",
-      "genre": "Geschichte",
-      "text": "Zum Jahrestag des Mauerfalls fragt das rbb, was aus den DDR-Bürgerrechtlern von damals geworden ist. Ohne ihren Mut hätte es den 9. November 1989 so nicht gegeben.",
-      "link": "https://tv.de/sendung/die-andersdenkenden/die-andersdenkenden-was-aus-ddr-burgerrechtlern-w,2472235497/"
+      "zeit": "20:15",
+      "art": "Dokuserie",
+      "genre": "Natur",
+      "text": "Eine Eisbärenmutter zieht mit ihren Jungen durch die Arktis, und Du bist hautnah dabei. Zwei Folgen am Stück, Teil 2 läuft um 21:00.",
+      "link": "https://www.tvinfo.de/tv-programm/montag"
+    },
+    {
+      "titel": "Grantchester (Staffel 8)",
+      "sender": "ONE",
+      "datum": "2026-11-09",
+      "zeit": "21:40",
+      "art": "Serie",
+      "genre": "Krimi",
+      "text": "Nach einem Benefiz-Motorradrennen liegt ein Biker tot da, und in Cambridge wird wieder ermittelt – so very British wie immer. ONE zeigt gleich drei Folgen hintereinander.",
+      "link": "https://www.tvinfo.de/tv-programm/montag/spaetabend"
     },
     {
       "titel": "The Zone of Interest",
@@ -569,9 +449,9 @@
       "datum": "2026-11-09",
       "zeit": "22:15",
       "art": "Film",
-      "genre": "Drama",
-      "text": "Am Abend der Pogromnacht-Erinnerung: Jonathan Glazers oscarprämierter Film über die Familie des Auschwitz-Kommandanten, die direkt hinter der Lagermauer ihr Gartenidyll pflegt. Leise erzählt und gerade deshalb schwer zu vergessen.",
-      "link": "https://tv.de/sendung/the-zone-of-interest-2023/the-zone-of-interest,2451946896/"
+      "genre": "Geschichte",
+      "text": "Jonathan Glazers Oscar-Film von 2023 mit Sandra Hüller zeigt den Alltag der Familie Höß direkt an der Mauer von Auschwitz. Leise, präzise und lange im Kopf.",
+      "link": "https://www.tvinfo.de/tv-programm/montag/spaetabend"
     },
     {
       "titel": "Die Freiheit, die Stasi und der Tod",
@@ -580,8 +460,168 @@
       "zeit": "22:50",
       "art": "Doku",
       "genre": "Geschichte",
-      "text": "Eine Doku über ein kurzes Leben im Schatten der Stasi, genau am Mauerfall-Jahrestag. Spät, aber lohnend, und notfalls morgen in der Mediathek.",
-      "link": "https://tv.de/sendung/die-freiheit-die-stasi-und-der-tod/die-freiheit-die-stasi-und-der-tod-das-kurze-lebe,2451761567/"
+      "text": "Passend zum 9. November: die Geschichte von Matthias Domaschk aus Jena, der 1981 ins Visier der Stasi geriet. Ein wichtiges Stück DDR-Geschichte, sorgfältig recherchiert.",
+      "link": "https://www.tvinfo.de/tv-programm/montag/spaetabend"
+    },
+    {
+      "titel": "Vienna Blood – Der verlorene Sohn",
+      "sender": "3sat",
+      "datum": "2026-11-10",
+      "zeit": "20:15",
+      "art": "Film",
+      "genre": "Krimi",
+      "text": "Wien um 1900: An einer Militärakademie wird ein toter Kadett gefunden, und Psychiater Max Liebermann ermittelt mit Inspektor Rheinhardt. Kaffeehausflair inklusive.",
+      "link": "https://www.tvinfo.de/tv-programm/dienstag"
+    },
+    {
+      "titel": "Der Pathologe – Mörderisches Dublin",
+      "sender": "ONE",
+      "datum": "2026-11-10",
+      "zeit": "20:15",
+      "art": "Miniserie",
+      "genre": "Krimi",
+      "text": "Im nebligen Dublin der 1950er stößt Pathologe Quirke auf die Geheimnisse der feinen Gesellschaft. Atmosphäre zum Einkuscheln – Teil 2 folgt um 21:40.",
+      "link": "https://www.tvinfo.de/tv-programm/dienstag"
+    },
+    {
+      "titel": "Ein NS-Verbrecher auf Jobsuche",
+      "sender": "arte",
+      "datum": "2026-11-10",
+      "zeit": "20:15",
+      "art": "Dokuserie",
+      "genre": "Geschichte",
+      "text": "Die Fluchtroute von Walther Rauff nach Südamerika, rekonstruiert aus CIA- und BND-Akten – spannend wie ein Agententhriller. Folge 2 schließt um 21:00 an.",
+      "link": "https://www.tvinfo.de/tv-programm/dienstag"
+    },
+    {
+      "titel": "Mysterium Gotik – Als die Kathedralen in den Himmel wuchsen",
+      "sender": "phoenix",
+      "datum": "2026-11-10",
+      "zeit": "20:15",
+      "art": "Doku",
+      "genre": "Kultur",
+      "text": "Wie bauten Meister im 12. Jahrhundert ohne Kran und Computer solche Kathedralen? Eine Doku über Stein, Licht und erstaunlich viel Mut.",
+      "link": "https://www.tvinfo.de/tv-programm/dienstag"
+    },
+    {
+      "titel": "Hafen im Nebel",
+      "sender": "arte",
+      "datum": "2026-11-11",
+      "zeit": "21:50",
+      "art": "Film",
+      "genre": "Drama",
+      "text": "Marcel Carnés Klassiker von 1938 mit Jean Gabin und Michèle Morgan, Le Havre im Nebel und Liebe auf den ersten Blick. Großes französisches Kino in Schwarzweiß.",
+      "link": "https://www.tvinfo.de/tv-programm/mittwoch"
+    },
+    {
+      "titel": "Staatsgeheimnis RAF – Terroristen in der DDR",
+      "sender": "rbb",
+      "datum": "2026-11-11",
+      "zeit": "22:15",
+      "art": "Doku",
+      "genre": "Geschichte",
+      "text": "Wie die DDR in den 80ern RAF-Aussteigern neue Namen und ein bürgerliches Leben verschaffte. Ein deutsch-deutsches Kapitel, das fast unglaublich klingt.",
+      "link": "https://www.histomich.de/deutsche-geschichte-tipps-zu-tv-events-und-ausfluege/tv-tipps/die-spannendsten-sendungen-zur-deutschen-geschichte-im-tv/"
+    },
+    {
+      "titel": "Up in the Air",
+      "sender": "rbb",
+      "datum": "2026-11-12",
+      "zeit": "20:15",
+      "art": "Film",
+      "genre": "Komödie",
+      "text": "George Clooney fliegt als charmanter Kündigungsprofi durchs Land, bis sein eigenes Leben ins Trudeln gerät. Klug, witzig und mit Herz (2009).",
+      "link": "https://www.kino-zeit.de/news-features/empfehlungen-tv-tipps/die-tv-tipps-fuer-donnerstag-den-12-11-2026"
+    },
+    {
+      "titel": "Honecker und der Pastor",
+      "sender": "3sat",
+      "datum": "2026-11-13",
+      "zeit": "20:15",
+      "art": "Film",
+      "genre": "Drama",
+      "text": "Januar 1990: Erich und Margot Honecker haben keine Bleibe mehr und landen ausgerechnet im Pfarrhaus von Pastor Holmer. Edgar Selge als Honecker – deutsche Geschichte als Kammerspiel mit leiser Ironie.",
+      "link": "https://www.tvmovie.de/tv/fernsehprogramm-freitag"
+    },
+    {
+      "titel": "Wildland",
+      "sender": "ONE",
+      "datum": "2026-11-13",
+      "zeit": "22:00",
+      "art": "Film",
+      "genre": "Krimi",
+      "text": "Dänischer Noir (2020): Eine junge Frau zieht zu ihrer Tante, gespielt von Sidse Babett Knudsen, deren Familie ein dunkles Geschäft betreibt. Skandinavische Spannung, schnörkellos und unter die Haut.",
+      "link": "https://www.kino-zeit.de/news-features/empfehlungen-tv-tipps/die-tv-tipps-fuer-freitag-den-13-11-2026"
+    },
+    {
+      "titel": "Talking Heads: Stop Making Sense",
+      "sender": "arte",
+      "datum": "2026-11-13",
+      "zeit": "22:40",
+      "art": "Film",
+      "genre": "Kultur",
+      "text": "Jonathan Demmes Konzertfilm von 1984: David Byrne im übergroßen Anzug und eine Band, die mit jedem Song wächst. Ruhig lauter drehen!",
+      "link": "https://www.kino-zeit.de/news-features/empfehlungen-tv-tipps/die-tv-tipps-fuer-freitag-den-13-11-2026"
+    },
+    {
+      "titel": "Petersdom – Megabaustelle der Renaissance",
+      "sender": "arte",
+      "datum": "2026-11-14",
+      "zeit": "20:15",
+      "art": "Doku",
+      "genre": "Kultur",
+      "text": "Bramante, Michelangelo, Bernini: 120 Jahre Bauzeit, Intrigen und Genie für die größte Kirche der Christenheit. Kunstgeschichte als Baustellenkrimi.",
+      "link": "https://www.tvmovie.de/tv/fernsehprogramm-samstag"
+    },
+    {
+      "titel": "Fedora",
+      "sender": "arte",
+      "datum": "2026-11-15",
+      "zeit": "20:15",
+      "art": "Film",
+      "genre": "Drama",
+      "text": "Billy Wilders spätes Juwel von 1978 mit William Holden, Marthe Keller und Hildegard Knef: eine Hollywood-Diva, die einfach nicht altert. Elegante Verbeugung vor dem schönen Schein.",
+      "link": "https://www.kino-zeit.de/news-features/empfehlungen-tv-tipps/die-tv-tipps-fuer-sonntag-den-15-11-2026"
+    },
+    {
+      "titel": "Iris – Die Wahrheit (Staffel 2)",
+      "sender": "ZDF",
+      "datum": "2026-11-15",
+      "zeit": "22:15",
+      "art": "Serie",
+      "genre": "Krimi",
+      "text": "Schwedenkrimi mit Sofia Helin aus „Die Brücke“ als Ermittlerin Iris Broman – Doppelfolge bis kurz vor Mitternacht. Wer nicht so lange aufbleiben mag: Die Folgen stehen meist schon vorab in der ZDF-Mediathek.",
+      "link": "https://www.fernsehserien.de/iris-die-wahrheit"
+    },
+    {
+      "titel": "Mord im Fahrpreis inbegriffen",
+      "sender": "arte",
+      "datum": "2026-11-16",
+      "zeit": "20:15",
+      "art": "Film",
+      "genre": "Krimi",
+      "text": "Ein Nachtzug von Marseille nach Paris, sechs Fremde im Schlafwagen und am Morgen eine Leiche. Costa-Gavras' Krimiklassiker von 1965 mit Yves Montand und Simone Signoret.",
+      "link": "https://www.filmdienst.de/artikel/82631/mord-im-fahrpreis-inbegriffen-tv-programm"
+    },
+    {
+      "titel": "Boxhagener Platz",
+      "sender": "MDR",
+      "datum": "2026-11-16",
+      "zeit": "20:15",
+      "art": "Film",
+      "genre": "Komödie",
+      "text": "Friedrichshain 1968: Oma Otti hat schon fünf Männer überlebt, und im Kiez gibt es plötzlich einen Mordfall. Warmherziges Ost-Berliner Kiezpanorama mit Augenzwinkern.",
+      "link": "https://www.filmdienst.de/artikel/82628/boxhagener-platz-tv-programm"
+    },
+    {
+      "titel": "Das Piano",
+      "sender": "MDR",
+      "datum": "2026-11-17",
+      "zeit": "22:55",
+      "art": "Film",
+      "genre": "Drama",
+      "text": "Jane Campions Meisterwerk von 1993 mit Holly Hunter und Harvey Keitel: ein Klavier am Strand Neuseelands und Michael Nymans unvergessliche Musik. Spät am Abend, aber jede Minute wert.",
+      "link": "https://www.filmdienst.de/heimkino/tv-vorschau"
     }
   ]
 }
