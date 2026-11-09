@@ -21,6 +21,7 @@ function render(opt = {}) {
   if (!SHEETS.length && (document.activeElement === document.body || !document.activeElement || !document.contains(document.activeElement))) { const z = (opt.fokus && $(opt.fokus, main)) || null; if (z) z.focus({ preventScroll: true }); }
   bilderZeichnen(opt.neu);
   figurenMalen();
+  if (typeof postGefuehlArm === "function") try { postGefuehlArm(); } catch (e) { }
   const lg = $("#logo"); if (lg && !lg.firstChild) lg.innerHTML = ritaSVG(72);
   armHaptics();
   if (typeof entAnimArm === "function") try { entAnimArm(); } catch (e) { }
@@ -286,7 +287,7 @@ function aktion(a, d, el, ev) {
     case "liste-hak": { const x = (S.liste || []).find(y => y.id === d.id); if (!x) break; x.erledigt = heute(); const r = eintragSpeichern({ t: "abgehakt", tag: heute(), notiz: x.text, listeId: x.id }); x.eintrag = r && r.e.id; speichern(); if (r) nachEintrag(r, `Abgehakt: ${x.text.replace(/[.!?]+$/, "")}.`); else render({ halteScroll: true, ohneAnim: true }); break; }
     case "liste-zurueck": { const x = (S.liste || []).find(y => y.id === d.id); if (!x) break; delete x.erledigt; if (x.eintrag) eintragLoeschen(x.eintrag, true); speichern(); render({ halteScroll: true, ohneAnim: true }); break; }
     case "erklaerung": erklaerungSheet(); break;
-    case "post-auf": { const p = postHeute(); if (p && p.extra) S.extraPost.offen = true; else S.postOffen = heute(); } speichern(); haptik("auswahl"); render({ halteScroll: true, ohneAnim: true }); break;
+    case "post-auf": { const p = postHeute(); if (p && p.extra) S.extraPost.offen = true; else { S.postOffen = heute(); S.postOffenText = p ? p.text : ""; } } speichern(); haptik("auswahl"); render({ halteScroll: true, ohneAnim: true }); break;
     case "tschuess-los": S.tschuess = { tag: heute(), verlauf: [["rita", "Danke, Max!"], ["max", "Gern! Tschüss!"]], grenze: 2 + Math.floor(Math.random() * 4), n: 0 }; speichern(); haptik("auswahl"); render({ halteScroll: true, ohneAnim: true }); break;
     case "tschuess": { const T = S.tschuess; if (!T || T.ende) break; T.n++; eierTschuess(T.n); T.verlauf.push(["rita", TSCHUESS[Math.floor(Math.random() * TSCHUESS.length)]]); if (T.n >= T.grenze || (T.n >= 2 && Math.random() < .2)) { T.verlauf.push(["max", "Ich leg jetzt auf. Tschüss!"]); T.ende = "max"; } else T.verlauf.push(["max", TSCHUESS[Math.floor(Math.random() * TSCHUESS.length)]]); if (T.verlauf.length > 9) T.verlauf = [...T.verlauf.slice(0, 2), ...T.verlauf.slice(-7)]; speichern(); haptik("auswahl"); render({ halteScroll: true, ohneAnim: true }); break; }
     case "tschuess-auflegen": { const T = S.tschuess; if (!T || T.ende) break; T.verlauf.push(["rita", "Ich leg jetzt auf. Tschüss!"]); T.ende = "rita"; S.tschuessSiege = (S.tschuessSiege || 0) + 1; speichern(); haptik("erfolg"); render({ halteScroll: true, ohneAnim: true }); break; }
@@ -299,6 +300,7 @@ function aktion(a, d, el, ev) {
     case "eier-um": S.eierAus = !S.eierAus; speichern(); sheetInhalt(einstellungenInhalt()); break;
     case "tuer": tuerSheet(d.v); break;
     case "logo": logoSpass(el); break;
+    case "post-antworten": haptik("auswahl"); tlWhatsApp("Lieber Max, "); break;
     case "post-gelesen": { const p = postHeute(); S.briefe = S.briefe || []; if (p && !S.briefe.some(b => b.tag === heute() && b.text === p.text)) S.briefe.push({ tag: heute(), text: p.text, wer: p.wer }); if (p && p.extra) { S.extraPost.gelesen = true; speichern(); render({ halteScroll: true, ohneAnim: true }); break; } } S.postGelesen = heute(); speichern(); render({ halteScroll: true, ohneAnim: true }); break;
     case "stufe-zeigen": $$(".toast").forEach(t => t.remove()); S.gesehenStufe = stufe(); speichern(); stufeMoment(stufe(), window._auchNeu || []); break;
 

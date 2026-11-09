@@ -120,9 +120,33 @@ function angeboteLaden() {
 }
 function postLaden() {
   if (!/github\.io$/.test(location.hostname)) return;
-  fetch("post.json", { cache: "no-store" }).then(r => r.ok ? r.json() : []).then(arr => { if (Array.isArray(arr)) { repoSchreiben("post", arr.filter(b => b && typeof b.text === "string" && /^\d{4}-\d{2}-\d{2}$/.test(b.datum || ""))); } }).catch(() => { });
+  fetch("post.json", { cache: "no-store" }).then(r => r.ok ? r.json() : []).then(arr => { if (Array.isArray(arr)) { const neu = arr.filter(b => b && typeof b.text === "string" && /^\d{4}-\d{2}-\d{2}$/.test(b.datum || "")), vorher = JSON.stringify(REPO.post || []); repoSchreiben("post", neu); if (JSON.stringify(neu) !== vorher && TAB === "heute") render({ halteScroll: true, ohneAnim: true }); } }).catch(() => { }); // neue Post gleich zeigen, nicht erst beim nächsten Öffnen
 }
-{ const m0 = maxPost; maxPost = function () { const h = heute(); const r = (Array.isArray(REPO.post) ? REPO.post : []).filter(b => b.datum <= h && !(S.briefe || []).some(x => x.text === b.text)).sort((a, b) => a.datum < b.datum ? -1 : 1)[0]; return r ? r.text : m0(); }; }
+/* Echte Post aus post.json: der älteste fällige, noch nicht archivierte Eintrag. Hat Vorrang vor Satz des Tages, Ereignis-Post und Brief-Tagen (mbStill)
+   und kommt auch, wenn Rita heute schon eine Post gelesen hat (S.postGelesen). Optional: gefuehl (kleine Szene am Max-Avatar), antworten (Knopf „Max antworten“). */
+function repoPostFaellig() { const h = heute(); return (Array.isArray(REPO.post) ? REPO.post : []).filter(b => b.datum <= h && !(S.briefe || []).some(x => x.text === b.text)).sort((a, b) => a.datum < b.datum ? -1 : 1)[0] || null; }
+{ const m0 = maxPost; maxPost = function () { const r = repoPostFaellig(); return r ? r.text : m0(); }; }
+{ const p0 = postHeute; postHeute = function () {
+  const h = heute(), r = repoPostFaellig(); if (!r) return p0(); // echte Post zuerst, eine Ereignis-Post (S.extraPost) kommt danach
+  return { wer: "max", text: r.text, repo: true, gefuehl: typeof r.gefuehl === "string" ? r.gefuehl : "", antworten: r.antworten === true, offen: S.postOffen === h && S.postOffenText === r.text };
+}; }
+/* Gefühl-Szene am Max-Avatar (einmal je Post, ≤ 2,5 s): kurz strahlen (maxLacht ohne „Ha ha ha“), kleines „Autsch“, ein Herz steigt auf.
+   Nur transform/opacity, nur an der Marke (nicht hinter dem Text). Ein Tipp springt sofort zum Endzustand. REDUCED: nur ein stilles Herz. */
+function postGefuehlArm() {
+  const b = document.querySelector(".brief-papier[data-gefuehl]"); if (!b) return;
+  const p = postHeute(); if (!p || !p.gefuehl || S.postGefuehl === p.text) return;
+  const marke = b.querySelector(".brief-marke"), svg = marke && marke.querySelector("svg.portrait"); if (!svg) return;
+  S.postGefuehl = p.text; speichern();
+  const herz = document.createElement("span"); herz.className = "pg-herz"; herz.setAttribute("aria-hidden", "true");
+  herz.innerHTML = `<svg viewBox="0 0 24 22" width="20" height="18"><path d="M12 21 C5 15.5 1 12 1 7 A5.5 5.5 0 0 1 12 4.2 A5.5 5.5 0 0 1 23 7 C23 12 19 15.5 12 21Z" fill="var(--ziegel)"/></svg>`;
+  const T = [], ende = () => { T.forEach(clearTimeout); document.removeEventListener("pointerdown", ende, true); svg.classList.remove("lacht", "pg-autsch"); herz.remove(); };
+  document.addEventListener("pointerdown", ende, true);
+  if (REDUCED()) { herz.classList.add("pg-still"); marke.appendChild(herz); T.push(setTimeout(ende, 2500)); return; }
+  T.push(setTimeout(() => maxLacht(svg, { ha: false, dauer: 1020 }), 450));
+  T.push(setTimeout(() => { svg.classList.remove("lacht"); svg.classList.add("pg-autsch"); }, 1470));
+  T.push(setTimeout(() => { svg.classList.remove("pg-autsch"); marke.appendChild(herz); }, 1910));
+  T.push(setTimeout(ende, 2720));
+}
 
 /* ---------- Ritas Porträt: Finger drauf halten (oder Maus drüber) = groß daneben, blinzelt und lächelt ---------- */
 { let zeitV = 0, gross = null, lange = false;

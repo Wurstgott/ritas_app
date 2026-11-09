@@ -46,3 +46,14 @@ svg.huhn.fig-plustert .huhn-kopf { transform-box: view-box; transform-origin: 60
   .fig-ha { display: none; }
 }
 :root[data-motion="ruhig"] .fig-ha { display: none; }
+
+/* Post von Max mit Gefühl (extras.js postGefuehlArm): „Autsch“ und Herz an der Briefmarke – einmal, kurz, dann still */
+svg.portrait.pg-autsch { animation: pg-autsch .44s ease-out both !important; transform-origin: 50% 100%; }
+@keyframes pg-autsch { 0%, 100% { transform: none; } 25% { transform: translateY(3px) rotate(-5deg); } 55% { transform: translateY(2px) rotate(-4deg); } }
+.pg-herz { position: absolute; left: -12px; top: -8px; pointer-events: none; line-height: 0; opacity: 0; animation: pg-herz .8s ease-out forwards; }
+@keyframes pg-herz { 0% { opacity: 0; transform: translateY(4px) scale(.9); } 30% { opacity: 1; } 70% { opacity: 1; } 100% { opacity: 0; transform: translateY(-14px) scale(1); } }
+.pg-herz.pg-still { animation: none; opacity: 1; }
+@media (prefers-reduced-motion: reduce) { svg.portrait.pg-autsch { animation: none !important; } .pg-herz { animation: none; opacity: 1; } }
+:root[data-motion="ruhig"] svg.portrait.pg-autsch { animation: none !important; }
+.brief-text { white-space: pre-line; }
+.pg-antworten { margin: 12px 0 2px; }
